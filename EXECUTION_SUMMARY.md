@@ -26,6 +26,8 @@
 
 **Commitment**: 90 days, Rewardify ONLY
 
+**Execution stance**: Validation-first via Next.js web; defer any mobile build until after Week 1 success signals.
+
 ---
 
 ## 📚 DOCUMENTATION INVENTORY

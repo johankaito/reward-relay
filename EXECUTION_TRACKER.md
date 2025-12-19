@@ -5,6 +5,7 @@
 **Target Validation**: [Start date + 12 weeks]
 
 **Commitment**: I will work on ONLY Rewardify for 90 days. No other projects.
+**Execution stance**: Validation-first via Next.js web; keep logic portable, but defer mobile work until after Week 1 proves value.
 
 ---
 

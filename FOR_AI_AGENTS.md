@@ -17,6 +17,14 @@ Build **Rewardify** - a polished web app for Australian credit card churning aut
 **Success**: $500+ MRR by Week 12 or kill
 **Quality**: Must be polished, production-ready (not just functional)
 
+**Validation-first (mobile later)**:
+- Ship the fastest possible Next.js web app to validate the core decision flow
+- Do **not** add mobile-specific architecture or tooling in Week 1
+- Add only lightweight choices that keep a future mobile swap easy
+- Keep business logic in plain TS modules (`lib/`), not React components
+- Keep data access in a thin client module (`lib/supabase.ts` or `src/lib/supabase/*`)
+- Build responsive UI that works well on phones, but stay web-first
+
 ---
 
 ## 📚 DOCUMENTATION INDEX (Read in Order)
@@ -38,6 +46,7 @@ Build **Rewardify** - a polished web app for Australian credit card churning aut
 - ✅ React Hook Form + Zod (forms)
 - ✅ shadcn/ui (components)
 - ✅ Direct Supabase calls (no API routes)
+ - ✅ Validate on web first; revisit mobile only after Week 1 success
 
 ### 3. BUILD SPECIFICATIONS (Read as you build)
 - `MVP_FEATURES.md` - Complete feature list

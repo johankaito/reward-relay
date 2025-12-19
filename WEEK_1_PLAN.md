@@ -11,6 +11,17 @@
 **Traditional MVP approach**: Build full tracking system → then use it
 **Your approach**: Build what you need TODAY → then add features
 
+**Validation-first, mobile-later**:
+- Ship the fastest possible web version (Next.js) to validate the decision flow
+- Add only lightweight choices that keep a mobile swap possible later
+- Do **not** add mobile-specific complexity in Week 1
+
+**Lightweight future-proofing (no extra time cost)**:
+- Keep business logic in plain TS modules (e.g. `lib/`) instead of React components
+- Keep data access in a thin client module (e.g. `lib/supabase.ts`)
+- Favor simple responsive UI patterns (1-column on mobile, 2-column on desktop)
+- Use clean Supabase schemas (portable to any client)
+
 **What You Need RIGHT NOW**:
 1. ✅ Track your current 2 cards (AMEX + one other)
 2. ✅ See when you last churned
@@ -79,6 +90,7 @@ git commit -m "Initial commit: Rewardify"
 **Evening** (1 hour):
 - Set up Supabase project at supabase.com
 - Copy API keys to `.env.local`
+- Create `lib/supabase.ts` (single client) and `lib/` folder for core logic
 - Test connection (simple query)
 - **Done when**: App runs locally with Supabase connected
 
@@ -235,6 +247,10 @@ git commit -m "Initial commit: Rewardify"
 - **Deployment**: Vercel (frontend), Supabase (backend)
 - **Email**: Resend (for reminders later)
 - **Analytics**: Plausible (simple, privacy-first)
+
+**Mobile Later (Not Week 1)**:
+- Validate via web first, then consider mobile if usage demands it
+- Week 1 avoids mobile-specific architecture or tooling
 
 **Why This Stack**:
 - ✅ You can build alone

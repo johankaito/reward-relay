@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "*"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "whatsapp",
+    "notion",
+    "puppeteer",
+    "linear"
+  ]
+}

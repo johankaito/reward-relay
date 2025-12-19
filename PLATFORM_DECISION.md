@@ -4,6 +4,8 @@
 **Decision Needed**: Web App vs Mobile App vs React Native Web (Universal)
 **Context**: Need to ship polished product in 8 weeks, solo founder, 10-20 hrs/week
 
+**Execution stance**: Validation-first via Next.js web; keep logic portable, defer any mobile build until after web validates.
+
 ---
 
 ## OPTIONS ANALYSIS

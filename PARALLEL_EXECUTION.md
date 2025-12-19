@@ -4,6 +4,12 @@
 **⚡ GOAL**: Reduce 8 weeks to 4-6 weeks through parallelization
 **🤖 AGENTS**: 3-4 AI coding assistants working concurrently
 
+**Validation-first (web now, mobile later)**:
+- Prioritize the fastest Next.js web delivery to validate the decision flow
+- Do **not** add mobile-specific architecture/tooling in Week 1
+- Keep business logic in plain TS modules (`lib/`) and data access in a thin Supabase client
+- Build responsive UI so it’s usable on phones, but stay web-first
+
 ---
 
 ## 🎯 PARALLEL WORK STREAMS (Week 1 Example)
@@ -53,6 +59,7 @@
 - Create card components (CardItem, CardGrid)
 - Create empty states
 - Create loading skeletons
+- Keep components responsive (1-column mobile, 2-3 columns desktop); no mobile-specific libs
 
 **Time**: 4-6 hours
 **Blocks**: Nothing (UI components are standalone)

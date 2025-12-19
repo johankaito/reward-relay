@@ -2,6 +2,8 @@
 
 **You're ready to churn your next card. Build the tool that helps YOU decide.**
 
+**Validation-first**: Ship the fastest Next.js web version; defer any mobile build until after Week 1 success signals. Keep logic in `lib/`, use a thin Supabase client, and stay responsive-but-web-first.
+
 ---
 
 ## YOUR SITUATION RIGHT NOW

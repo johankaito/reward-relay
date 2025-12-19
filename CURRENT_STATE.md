@@ -15,6 +15,7 @@
 **Next Milestone**: Week 1 - Foundation (Auth + Card Database)
 **Timeline**: On schedule (not started)
 **Blockers**: None (waiting for execution to start)
+**Execution stance**: Validation-first via Next.js web; keep logic portable (lib + thin Supabase client), defer mobile work until value is proven.
 
 ---
 
