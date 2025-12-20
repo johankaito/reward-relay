@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "migrate:execute": "sh -c 'psql \"$DATABASE_URL\" -f $SQL_FILE'",
     "migrate:rls": "SQL_FILE=supabase/rls-policies.sql pnpm migrate:execute",
-    "migrate:all": "pnpm migrate:rls"
+    "migrate:all": "pnpm migrate:rls",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -47,6 +48,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.0",
+    "husky": "^9.1.7",
     "puppeteer": "^24.34.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
