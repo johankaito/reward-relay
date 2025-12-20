@@ -1,4 +1,4 @@
-# START HERE - Rewardify Execution
+# START HERE - Reward Relay Execution
 
 **You're ready to churn your next card. Build the tool that helps YOU decide.**
 
@@ -102,7 +102,7 @@ npm run dev
 
 ```bash
 git add .
-git commit -m "Initial commit: Rewardify - helping myself churn smarter"
+git commit -m "Initial commit: Reward Relay - helping myself churn smarter"
 git branch -M main
 ```
 

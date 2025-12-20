@@ -16,7 +16,7 @@ Australian credit card rewards optimization platform for churners.
 
 ## WHAT IS REWARDIFY?
 
-Rewardify automates credit card churning for Australians. We track your cards, remind you when to cancel, recommend which card to apply for next, and optimize every dollar you spend.
+Reward Relay automates credit card churning for Australians. We track your cards, remind you when to cancel, recommend which card to apply for next, and optimize every dollar you spend.
 
 **The Problem**:
 Australian churners manually track credit cards in spreadsheets, forget optimal cancel dates, and miss opportunities. Zero automated tools exist in the AU market.
@@ -265,7 +265,7 @@ This is Customer #1—the blueprint for the product.
 
 **To succeed, founder must**:
 1. ❌ **STOP** Sentra, ClipCash, MLaaS (kill all other projects)
-2. ✅ **BUILD** Rewardify exclusively for 90 days
+2. ✅ **BUILD** Reward Relay exclusively for 90 days
 3. 📊 **MEASURE** progress weekly (MRR, users, activation)
 4. 🔪 **KILL** if Month 3 validation fails (<$500 MRR)
 5. 🚀 **SCALE** if validation succeeds (double down)
@@ -276,8 +276,8 @@ This is Customer #1—the blueprint for the product.
 
 ## FREQUENTLY ASKED QUESTIONS
 
-### Q: Why Rewardify vs just using PointsHacks?
-**A**: PointsHacks is content/education. Rewardify is automation/execution. They're complementary (we may partner).
+### Q: Why Reward Relay vs just using PointsHacks?
+**A**: PointsHacks is content/education. Reward Relay is automation/execution. They're complementary (we may partner).
 
 ### Q: Why would people pay $49/month for this?
 **A**: Time savings (40 hours/year) + optimized earnings (50K+ extra points = $500-1,000 value) = ROI of 10:1.

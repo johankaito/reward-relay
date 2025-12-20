@@ -9,7 +9,7 @@
 
 ## 🎯 THE DECISION
 
-**You chose**: **Build Rewardify** (not Sentra)
+**You chose**: **Build Reward Relay** (not Sentra)
 
 **Why**:
 - ✅ Perfect founder-market fit (you ARE the customer)
@@ -21,10 +21,10 @@
 
 **What you're stopping**:
 - ❌ Sentra (30% done, but hard 70% remaining)
-- ❌ ClipCash (until Rewardify hits $1K MRR)
+- ❌ ClipCash (until Reward Relay hits $1K MRR)
 - ❌ MLaaS (kill completely - evaluation said so)
 
-**Commitment**: 90 days, Rewardify ONLY
+**Commitment**: 90 days, Reward Relay ONLY
 
 **Execution stance**: Validation-first via Next.js web; defer any mobile build until after Week 1 success signals.
 
@@ -345,7 +345,7 @@ You signed:
 
 > I, John Keto, commit to:
 > 1. ❌ STOP working on Sentra, ClipCash, MLaaS for 90 days
-> 2. ✅ BUILD Rewardify exclusively
+> 2. ✅ BUILD Reward Relay exclusively
 > 3. 📊 TRACK progress daily in this document
 > 4. 🔪 KILL if Week 12 validation fails (<$500 MRR)
 > 5. 🚀 SCALE if validation succeeds
@@ -592,7 +592,7 @@ npx create-next-app@latest rewardify --typescript --tailwind --app
 ## 🎉 YOU'RE READY
 
 You have:
-- ✅ The right idea (Rewardify > Sentra)
+- ✅ The right idea (Reward Relay > Sentra)
 - ✅ The right approach (web > mobile)
 - ✅ The right system (execution tracker + multi-agent)
 - ✅ The right motivation (want to finish something)

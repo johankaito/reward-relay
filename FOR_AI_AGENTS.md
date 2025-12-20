@@ -1,6 +1,6 @@
 # FOR AI CODING ASSISTANTS - START HERE
 
-**🤖 YOU ARE AN AI AGENT** tasked with building Rewardify
+**🤖 YOU ARE AN AI AGENT** tasked with building Reward Relay
 
 **📋 THIS FILE**: Your master execution guide
 **✅ FOLLOW**: Every specification exactly
@@ -10,7 +10,7 @@
 
 ## 🎯 YOUR MISSION
 
-Build **Rewardify** - a polished web app for Australian credit card churning automation.
+Build **Reward Relay** - a polished web app for Australian credit card churning automation.
 
 **Founder**: John Keto (solo, 10-20 hrs/week)
 **Timeline**: 8 weeks to launch
@@ -102,6 +102,53 @@ Build **Rewardify** - a polished web app for Australian credit card churning aut
 - Every async action shows loading
 - Disable buttons during loading
 - Use skeletons for data loading
+
+---
+
+## DESIGN BLUEPRINT (Mobbin-first)
+
+Use Mobbin for primary patterns, Pageflows to study multi-step journeys, and Nicely Done for component polish. Keep this direction consistent across all flows.
+
+**Direction & Tone**:
+- Light base with soft off-white background, deep navy/ink text, emerald/teal accent; subtle gradients for hero/timeline rails.
+- Typeface: modern grotesk (Space Grotesk/Manrope ok) with tabular numbers for money/dates; hierarchy via weight/size over color.
+- Layout: card-based panels, sticky top app bar with quick actions, desktop left rail, mobile bottom tab; generous spacing.
+- Motion: 180–220ms ease on hover/press; staggered list/timeline load; toasts for confirmations.
+
+**Inspiration Map**:
+- Onboarding/Auth: Mobbin email-first flows with inline validation and progress dots; Pageflows for step order (welcome → account → first card added).
+- Dashboard/Portfolio: Mobbin fintech dashboards (Ramp/Brex style) for summary tiles + insight callouts; Nicely Done list cells with status pills and inline actions.
+- Timeline/Reminders: Mobbin finance/habit timelines for “today” marker and colored bars; Pageflows for reminder opt-in confirmations.
+- Comparison/Recommendation: Mobbin pricing/compare tables with sticky headers; Nicely Done highlight badges and “Apply now” CTA.
+- Spend/Upload: Mobbin form patterns with inline calculators; Pageflows for upload → parse → review; Nicely Done progress trackers and review cards.
+- Billing/Upgrade: Mobbin paywalls/plan pickers with feature checklists; Pageflows for checkout steps.
+
+**Screens & States to Cover**:
+- First-run onboarding: welcome → value prop → create account → email verify → “Add your first card”; include loading, validation errors, resend, skip.
+- Card catalog & detail: search/filter/sort, detail drawer/page with offer, eligibility, churning rule; empty, skeleton, network error states.
+- Add/Edit card: select card, dates, status, notes; success toast, undo link, error retry; empty portfolio onboarding card; pro gate when >3 cards.
+- Timeline & reminders: responsive timeline with today marker, cancel/eligibility dates, status filters; reminder toggle per card/global default; empty, upcoming list, snoozed.
+- Recommendation & comparison: dashboard “Next card” module with rationale and net value; comparison builder (up to 5) with best-value highlight; not-enough-cards and paywall states.
+- Spending/analysis: manual spend input with live points math; CSV upload (upload → parsing → category review → insights); parsing/loading/error/no-insights states.
+- Billing & settings: plan picker (Free/Pro), upgrade intercept modal when hitting limits, Stripe checkout success/fail; settings for reminders/email/password with pending/success/error states.
+
+**Component Patterns**:
+- List rows: leading bank badge/icon, primary metric (net value or cancel date), secondary meta, trailing actions; full-row hover affordance.
+- Filters: pill filters with counts, clear-all, sticky bar on scroll.
+- Timeline: colored bars with subtle shadow, milestone dots, tooltip on hover/tap; month headers for orientation.
+- Insights: slim banners with icon and “Because you…” reasoning; inline action links.
+- Paywalls: blur/lock on gated modules, inline benefit bullets, clear exit path + upgrade CTA.
+
+---
+
+## PRICING / UPGRADE STRATEGY (Build for pay-on-proof)
+
+- Free tier: up to 3 cards, basic reminders (1 week), catalog, limited comparison, blurred proof preview (headline net value and next-card headline only).
+- Paywall trigger: once user adds 2+ cards or uploads CSV, show “Found value” panel (net value headline + next best card); actionable details (cancel-by dates, eligibility rules, full comparison, full reminders, CSV insights) gated to Pro.
+- Pro: standard price with Stripe coupons/trials (e.g., 30-day trial or first month $9) + money-back guarantee.
+- UX: inline intercepts on dashboard/timeline/comparison with: (1) headline value found, (2) what unlocks, (3) single CTA; avoid complex bundles.
+- Referrals: optional Stripe coupon credits (cash), no points as payment.
+- Implementation: enforce limits in code; use Stripe coupons/trials for intro offers; instrument upgrade funnel (proof view → upgrade).
 
 ---
 
@@ -265,7 +312,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Welcome to Rewardify</CardTitle>
+          <CardTitle>Welcome to Reward Relay</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">

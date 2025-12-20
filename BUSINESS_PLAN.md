@@ -15,7 +15,7 @@
 ### The One-Liner
 **"Turn every credit card into maximum rewards, automatically."**
 
-Rewardify is Australia's first automated credit card rewards optimization platform. We help Australians maximize credit card rewards through intelligent churning schedules, spending category optimization, and automated tracking—eliminating the manual spreadsheet work that currently defines the space.
+Reward Relay is Australia's first automated credit card rewards optimization platform. We help Australians maximize credit card rewards through intelligent churning schedules, spending category optimization, and automated tracking—eliminating the manual spreadsheet work that currently defines the space.
 
 ### The Opportunity
 - **Market**: 100,000+ active credit card churners in Australia
@@ -169,7 +169,7 @@ Rewardify is Australia's first automated credit card rewards optimization platfo
 
 ### Competitive Matrix
 
-| Feature | PointsHacks | Churner.com.au | US Apps | **Rewardify** |
+| Feature | PointsHacks | Churner.com.au | US Apps | **Reward Relay** |
 |---------|-------------|----------------|---------|---------------|
 | AU Card Database | ✅ Static | ✅ Basic | ❌ | ✅ Dynamic |
 | Churning Tracker | ❌ | ❌ | ⚠️ US only | ✅ |
@@ -262,7 +262,7 @@ Rewardify is Australia's first automated credit card rewards optimization platfo
 
 **Time Required**: 2-3 hours per rotation
 
-**Rewardify Automated Process**:
+**Reward Relay Automated Process**:
 1. Open app
 2. See "Optimal card to apply for: AMEX Platinum (346K points, cancel ANZ by Dec 15)"
 3. Click "Track Application"
@@ -280,15 +280,15 @@ Rewardify is Australia's first automated credit card rewards optimization platfo
 ### Core Value Proposition
 
 **For Active Churners**:
-"Stop tracking credit cards in spreadsheets. Rewardify automates your churning schedule, optimizes every dollar spent, and ensures you never miss an opportunity or violate bank rules."
+"Stop tracking credit cards in spreadsheets. Reward Relay automates your churning schedule, optimizes every dollar spent, and ensures you never miss an opportunity or violate bank rules."
 
 **For Casual Optimizers**:
-"Always use the right credit card. Rewardify tells you which card to use for every purchase to maximize rewards effortlessly."
+"Always use the right credit card. Reward Relay tells you which card to use for every purchase to maximize rewards effortlessly."
 
 ### Product Positioning
 
 **Positioning Statement**:
-"For Australian credit card churners who are tired of manual spreadsheet tracking, Rewardify is the automated rewards optimization platform that maximizes points earned while preventing costly mistakes—unlike static comparison sites like PointsHacks, we actively manage your entire churning strategy."
+"For Australian credit card churners who are tired of manual spreadsheet tracking, Reward Relay is the automated rewards optimization platform that maximizes points earned while preventing costly mistakes—unlike static comparison sites like PointsHacks, we actively manage your entire churning strategy."
 
 **Brand Personality**:
 - Smart but not pretentious
@@ -1013,7 +1013,7 @@ Rewardify is Australia's first automated credit card rewards optimization platfo
 
 **To succeed, you must**:
 1. ❌ STOP Sentra, ClipCash, MLaaS (kill all other projects)
-2. ✅ BUILD Rewardify exclusively for 90 days
+2. ✅ BUILD Reward Relay exclusively for 90 days
 3. 📊 MEASURE progress weekly (MRR, users, activation)
 4. 🔪 KILL if Month 3 validation fails (<$500 MRR)
 5. 🚀 SCALE if validation succeeds (double down)

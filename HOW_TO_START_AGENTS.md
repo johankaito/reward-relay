@@ -11,7 +11,7 @@
 
 **What You Say**:
 ```
-I'm continuing work on Rewardify - credit card churning SaaS for Australia.
+I'm continuing work on Reward Relay - credit card churning SaaS for Australia.
 
 Please read these files to understand current state:
 1. ~/gits/src/github.com/johankaito/ideas/rewardify/CURRENT_STATE.md
@@ -44,7 +44,7 @@ Current task: [Tell it what to work on, or let it read from CURRENT_STATE.md]
 
 **Open Claude Code → Say**:
 ```
-You are Agent A - Database Specialist for Rewardify.
+You are Agent A - Database Specialist for Reward Relay.
 
 Your mission: Setup Supabase database and schema.
 
@@ -72,7 +72,7 @@ Start now.
 
 **Open New Claude Code Window → Say**:
 ```
-You are Agent C - UI Specialist for Rewardify.
+You are Agent C - UI Specialist for Reward Relay.
 
 Your mission: Setup design system and build UI components.
 
@@ -102,7 +102,7 @@ Start now (you don't need Agent A to finish first).
 
 **Open Claude Code → Say**:
 ```
-You are Agent B - Auth Specialist for Rewardify.
+You are Agent B - Auth Specialist for Reward Relay.
 
 Your mission: Build authentication system.
 
@@ -132,7 +132,7 @@ Waiting for Agent A...
 
 **Open Claude Code → Say**:
 ```
-You are Agent D - Integration Specialist for Rewardify.
+You are Agent D - Integration Specialist for Reward Relay.
 
 Your mission: Assemble all components into working application.
 
@@ -320,7 +320,7 @@ Agent C (UI) can work in parallel (doesn't need this)
 
 **You Say to New Claude Code Session**:
 ```
-Continuing Rewardify build.
+Continuing Reward Relay build.
 
 Context files (read in order):
 1. ~/ideas/rewardify/CURRENT_STATE.md (current progress)
@@ -629,7 +629,7 @@ npx create-next-app@latest rewardify --typescript --tailwind --app
 **Then**:
 Open Claude Code and say:
 ```
-I just created the Rewardify project.
+I just created the Reward Relay project.
 
 Continue with Week 1 Day 1 tasks from:
 ~/ideas/rewardify/WEEK_1_PLAN.md

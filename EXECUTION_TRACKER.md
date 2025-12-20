@@ -4,7 +4,7 @@
 **Target Launch**: [Start date + 8 weeks]
 **Target Validation**: [Start date + 12 weeks]
 
-**Commitment**: I will work on ONLY Rewardify for 90 days. No other projects.
+**Commitment**: I will work on ONLY Reward Relay for 90 days. No other projects.
 **Execution stance**: Validation-first via Next.js web; keep logic portable, but defer mobile work until after Week 1 proves value.
 
 ---
@@ -13,7 +13,7 @@
 
 I, John Keto, commit to:
 1. ❌ **STOP** working on Sentra, ClipCash, MLaaS for 90 days
-2. ✅ **BUILD** Rewardify exclusively
+2. ✅ **BUILD** Reward Relay exclusively
 3. 📊 **TRACK** progress daily in this document
 4. 🔪 **KILL** if Week 12 validation fails (<$500 MRR)
 5. 🚀 **SCALE** if validation succeeds
@@ -39,7 +39,7 @@ I, John Keto, commit to:
 **Actual Progress** (fill in daily):
 - Wed: _____________________
 - Thu: _____________________
-- Fri: _____________________
+- Fri: Scaffolded Next.js app (app/), installed deps, shadcn initialized, Supabase env set, switched to pnpm, built /login + /signup + /dashboard wired to user_cards, added password reset/update, added /cards catalog + middleware + app shell, applied Supabase schema/seed, generated live types
 - Sat: _____________________
 - Sun: _____________________
 - Mon: _____________________
@@ -345,7 +345,7 @@ I, John Keto, commit to:
 
 ## KILL CRITERIA (Permission to Stop)
 
-**You MUST kill Rewardify if**:
+**You MUST kill Reward Relay if**:
 1. Week 4: Can't get 5 friends to use it
 2. Week 8: Can't launch publicly
 3. Week 12: <$200 MRR (<5 paying users)
@@ -366,7 +366,7 @@ I, John Keto, commit to:
 **Tweet Template** (to post when you start):
 
 ```
-I'm building Rewardify - credit card churning automation for Australians.
+I'm building Reward Relay - credit card churning automation for Australians.
 
 90-day commitment:
 • Week 8: Launch on r/AusFinance

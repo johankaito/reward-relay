@@ -252,7 +252,7 @@
 ### In Code Repo README (`/rewardify/README.md`):
 
 ```markdown
-# Rewardify
+# Reward Relay
 
 Credit card churning automation for Australians.
 
@@ -276,7 +276,7 @@ Credit card churning automation for Australians.
 ### In Planning README (`/ideas/rewardify/README.md`):
 
 ```markdown
-# Rewardify - Planning Hub
+# Reward Relay - Planning Hub
 
 **Code Repository**: [../../rewardify/](../../rewardify/)
 

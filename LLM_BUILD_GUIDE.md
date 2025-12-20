@@ -1,6 +1,6 @@
 # REWARDIFY - LLM-EXECUTABLE BUILD GUIDE
 
-**Purpose**: This document can be given to ANY LLM (Claude, ChatGPT, etc.) to build Rewardify from scratch.
+**Purpose**: This document can be given to ANY LLM (Claude, ChatGPT, etc.) to build Reward Relay from scratch.
 **Format**: Step-by-step instructions with exact commands, code snippets, and success criteria.
 **Target**: 8-week build timeline, solo developer, 10-20 hours/week.
 
@@ -21,7 +21,7 @@
 
 **If you are the human developer**:
 1. Give this document to your LLM assistant (Claude, ChatGPT, etc.)
-2. Say: "Build Rewardify following this guide exactly"
+2. Say: "Build Reward Relay following this guide exactly"
 3. Monitor progress via EXECUTION_TRACKER.md
 4. Intervene only if LLM gets stuck >30 minutes
 

@@ -31,7 +31,7 @@
 | **WalletFlo** | Tool | ❌ US Only | ⚠️ Basic | ❌ None | Free | 🟢 Low |
 | **Canstar** | Comparison | ✅ High | ❌ None | ❌ None | Free | 🟢 Low |
 | **Finder** | Comparison | ✅ High | ❌ None | ❌ None | Free | 🟢 Low |
-| **Rewardify** | **App** | ✅ **High** | ✅ **High** | ✅ **Yes** | **$49/mo** | - |
+| **Reward Relay** | **App** | ✅ **High** | ✅ **High** | ✅ **Yes** | **$49/mo** | - |
 
 ---
 
@@ -207,7 +207,7 @@
 
 **Threat Level**: 🟢 **Low**
 - Not relevant to AU market
-- More PointsHacks competitor than Rewardify competitor
+- More PointsHacks competitor than Reward Relay competitor
 
 ---
 
@@ -447,7 +447,7 @@
 | **MaxRewards** | Subscription | $8/mo | $96 | Full automation (US) |
 | **CardPointers** | Freemium | $50/yr | $50 | Card optimization |
 | **WalletFlo** | Free | $0 | $0 | Basic tools |
-| **Rewardify** | **Freemium** | **$49/mo** | **$588** | **Full AU automation** |
+| **Reward Relay** | **Freemium** | **$49/mo** | **$588** | **Full AU automation** |
 
 **Pricing Analysis**:
 - Our $49/month is premium vs competitors

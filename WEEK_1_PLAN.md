@@ -33,7 +33,7 @@
 - ❌ Spending optimization (nice-to-have)
 - ❌ Statement analysis (later)
 
-**Week 1 delivers JUST #1-4. Nothing more.**
+**Week 1 delivers JUST #1-4. Nothing more.** (Free → Pay-on-Proof path set up later)
 
 ---
 
@@ -84,7 +84,7 @@ npm install tailwindcss shadcn/ui
 # 3. Initialize git
 git init
 git add .
-git commit -m "Initial commit: Rewardify"
+git commit -m "Initial commit: Reward Relay"
 ```
 
 **Evening** (1 hour):

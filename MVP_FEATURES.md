@@ -439,7 +439,7 @@ Return ONLY the category: [Groceries, Fuel, Dining, Travel, Entertainment, Bills
 ## FREE vs PRO TIER (Feature Gating)
 
 ### Free Tier (Forever Free)
-**Goal**: Acquisition + proof of value
+**Goal**: Acquisition + proof of value before payment
 
 **Features**:
 - ✅ Track up to 3 cards
@@ -447,17 +447,20 @@ Return ONLY the category: [Groceries, Fuel, Dining, Travel, Entertainment, Bills
 - ✅ Card comparison (up to 3 cards)
 - ✅ Email reminders (1 week before only)
 - ✅ Card database access
+- ✅ “Proof” preview: show headline net value found (blur details) and next-card recommendation headline to demonstrate value before upgrade
 
 **Limitations**:
 - ⚠️ Max 3 cards tracked
 - ⚠️ Limited reminders
 - ⚠️ No spending optimization
 - ⚠️ No statement analysis
+- ⚠️ Limited comparison (max 3 cards)
+- ⚠️ No cancel-by date details or eligibility rules beyond basics
 
 ---
 
 ### Pro Tier ($49/month)
-**Goal**: Core monetization
+**Goal**: Core monetization; pay-on-proof upgrade
 
 **All Free Features PLUS**:
 - ✅ Unlimited cards
@@ -468,6 +471,8 @@ Return ONLY the category: [Groceries, Fuel, Dining, Travel, Entertainment, Bills
 - ✅ Statement upload & analysis
 - ✅ Dashboard insights
 - ✅ Priority email support
+- ✅ Full “proof” details: net value breakdown, cancel-by dates per card, eligibility rules, full recommendations, CSV insights unlocked
+- ✅ Remove comparison limit; unlock apply links
 
 ---
 

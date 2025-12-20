@@ -3,17 +3,17 @@
 **⚡ FOR SESSION CONTINUITY**: Update this after every coding session
 **🤖 FOR NEW AI AGENTS**: Read this FIRST to understand current progress
 
-**Last Updated**: 2025-12-17 (Initial State)
-**Week**: 0 of 8 (Planning Complete, Build Not Started)
-**Overall Progress**: 0% (Planning: 100%, Code: 0%)
+**Last Updated**: 2025-12-19 11:02 SAST
+**Week**: 1 of 8 (Build Started)
+**Overall Progress**: ~10% (Planning: 100%, Code: Scaffolding started)
 
 ---
 
 ## 📊 OVERALL STATUS
 
-**Phase**: Planning Complete → Ready to Build
-**Next Milestone**: Week 1 - Foundation (Auth + Card Database)
-**Timeline**: On schedule (not started)
+**Phase**: Week 1 - Foundation (Day 1 setup in progress)
+**Next Milestone**: Auth + Card database ready
+**Timeline**: On schedule (scaffolding underway)
 **Blockers**: None (waiting for execution to start)
 **Execution stance**: Validation-first via Next.js web; keep logic portable (lib + thin Supabase client), defer mobile work until value is proven.
 
@@ -33,27 +33,41 @@
 - ✅ Engineering standards defined
 - ✅ Design system specified
 
-### Technical Setup (0%):
-- ❌ Code repository not created yet
-- ❌ Supabase project not created yet
-- ❌ No code written yet
+### Technical Setup (~85%):
+- ✅ Supabase project provisioned (URL + anon key configured in `.env.local`)
+- ✅ Next.js app scaffolded in `app/` (TypeScript, Tailwind, App Router, src/ alias)
+- ✅ shadcn initialized (neutral base color) and core UI components added (button, input, label, card, dialog, select, badge, sonner)
+- ✅ Supabase client placeholder created (`src/lib/supabase/client.ts`)
+- ✅ Database types generated from live Supabase schema (`src/types/database.types.ts`)
+- ✅ Package manager: pnpm (pnpm-lock.yaml, packageManager pinned)
+- ✅ Auth screens scaffolded (`/login`, `/signup`) with Supabase password auth; dashboard placeholder with sign-out
+- ✅ Toaster + theme provider wired in root layout
+- ✅ Cards catalog page with filters pulling from Supabase
+- ✅ Middleware protects /dashboard and /cards
+- ✅ App shell layout with nav + sign-out
+- ✅ Schema + seed applied in Supabase (cards/user_cards/spending_profiles)
+- ✅ Password reset + update flow added
+- ✅ Dashboard wired to `user_cards` with stats and empty state
+- ✅ **GitHub Actions CI/CD** pipeline configured (`.github/workflows/ci.yml`)
+- ✅ **Vercel deployment** gated by GitHub Actions (vercel.json disables auto-deploy)
+- ✅ **Supabase RLS policies** system (`supabase/rls-policies.sql`)
+- ✅ **Button hover states** fixed globally with professional, subtle effects
+- ✅ **Form autocomplete** enabled for password managers
+- ✅ **Footer** added to home page with copyright and legal links
+- ✅ **Puppeteer testing** system for interactive UI testing
+- ❌ Add/edit user cards form not built yet
 
-**Status**: Ready to execute, waiting for Day 1 start
+**Status**: Execution started; continue Week 1 tasks; deployment infrastructure ready
 
 ---
 
 ## 🔄 IN PROGRESS
 
-**Current Task**: None (planning complete, awaiting build start)
-
-**When Build Starts**, update to:
-```markdown
-**Current Task**: Week 1 Day 1 - Project setup
-**Agent**: [Agent name or human]
-**Started**: [Timestamp]
-**ETA**: [When expected to finish]
-**Status**: [On track / Blocked / Delayed]
-```
+**Current Task**: Week 1 Day 1 - Project setup (code scaffold + deps)
+**Agent**: Main thread (Codex)
+**Started**: 2025-12-19 10:30 SAST
+**ETA**: 2025-12-19
+**Status**: On track
 
 ---
 
@@ -75,19 +89,21 @@
 
 ## 🗓️ WEEK PROGRESS
 
-### Week 1: Foundation (Not Started)
+### Week 1: Foundation (In Progress)
 **Goal**: Auth + Card database with 30 AU cards
 
 **Tasks**:
-- [ ] Project setup (Next.js + Supabase)
+- [x] Project setup (Next.js + base deps in `app/`)
+- [x] Supabase credentials added to `.env.local`
+- [x] shadcn initialized + core UI components scaffolded
 - [ ] Auth flow (login, signup)
 - [ ] Database schema created
 - [ ] 30 Australian cards added
 - [ ] Card catalog UI
 - [ ] Protected routes working
 
-**Status**: 0% complete
-**Blockers**: None (ready to start)
+**Status**: ~25% complete
+**Blockers**: None (next: schema + auth)
 
 ### Week 2-8: (Not Started)
 See EXECUTION_TRACKER.md for full breakdown

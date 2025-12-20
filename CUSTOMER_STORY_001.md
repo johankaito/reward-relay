@@ -30,7 +30,7 @@
 
 ## PURPOSE OF THIS DOCUMENT
 
-This document captures YOUR real experience rotating a credit card. This is Customer Story #1—the foundation of Rewardify.
+This document captures YOUR real experience rotating a credit card. This is Customer Story #1—the foundation of Reward Relay.
 
 **Why This Matters**:
 1. **Validates Product Need**: If YOU need this, others like you need it
@@ -311,7 +311,7 @@ Given the value above, **how much would you pay per month?**
 ## DISCOVERY & ADOPTION
 
 ### How You'd Find This Tool
-**If Rewardify existed today, how would you discover it?**
+**If Reward Relay existed today, how would you discover it?**
 
 - [ ] r/AusFinance post
 - [ ] PointsHacks mention
@@ -321,7 +321,7 @@ Given the value above, **how much would you pay per month?**
 - [ ] Other: _______________
 
 ### Would You Try It?
-**If you saw Rewardify launched on r/AusFinance tomorrow...**
+**If you saw Reward Relay launched on r/AusFinance tomorrow...**
 
 - [ ] Would sign up immediately (free tier)
 - [ ] Would wait to see reviews first
@@ -364,7 +364,7 @@ Given the value above, **how much would you pay per month?**
 ---
 
 ### Would You Switch?
-**Would you replace your current method with Rewardify?**
+**Would you replace your current method with Reward Relay?**
 
 - [ ] Yes, completely (would stop using spreadsheet)
 - [ ] Partially (would use alongside existing tools)
@@ -387,7 +387,7 @@ Given the value above, **how much would you pay per month?**
 ---
 
 ### What Would Build Trust?
-**What would make you trust Rewardify with your financial data?**
+**What would make you trust Reward Relay with your financial data?**
 
 - [ ] Open source (can see the code)
 - [ ] No bank login required (manual entry only)
@@ -421,8 +421,8 @@ Given the value above, **how much would you pay per month?**
 
 ---
 
-### Would Rewardify Have Helped?
-**Looking back, would Rewardify have:**
+### Would Reward Relay Have Helped?
+**Looking back, would Reward Relay have:**
 - [ ] Saved you time? (how much?)
 - [ ] Helped you make better decision?
 - [ ] Prevented any mistakes?
@@ -493,4 +493,4 @@ Given the value above, **how much would you pay per month?**
 - [ ] Follow up 1 month later (did you make right choice?)
 - [ ] Share learnings with me (we'll use this to build MVP)
 
-**This document is your blueprint. Fill it out completely. It's the foundation of Rewardify.**
+**This document is your blueprint. Fill it out completely. It's the foundation of Reward Relay.**

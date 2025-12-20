@@ -224,7 +224,7 @@ Supabase credentials:
 **Create**: `~/ideas/rewardify/CURRENT_STATE.md` (update after each session)
 
 ```markdown
-# Rewardify - Current State
+# Reward Relay - Current State
 
 **Last Updated**: 2025-12-XX XX:XX
 **Week**: X of 8
@@ -352,7 +352,7 @@ Small: text-sm text-gray-600 (Meta info)
 **Mobile (375px)**:
 ```
 ┌─────────────────────┐
-│  ≡  Rewardify    🔔 │
+│  ≡  Reward Relay    🔔 │
 ├─────────────────────┤
 │ Hi John             │
 │                     │
@@ -381,7 +381,7 @@ Small: text-sm text-gray-600 (Meta info)
 **Desktop (1024px)**:
 ```
 ┌──────────────────────────────────────────────────────┐
-│  Rewardify          Dashboard  Cards  Calendar    🔔 │
+│  Reward Relay          Dashboard  Cards  Calendar    🔔 │
 ├────────┬─────────────────────────────────────────────┤
 │        │  Hi John, here's your overview             │
 │ [Nav]  │                                             │
@@ -567,7 +567,7 @@ Every agent creates a handoff file when done:
 
 **You (Human) Say**:
 ```
-I'm continuing work on Rewardify.
+I'm continuing work on Reward Relay.
 
 Context:
 - Read: ~/ideas/rewardify/CURRENT_STATE.md (shows what's done)
@@ -961,7 +961,7 @@ mkdir -p ~/ideas/rewardify/handoffs
 **File**: `~/ideas/rewardify/CURRENT_STATE.md`
 
 ```markdown
-# Rewardify - Current State
+# Reward Relay - Current State
 
 **Last Updated**: 2025-12-17 15:30
 **Week**: 1 of 8
