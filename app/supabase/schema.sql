@@ -52,20 +52,8 @@ create table if not exists public.spending_profiles (
   created_at timestamptz default now()
 );
 
--- Row Level Security
-alter table public.user_cards enable row level security;
-alter table public.spending_profiles enable row level security;
-
--- Policies
-create policy "Allow individual access to own user_cards" on public.user_cards
-  for all
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
-
-create policy "Allow individual access to own spending_profiles" on public.spending_profiles
-  for all
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+-- Row Level Security policies are in rls-policies.sql
+-- Run that file separately after schema is applied
 
 -- Seed 30 Australian cards (minimal fields). Edit as needed.
 insert into public.cards (bank, name, network, annual_fee, welcome_bonus_points, bonus_spend_requirement, bonus_spend_currency, bonus_spend_window_months, points_currency, earn_rate_primary, earn_rate_secondary, min_income, notes, application_link)

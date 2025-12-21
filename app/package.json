@@ -10,8 +10,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "migrate:execute": "sh -c 'psql \"$DATABASE_URL\" -f $SQL_FILE'",
+    "migrate:schema": "SQL_FILE=supabase/schema.sql pnpm migrate:execute",
     "migrate:rls": "SQL_FILE=supabase/rls-policies.sql pnpm migrate:execute",
-    "migrate:all": "pnpm migrate:rls",
+    "migrate:all": "pnpm migrate:schema && pnpm migrate:rls",
     "prepare": "husky install"
   },
   "dependencies": {
