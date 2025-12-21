@@ -36,8 +36,7 @@ jobs:
         run: pnpm install
 
       - name: Run database migrations
-        run: pnpm migrate:all || echo "⚠️ Migrations failed - may need to run manually"
-        continue-on-error: true
+        run: pnpm migrate:all
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
