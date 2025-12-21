@@ -96,6 +96,7 @@ jobs:
   # Build test (ensures the app can build)
   build:
     runs-on: ubuntu-latest
+    environment: production
     defaults:
       run:
         working-directory: app
