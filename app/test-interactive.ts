@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 /**
- * Interactive Reward Relay Puppeteer Test
+ * Interactive RewardRelay Puppeteer Test
  *
  * Logs in with credentials and tests the app interactively:
  * - Logs in

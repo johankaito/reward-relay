@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 /**
- * Reward Relay Puppeteer Monitoring Script
+ * RewardRelay Puppeteer Monitoring Script
  *
  * Continuously monitors the Next.js app by:
  * - Navigating through key pages every 30 seconds
@@ -38,13 +38,13 @@ interface MonitoringLog {
   screenshot: string;
 }
 
-class Reward RelayMonitor {
+class RewardRelayMonitor {
   private browser: Browser | null = null;
   private logs: MonitoringLog[] = [];
   private iterationCount = 0;
 
   async setup(): Promise<void> {
-    console.log('🚀 Setting up Reward Relay Monitor...');
+    console.log('🚀 Setting up RewardRelay Monitor...');
 
     // Create output directory
     await mkdir(OUTPUT_DIR, { recursive: true });
@@ -237,7 +237,7 @@ class Reward RelayMonitor {
 
 // Main execution
 async function main() {
-  const monitor = new Reward RelayMonitor();
+  const monitor = new RewardRelayMonitor();
 
   try {
     await monitor.setup();
