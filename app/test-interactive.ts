@@ -285,7 +285,7 @@ class InteractiveTest {
 
     // Enable console logging from the page
     page.on('console', msg => console.log(`     [PAGE] ${msg.text()}`));
-    page.on('pageerror', error => console.error(`     [ERROR] ${error.message}`));
+    page.on("pageerror", (error) => console.error(`     [ERROR] ${error instanceof Error ? error.message : String(error)}`));
 
     try {
       // Wait for server

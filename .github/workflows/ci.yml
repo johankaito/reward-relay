@@ -10,6 +10,9 @@ jobs:
   # Type checking and linting for all branches
   typecheck:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     steps:
       - uses: actions/checkout@v4
 
@@ -21,6 +24,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
+          cache-dependency-path: 'app/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
@@ -31,6 +35,9 @@ jobs:
   # Linting (optional, doesn't block deployment)
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     steps:
       - uses: actions/checkout@v4
 
@@ -42,6 +49,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
+          cache-dependency-path: 'app/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
@@ -52,6 +60,9 @@ jobs:
   # Build test (ensures the app can build)
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     steps:
       - uses: actions/checkout@v4
 
@@ -63,6 +74,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
+          cache-dependency-path: 'app/pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install
@@ -78,6 +90,9 @@ jobs:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     needs: [typecheck, build]
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     environment:
       name: production
       url: ${{ steps.deploy.outputs.url }}

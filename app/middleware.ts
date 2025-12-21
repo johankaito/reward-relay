@@ -22,11 +22,11 @@ export async function middleware(request: NextRequest) {
       get(name: string) {
         return request.cookies.get(name)?.value
       },
-      set(name: string, value: string, options: Parameters<typeof response.cookies.set>[1]) {
-        response.cookies.set({ name, value, ...options })
+      set(name: string, value: string, options: any) {
+        response.cookies.set(name, value, options)
       },
-      remove(name: string, options: Parameters<typeof response.cookies.set>[1]) {
-        response.cookies.set({ name, value: "", ...options, maxAge: 0 })
+      remove(name: string, options: any) {
+        response.cookies.set(name, "", { ...options, maxAge: 0 })
       },
     },
   })

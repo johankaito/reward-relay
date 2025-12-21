@@ -1,5 +1,3 @@
 #!/bin/sh
 
-# Temporarily disabled - fix TypeScript errors first
-# cd app && pnpm typecheck
-exit 0
+cd app && pnpm typecheck

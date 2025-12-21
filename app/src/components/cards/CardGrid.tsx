@@ -1,5 +1,8 @@
 import { CardItem, type CardRecord } from "./CardItem"
 
+// Re-export CardRecord for use in other files
+export type { CardRecord }
+
 type Props = {
   cards: CardRecord[]
 }

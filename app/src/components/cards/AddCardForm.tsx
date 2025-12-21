@@ -16,13 +16,7 @@ import {
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase/client"
 import type { Database } from "@/types/database.types"
-
-type CardRecord = {
-  id: string
-  bank: string
-  name: string
-  annual_fee: number | null
-}
+import type { CardRecord } from "./CardGrid"
 
 type Props = {
   cards: CardRecord[]
@@ -168,13 +162,13 @@ export function AddCardForm({ cards, onCreated }: Props) {
             <Label htmlFor="status" className="text-slate-200">
               Status
             </Label>
-            <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
+            <Select value={status ?? undefined} onValueChange={(v) => setStatus(v as typeof status)}>
               <SelectTrigger className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {statuses.map((s) => (
-                  <SelectItem key={s} value={s}>
+                  <SelectItem key={s ?? "active"} value={s ?? "active"}>
                     {s}
                   </SelectItem>
                 ))}

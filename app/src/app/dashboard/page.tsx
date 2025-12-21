@@ -31,7 +31,7 @@ export default function DashboardPage() {
         return
       }
 
-      setEmail(session.user.email)
+      setEmail(session.user.email ?? null)
 
       const { data, error } = await supabase
         .from("user_cards")

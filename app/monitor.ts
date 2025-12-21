@@ -95,7 +95,7 @@ class RewardRelayMonitor {
 
     // Capture errors
     page.on('pageerror', (error) => {
-      const errorMsg = `Page Error: ${error.message}`;
+      const errorMsg = `Page Error: ${error instanceof Error ? error.message : String(error)}`;
       errors.push(errorMsg);
       console.error(`  ❌ ${errorMsg}`);
     });
