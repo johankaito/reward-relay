@@ -75,7 +75,10 @@ export default function CardsPage() {
           </div>
         </div>
 
-        <AddCardForm cards={cards} />
+        <AddCardForm cards={cards} onCreated={() => {
+          // Redirect to dashboard to see the newly added card
+          window.location.href = '/dashboard';
+        }} />
 
         <CardFilters
           cards={cards}

@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { Pencil, Trash2 } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { EditCardModal } from "@/components/cards/EditCardModal"
 import { supabase } from "@/lib/supabase/client"
 import type { Database } from "@/types/database.types"
 
@@ -19,37 +21,48 @@ export default function DashboardPage() {
   const [email, setEmail] = useState<string | null>(null)
   const [cards, setCards] = useState<UserCard[]>([])
   const [loading, setLoading] = useState(true)
+  const [editingCard, setEditingCard] = useState<UserCard | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
-  useEffect(() => {
-    const load = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
+  const loadCards = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
 
-      if (!session) {
-        router.replace("/login")
-        return
-      }
-
-      setEmail(session.user.email ?? null)
-
-      const { data, error } = await supabase
-        .from("user_cards")
-        .select("*")
-        .order("created_at", { ascending: false })
-
-      if (error) {
-        toast.error(error.message || "Unable to load your cards")
-        setLoading(false)
-        return
-      }
-
-      setCards(data || [])
-      setLoading(false)
+    if (!session) {
+      router.replace("/login")
+      return
     }
 
-    load()
+    setEmail(session.user.email ?? null)
+
+    const { data, error } = await supabase
+      .from("user_cards")
+      .select("*")
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      toast.error(error.message || "Unable to load your cards")
+      setLoading(false)
+      return
+    }
+
+    setCards(data || [])
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadCards()
   }, [router])
+
+  const handleEditCard = (card: UserCard) => {
+    setEditingCard(card)
+    setIsEditModalOpen(true)
+  }
+
+  const handleUpdateComplete = () => {
+    loadCards() // Reload cards after edit/delete
+  }
 
   const stats = useMemo(() => {
     const active = cards.filter((c) => c.status === "active").length
@@ -168,6 +181,7 @@ export default function DashboardPage() {
                     <div
                       key={card.id}
                       className="flex flex-col gap-3 rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-4 shadow-sm"
+                      data-card-item
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
@@ -178,9 +192,19 @@ export default function DashboardPage() {
                             {card.name || "Untitled card"}
                           </p>
                         </div>
-                        <Badge className="capitalize" style={statusStyle(status)}>
-                          {status}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge className="capitalize" style={statusStyle(status)}>
+                            {status}
+                          </Badge>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleEditCard(card)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
                       <div className="grid grid-cols-2 gap-3 text-xs text-slate-300 md:text-sm">
                         <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2">
@@ -213,6 +237,16 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      <EditCardModal
+        card={editingCard}
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setEditingCard(null)
+        }}
+        onUpdate={handleUpdateComplete}
+      />
     </AppShell>
   )
 }

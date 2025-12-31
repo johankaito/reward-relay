@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Home, LayoutGrid, LogOut, Menu, Shield, Sparkles } from "lucide-react"
+import { Home, LayoutGrid, LogOut, Menu, Shield, Sparkles, History, Calculator } from "lucide-react"
 import { useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,8 @@ import { supabase } from "@/lib/supabase/client"
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/cards", label: "Cards", icon: LayoutGrid },
+  { href: "/history", label: "History", icon: History },
+  { href: "/compare", label: "Compare", icon: Calculator },
 ]
 
 type AppShellProps = {
