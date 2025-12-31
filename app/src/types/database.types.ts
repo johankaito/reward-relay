@@ -163,6 +163,50 @@ export type Database = {
           },
         ]
       }
+      spending_transactions: {
+        Row: {
+          id: string
+          user_card_id: string | null
+          user_id: string | null
+          amount: number
+          description: string | null
+          transaction_date: string
+          category: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_card_id?: string | null
+          user_id?: string | null
+          amount: number
+          description?: string | null
+          transaction_date?: string
+          category?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_card_id?: string | null
+          user_id?: string | null
+          amount?: number
+          description?: string | null
+          transaction_date?: string
+          category?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "spending_transactions_user_card_id_fkey"
+            columns: ["user_card_id"]
+            isOneToOne: false
+            referencedRelation: "user_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
