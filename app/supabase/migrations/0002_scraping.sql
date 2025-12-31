@@ -1,3 +1,6 @@
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Add scraping-related fields to cards table
 ALTER TABLE public.cards
 ADD COLUMN IF NOT EXISTS last_scraped_at TIMESTAMPTZ,
@@ -7,7 +10,7 @@ ADD COLUMN IF NOT EXISTS raw_data JSONB;
 
 -- Track scraping history
 CREATE TABLE IF NOT EXISTS public.scrape_logs (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   source TEXT NOT NULL,
   status TEXT NOT NULL CHECK (status IN ('success', 'error', 'partial')),
   cards_updated INTEGER DEFAULT 0,
@@ -17,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.scrape_logs (
 
 -- Track card changes over time
 CREATE TABLE IF NOT EXISTS public.card_history (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   card_id UUID REFERENCES public.cards(id) ON DELETE CASCADE,
   field_name TEXT NOT NULL,
   old_value TEXT,
@@ -54,7 +57,7 @@ CREATE POLICY "Anyone can read card history"
 CREATE POLICY "Only admins can write card history"
   ON public.card_history
   FOR INSERT
-  USING (
+  WITH CHECK (
     auth.jwt() ->> 'email' LIKE '%@rewardrelay.au'
     OR auth.jwt() ->> 'email' = 'john.g.keto+rewardrelay@gmail.com'
   );

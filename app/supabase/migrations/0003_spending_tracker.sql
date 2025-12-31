@@ -1,3 +1,6 @@
+-- Enable UUID extension (if not already enabled)
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Add spending tracking fields to user_cards table
 ALTER TABLE public.user_cards
 ADD COLUMN IF NOT EXISTS current_spend DECIMAL(10,2) DEFAULT 0,
@@ -5,7 +8,7 @@ ADD COLUMN IF NOT EXISTS spend_updated_at TIMESTAMPTZ DEFAULT NOW();
 
 -- Create transactions table for detailed spending tracking
 CREATE TABLE IF NOT EXISTS public.spending_transactions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_card_id UUID REFERENCES public.user_cards(id) ON DELETE CASCADE,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   amount DECIMAL(10,2) NOT NULL,
