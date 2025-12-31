@@ -447,6 +447,54 @@ For issues, questions, or feature requests:
 
 ---
 
+## 🧪 Testing
+
+Comprehensive automated testing suite using Puppeteer for E2E validation.
+
+### Test Strategy: Login-Only
+
+**Philosophy**: We test our application features, not Supabase's authentication.
+
+Tests use a **pre-created test user** and login-only approach:
+- No signup testing (Supabase handles this)
+- No need to toggle email confirmation settings
+- Repeatable and reliable tests
+- Works with production auth configuration
+
+### One-Time Setup
+
+**Create test user once** (manually):
+1. Visit `http://localhost:3000/signup`
+2. Sign up with: `john.g.keto+rewardrelay-test@gmail.com`
+3. Password: `TestPass123!`
+4. Confirm email if required
+
+**Optional**: Add to `.env.local`:
+```bash
+TEST_EMAIL=john.g.keto+rewardrelay-test@gmail.com
+TEST_PASSWORD=TestPass123!
+```
+
+### Running Tests
+
+```bash
+# Full comprehensive test suite (all 7 features)
+pnpm test
+
+# Quick smoke tests (critical paths only)
+pnpm test:smoke
+
+# Regression tests before committing
+pnpm test:regression
+
+# Watch mode for continuous testing during development
+pnpm test:watch
+```
+
+For detailed testing documentation, see [TESTING.md](./TESTING.md).
+
+---
+
 ## 📊 Project Status
 
 **Current Version**: MVP Beta (90% Complete)

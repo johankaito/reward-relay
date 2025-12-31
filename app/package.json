@@ -13,7 +13,12 @@
     "migrate:schema": "SQL_FILE=supabase/schema.sql pnpm migrate:execute",
     "migrate:rls": "SQL_FILE=supabase/rls-policies.sql pnpm migrate:execute",
     "migrate:all": "pnpm migrate:schema && pnpm migrate:rls",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "tsx comprehensive-test.ts",
+    "test:smoke": "tsx testing-agent.ts smoke",
+    "test:regression": "tsx testing-agent.ts regression",
+    "test:watch": "tsx testing-agent.ts watch",
+    "precommit": "pnpm test:smoke"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
