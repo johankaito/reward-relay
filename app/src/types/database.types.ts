@@ -113,9 +113,11 @@ export type Database = {
           cancellation_date: string | null
           card_id: string | null
           created_at: string | null
+          current_spend: number | null
           id: string
           name: string | null
           notes: string | null
+          spend_updated_at: string | null
           status: string | null
           user_id: string
         }
@@ -127,9 +129,11 @@ export type Database = {
           cancellation_date?: string | null
           card_id?: string | null
           created_at?: string | null
+          current_spend?: number | null
           id?: string
           name?: string | null
           notes?: string | null
+          spend_updated_at?: string | null
           status?: string | null
           user_id: string
         }
@@ -141,9 +145,11 @@ export type Database = {
           cancellation_date?: string | null
           card_id?: string | null
           created_at?: string | null
+          current_spend?: number | null
           id?: string
           name?: string | null
           notes?: string | null
+          spend_updated_at?: string | null
           status?: string | null
           user_id?: string
         }
