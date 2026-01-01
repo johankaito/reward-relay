@@ -8,9 +8,13 @@ on:
 
 jobs:
   # Database migrations (only runs on master branch pushes)
+  # NOTE: Non-blocking - deployment proceeds even if migrations fail
+  # SETUP REQUIRED: Set DATABASE_URL secret to direct connection (not pooler):
+  #   postgres://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
   migrate:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    continue-on-error: true
     environment: production
     defaults:
       run:
@@ -123,11 +127,12 @@ jobs:
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-  # Deploy to Vercel (only after successful checks and migrations)
+  # Deploy to Vercel (only after successful checks)
   deploy-vercel:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: [migrate, typecheck, build]
+    needs: [typecheck, build]
     runs-on: ubuntu-latest
     defaults:
       run:
