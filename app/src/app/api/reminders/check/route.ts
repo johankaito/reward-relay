@@ -7,6 +7,9 @@ import {
   get7DayReminderEmail,
 } from "@/lib/email/templates";
 
+// Force dynamic rendering to avoid build-time evaluation
+export const dynamic = 'force-dynamic';
+
 // Use service role for admin access
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
