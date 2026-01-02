@@ -151,9 +151,6 @@ jobs:
     environment:
       name: production
       url: ${{ steps.deploy.outputs.url }}
-    defaults:
-      run:
-        working-directory: app
 
     steps:
       - name: Checkout code
