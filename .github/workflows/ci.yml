@@ -9,6 +9,7 @@ on:
 jobs:
   # Database migrations (only runs on master branch pushes)
   # NOTE: Non-blocking - deployment proceeds even if migrations fail
+  # Uses IPv4 resolution to avoid GitHub Actions IPv6 connectivity issues
   # SETUP REQUIRED: Configure these GitHub secrets:
   #   - SUPABASE_ACCESS_TOKEN (from https://supabase.com/dashboard/account/tokens)
   #   - SUPABASE_PROJECT_REF (project ID, e.g., "iexqzpttbnylbxcuxhfa")
@@ -46,13 +47,18 @@ jobs:
         with:
           version: latest
 
-      - name: Link Supabase project
-        run: supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --password ${{ secrets.SUPABASE_DB_PASSWORD }} --skip-pooler
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      - name: Resolve database IPv4 address
+        id: resolve-db
+        run: |
+          DB_HOST="db.${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co"
+          DB_IPV4=$(dig +short $DB_HOST A | head -n1)
+          echo "ipv4=$DB_IPV4" >> $GITHUB_OUTPUT
+          echo "Resolved $DB_HOST to IPv4: $DB_IPV4"
 
       - name: Run database migrations
-        run: supabase db push --password ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          DB_URL="postgres://postgres:${{ secrets.SUPABASE_DB_PASSWORD }}@${{ steps.resolve-db.outputs.ipv4 }}:5432/postgres"
+          supabase db push --db-url "$DB_URL"
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
