@@ -91,7 +91,7 @@ export default function Home() {
               <a href="/terms" className="hover:text-white transition">
                 Terms of Service
               </a>
-              <a href="mailto:support@rewardrelay.au" className="hover:text-white transition">
+              <a href="mailto:support@rewardrelay.com.au" className="hover:text-white transition">
                 Contact
               </a>
             </div>
