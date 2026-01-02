@@ -1,8 +1,8 @@
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--surface-muted)] text-white">
-      <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-6 py-20 lg:py-24">
+      <main className="flex flex-1 items-center justify-center">
+        <div className="mx-auto max-w-6xl px-6 py-12">
           <div className="grid gap-12 md:grid-cols-[1.05fr_0.95fr] md:items-center">
             <div className="space-y-6">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-teal-200 ring-1 ring-white/10">
