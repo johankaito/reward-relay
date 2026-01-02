@@ -1,5 +1,7 @@
 {
   "git": {
     "deploymentEnabled": false
-  }
+  },
+  "buildCommand": "pnpm install --force && pnpm run build",
+  "installCommand": "pnpm install --force"
 }
