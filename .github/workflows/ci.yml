@@ -130,6 +130,12 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
   # Deploy to Vercel (only after successful checks)
+  # SETUP REQUIRED: Configure environment variables in Vercel project settings:
+  #   - NEXT_PUBLIC_SUPABASE_URL (from Supabase project settings)
+  #   - NEXT_PUBLIC_SUPABASE_ANON_KEY (from Supabase project settings)
+  #   - SUPABASE_SERVICE_KEY (service_role key from Supabase)
+  #   - RESEND_API_KEY (from Resend dashboard)
+  #   - CRON_SECRET (generate a random secret for cron job authentication)
   deploy-vercel:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     needs: [typecheck, build]
