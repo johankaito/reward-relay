@@ -10,13 +10,12 @@ import {
 // Force dynamic rendering to avoid build-time evaluation
 export const dynamic = 'force-dynamic';
 
-// Use service role for admin access
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
-
 export async function GET(request: Request) {
+  // Initialize Supabase client at request time to avoid build-time evaluation
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
   try {
     // Verify authorization (optional: add API key check)
     const authHeader = request.headers.get("authorization");
