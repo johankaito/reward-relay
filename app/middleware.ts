@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createServerClient } from "@supabase/auth-helpers-nextjs"
+import { createServerClient, type CookieOptions } from "@supabase/ssr"
 import type { Database } from "@/types/database.types"
 
 const PROTECTED_PATHS = ["/dashboard", "/cards"]
@@ -13,7 +13,12 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
   const isProtected = PROTECTED_PATHS.some((path) => pathname.startsWith(path))
-  const response = NextResponse.next()
+
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
 
   if (!isProtected) return response
 
@@ -22,11 +27,39 @@ export async function middleware(request: NextRequest) {
       get(name: string) {
         return request.cookies.get(name)?.value
       },
-      set(name: string, value: string, options: any) {
-        response.cookies.set(name, value, options)
+      set(name: string, value: string, options: CookieOptions) {
+        request.cookies.set({
+          name,
+          value,
+          ...options,
+        })
+        response = NextResponse.next({
+          request: {
+            headers: request.headers,
+          },
+        })
+        response.cookies.set({
+          name,
+          value,
+          ...options,
+        })
       },
-      remove(name: string, options: any) {
-        response.cookies.set(name, "", { ...options, maxAge: 0 })
+      remove(name: string, options: CookieOptions) {
+        request.cookies.set({
+          name,
+          value: "",
+          ...options,
+        })
+        response = NextResponse.next({
+          request: {
+            headers: request.headers,
+          },
+        })
+        response.cookies.set({
+          name,
+          value: "",
+          ...options,
+        })
       },
     },
   })
