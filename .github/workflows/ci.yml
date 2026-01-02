@@ -134,9 +134,6 @@ jobs:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     needs: [typecheck, build]
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
     environment:
       name: production
       url: ${{ steps.deploy.outputs.url }}
