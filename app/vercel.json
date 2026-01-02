@@ -2,6 +2,6 @@
   "git": {
     "deploymentEnabled": false
   },
-  "buildCommand": "pnpm install --force && pnpm run build",
-  "installCommand": "pnpm install --force"
+  "buildCommand": "rm -rf node_modules .next && pnpm install --force && pnpm run build",
+  "installCommand": "rm -rf node_modules && pnpm install --force"
 }
