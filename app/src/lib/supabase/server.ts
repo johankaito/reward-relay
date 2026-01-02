@@ -1,5 +1,5 @@
 import { cookies } from "next/headers"
-import { createServerClient } from "@supabase/auth-helpers-nextjs"
+import { createServerClient, type CookieOptions } from "@supabase/ssr"
 import type { Database } from "@/types/database.types"
 
 export async function getSupabaseServerClient() {
@@ -16,11 +16,23 @@ export async function getSupabaseServerClient() {
       get(name: string) {
         return cookieStore.get(name)?.value
       },
-      set(name: string, value: string, options: any) {
-        cookieStore.set(name, value, options)
+      set(name: string, value: string, options: CookieOptions) {
+        try {
+          cookieStore.set(name, value, options)
+        } catch {
+          // The `set` method was called from a Server Component.
+          // This can be ignored if you have middleware refreshing
+          // user sessions.
+        }
       },
-      remove(name: string, options: any) {
-        cookieStore.set(name, "", { ...options, maxAge: 0 })
+      remove(name: string, options: CookieOptions) {
+        try {
+          cookieStore.set(name, "", { ...options, maxAge: 0 })
+        } catch {
+          // The `remove` method was called from a Server Component.
+          // This can be ignored if you have middleware refreshing
+          // user sessions.
+        }
       },
     },
   })

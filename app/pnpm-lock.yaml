@@ -32,9 +32,6 @@ importers:
       '@radix-ui/react-toast':
         specifier: ^1.2.15
         version: 1.2.15(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@supabase/auth-helpers-nextjs':
-        specifier: ^0.15.0
-        version: 0.15.0(@supabase/supabase-js@2.89.0)
       '@supabase/auth-ui-react':
         specifier: ^0.4.7
         version: 0.4.7(@supabase/supabase-js@2.89.0)
@@ -1095,12 +1092,6 @@ packages:
 
   '@stitches/core@1.2.8':
     resolution: {integrity: sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==}
-
-  '@supabase/auth-helpers-nextjs@0.15.0':
-    resolution: {integrity: sha512-VtXz3GGnxluoxks1g3SaCoYr2OZ7PgRukDl+pLWrDfD2dPDaG8hmkp5iBZsU+lmsDYALGNO2dgbymgpAfD8eCQ==}
-    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
-    peerDependencies:
-      '@supabase/supabase-js': ^2.76.1
 
   '@supabase/auth-js@2.89.0':
     resolution: {integrity: sha512-wiWZdz8WMad8LQdJMWYDZ2SJtZP5MwMqzQq3ehtW2ngiI3UTgbKiFrvMUUS3KADiVlk4LiGfODB2mrYx7w2f8w==}
@@ -4198,11 +4189,6 @@ snapshots:
   '@standard-schema/utils@0.3.0': {}
 
   '@stitches/core@1.2.8': {}
-
-  '@supabase/auth-helpers-nextjs@0.15.0(@supabase/supabase-js@2.89.0)':
-    dependencies:
-      '@supabase/supabase-js': 2.89.0
-      cookie: 1.1.1
 
   '@supabase/auth-js@2.89.0':
     dependencies:
