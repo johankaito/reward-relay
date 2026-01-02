@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { AppShell } from "@/components/layout/AppShell";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -292,11 +293,12 @@ export default function StatementsPage() {
   const totalAmount = transactions.reduce((sum, txn) => sum + txn.amount, 0);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <FileUp className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="text-3xl font-bold">Upload Statement</h1>
+    <AppShell>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <FileUp className="h-8 w-8 text-primary" />
+          <div>
+            <h1 className="text-3xl font-bold">Upload Statement</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Import bank statements to automatically track spending
           </p>
@@ -447,6 +449,7 @@ export default function StatementsPage() {
           </div>
         </div>
       </Card>
-    </div>
+      </div>
+    </AppShell>
   );
 }

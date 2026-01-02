@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { AppShell } from "@/components/layout/AppShell";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react";
@@ -194,20 +195,21 @@ export default function CalendarPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <AppShell>
         <div className="animate-pulse space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg" />
           ))}
         </div>
-      </div>
+      </AppShell>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <Calendar className="h-8 w-8 text-primary" />
+    <AppShell>
+      <div className="space-y-6">
+        <div className="flex items-center gap-3">
+          <Calendar className="h-8 w-8 text-primary" />
         <div>
           <h1 className="text-3xl font-bold">Churning Calendar</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
@@ -376,6 +378,7 @@ export default function CalendarPage() {
           </div>
         </div>
       </Card>
-    </div>
+      </div>
+    </AppShell>
   );
 }

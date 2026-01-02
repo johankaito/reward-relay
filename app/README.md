@@ -430,6 +430,8 @@ For issues, questions, or feature requests:
 - [x] History & eligibility tracking
 
 ### 🔜 Coming Soon
+- [ ] **Conversational onboarding wizard** - Add cards in <5 minutes with guided flow
+- [ ] **AI chatbot assistant** - Natural language data entry and queries
 - [ ] Mobile app (PWA or React Native)
 - [ ] Points valuation optimizer
 - [ ] Travel redemption calculator

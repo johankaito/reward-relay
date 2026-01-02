@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { AppShell } from "@/components/layout/AppShell";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -203,18 +204,19 @@ export default function SpendingTrackerPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <AppShell>
         <div className="animate-pulse space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-32 bg-gray-200 dark:bg-gray-800 rounded-lg" />
           ))}
         </div>
-      </div>
+      </AppShell>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <AppShell>
+      <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Spending Tracker</h1>
@@ -410,6 +412,7 @@ export default function SpendingTrackerPage() {
           })
         )}
       </div>
-    </div>
+      </div>
+    </AppShell>
   );
 }
