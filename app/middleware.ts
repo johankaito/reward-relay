@@ -32,10 +32,10 @@ export async function middleware(request: NextRequest) {
   })
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  if (!session) {
+  if (!user) {
     const redirectUrl = new URL("/login", request.url)
     redirectUrl.searchParams.set("redirect", pathname)
     return NextResponse.redirect(redirectUrl)
