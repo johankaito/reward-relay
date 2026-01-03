@@ -189,9 +189,10 @@ export default function DashboardPage() {
                 {cards.map((card) => {
                   const status = card.status || "active"
                   return (
-                    <div
+                    <Link
                       key={card.id}
-                      className="flex flex-col gap-3 rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-4 shadow-sm"
+                      href={`/dashboard/cards/${card.id}`}
+                      className="flex flex-col gap-3 rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-4 shadow-sm transition-all hover:border-[var(--accent)] hover:shadow-md"
                       data-card-item
                     >
                       <div className="flex items-start justify-between gap-3">
@@ -210,7 +211,10 @@ export default function DashboardPage() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => handleEditCard(card)}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              handleEditCard(card)
+                            }}
                             className="h-8 w-8 p-0"
                           >
                             <Pencil className="h-4 w-4" />
@@ -240,7 +244,7 @@ export default function DashboardPage() {
                           {card.notes}
                         </p>
                       )}
-                    </div>
+                    </Link>
                   )
                 })}
               </div>
