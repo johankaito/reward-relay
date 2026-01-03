@@ -24,7 +24,7 @@ export default function DashboardPage() {
   const [editingCard, setEditingCard] = useState<UserCard | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
-  const loadCards = async () => {
+  const loadCards = async (showWelcome = false) => {
     const {
       data: { session },
     } = await supabase.auth.getSession()
@@ -49,10 +49,21 @@ export default function DashboardPage() {
 
     setCards(data || [])
     setLoading(false)
+
+    // Show welcome message on initial load from login
+    if (showWelcome) {
+      toast.success("Welcome back!")
+    }
   }
 
   useEffect(() => {
-    loadCards()
+    // Check if coming from login by looking for a fresh session
+    const checkAndLoad = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      const isNewLogin = session && !email // Fresh session and no email set yet
+      loadCards(isNewLogin)
+    }
+    checkAndLoad()
   }, [router])
 
   const handleEditCard = (card: UserCard) => {
@@ -61,7 +72,7 @@ export default function DashboardPage() {
   }
 
   const handleUpdateComplete = () => {
-    loadCards() // Reload cards after edit/delete
+    loadCards(false) // Reload cards after edit/delete
   }
 
   const stats = useMemo(() => {

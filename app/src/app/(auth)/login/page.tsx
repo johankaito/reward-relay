@@ -34,13 +34,13 @@ export default function LoginPage() {
 
       if (error) throw error
 
-      toast.success("Welcome back")
+      // Keep loading state during navigation
       router.push("/dashboard")
+      // Don't set isLoading false - keep it true during redirect
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Login failed. Try again."
       toast.error(message)
-    } finally {
       setIsLoading(false)
     }
   }
