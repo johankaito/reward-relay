@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--surface-muted)] text-white">
@@ -5,9 +7,12 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-6 py-12">
           <div className="grid gap-12 md:grid-cols-[1.05fr_0.95fr] md:items-center">
             <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-teal-200 ring-1 ring-white/10">
-                Australian churners · Private beta
-              </span>
+              <div className="flex items-center gap-3">
+                <Image src="/logo.svg" alt="Reward Relay" width={48} height={48} />
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-medium text-teal-200 ring-1 ring-white/10">
+                  Australian churners · Private beta
+                </span>
+              </div>
               <div className="space-y-3">
                 <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
                   Turn every card into maximum rewards—automatically.

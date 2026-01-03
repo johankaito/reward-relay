@@ -20,6 +20,23 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Reward Relay — maximize card rewards",
   description: "Track, churn, and optimize Australian credit cards automatically.",
+  manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Reward Relay",
+  },
+  themeColor: "#FF6B6B",
 }
 
 export default function RootLayout({
