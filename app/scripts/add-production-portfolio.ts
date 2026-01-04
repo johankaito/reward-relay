@@ -83,6 +83,24 @@ async function addCardViaForm(page: Page, card: CardData): Promise<void> {
 
   await delay(1000);
 
+  // Fill bank field (required for custom cards)
+  const bankInput = await page.$('input#bank');
+  if (bankInput) {
+    await bankInput.click();
+    await bankInput.type(card.searchTerm.split(' ')[0]); // First word as bank name
+    console.log(`  - Set bank: ${card.searchTerm.split(' ')[0]}`);
+    await delay(300);
+  }
+
+  // Fill name field (required for custom cards)
+  const nameInput = await page.$('input#name');
+  if (nameInput) {
+    await nameInput.click();
+    await nameInput.type(card.searchTerm);
+    console.log(`  - Set card name: ${card.searchTerm}`);
+    await delay(300);
+  }
+
   // Fill application date
   const dateInput = await page.$('input[type="date"]#applicationDate');
   if (dateInput) {
@@ -111,12 +129,34 @@ async function addCardViaForm(page: Page, card: CardData): Promise<void> {
     await delay(300);
   }
 
-  // Submit form
+  // Submit form and wait for response
   const submitButtons = await page.$$('button[type="submit"]');
   if (submitButtons.length > 0) {
     await submitButtons[0].click();
-    console.log(`  - Submitted form`);
-    await delay(2000);
+    console.log(`  - Submitted form, waiting for result...`);
+
+    // Wait for either success or error toast
+    await delay(3000);
+
+    // Check for success/error by looking for toast messages
+    const toastText = await page.evaluate(() => {
+      const toasts = document.querySelectorAll('[data-sonner-toast]');
+      if (toasts.length > 0) {
+        const lastToast = toasts[toasts.length - 1];
+        return lastToast.textContent || '';
+      }
+      return '';
+    });
+
+    if (toastText.toLowerCase().includes('tracked') || toastText.toLowerCase().includes('success')) {
+      console.log(`  - ✅ Success: ${toastText}`);
+    } else if (toastText) {
+      console.log(`  - ⚠️  Response: ${toastText}`);
+    } else {
+      console.log(`  - ⚠️  No toast detected`);
+    }
+
+    await delay(1000);
   }
 }
 
@@ -132,6 +172,19 @@ async function main() {
   });
 
   const page = await browser.newPage();
+
+  // Monitor console for errors
+  const consoleErrors: string[] = [];
+  page.on('console', msg => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text());
+    }
+  });
+
+  // Monitor page errors
+  page.on('pageerror', error => {
+    console.error('  ⚠️  Page Error:', error.message);
+  });
 
   try {
     // Login
@@ -172,7 +225,18 @@ async function main() {
     const cardCount = await page.$$eval('[data-card-item]', (cards) => cards.length);
     console.log(`✅ Found ${cardCount} cards on dashboard\n`);
 
-    console.log('🎉 SUCCESS! All cards added to production!');
+    // Report console errors if any
+    if (consoleErrors.length > 0) {
+      console.log('⚠️  Console Errors Detected:');
+      consoleErrors.forEach(err => console.log(`   - ${err}`));
+      console.log('');
+    }
+
+    if (cardCount === CARDS.length) {
+      console.log('🎉 SUCCESS! All cards added to production!');
+    } else {
+      console.log(`⚠️  PARTIAL SUCCESS: Added ${cardCount}/${CARDS.length} cards`);
+    }
     console.log('🌐 Visit https://www.rewardrelay.app/dashboard\n');
 
     console.log('⏸️  Browser stays open for 10 seconds...\n');
