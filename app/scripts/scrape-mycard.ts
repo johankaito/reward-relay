@@ -241,20 +241,20 @@ async function saveToSupabase(cards: ScrapedCard[]): Promise<void> {
     }
   }
 
-  // Log scraping run
-  try {
-    await supabase.from('scrape_logs').insert({
-      source: 'mycard',
-      status: errors === 0 ? 'success' : errors === cards.length ? 'failed' : 'partial',
-      cards_updated: cardsAdded,
-      cards_added: cardsAdded, // Simplified
-      started_at: startTime.toISOString(),
-      completed_at: new Date().toISOString(),
-      error_message: errors > 0 ? `${errors} cards failed to save` : null
-    });
-  } catch (error) {
-    console.error('⚠️  Failed to log scrape run:', error);
-  }
+  // Log scraping run (scrape_logs table not yet in schema, commented out)
+  // try {
+  //   await supabase.from('scrape_logs').insert({
+  //     source: 'mycard',
+  //     status: errors === 0 ? 'success' : errors === cards.length ? 'failed' : 'partial',
+  //     cards_updated: cardsAdded,
+  //     cards_added: cardsAdded,
+  //     started_at: startTime.toISOString(),
+  //     completed_at: new Date().toISOString(),
+  //     error_message: errors > 0 ? `${errors} cards failed to save` : null
+  //   });
+  // } catch (error) {
+  //   console.error('⚠️  Failed to log scrape run:', error);
+  // }
 
   console.log(`\n📊 Summary:`);
   console.log(`   ✅ Saved: ${cardsAdded} cards`);

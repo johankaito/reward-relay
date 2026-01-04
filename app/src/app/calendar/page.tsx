@@ -9,7 +9,9 @@ import { Calendar, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react
 
 interface UserCard {
   id: string;
-  card_id: string;
+  card_id: string | null;
+  bank: string | null;
+  name: string | null;
   status: string;
   application_date: string | null;
   approval_date: string | null;
@@ -19,7 +21,7 @@ interface UserCard {
     bank: string;
     name: string;
     welcome_bonus_points?: number;
-  };
+  } | null;
 }
 
 interface BankTimeline {
@@ -266,7 +268,7 @@ export default function CalendarPage() {
                 <div className="space-y-4">
                   {timeline.cards.map(({ card, stages }) => (
                     <div key={card.id} className="border-l-4 border-gray-300 dark:border-gray-700 pl-4">
-                      <h3 className="font-semibold mb-3">{card.card.name}</h3>
+                      <h3 className="font-semibold mb-3">{card.card?.name || card.name || "Unknown Card"}</h3>
 
                       {/* Timeline Stages */}
                       <div className="space-y-2">

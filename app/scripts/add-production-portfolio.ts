@@ -203,8 +203,8 @@ async function main() {
   });
 
   // Monitor page errors
-  page.on('pageerror', error => {
-    console.error('  ⚠️  Page Error:', error.message);
+  page.on('pageerror', (error) => {
+    console.error('  ⚠️  Page Error:', error instanceof Error ? error.message : String(error));
   });
 
   try {
