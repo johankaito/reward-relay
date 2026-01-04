@@ -46,7 +46,7 @@ export function AppShell({ children }: AppShellProps) {
       setSigningOut(false)
       return
     }
-    router.replace("/login")
+    router.replace("/")
   }
 
   return (
