@@ -35,7 +35,7 @@ export default function ChurnHistoryPage() {
     } = await supabase.auth.getSession()
 
     if (!session) {
-      router.replace("/login")
+      router.replace("/")
       return
     }
 
