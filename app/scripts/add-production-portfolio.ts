@@ -120,6 +120,27 @@ async function addCardViaForm(page: Page, card: CardData): Promise<void> {
     await delay(500);
   }
 
+  // Fill cancellation date (if provided)
+  if (card.cancellationDate) {
+    const cancelDateInput = await page.$('input[type="date"]#cancellationDate');
+    if (cancelDateInput) {
+      await cancelDateInput.focus();
+      await delay(100);
+
+      await cancelDateInput.evaluate((el, date) => {
+        const input = el as HTMLInputElement;
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')!.set;
+        nativeInputValueSetter!.call(input, date);
+
+        const event = new Event('input', { bubbles: true });
+        input.dispatchEvent(event);
+      }, card.cancellationDate);
+
+      console.log(`  - Set cancellation date: ${card.cancellationDate}`);
+      await delay(500);
+    }
+  }
+
   // Fill notes
   const notesInput = await page.$('input#notes');
   if (notesInput) {

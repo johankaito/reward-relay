@@ -38,6 +38,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
     Database["public"]["Tables"]["user_cards"]["Row"]["status"]
   >("active")
   const [applicationDate, setApplicationDate] = useState("")
+  const [cancellationDate, setCancellationDate] = useState("")
   const [annualFee, setAnnualFee] = useState("")
   const [notes, setNotes] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -68,6 +69,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
         name: name || selectedCard?.name || null,
         status,
         application_date: applicationDate || null,
+        cancellation_date: cancellationDate || null,
         annual_fee: annualFee ? Number(annualFee) : selectedCard?.annual_fee ?? null,
         notes: notes || null,
       })
@@ -80,6 +82,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
       setName("")
       setStatus("active")
       setApplicationDate("")
+      setCancellationDate("")
       setAnnualFee("")
       setNotes("")
       onCreated?.()
@@ -185,6 +188,19 @@ export function AddCardForm({ cards, onCreated }: Props) {
               type="date"
               value={applicationDate}
               onChange={(e) => setApplicationDate(e.target.value)}
+              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cancellationDate" className="text-slate-200">
+              Cancellation date
+            </Label>
+            <Input
+              id="cancellationDate"
+              type="date"
+              value={cancellationDate}
+              onChange={(e) => setCancellationDate(e.target.value)}
               className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
             />
           </div>
