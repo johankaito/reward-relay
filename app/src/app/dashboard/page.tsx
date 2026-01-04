@@ -60,7 +60,7 @@ export default function DashboardPage() {
     // Check if coming from login by looking for a fresh session
     const checkAndLoad = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      const isNewLogin = session && !email // Fresh session and no email set yet
+      const isNewLogin = !!(session && !email) // Fresh session and no email set yet
       loadCards(isNewLogin)
     }
     checkAndLoad()
