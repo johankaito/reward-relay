@@ -125,8 +125,16 @@ Build a profitable credit card churning SaaS for Australian users targeting:
   - send.rewardrelay.app subdomain for outgoing (Resend)
   - rewardrelay.app main domain for incoming (Cloudflare Email Routing)
   - DKIM, SPF, MX records configured
-- [ ] **Supabase Custom SMTP** - TODO: Configure Supabase Auth to use Resend
-- [ ] **Weekly Email Digest Template** - TODO: React Email template
+- [ ] **⚠️ PRIORITY: Supabase Custom SMTP** - Configure Supabase Auth to use Resend ASAP
+  - Auth emails (signup confirmation, password reset) must work
+  - Currently using default Supabase SMTP (unreliable for production)
+  - Need to test send/receive from third parties
+- [ ] **Transactional Email Testing** - Verify all outgoing emails work
+  - Signup confirmation emails
+  - Password reset emails
+  - Card reminder emails (30/14/7 day alerts)
+  - Test delivery to Gmail, Outlook, Yahoo, etc.
+- [ ] **Weekly Email Digest Template** - React Email template
   - Tease 3 of 5 deals to drive app opens
   - Include streak status and top insight
   - Send Mondays at 9am
@@ -134,6 +142,17 @@ Build a profitable credit card churning SaaS for Australian users targeting:
 ---
 
 ## 🚧 In Progress
+
+### ⚠️ Critical: Email System Setup
+- [ ] **Configure Supabase Auth SMTP with Resend** - MUST WORK ASAP
+  - Auth confirmation emails (signup verification)
+  - Password reset emails
+  - Test with Gmail, Outlook, Yahoo, ProtonMail
+- [ ] **Test Transactional Email Delivery**
+  - Verify deliverability to all major email providers
+  - Check spam folder placement
+  - Test from/reply-to addresses work correctly
+  - Ensure email authentication (DKIM, SPF, DMARC) passes
 
 ### Trial Stickiness & Engagement
 - [ ] **Daily Insights Generation Logic**
@@ -404,6 +423,14 @@ Build a profitable credit card churning SaaS for Australian users targeting:
 ---
 
 ## 🎯 Next Sprint (Week of Jan 6-12, 2026)
+
+### Priority 0: Email System (CRITICAL - Must Work ASAP)
+1. Configure Supabase Auth to use Resend SMTP
+2. Test signup confirmation emails
+3. Test password reset emails
+4. Verify deliverability to Gmail, Outlook, Yahoo, ProtonMail
+5. Check spam folder placement and authentication
+6. Test card reminder emails (30/14/7 day system)
 
 ### Priority 1: Stripe Integration
 1. Set up Stripe account
