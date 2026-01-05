@@ -3,6 +3,19 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
+import {
+  Lock,
+  ChartBar,
+  Zap,
+  Plane,
+  Globe,
+  Sparkles,
+  Calendar,
+  Target,
+  FileText,
+  Lightbulb,
+  Check
+} from "lucide-react"
 import { supabase } from "@/lib/supabase/client"
 
 export default function Home() {
@@ -28,6 +41,30 @@ export default function Home() {
         <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
       </div>
 
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0e1a]/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <Image src="/logo.svg" alt="Reward Relay" width={32} height={32} className="drop-shadow-lg" />
+            <span className="text-xl font-bold text-white">Reward Relay</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <a
+              href="/login"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-2 text-sm font-semibold text-white transition-all hover:border-white/30 hover:bg-white/5"
+            >
+              Log in
+            </a>
+            <a
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/30"
+            >
+              Sign up
+            </a>
+          </div>
+        </div>
+      </header>
+
       <main className="relative z-10 flex flex-1 items-center justify-center py-8 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12 xl:gap-16">
@@ -44,7 +81,7 @@ export default function Home() {
                 <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                   Turn every card into maximum rewards—
                   <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-                    automatically
+                    seamlessly
                   </span>
                 </h1>
                 <p className="text-lg text-slate-300 sm:text-xl">
@@ -125,22 +162,22 @@ export default function Home() {
             </div>
             <div className="grid gap-6 md:grid-cols-3">
               <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 text-2xl ring-1 ring-white/10">
-                  🔒
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-white/10">
+                  <Lock className="h-6 w-6 text-teal-400" />
                 </div>
                 <p className="text-center text-sm font-semibold text-white">Your data stays in Australia</p>
                 <p className="text-center text-xs text-slate-400">No offshore storage. Compliant with local privacy laws.</p>
               </div>
               <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 text-2xl ring-1 ring-white/10">
-                  📊
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-white/10">
+                  <ChartBar className="h-6 w-6 text-teal-400" />
                 </div>
                 <p className="text-center text-sm font-semibold text-white">Track unlimited cards</p>
                 <p className="text-center text-xs text-slate-400">Pro tier removes all limits. Churn as many as you want.</p>
               </div>
               <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 text-2xl ring-1 ring-white/10">
-                  ⚡
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-white/10">
+                  <Zap className="h-6 w-6 text-teal-400" />
                 </div>
                 <p className="text-center text-sm font-semibold text-white">Never miss a cancellation deadline</p>
                 <p className="text-center text-xs text-slate-400">Email reminders at 30, 14, and 7 days before annual fee.</p>
@@ -162,8 +199,8 @@ export default function Home() {
               <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 text-2xl ring-1 ring-white/10">
-                      ✈️
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 ring-1 ring-white/10">
+                      <Plane className="h-6 w-6 text-blue-400" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-teal-400">
@@ -203,8 +240,8 @@ export default function Home() {
                 <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-teal-500/10 blur-3xl"></div>
                 <div className="relative space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 text-2xl ring-1 ring-teal-400/30">
-                      🌏
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-teal-400/30">
+                      <Globe className="h-6 w-6 text-teal-400" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-teal-400">
@@ -244,8 +281,8 @@ export default function Home() {
                 <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-purple-500/10 blur-3xl"></div>
                 <div className="relative space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-2xl ring-1 ring-purple-400/30">
-                      ✨
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 ring-1 ring-purple-400/30">
+                      <Sparkles className="h-6 w-6 text-purple-400" />
                     </div>
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-purple-400">
@@ -277,8 +314,9 @@ export default function Home() {
                       Sydney → Singapore return • Worth: $2,000
                     </div>
 
-                    <div className="rounded-xl border border-purple-400/20 bg-purple-500/10 px-3 py-2 text-xs text-purple-200">
-                      💡 Pro members: Calculate YOUR custom goals
+                    <div className="flex items-center gap-2 rounded-xl border border-purple-400/20 bg-purple-500/10 px-3 py-2 text-xs text-purple-200">
+                      <Lightbulb className="h-4 w-4" />
+                      <span>Pro members: Calculate YOUR custom goals</span>
                     </div>
                   </div>
                 </div>
@@ -311,7 +349,7 @@ export default function Home() {
               {/* Visual Calendar */}
               <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-teal-400/30">
-                  <span className="text-3xl">📅</span>
+                  <Calendar className="h-8 w-8 text-teal-400" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">Visual Churning Calendar</h3>
@@ -324,7 +362,7 @@ export default function Home() {
               {/* Smart Recommendations */}
               <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 ring-1 ring-purple-400/30">
-                  <span className="text-3xl">🎯</span>
+                  <Target className="h-8 w-8 text-purple-400" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">Smart Recommendations</h3>
@@ -337,7 +375,7 @@ export default function Home() {
               {/* CSV Upload */}
               <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 ring-1 ring-blue-400/30">
-                  <span className="text-3xl">📊</span>
+                  <FileText className="h-8 w-8 text-blue-400" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">CSV Statement Upload</h3>
@@ -350,7 +388,7 @@ export default function Home() {
               {/* Daily Insights */}
               <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 ring-1 ring-orange-400/30">
-                  <span className="text-3xl">💡</span>
+                  <Lightbulb className="h-8 w-8 text-orange-400" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">Daily Insights & Deals</h3>
@@ -384,19 +422,19 @@ export default function Home() {
                 </div>
                 <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span>Track 2-3 cards</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span>Basic reminders</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span>12-month rule tracking</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span>Manual transaction entry</span>
                   </li>
                 </ul>
@@ -423,31 +461,31 @@ export default function Home() {
                 </div>
                 <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span><strong>Unlimited cards</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span><strong>Smart recommendations</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span><strong>Goal projections & timeline</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span><strong>CSV statement upload</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span>Daily insights & deals</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span>Streak rewards</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-teal-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
                     <span>Priority support</span>
                   </li>
                 </ul>
@@ -477,19 +515,19 @@ export default function Home() {
                 </div>
                 <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
                     <span><strong>Everything in Pro Monthly</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
                     <span><strong>17% discount ($78 saved)</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
                     <span>Priority support</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-purple-400">✓</span>
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
                     <span>Early access to new features</span>
                   </li>
                 </ul>
@@ -504,8 +542,9 @@ export default function Home() {
             </div>
 
             <div className="text-center">
-              <p className="text-sm text-slate-300">
-                💡 <strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)
+              <p className="flex items-center justify-center gap-2 text-sm text-slate-300">
+                <Lightbulb className="h-5 w-5 text-teal-400" />
+                <span><strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)</span>
               </p>
             </div>
           </div>
@@ -573,7 +612,7 @@ export default function Home() {
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <p className="mt-4 text-sm text-slate-300">
-                  Yes. Your data is encrypted in transit and at rest, stored in Australia, and protected by industry-standard security (Supabase). We use Row Level Security so you can only access your own data.
+                  Yes. Your data is encrypted in transit and at rest, stored in Australia, and protected by industry-standard security. We use Row Level Security so you can only access your own data.
                 </p>
               </details>
             </div>
