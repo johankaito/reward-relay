@@ -1,4 +1,4 @@
-# REWARDIFY
+# REWARD RELAY
 **Turn every credit card into maximum rewards, automatically.**
 
 Australian credit card rewards optimization platform for churners.
