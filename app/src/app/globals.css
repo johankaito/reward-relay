@@ -151,4 +151,15 @@
     transform: translateY(0);
     filter: brightness(0.95);
   }
+
+  /* Text selection styles */
+  ::selection {
+    background-color: rgb(20 184 166 / 0.3); /* teal-500 with 30% opacity */
+    color: rgb(255 255 255); /* white text */
+  }
+
+  ::-moz-selection {
+    background-color: rgb(20 184 166 / 0.3); /* teal-500 with 30% opacity */
+    color: rgb(255 255 255); /* white text */
+  }
 }
