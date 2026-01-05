@@ -154,12 +154,12 @@
 
   /* Text selection styles */
   ::selection {
-    background-color: rgb(20 184 166 / 0.3); /* teal-500 with 30% opacity */
+    background-color: rgb(20 184 166 / 0.5); /* teal-500 with 50% opacity - more vibrant */
     color: rgb(255 255 255); /* white text */
   }
 
   ::-moz-selection {
-    background-color: rgb(20 184 166 / 0.3); /* teal-500 with 30% opacity */
+    background-color: rgb(20 184 166 / 0.5); /* teal-500 with 50% opacity - more vibrant */
     color: rgb(255 255 255); /* white text */
   }
 }
