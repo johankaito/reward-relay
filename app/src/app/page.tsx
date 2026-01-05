@@ -116,6 +116,38 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Social Proof / Trust Signals */}
+          <div className="mt-16 md:mt-20">
+            <div className="text-center mb-8">
+              <p className="text-sm font-semibold uppercase tracking-wider text-teal-400">
+                Built for Australian Churners
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-3">
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 text-2xl ring-1 ring-white/10">
+                  🔒
+                </div>
+                <p className="text-center text-sm font-semibold text-white">Your data stays in Australia</p>
+                <p className="text-center text-xs text-slate-400">No offshore storage. Compliant with local privacy laws.</p>
+              </div>
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 text-2xl ring-1 ring-white/10">
+                  📊
+                </div>
+                <p className="text-center text-sm font-semibold text-white">Track unlimited cards</p>
+                <p className="text-center text-xs text-slate-400">Pro tier removes all limits. Churn as many as you want.</p>
+              </div>
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 text-2xl ring-1 ring-white/10">
+                  ⚡
+                </div>
+                <p className="text-center text-sm font-semibold text-white">Never miss a cancellation deadline</p>
+                <p className="text-center text-xs text-slate-400">Email reminders at 30, 14, and 7 days before annual fee.</p>
+              </div>
+            </div>
+          </div>
+
           {/* Gamification Section: Example Projections */}
           <div className="mt-16 space-y-8 md:mt-24">
             <div className="text-center space-y-3">
@@ -125,7 +157,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {/* Domestic Flight Example */}
               <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10">
                 <div className="space-y-4">
@@ -206,6 +238,51 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+
+              {/* Business Class Example */}
+              <div className="group relative overflow-hidden rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-6 backdrop-blur-sm transition-all hover:border-purple-500/50">
+                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-purple-500/10 blur-3xl"></div>
+                <div className="relative space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 text-2xl ring-1 ring-purple-400/30">
+                      ✨
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-purple-400">
+                        Pro Goal
+                      </p>
+                      <p className="text-lg font-bold text-white">Business Class Asia</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-5xl font-bold text-purple-400">18</span>
+                      <span className="text-xl font-semibold text-slate-300">months</span>
+                    </div>
+
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+                      <p className="text-xs font-semibold text-slate-400">With 3 cards:</p>
+                      <p className="mt-1 text-base font-semibold text-white">ANZ + Westpac + AMEX</p>
+                      <div className="mt-3 flex items-center gap-3 border-t border-white/10 pt-3 text-sm text-slate-300">
+                        <span>200k pts</span>
+                        <span className="text-slate-600">•</span>
+                        <span>$1,145 fees</span>
+                        <span className="text-slate-600">•</span>
+                        <span className="font-semibold text-purple-400">$855 net</span>
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl bg-purple-500/10 px-4 py-2 text-sm text-slate-300">
+                      Sydney → Singapore return • Worth: $2,000
+                    </div>
+
+                    <div className="rounded-xl border border-purple-400/20 bg-purple-500/10 px-3 py-2 text-xs text-purple-200">
+                      💡 Pro members: Calculate YOUR custom goals
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="text-center pt-6">
@@ -216,8 +293,289 @@ export default function Home() {
                 Start Tracking Your Cards
               </a>
               <p className="mt-3 text-sm text-slate-400">
-                Free forever • No credit card required
+                Start with free tier • Upgrade anytime
               </p>
+            </div>
+          </div>
+
+          {/* Feature Highlights */}
+          <div className="mt-24 space-y-8">
+            <div className="text-center space-y-3">
+              <h2 className="text-3xl font-bold text-white sm:text-4xl">Everything You Need to Churn Smarter</h2>
+              <p className="text-lg text-slate-400">
+                Powerful features that help you maximize rewards while staying organized
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {/* Visual Calendar */}
+              <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-teal-400/30">
+                  <span className="text-3xl">📅</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Visual Churning Calendar</h3>
+                  <p className="mt-2 text-sm text-slate-300">
+                    See your entire card journey from application to re-eligibility. Never lose track of the 12-month rule.
+                  </p>
+                </div>
+              </div>
+
+              {/* Smart Recommendations */}
+              <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 ring-1 ring-purple-400/30">
+                  <span className="text-3xl">🎯</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Smart Recommendations</h3>
+                  <p className="mt-2 text-sm text-slate-300">
+                    AI-powered card suggestions based on your eligibility, portfolio, and goals. Know exactly what to apply for next.
+                  </p>
+                </div>
+              </div>
+
+              {/* CSV Upload */}
+              <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 ring-1 ring-blue-400/30">
+                  <span className="text-3xl">📊</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">CSV Statement Upload</h3>
+                  <p className="mt-2 text-sm text-slate-300">
+                    Bulk import transactions from CommBank, ANZ, NAB, and Westpac. Track spending requirements automatically.
+                  </p>
+                </div>
+              </div>
+
+              {/* Daily Insights */}
+              <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 ring-1 ring-orange-400/30">
+                  <span className="text-3xl">💡</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Daily Insights & Deals</h3>
+                  <p className="mt-2 text-sm text-slate-300">
+                    Personalized tips, OzBargain credit card deals, and streak rewards. Stay engaged and informed.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Pricing Section */}
+          <div className="mt-24 space-y-8">
+            <div className="text-center space-y-3">
+              <h2 className="text-3xl font-bold text-white sm:text-4xl">Simple, Transparent Pricing</h2>
+              <p className="text-lg text-slate-400">
+                Start free, upgrade when you're ready to unlock all features
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {/* Free Tier */}
+              <div className="flex flex-col rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold text-white">Free</h3>
+                  <p className="mt-2 text-sm text-slate-400">Perfect for trying it out</p>
+                </div>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold text-white">$0</span>
+                  <span className="text-slate-400">/month</span>
+                </div>
+                <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span>Track 2-3 cards</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span>Basic reminders</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span>12-month rule tracking</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span>Manual transaction entry</span>
+                  </li>
+                </ul>
+                <a
+                  href="/signup"
+                  className="rounded-full border-2 border-white/20 bg-white/5 px-6 py-3 text-center font-semibold text-white transition-all hover:border-white/30 hover:bg-white/10"
+                >
+                  Start Free
+                </a>
+              </div>
+
+              {/* Pro Monthly */}
+              <div className="relative flex flex-col rounded-3xl border-2 border-teal-500/50 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 p-8 backdrop-blur-sm shadow-xl shadow-teal-500/20">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-1 text-xs font-bold text-white">
+                  MOST POPULAR
+                </div>
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold text-white">Pro Monthly</h3>
+                  <p className="mt-2 text-sm text-slate-400">For serious churners</p>
+                </div>
+                <div className="mb-6">
+                  <span className="text-5xl font-bold text-white">$39</span>
+                  <span className="text-slate-400">/month</span>
+                </div>
+                <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span><strong>Unlimited cards</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span><strong>Smart recommendations</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span><strong>Goal projections & timeline</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span><strong>CSV statement upload</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span>Daily insights & deals</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span>Streak rewards</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">✓</span>
+                    <span>Priority support</span>
+                  </li>
+                </ul>
+                <a
+                  href="/signup"
+                  className="rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-3 text-center font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/30"
+                >
+                  Start 7-Day Trial
+                </a>
+                <p className="mt-3 text-center text-xs text-slate-400">Then $39/month • Cancel anytime</p>
+              </div>
+
+              {/* Pro Annual */}
+              <div className="flex flex-col rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-8 backdrop-blur-sm">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold text-white">Pro Annual</h3>
+                  <p className="mt-2 text-sm text-purple-300">Save $78/year</p>
+                </div>
+                <div className="mb-6">
+                  <div>
+                    <span className="text-5xl font-bold text-white">$390</span>
+                    <span className="text-slate-400">/year</span>
+                  </div>
+                  <p className="mt-2 text-sm text-slate-400">
+                    <span className="font-semibold text-purple-300">$32.50/month</span> effective
+                  </p>
+                </div>
+                <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">✓</span>
+                    <span><strong>Everything in Pro Monthly</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">✓</span>
+                    <span><strong>17% discount ($78 saved)</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">✓</span>
+                    <span>Priority support</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">✓</span>
+                    <span>Early access to new features</span>
+                  </li>
+                </ul>
+                <a
+                  href="/signup"
+                  className="rounded-full border-2 border-purple-400/50 bg-purple-500/20 px-6 py-3 text-center font-semibold text-white transition-all hover:border-purple-400/70 hover:bg-purple-500/30"
+                >
+                  Start Annual Trial
+                </a>
+                <p className="mt-3 text-center text-xs text-slate-400">7-day trial • Then $390 billed annually</p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <p className="text-sm text-slate-300">
+                💡 <strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)
+              </p>
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="mt-24 space-y-8">
+            <div className="text-center space-y-3">
+              <h2 className="text-3xl font-bold text-white sm:text-4xl">Frequently Asked Questions</h2>
+            </div>
+
+            <div className="mx-auto max-w-3xl space-y-4">
+              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+                  What happens after the 7-day free trial?
+                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p className="mt-4 text-sm text-slate-300">
+                  After 7 days, you'll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
+                </p>
+              </details>
+
+              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+                  Can I cancel anytime?
+                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p className="mt-4 text-sm text-slate-300">
+                  Yes! Cancel anytime from your account settings. If you cancel mid-month, you'll keep Pro access until the end of your billing period. No penalties, no hassle.
+                </p>
+              </details>
+
+              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+                  Do you store my credit card numbers?
+                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p className="mt-4 text-sm text-slate-300">
+                  <strong>No.</strong> We only track card metadata—bank name, application dates, cancellation dates, and your notes. We never store or see your actual credit card numbers or PINs.
+                </p>
+              </details>
+
+              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+                  What's the 12-month rule?
+                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p className="mt-4 text-sm text-slate-300">
+                  Most Australian banks require you to wait 12 months after cancelling a card before you're eligible for sign-up bonuses on another card from that same bank. Reward Relay automatically tracks this for you.
+                </p>
+              </details>
+
+              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+                  How do I upgrade from Free to Pro?
+                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p className="mt-4 text-sm text-slate-300">
+                  Click "Upgrade to Pro" in your dashboard settings. Choose monthly or annual, start your 7-day trial, and all Pro features unlock immediately. You'll keep all your existing data.
+                </p>
+              </details>
+
+              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+                  Is my data secure?
+                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p className="mt-4 text-sm text-slate-300">
+                  Yes. Your data is encrypted in transit and at rest, stored in Australia, and protected by industry-standard security (Supabase). We use Row Level Security so you can only access your own data.
+                </p>
+              </details>
             </div>
           </div>
         </div>
