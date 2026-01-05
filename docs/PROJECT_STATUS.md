@@ -194,7 +194,15 @@ Build a profitable credit card churning SaaS for Australian users targeting:
 
 ### Phase 4: Growth & Acquisition (Weeks 7-8)
 - [ ] Referral system (earn free months)
-- [ ] Landing page optimization
+- [x] **Landing page optimization**
+  - Professional icon library (Lucide React) instead of emojis
+  - Comprehensive pricing section (Monthly $39, Annual $390)
+  - Social proof section (3 trust signals)
+  - Enhanced projections showcase (3 goals)
+  - Feature highlights section (4 key features)
+  - FAQ section (6 questions)
+  - Sticky header navigation
+  - Improved text selection visibility
 - [ ] SEO optimization (OzBargain keywords)
 - [ ] Content marketing (blog posts)
 - [ ] Google Ads campaign setup
@@ -282,10 +290,12 @@ Build a profitable credit card churning SaaS for Australian users targeting:
 - **Background**: Dark slate (#0f172a)
 - **Typography**: Inter (sans-serif)
 - **Style**: Modern, glassmorphism, gradient accents
+- **Logo**: Currently SVG emoji (📊), considering professional logo generation
+  - Options: Recraft.ai (free AI), Canva, logoipsum.com, DIY Figma
 
 ### Component Library
 - **UI Framework**: shadcn/ui + Tailwind CSS
-- **Icons**: Lucide React
+- **Icons**: Lucide React (replaced emojis throughout app)
 - **Charts**: Recharts (for projections)
 - **Animations**: Framer Motion (minimal, strategic)
 
@@ -449,7 +459,27 @@ Build a profitable credit card churning SaaS for Australian users targeting:
 
 ## 📝 Change Log
 
-### January 5, 2026 - Engagement System Launch
+### January 5, 2026 (Evening) - Landing Page & Navigation Polish
+- ✅ Comprehensive landing page enhancements
+  - Replaced all emojis with professional Lucide React icons
+  - Added pricing section with Monthly ($39) and Annual ($390) options
+  - Added social proof section with 3 trust signals
+  - Enhanced projections showcase from 2 to 3 goals
+  - Added feature highlights section (4 key features)
+  - Added FAQ section (6 questions with accordion style)
+  - Removed inappropriate "free forever" references
+  - Removed Supabase security references
+- ✅ Navigation consistency improvements
+  - Created shared Header component (app/src/components/layout/Header.tsx)
+  - Applied consistent sticky header across landing and auth pages
+  - Logo clickable on auth pages, static on landing page
+- ✅ UX improvements
+  - Fixed text selection visibility (80% opacity teal highlight)
+  - Ensured header stays sticky when scrolling
+- 📝 Updated branding in README.md (REWARDIFY → REWARD RELAY)
+- 🎨 Landing page now looks professional and conversion-optimized
+
+### January 5, 2026 (Morning) - Engagement System Launch
 - ✅ Implemented PostHog analytics with CAC tracking
 - ✅ Built 3-question onboarding quiz
 - ✅ Created database schema for profiles, deals, daily_insights
