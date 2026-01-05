@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Home, LayoutGrid, LogOut, Menu, Shield, Sparkles, History, Calculator, Wallet, Calendar, FileUp } from "lucide-react"
+import { Home, LayoutGrid, LogOut, Menu, Shield, Sparkles, History, Calculator, Wallet, Calendar, FileUp, Lightbulb, TrendingUp } from "lucide-react"
 import { useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,8 @@ import { supabase } from "@/lib/supabase/client"
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/cards", label: "Cards", icon: LayoutGrid },
+  { href: "/recommendations", label: "Recommendations", icon: Lightbulb },
+  { href: "/projections", label: "Projections", icon: TrendingUp },
   { href: "/spending", label: "Spending", icon: Wallet },
   { href: "/statements", label: "Statements", icon: FileUp },
   { href: "/calendar", label: "Calendar", icon: Calendar },
@@ -100,7 +102,7 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[240px_1fr]">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-6 pb-24 md:grid-cols-[240px_1fr] md:pb-6">
         <Card className="hidden h-fit border border-[var(--border-default)] bg-[var(--surface)] text-white shadow-md md:block">
           <nav className="space-y-1 p-3">
             {navMap.map((item) => {
@@ -137,19 +139,19 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--border-default)] bg-[var(--surface)]/95 backdrop-blur md:hidden">
-        <div className="mx-auto flex max-w-3xl items-center justify-around px-4 py-2 text-sm font-medium text-white">
+        <div className="mx-auto flex max-w-3xl items-center gap-1 overflow-x-auto px-2 py-2 text-xs font-medium text-white scrollbar-hide">
           {navMap.map((item) => {
             const Icon = item.icon
             return (
               <button
                 key={item.href}
                 onClick={() => router.push(item.href)}
-                className={`flex flex-col items-center gap-1 rounded-md px-3 py-2 transition-all ${
+                className={`flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 transition-all whitespace-nowrap min-w-[60px] ${
                   item.active ? "text-[var(--accent)]" : "text-slate-300 hover:text-white hover:bg-white/5"
                 }`}
               >
-                <Icon className="h-5 w-5" />
-                {item.label}
+                <Icon className="h-5 w-5 flex-shrink-0" />
+                <span className="text-[10px] leading-tight">{item.label}</span>
               </button>
             )
           })}

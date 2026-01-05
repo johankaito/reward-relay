@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { toast } from "sonner"
-import { TrendingUp, DollarSign, Calendar, AlertCircle, Check, X } from "lucide-react"
+import { TrendingUp, DollarSign, Calendar, AlertCircle, Check, X, ExternalLink } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { Badge } from "@/components/ui/badge"
@@ -17,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase/client"
+import { useCatalog } from "@/contexts/CatalogContext"
 import type { Database } from "@/types/database.types"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
@@ -38,8 +40,8 @@ interface CardWithEligibility extends CatalogCard {
 
 export default function ComparePage() {
   const router = useRouter()
+  const { catalogCards } = useCatalog()
   const [userCards, setUserCards] = useState<UserCard[]>([])
-  const [catalogCards, setCatalogCards] = useState<CatalogCard[]>([])
   const [loading, setLoading] = useState(true)
   const [sortBy, setSortBy] = useState<"netValue" | "bonus" | "fee" | "recommendation">("recommendation")
   const [filterEligible, setFilterEligible] = useState(true)
@@ -66,20 +68,7 @@ export default function ComparePage() {
       return
     }
 
-    // Load catalog cards
-    const { data: catalogData, error: catalogError } = await supabase
-      .from("cards")
-      .select("*")
-      .order("bank", { ascending: true })
-
-    if (catalogError) {
-      toast.error(catalogError.message || "Unable to load card catalog")
-      setLoading(false)
-      return
-    }
-
     setUserCards(userCardsData || [])
-    setCatalogCards(catalogData || [])
     setLoading(false)
   }
 
@@ -451,13 +440,28 @@ export default function ComparePage() {
                           </div>
                         )}
                         {card.eligibility.canApply && (
-                          <Button
-                            size="sm"
-                            className="mt-2"
-                            onClick={() => router.push("/cards")}
-                          >
-                            Track Card
-                          </Button>
+                          <div className="mt-2 flex gap-2">
+                            {card.application_link && (
+                              <Button
+                                asChild
+                                size="sm"
+                                className="rounded-full text-white shadow-sm"
+                                style={{ background: "var(--gradient-cta)" }}
+                              >
+                                <Link href={card.application_link} target="_blank" rel="noopener noreferrer">
+                                  Apply
+                                  <ExternalLink className="ml-1 h-3 w-3" />
+                                </Link>
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => router.push("/cards")}
+                            >
+                              Track
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </div>

@@ -92,12 +92,14 @@ function calculateCardScore(card: Card): number {
 
 /**
  * Get personalized card recommendations based on user's portfolio
- * Returns top 5 recommendations sorted by score
+ * Returns top recommendations sorted by score
  */
 export function getRecommendations(
   userCards: UserCard[],
-  catalogCards: Card[]
+  catalogCards: Card[],
+  options?: { limit?: number }
 ): Recommendation[] {
+  const limit = options?.limit || 5;
   // Calculate bank eligibility
   const eligibility = calculateBankEligibility(userCards);
   const eligibilityMap = new Map(eligibility.map((e) => [e.bank.toLowerCase(), e]));
@@ -162,7 +164,7 @@ export function getRecommendations(
       // Then by score
       return b.score - a.score;
     })
-    .slice(0, 5); // Top 5
+    .slice(0, limit);
 
   return recommendations;
 }

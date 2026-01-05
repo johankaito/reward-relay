@@ -1,0 +1,48 @@
+name: Weekly Card Catalog Scraping
+
+on:
+  schedule:
+    # Every Sunday at 2am AEST (4pm UTC Saturday during standard time, 6pm UTC Saturday during daylight saving)
+    # Using 16:00 UTC on Saturday as baseline (2am Sunday AEST standard time)
+    - cron: '0 16 * * 6'
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  scrape-cards:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: |
+          cd app
+          pnpm install --frozen-lockfile
+
+      - name: Install Chromium for Puppeteer
+        run: |
+          cd app
+          npx puppeteer browsers install chrome
+
+      - name: Run card scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cd app
+          pnpm tsx scripts/scrape-mycard.ts
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "Card scraping failed. Check the logs for details."

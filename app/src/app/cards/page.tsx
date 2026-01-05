@@ -7,16 +7,18 @@ import { AddCardForm } from "@/components/cards/AddCardForm"
 import { CardFilters } from "@/components/cards/CardFilters"
 import { CardGrid, type CardRecord } from "@/components/cards/CardGrid"
 import { AppShell } from "@/components/layout/AppShell"
+import { useCatalog } from "@/contexts/CatalogContext"
 import { supabase } from "@/lib/supabase/client"
 
 export default function CardsPage() {
+  const { catalogCards: allCards, loading: catalogLoading } = useCatalog()
   const [cards, setCards] = useState<CardRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [bank, setBank] = useState<string | null>(null)
 
   useEffect(() => {
-    const load = async () => {
+    const checkAuth = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession()
@@ -24,21 +26,26 @@ export default function CardsPage() {
         window.location.href = `/login?redirect=${encodeURIComponent("/cards")}`
         return
       }
-
-      const { data, error } = await supabase
-        .from("cards")
-        .select("id, bank, name, annual_fee, welcome_bonus_points, points_currency, min_income")
-        .order("bank", { ascending: true })
-      if (error) {
-        toast.error(error.message || "Failed to load cards")
-        setLoading(false)
-        return
-      }
-      setCards(data || [])
       setLoading(false)
     }
-    void load()
+    checkAuth()
   }, [])
+
+  useEffect(() => {
+    // Map catalog cards to the CardRecord format
+    if (allCards.length > 0) {
+      const mapped = allCards.map(card => ({
+        id: card.id,
+        bank: card.bank,
+        name: card.name,
+        annual_fee: card.annual_fee,
+        welcome_bonus_points: card.welcome_bonus_points,
+        points_currency: card.points_currency,
+        min_income: card.min_income
+      }))
+      setCards(mapped)
+    }
+  }, [allCards])
 
   const filtered = useMemo(() => {
     return cards.filter((card) => {

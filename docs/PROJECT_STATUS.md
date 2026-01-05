@@ -1,273 +1,475 @@
-# Reward Relay Project Status Report
+# 📊 Reward Relay - Project Status
 
-**Last Updated**: December 31, 2024 (Latest Session)
+**Last Updated**: January 5, 2026
+**Current Phase**: Monetization & Engagement Optimization
+**Target**: $50K MRR with 70% profit margin in 6 months
 
-## 🎯 Project Overview
+---
 
-**Reward Relay** is an Australian credit card churning management application that helps users track credit card applications, monitor eligibility based on the 12-month rule, and maximize sign-up bonuses.
+## 🎯 Strategic Goals
 
-## ✅ Completed Features (MVP)
+### Primary Objective
+Build a profitable credit card churning SaaS for Australian users targeting:
+- **Revenue Target**: $50K monthly recurring revenue (MRR)
+- **Profit Margin**: 70% net (COGS: 9-10%, CAC: <$25)
+- **Pricing**: $39/month Pro tier (freemium model)
+- **Required Paying Users**: 1,282 users ($50K / $39)
+- **Timeline**: 6 months to target
 
-### Core Functionality
-- [x] **User Authentication** - Supabase Auth with email/password
-- [x] **Dashboard** - View active cards with status tracking
-- [x] **Add Cards** - Form to add cards from catalog to portfolio
-- [x] **Edit/Delete Cards** - Modal interface for card management
-- [x] **Spending Tracker** ⭐ NEW - Track progress toward minimum spend requirements with progress bars
-- [x] **Visual Churning Calendar** ⭐ NEW - Timeline view of card lifecycle with eligibility tracking
-- [x] **History Page** - Track churned cards and eligibility status
-- [x] **Compare Page** - Card comparison with net value calculations
-- [x] **Eligibility Calculator** - 12-month rule enforcement per bank
-- [x] **CSV Statement Upload** ⭐ NEW - Import bank statements with auto-categorization
+### Key Metrics to Track
+- **CAC (Customer Acquisition Cost)**: Target <$25 blended
+  - Organic: $0
+  - Paid (Google/Facebook): $20-30
+  - Referral: $5-10
+- **Trial → Paid Conversion**: 18-25% (no credit card required)
+- **Churn Rate**: <5% monthly
+- **LTV:CAC Ratio**: >3:1
+- **Daily Active Users (DAU)**: Track streak retention
 
-### Data & Infrastructure
-- [x] **Database Schema** - PostgreSQL with RLS policies
-- [x] **All Migrations Applied** ⭐ - 4 migrations successfully deployed to production
-- [x] **Scraper Infrastructure** - Playwright-based scraper for card data
-- [x] **Docker Deployment** - Containerized scraper for Coolify/VPS
-- [x] **History Tracking** - Card change history logging
-- [x] **Email Reminders** ⭐ NEW - Resend integration with 30/14/7 day reminders
+---
 
-### New Features Completed Today
-1. **Database Migrations** - All 4 migrations successfully applied to production
-   - Initial schema (cards, user_cards, spending_profiles)
-   - Scraping infrastructure (scrape_logs, card_history)
-   - Spending tracker (current_spend, spending_transactions)
-   - Email reminders (email_reminders table)
+## ✅ Completed Features (MVP + Engagement)
 
-2. **Spending Tracker** - Full feature with progress tracking
-   - Progress bars for spending requirements
-   - Transaction recording dialog
-   - Automatic spend calculation via database triggers
-   - Deadline alerts (urgent, warning, on track)
+### Core MVP (90% Complete)
+- [x] **User authentication** - Supabase Auth with email/password
+- [x] **Card management** - Add, edit, delete, status tracking
+- [x] **Card catalog** - Browse Australian credit cards
+- [x] **Spending tracker** - Progress bars, manual entry
+- [x] **CSV statement upload** - Multi-bank support (CommBank, ANZ, NAB, Westpac)
+- [x] **Visual churning calendar** - Timeline view with bank grouping
+- [x] **Email reminders** - 30/14/7 day alerts (Resend integration)
+- [x] **Card comparison** - Net value rankings, recommendations
+- [x] **History & eligibility** - 12-month rule tracking
+- [x] **Dashboard** - Active cards overview, quick stats
+- [x] **Projections** - Multi-card path calculator for travel goals
 
-3. **Visual Churning Calendar** - Timeline interface
-   - Card lifecycle stages (applied → approved → active → cancelled → eligible)
-   - Bank-grouped timelines (12-month rule per bank)
-   - Color-coded status indicators
-   - Days/months until eligible to reapply
+### 🆕 Engagement & Monetization System (January 2026)
 
-4. **Email Reminder System** - Automated notifications
-   - Resend API integration
-   - Beautiful HTML email templates with gradients
-   - 30/14/7 day cancellation reminders
-   - Spending progress included in emails
-   - API route for cron job integration
+#### Analytics Foundation
+- [x] **PostHog Integration** - Event tracking for all user actions
+  - `src/lib/analytics/posthog.ts` - Client initialization
+  - `src/lib/analytics/events.ts` - Type-safe event definitions
+  - `src/contexts/AnalyticsContext.tsx` - UTM tracking & attribution
+  - `src/components/analytics/AnalyticsProvider.tsx` - App-wide wrapper
+- [x] **CAC Tracking** - Source attribution for every signup
+  - Organic, paid (Google/Facebook), referral, direct
+  - First-touch attribution persisted in localStorage
+  - CAC estimates by channel in event metadata
+- [x] **Conversion Funnel Tracking**
+  - Signup → Trial → Paid conversion events
+  - Days to convert, total CAC per user
+  - MRR tracking per subscription activation
 
-5. **CSV Statement Upload** - Transaction import automation
-   - Drag-and-drop file upload
-   - Support for CommBank, ANZ, NAB, Westpac formats
-   - Auto-categorization (groceries, dining, travel, fuel)
-   - Transaction preview with editable categories
-   - Batch upload to database
+#### Onboarding Quiz (Behavior-Focused)
+- [x] **3-Question Quiz** - `src/components/onboarding/OnboardingQuiz.tsx`
+  - Q1: Primary spending category (groceries/dining/travel/shopping/mixed)
+  - Q2: Optimization goal (points/cashback/both)
+  - Q3: Churning goal (domestic/international/cashback/unsure)
+- [x] **Auto-Advance UI** - Smooth step-by-step flow
+- [x] **Profile Storage** - Quiz answers saved to `user_profiles` table
+- [x] **Analytics Tracking** - Each answer tracked for personalization insights
 
-### Development Tools
-- [x] **Multi-Agent Dev Loop** - Orchestrator with test runner
-- [x] **Automated Testing** - Puppeteer test suite
-- [x] **Deployment Documentation** - Comprehensive guides
+#### Database Schema (Engagement)
+- [x] **Migration Applied** - `20250106000000_user_profiles_and_deals.sql`
+- [x] **user_profiles Table**
+  - Onboarding quiz answers (spending_category, optimization_goal, churning_goal)
+  - Streak tracking (current_streak_days, longest_streak_days, last_active_date)
+  - Free days earned (7-day streak = 1 free premium day)
+  - Onboarding completion timestamp
+- [x] **deals Table**
+  - Curated card-linked offers from OzBargain
+  - Merchant, card network, specific issuer matching
+  - Valid from/until dates, is_active status
+  - View count, click count for engagement tracking
+  - Source tracking (ozbargain, manual, merchant)
+- [x] **daily_insights Table**
+  - Pre-computed personalized tips per user
+  - Types: spending, fee_warning, churn_reminder, deal
+  - Viewed/clicked timestamps for engagement metrics
+  - Associated card and deal references
+- [x] **Streak Function** - `update_user_streak(p_user_id UUID)`
+  - Auto-increments streak on daily visits
+  - Awards 1 free day every 7-day streak
+  - Resets if user misses a day
 
-## 📊 Current Completion: ~90% of MVP ⬆️
+#### OzBargain Deal Scraper
+- [x] **Web Scraper** - `scripts/scrape-ozbargain.ts`
+  - Searches credit card, AMEX, Mastercard, Visa, cashback, points
+  - Extracts merchant from known Australian retailers (Woolworths, Coles, Myer, etc.)
+  - Detects card network (AMEX, Visa, Mastercard) from title
+  - Identifies specific issuers (ANZ, Westpac, CBA, NAB)
+  - Rate-limited (2 seconds between requests)
+  - De-duplicates by deal URL
+  - Auto-expires deals after 7 days
+- [x] **Database Integration** - Saves to `deals` table with full metadata
+- [ ] **Cron Job** - TODO: Run daily at 6am to refresh deals
 
-**Major progress today:** Moved from 60% → 90% completion!
+#### Daily Insights Dashboard
+- [x] **DailyInsights Component** - `src/components/dashboard/DailyInsights.tsx`
+  - **Streak Card**: Displays current streak, days until next free day, total free days earned
+  - **Today's Insights**: Shows up to 3 personalized tips (spending, fee warnings, churn reminders, deals)
+  - **Hot Deal of the Day**: Highest-clicked active deal with merchant, network, expiry
+- [x] **Dashboard Integration** - Top of `/dashboard` page
+- [x] **Auto-Streak Update** - Calls `update_user_streak()` on page load
+- [x] **Analytics Tracking**
+  - `daily_insights_viewed` - Count and types tracked
+  - `daily_insight_clicked` - Tip type and title tracked
+  - `deal_clicked` - Deal ID, title, merchant tracked
+- [x] **Engagement Metrics**
+  - Marks insights as viewed automatically
+  - Tracks click-through rates
+  - Increments deal click counters
 
-## 🚧 Remaining MVP Features
+#### Email Infrastructure
+- [x] **Resend DNS Configuration** - Cloudflare setup complete
+  - send.rewardrelay.app subdomain for outgoing (Resend)
+  - rewardrelay.app main domain for incoming (Cloudflare Email Routing)
+  - DKIM, SPF, MX records configured
+- [ ] **Supabase Custom SMTP** - TODO: Configure Supabase Auth to use Resend
+- [ ] **Weekly Email Digest Template** - TODO: React Email template
+  - Tease 3 of 5 deals to drive app opens
+  - Include streak status and top insight
+  - Send Mondays at 9am
 
-### High Priority (Final Polish)
-1. **Deploy Scraper to Production** - READY
-   - Infrastructure complete and tested
-   - Needs deployment to Coolify/VPS
-   - Configure cron job for daily runs
-   - Estimated: 2-3 hours
+---
 
-2. **Configure Email Service** - READY
-   - Code complete, needs API keys
-   - Set up Resend account
-   - Add RESEND_API_KEY to environment
-   - Set up Vercel cron job
-   - Estimated: 1 hour
+## 🚧 In Progress
 
-3. **Application Tracker** - Optional
-   - Document upload for applications
-   - Status tracking (pending/approved/denied)
-   - Requirements checklist
-   - Estimated: 4-5 hours
+### Trial Stickiness & Engagement
+- [ ] **Daily Insights Generation Logic**
+  - Build algorithm to create personalized tips
+  - Based on: User profile (quiz answers), cards, upcoming dates
+  - Types: Fee warnings (14 days before), churn reminders (when eligible), spending optimization
+- [ ] **Weekly Email Digest**
+  - Design Resend React Email template
+  - Format: Show 3 deals, tease 2 more (drive app opens)
+  - Include: Streak status, top personalized insight, hot deals
+  - Schedule: Mondays at 9am
+- [ ] **Deal Cron Job**
+  - Run OzBargain scraper daily (e.g., 6am)
+  - Auto-clean expired deals (older than 7 days)
+  - Store new deals in database
 
-### Lower Priority (Post-MVP)
-4. **Pro/Premium Tiers**
-   - Stripe payment integration
-   - Feature gating
-   - Subscription management
-   - Estimated: 8-10 hours
+### Subscription Infrastructure
+- [ ] **Stripe Integration**
+  - Checkout session creation
+  - Webhook handling for subscription events
+  - Customer portal for management
+- [ ] **Subscription Lifecycle**
+  - Trial management (5-day progressive trial)
+  - Free days extension logic (earned from streaks)
+  - Billing date calculations
+- [ ] **Paywall Implementation**
+  - Free tier: 2-3 card limit, basic tracking
+  - Pro tier ($39/month): Unlimited cards, recommendations, projections, insights
 
-5. **Mobile App/PWA**
-   - Progressive Web App optimization
-   - Push notifications
-   - Offline support
-   - Estimated: 20-30 hours
+---
 
-6. **Advanced Analytics**
-   - Points valuation optimizer
-   - Travel redemption calculator
-   - Historical trends
-   - Estimated: 10-15 hours
+## 📋 Backlog (Prioritized)
 
-## ✅ Resolved Issues
+### Phase 1: Monetization Launch (Weeks 1-2)
+- [ ] Stripe subscription integration
+- [ ] Paywall UI components
+- [ ] Free tier limitations
+- [ ] Pro tier feature unlocks
+- [ ] Upgrade prompts and CTAs
 
-- ~~Supabase Project Paused~~ → **RESOLVED** - Unpaused and migrations applied
-- ~~No Spending Tracker~~ → **RESOLVED** - Full feature implemented
-- ~~No Visual Calendar~~ → **RESOLVED** - Timeline view complete
-- ~~No Email Service~~ → **RESOLVED** - Resend integrated
-- ~~No CSV Upload~~ → **RESOLVED** - Full import feature implemented
+### Phase 2: Engagement Optimization (Weeks 3-4)
+- [ ] Daily insights generation algorithm
+- [ ] Weekly email digest template
+- [ ] Email scheduling cron job
+- [ ] OzBargain scraper cron job
+- [ ] Deal display page (browse all deals)
 
-## 📈 Technical Debt
+### Phase 3: Trial Conversion (Weeks 5-6)
+- [ ] Progressive trial feature unlocking (Days 1-5)
+- [ ] Day 1: Immediate value + onboarding quiz
+- [ ] Day 2: Unlock spending tracker
+- [ ] Day 3: Unlock recommendations
+- [ ] Day 4: Unlock projections
+- [ ] Day 5: Unlock full access + upgrade prompt
+- [ ] In-app upgrade prompts at strategic moments
+- [ ] Testimonials & social proof
+- [ ] Trial expiry notifications
 
-- [ ] Add comprehensive error handling
-- [ ] Implement loading states consistently
-- [ ] Add data validation on forms
-- [ ] Create unit tests for utilities
-- [ ] Add E2E test coverage
-- [ ] Implement proper logging
-- [ ] Add performance monitoring
-- [x] Database migrations applied ✅
-- [x] Type safety for new features ✅
+### Phase 4: Growth & Acquisition (Weeks 7-8)
+- [ ] Referral system (earn free months)
+- [ ] Landing page optimization
+- [ ] SEO optimization (OzBargain keywords)
+- [ ] Content marketing (blog posts)
+- [ ] Google Ads campaign setup
+- [ ] Facebook Ads campaign setup
+- [ ] Reddit community engagement
 
-## 🚀 Next Steps (Recommended Order)
+### Phase 5: Retention & Expansion (Weeks 9-12)
+- [ ] Churn prediction model
+- [ ] Win-back campaigns
+- [ ] Annual subscription discount (save 20%)
+- [ ] Premium features brainstorming
+- [ ] Multi-user household plans
+- [ ] Application document storage
+- [ ] Points transfer tracking
 
-### Immediate (Ready to Deploy)
-1. **Deploy Scraper to Coolify**
-   - Create Coolify service
-   - Add environment variables
-   - Test with --now flag
-   - Configure daily cron (3 AM)
+---
 
-2. **Configure Email Reminders**
-   - Sign up for Resend account
-   - Add RESEND_API_KEY to Vercel
-   - Create Vercel cron job: `/api/reminders/check` daily
-   - Test with active cards
+## 🔮 Future Ideas (Not Prioritized)
 
-3. **User Testing**
-   - Invite beta testers
-   - Gather feedback on new features
-   - Fix any bugs discovered
+### Advanced Features
+- [ ] **AI Chatbot Assistant** - Natural language data entry
+- [ ] **Mobile App** - PWA or React Native
+- [ ] **Points Valuation Optimizer** - Custom redemption goals
+- [ ] **Travel Redemption Calculator** - Point requirements for flights/hotels
+- [ ] **Card Recommendation AI** - ML-based personalization
+- [ ] **Bank Scraper** - Live card offers from bank websites
+- [ ] **Credit Score Integration** - Equifax/Illion API
+- [ ] **Browser Extension** - Shopping assistant (lightweight)
 
-### Short Term (1-2 weeks)
-4. **Polish & Optimization**
-   - Add loading states
-   - Improve error messages
-   - Optimize database queries
-   - Add analytics tracking
+### Community Features
+- [ ] **Referral Link Management** - Track referral signups
+- [ ] **Community Forum** - Discussion board
+- [ ] **User Leaderboards** - Gamify churning success
+- [ ] **Success Stories** - User testimonials and case studies
 
-5. **Documentation**
-   - User guide
-   - Video tutorials
-   - FAQ page
+---
 
-### Medium Term (Post-Launch)
-6. **Marketing & Growth**
-   - Reddit r/churning posts
-   - Points blogs outreach
-   - Social media presence
+## 📈 Success Metrics Dashboard
 
-## 💰 Deployment Strategy
+### Key Performance Indicators (KPIs)
 
-### Current Architecture (Production Ready)
-- **Frontend**: Vercel (free tier) ✅
-- **Database**: Supabase (free tier, unpaused) ✅
-- **Scraper**: Ready for Coolify on Hetzner VPS (~$5/month)
-- **Email**: Resend (10k emails free/month) ✅
+#### Revenue Metrics
+- **Current MRR**: $0 (pre-launch)
+- **Target MRR**: $50K (6 months)
+- **Paying Users**: 0
+- **Target Paying Users**: 1,282 users
+- **ARPU (Average Revenue Per User)**: $39/month
+- **Churn Rate**: TBD (target <5%)
+- **LTV (Lifetime Value)**: TBD (target >$117)
 
-### Monthly Costs (Estimated)
-- Vercel: $0 (free tier)
-- Supabase: $0 (free tier for MVP)
-- VPS for Scraper: $5-20
-- Resend: $0 (free tier, 10k emails/month)
-- Domain: $12/year (~$1/month)
-- **Total**: ~$6-21/month
+#### Acquisition Metrics
+- **Total Signups**: TBD
+- **Trial Signups**: TBD
+- **Trial → Paid Conversion**: TBD (target 18-25%)
+- **CAC by Channel**:
+  - Organic: $0 (target 40% of signups)
+  - Google Ads: TBD (target $25)
+  - Facebook Ads: TBD (target $30)
+  - Reddit: TBD (target $5)
+  - Referral: TBD (target $10)
+- **Blended CAC**: TBD (target <$25)
 
-## 📝 Documentation Status
+#### Engagement Metrics
+- **DAU (Daily Active Users)**: TBD
+- **7+ Day Streaks**: TBD (target 30% of users)
+- **Daily Insights View Rate**: TBD (target 70%)
+- **Deal Click-Through Rate**: TBD (target 20%)
+- **Weekly Email Open Rate**: TBD (target 25%)
+- **Weekly Email Click Rate**: TBD (target 10%)
 
-### Completed
-- [x] README with setup instructions
-- [x] Business plan (BUSINESS_PLAN.md)
-- [x] MVP features list (MVP_FEATURES.md)
-- [x] Scraper documentation (scraper/README.md)
-- [x] Deployment guide (scraper/DEPLOYMENT.md)
-- [x] Dev loop guide (DEV_LOOP_README.md)
-- [x] Environment variable examples (.env.example) ⭐ NEW
+#### Product Metrics
+- **Cards Added Per User**: TBD (target 3-5)
+- **CSV Uploads Per User**: TBD (target 2+)
+- **Spending Tracker Usage**: TBD (target 60%)
+- **Calendar Views**: TBD (target 50%)
+- **Recommendations Clicked**: TBD (target 40%)
 
-### Needed
-- [ ] API documentation
-- [ ] User guide
-- [ ] Contributing guidelines
-- [ ] Security policy
-- [ ] Email reminder setup guide
-- [ ] CSV upload instructions
+---
 
-## 🎯 Success Metrics
+## 🎨 Design System
 
-### Technical
-- Page load time < 2s
-- 99% uptime
-- Daily scraper success rate > 95%
-- Zero critical security issues
-- Email delivery rate > 98%
+### Brand Identity
+- **Primary Color**: Teal (#14b8a6)
+- **Accent Color**: Purple (#8b5cf6)
+- **Background**: Dark slate (#0f172a)
+- **Typography**: Inter (sans-serif)
+- **Style**: Modern, glassmorphism, gradient accents
 
-### Business
-- 100 active users in first month
-- 500 users by month 3
-- 10% conversion to premium
-- NPS score > 50
-- Weekly active usage rate > 40%
+### Component Library
+- **UI Framework**: shadcn/ui + Tailwind CSS
+- **Icons**: Lucide React
+- **Charts**: Recharts (for projections)
+- **Animations**: Framer Motion (minimal, strategic)
 
-## 📅 Updated Timeline
+---
 
-### Current Status: READY FOR BETA LAUNCH 🚀
+## 🔐 Security & Compliance
 
-**Remaining Work:**
-- **Day 1**: Deploy scraper to Coolify (2-3 hours)
-- **Day 2**: Configure email reminders (1 hour)
-- **Day 3**: Beta testing and bug fixes (4-6 hours)
-- **Day 4**: Launch! 🎉
+### Data Protection
+- [x] Row Level Security (RLS) enabled on all tables
+- [x] Supabase Auth for authentication
+- [x] No credit card numbers stored
+- [x] Encrypted connections (HTTPS)
+- [ ] Privacy policy page
+- [ ] Terms of service page
+- [ ] GDPR compliance (for international users)
+- [ ] Data export functionality
 
-**Total**: 3-4 days to production launch
+### Monitoring
+- [x] PostHog analytics (privacy-friendly)
+- [ ] Sentry error tracking
+- [ ] Uptime monitoring (UptimeRobot)
+- [ ] Performance monitoring (Vercel Analytics)
 
-## 🏁 Conclusion
+---
 
-**Major Milestone Achieved!** The project has progressed from 60% to 90% MVP completion in this session. All core features are now implemented:
+## 🚀 Deployment Status
 
-### Completed Today:
-✅ Database migrations applied to production
-✅ Spending tracker with progress bars and deadlines
-✅ Visual churning calendar with timeline view
-✅ Email reminder system with beautiful templates
-✅ CSV statement upload with auto-categorization
+### Infrastructure
+- **Frontend**: Deployed on Vercel (production-ready)
+- **Database**: Supabase (hosted PostgreSQL)
+- **Email**: Resend (DNS configured, SMTP pending)
+- **Analytics**: PostHog (configured)
+- **Domain**: rewardrelay.app (configured)
 
-### Ready for Launch:
-The application is now **production-ready** with all essential MVP features complete. Only deployment tasks remain:
-1. Deploy scraper to Coolify/VPS
-2. Configure email service (Resend API key)
-3. Beta testing
+### Environments
+- **Production**: https://rewardrelay.app (live)
+- **Staging**: TBD (optional)
+- **Development**: http://localhost:3000
 
-### What's Working:
-- Full user authentication and authorization
-- Complete card management (add, edit, delete, track)
-- Spending progress tracking with transaction recording
-- Visual lifecycle timeline with eligibility tracking
-- Card comparison and net value calculations
-- Automated email reminders (code complete)
-- CSV import for automated spending tracking
-- All database migrations applied successfully
+### CI/CD
+- **GitHub Actions**: TBD (optional)
+- **Vercel Auto-Deploy**: Enabled on push to master
+- **Database Migrations**: Manual via `supabase db push`
 
-### Architecture:
-The app is built on a solid, scalable architecture:
-- Next.js 14 (App Router) for frontend
-- Supabase (PostgreSQL + Auth + RLS) for backend
-- Playwright/Puppeteer for scraping and testing
-- Resend for transactional emails
-- Docker for scraper deployment
+---
 
-Reward Relay is ready to serve the Australian credit card churning community and help users maximize their rewards strategy! 🎉
+## 📚 Documentation Status
 
-### Immediate Next Step:
-Deploy scraper and configure email reminders, then launch beta! 🚀
+### Developer Docs
+- [x] README.md - Comprehensive project overview
+- [x] TESTING.md - Test strategy and setup
+- [x] PROJECT_STATUS.md - This file
+- [ ] API.md - API endpoints documentation
+- [ ] DEPLOYMENT.md - Production deployment guide
+- [ ] CONTRIBUTING.md - Contribution guidelines
+
+### User Docs
+- [ ] Help Center (in-app)
+- [ ] Video tutorials
+- [ ] FAQ page
+- [ ] Onboarding guide
+- [ ] Best practices blog posts
+
+---
+
+## 👥 Team & Responsibilities
+
+**Current Team**: Solo founder (John Keto)
+
+**Roles**:
+- Product strategy & design
+- Full-stack development
+- DevOps & infrastructure
+- Marketing & growth
+- Customer support
+
+**Future Hiring** (when revenue justifies):
+- Growth marketer ($50K+ MRR)
+- Customer success manager ($100K+ MRR)
+- Backend engineer ($150K+ MRR)
+
+---
+
+## 💰 Financial Projections
+
+### Cost Structure (Monthly)
+- **Infrastructure**: $50-100 (Supabase, Vercel, Resend)
+- **Analytics**: $0 (PostHog free tier, 1M events/month)
+- **Marketing Spend**: $500-2000 (Google/Facebook Ads)
+- **Domain & DNS**: $2 (Cloudflare)
+- **Total Fixed Costs**: ~$600-2200/month
+
+### Revenue Milestones
+- **Month 1**: $500 MRR (13 paying users)
+- **Month 2**: $2K MRR (51 paying users)
+- **Month 3**: $8K MRR (205 paying users)
+- **Month 4**: $18K MRR (462 paying users)
+- **Month 5**: $35K MRR (897 paying users)
+- **Month 6**: $50K MRR (1,282 paying users) ✅ TARGET
+
+### Profit Margins
+- **Target**: 70% net profit margin
+- **$50K MRR**: $35K net profit/month
+- **Annual**: $600K MRR, $420K net profit
+
+---
+
+## 🎯 Next Sprint (Week of Jan 6-12, 2026)
+
+### Priority 1: Stripe Integration
+1. Set up Stripe account
+2. Create product and pricing in Stripe
+3. Build checkout session API route
+4. Implement webhook handler
+5. Create subscription status in database
+6. Test full payment flow
+
+### Priority 2: Paywall Implementation
+1. Build paywall UI components
+2. Add free tier limitations (2-3 cards max)
+3. Add upgrade prompts throughout app
+4. Create pricing page
+5. Add "Pro" badges to features
+6. Test free → paid upgrade flow
+
+### Priority 3: Daily Insights Algorithm
+1. Design insight generation logic
+2. Build fee warning generator (14 days before)
+3. Build churn reminder generator (when eligible)
+4. Build spending optimization tips
+5. Test with real user profiles
+6. Schedule nightly generation cron job
+
+---
+
+## ✅ Definition of "Launch Ready"
+
+### MVP Launch Checklist
+- [x] Core features complete (card tracking, spending, calendar, recommendations)
+- [ ] Stripe subscription working
+- [ ] Paywall implemented
+- [ ] Free tier limits enforced
+- [ ] Analytics tracking all events
+- [ ] Email system tested
+- [ ] Landing page optimized
+- [ ] Privacy policy & ToS published
+- [ ] Error monitoring setup
+- [ ] Beta user testing complete (5-10 users)
+
+### Growth Ready Checklist
+- [ ] Daily insights generation working
+- [ ] Weekly email digest sending
+- [ ] OzBargain scraper running daily
+- [ ] Trial conversion optimized (>20%)
+- [ ] Referral system live
+- [ ] Marketing campaigns live
+- [ ] Customer support process defined
+- [ ] Churn mitigation strategies tested
+
+---
+
+## 📝 Change Log
+
+### January 5, 2026 - Engagement System Launch
+- ✅ Implemented PostHog analytics with CAC tracking
+- ✅ Built 3-question onboarding quiz
+- ✅ Created database schema for profiles, deals, daily_insights
+- ✅ Built OzBargain web scraper
+- ✅ Implemented daily insights dashboard with streak tracking
+- ✅ Configured Resend DNS for email
+- 📝 Updated documentation (PROJECT_STATUS.md)
+
+### December 2025 - MVP Foundation
+- ✅ Built core card tracking features
+- ✅ Implemented spending tracker with CSV upload
+- ✅ Created visual churning calendar
+- ✅ Designed card recommendation system
+- ✅ Deployed to Vercel
+
+---
+
+**Last Updated**: January 5, 2026
+**Next Review**: January 12, 2026
+
+---
+
+Made with ❤️ for the Australian churning community | [rewardrelay.app](https://rewardrelay.app)

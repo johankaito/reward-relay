@@ -1,0 +1,45 @@
+name: Send Churning Notifications
+
+on:
+  schedule:
+    # Daily at 9:00 AM AEST (11:00 PM UTC previous day)
+    # Note: During daylight saving (AEDT), this will be 10:00 AM
+    - cron: '0 23 * * *'
+
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  send-notifications:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run notification check
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: pnpm tsx scripts/check-notifications.ts
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Notification check failed"
+          echo "Check the logs above for details"

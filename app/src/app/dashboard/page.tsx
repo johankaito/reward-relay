@@ -12,70 +12,25 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
+import { DailyInsights } from "@/components/dashboard/DailyInsights"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
+import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
+import { useCatalog } from "@/contexts/CatalogContext"
 import type { Database } from "@/types/database.types"
 import type { Recommendation } from "@/lib/recommendations"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
-type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
-
-interface CachedCatalog {
-  cards: CatalogCard[]
-  timestamp: number
-}
-
-const CACHE_KEY = "catalog_cards"
-const CACHE_TTL = 60 * 60 * 1000 // 1 hour
 
 export default function DashboardPage() {
   const router = useRouter()
+  const { catalogCards } = useCatalog()
   const [email, setEmail] = useState<string | null>(null)
+  const [userId, setUserId] = useState<string | null>(null)
   const [cards, setCards] = useState<UserCard[]>([])
-  const [catalogCards, setCatalogCards] = useState<CatalogCard[]>([])
   const [loading, setLoading] = useState(true)
   const [editingCard, setEditingCard] = useState<UserCard | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-
-  const loadCatalog = async (): Promise<CatalogCard[]> => {
-    // Check cache first
-    try {
-      const cached = sessionStorage.getItem(CACHE_KEY)
-      if (cached) {
-        const { cards, timestamp }: CachedCatalog = JSON.parse(cached)
-        const age = Date.now() - timestamp
-        if (age < CACHE_TTL) {
-          return cards
-        }
-      }
-    } catch (e) {
-      // Cache read failed, continue to fetch
-    }
-
-    // Fetch from Supabase
-    const { data, error } = await supabase
-      .from("cards")
-      .select("*")
-      .eq("is_active", true)
-      .order("bank", { ascending: true })
-
-    if (error) {
-      console.error("Failed to load catalog:", error)
-      return []
-    }
-
-    const cards = data || []
-
-    // Cache the result
-    try {
-      const cache: CachedCatalog = { cards, timestamp: Date.now() }
-      sessionStorage.setItem(CACHE_KEY, JSON.stringify(cache))
-    } catch (e) {
-      // Cache write failed, continue
-    }
-
-    return cards
-  }
 
   const loadCards = async (showWelcome = false) => {
     const {
@@ -88,24 +43,21 @@ export default function DashboardPage() {
     }
 
     setEmail(session.user.email ?? null)
+    setUserId(session.user.id)
 
-    // Load both user cards and catalog in parallel
-    const [userCardsResult, catalog] = await Promise.all([
-      supabase
-        .from("user_cards")
-        .select("*")
-        .order("created_at", { ascending: false }),
-      loadCatalog()
-    ])
+    // Load user cards
+    const { data: userCardsResult, error } = await supabase
+      .from("user_cards")
+      .select("*")
+      .order("created_at", { ascending: false })
 
-    if (userCardsResult.error) {
-      toast.error(userCardsResult.error.message || "Unable to load your cards")
+    if (error) {
+      toast.error(error.message || "Unable to load your cards")
       setLoading(false)
       return
     }
 
-    setCards(userCardsResult.data || [])
-    setCatalogCards(catalog)
+    setCards(userCardsResult || [])
     setLoading(false)
 
     // Show welcome message on initial load from login
@@ -146,6 +98,14 @@ export default function DashboardPage() {
 
   const topRecommendation = recommendations.length > 0 ? recommendations[0] : null
 
+  // Calculate projection to domestic flight (most achievable goal)
+  const projection = useMemo(() => {
+    if (catalogCards.length === 0) return null
+    const goal = GOALS.domesticFlight // 10,000 points
+    const paths = calculateMultiCardPaths(goal, cards, catalogCards, 0)
+    return paths.length > 0 ? { path: paths[0], goal } : null
+  }, [cards, catalogCards])
+
   if (loading) {
     return (
       <AppShell>
@@ -159,6 +119,9 @@ export default function DashboardPage() {
   return (
     <AppShell>
       <div className="space-y-6">
+        {/* Daily Insights with Streak Tracking */}
+        {userId && <DailyInsights userId={userId} />}
+
         {topRecommendation && (
           <div className="space-y-3">
             <RecommendationCard recommendation={topRecommendation} variant="hero" />
@@ -166,6 +129,45 @@ export default function DashboardPage() {
               Simple workflow: 1. Add your cards 2. Get instant recommendations
             </p>
           </div>
+        )}
+
+        {/* Projection Preview */}
+        {projection && (
+          <Card className="border border-[var(--accent)]/30 bg-gradient-to-br from-[var(--surface)] to-[color-mix(in_srgb,var(--accent)_5%,transparent)] shadow-md">
+            <CardContent className="pt-6">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">{projection.goal.icon}</span>
+                    <p className="text-lg font-semibold text-white">Your Goal Path</p>
+                  </div>
+                  <p className="text-2xl font-bold text-[var(--accent)]">
+                    {projection.goal.label} in {projection.path.timeToGoal} months
+                  </p>
+                  <p className="text-sm text-slate-300">
+                    With {projection.path.cards.length} card{projection.path.cards.length > 1 ? 's' : ''}: {projection.path.cards.map(c => c.bank).join(' + ')}
+                  </p>
+                  <div className="flex items-center gap-4 text-xs text-slate-400">
+                    <span>{projection.path.totalPoints.toLocaleString()} points earned</span>
+                    <span>•</span>
+                    <span>${projection.path.totalCost} total fees</span>
+                    <span>•</span>
+                    <span>${projection.path.netValue.toFixed(0)} net value</span>
+                  </div>
+                </div>
+                <div>
+                  <Link href="/projections">
+                    <Button
+                      className="rounded-full text-white shadow-sm"
+                      style={{ background: "var(--gradient-cta)" }}
+                    >
+                      View All Goals
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         <div className="overflow-hidden rounded-3xl border border-[var(--border-default)] bg-[var(--surface)] p-6 shadow-md">

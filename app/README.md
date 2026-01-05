@@ -493,7 +493,7 @@ pnpm test:regression
 pnpm test:watch
 ```
 
-For detailed testing documentation, see [TESTING.md](./TESTING.md).
+For detailed testing documentation, see [TESTING.md](../docs/TESTING.md).
 
 ---
 
@@ -503,7 +503,7 @@ For detailed testing documentation, see [TESTING.md](./TESTING.md).
 **Status**: Production Ready
 **Next Steps**: Deploy scraper, configure email service, beta testing
 
-See [PROJECT_STATUS.md](../PROJECT_STATUS.md) for detailed progress tracking.
+See [../docs/PROJECT_STATUS.md](../docs/PROJECT_STATUS.md) for detailed progress tracking.
 
 ---
 
