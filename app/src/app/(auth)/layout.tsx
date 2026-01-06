@@ -17,7 +17,7 @@ export default function AuthLayout({
       <Header logoClickable={true} />
 
       {/* Page Content */}
-      <main className="relative z-10 flex items-center justify-center py-8 md:py-16 min-h-[calc(100vh-12rem)]">
+      <main className="relative z-10 flex items-center justify-center flex-1 py-8 md:py-16">
         {children}
       </main>
     </div>

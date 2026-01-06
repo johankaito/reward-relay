@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
@@ -47,15 +46,8 @@ export default function LoginPage() {
   }
 
   return (
-      <div className="w-full px-4">
-      <Card className="w-full max-w-md border border-[var(--border-default)] bg-[var(--surface)] shadow-xl">
-        <CardHeader className="space-y-4">
-          <div className="flex justify-center">
-            <Image src="/logo.svg" alt="Reward Relay" width={64} height={64} />
-          </div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)] text-center">
-            Reward Relay
-          </p>
+      <Card className="w-full max-w-md mx-auto border border-[var(--border-default)] bg-[var(--surface)] shadow-xl">
+        <CardHeader className="space-y-3">
           <CardTitle className="text-2xl font-semibold text-white">
             Log in to your account
           </CardTitle>
@@ -117,6 +109,5 @@ export default function LoginPage() {
           </div>
         </CardContent>
       </Card>
-      </div>
   )
 }

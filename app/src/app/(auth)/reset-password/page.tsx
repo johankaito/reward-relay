@@ -37,10 +37,8 @@ export default function ResetPasswordPage() {
   }
 
   return (
-      <div className="w-full px-4">
-      <Card className="w-full max-w-md border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-        <CardHeader className="space-y-2">
-          <p className="text-sm text-slate-300">Reward Relay</p>
+      <Card className="w-full max-w-md mx-auto border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+        <CardHeader className="space-y-3">
           <CardTitle className="text-2xl font-semibold text-white">Reset password</CardTitle>
         </CardHeader>
         <CardContent>
@@ -71,6 +69,5 @@ export default function ResetPasswordPage() {
           </form>
         </CardContent>
       </Card>
-      </div>
   )
 }
