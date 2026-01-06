@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { initPostHog } from "@/lib/analytics/posthog"
 import { AnalyticsProvider as AnalyticsContextProvider } from "@/contexts/AnalyticsContext"
 
@@ -10,5 +10,9 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     initPostHog()
   }, [])
 
-  return <AnalyticsContextProvider>{children}</AnalyticsContextProvider>
+  return (
+    <Suspense fallback={null}>
+      <AnalyticsContextProvider>{children}</AnalyticsContextProvider>
+    </Suspense>
+  )
 }
