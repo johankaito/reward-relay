@@ -57,7 +57,7 @@ export default function SignupPage() {
           <CardTitle className="text-2xl font-semibold text-white">
             Create your account
           </CardTitle>
-          <p className="text-sm text-slate-300">Week 1: add your AMEX + churn target</p>
+          <p className="text-sm text-slate-300">Week 1: add your cards + churn target</p>
         </CardHeader>
         <CardContent className="space-y-6">
           <form onSubmit={handleSignup} className="space-y-4" name="signup">

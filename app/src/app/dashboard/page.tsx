@@ -188,7 +188,7 @@ export default function DashboardPage() {
                 className="rounded-full px-3 py-2 text-xs font-semibold text-[var(--accent-contrast)]"
                 style={{ background: "var(--gradient-accent)" }}
               >
-                Week 1: Add your AMEX + churn target
+                Week 1: Add your cards + churn target
               </div>
               <Button
                 size="sm"
@@ -249,7 +249,7 @@ export default function DashboardPage() {
             {cards.length === 0 ? (
               <div className="flex flex-col items-start gap-3 rounded-2xl border border-dashed border-[var(--border-default)] bg-[var(--surface-muted)] p-5 text-sm text-slate-200">
                 <p className="text-base font-semibold text-white">No cards tracked yet</p>
-                <p>Add your AMEX and churn target to start seeing reminders and eligibility.</p>
+                <p>Add your cards and churn target to start seeing reminders and eligibility.</p>
                 <div className="flex gap-2">
                   <Button
                     size="sm"

@@ -100,7 +100,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
       <CardHeader className="border-b border-[var(--border-default)] bg-[var(--surface-strong)]/60">
         <CardTitle className="text-lg text-white">Track a card</CardTitle>
         <p className="text-sm text-slate-300">
-          Pick from catalog or add custom. Add your AMEX and your current churn target first.
+          Pick from catalog or add custom. Add your primary card and churn target first.
         </p>
       </CardHeader>
       <CardContent className="pt-6">
