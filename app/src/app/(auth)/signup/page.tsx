@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { PublicHeader } from "@/components/layout/PublicHeader"
 import { supabase } from "@/lib/supabase/client"
 
 export default function SignupPage() {
@@ -54,9 +53,7 @@ export default function SignupPage() {
   }
 
   return (
-    <>
-      <PublicHeader />
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-[var(--surface-muted)] px-4 text-white">
+      <div className="w-full px-4">
       <Card className="w-full max-w-md border border-[var(--border-default)] bg-[var(--surface)] shadow-xl">
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
@@ -122,6 +119,5 @@ export default function SignupPage() {
         </CardContent>
       </Card>
       </div>
-    </>
   )
 }

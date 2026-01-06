@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { PublicHeader } from "@/components/layout/PublicHeader"
 import { supabase } from "@/lib/supabase/client"
 
 export default function ResetPasswordPage() {
@@ -38,9 +37,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <>
-      <PublicHeader />
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-[var(--surface-muted)] px-4 text-white">
+      <div className="w-full px-4">
       <Card className="w-full max-w-md border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
         <CardHeader className="space-y-2">
           <p className="text-sm text-slate-300">Reward Relay</p>
@@ -75,6 +72,5 @@ export default function ResetPasswordPage() {
         </CardContent>
       </Card>
       </div>
-    </>
   )
 }

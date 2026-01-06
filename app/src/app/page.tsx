@@ -35,7 +35,7 @@ export default function Home() {
   }, [router])
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-gradient-to-br from-[#0a0e1a] via-[#0f1419] to-[#050810] text-white">
+    <div className="relative flex flex-col bg-gradient-to-br from-[#0a0e1a] via-[#0f1419] to-[#050810] text-white">
       {/* Subtle gradient orbs for depth */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl"></div>
@@ -45,7 +45,7 @@ export default function Home() {
       {/* Sticky Header */}
       <Header logoClickable={false} />
 
-      <main className="relative z-10 flex flex-1 items-center justify-center py-8 md:py-16">
+      <main className="relative z-10 flex-1 py-8 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12 xl:gap-16">
             {/* Left: Hero Content */}
@@ -536,62 +536,62 @@ export default function Home() {
             </div>
 
             <div className="mx-auto max-w-3xl space-y-4">
-              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   What happens after the 7-day free trial?
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <p className="mt-4 text-sm text-slate-300">
+                <p className="px-6 pb-6 text-sm text-slate-300">
                   After 7 days, you'll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
                 </p>
               </details>
 
-              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   Can I cancel anytime?
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <p className="mt-4 text-sm text-slate-300">
+                <p className="px-6 pb-6 text-sm text-slate-300">
                   Yes! Cancel anytime from your account settings. If you cancel mid-month, you'll keep Pro access until the end of your billing period. No penalties, no hassle.
                 </p>
               </details>
 
-              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   Do you store my credit card numbers?
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <p className="mt-4 text-sm text-slate-300">
+                <p className="px-6 pb-6 text-sm text-slate-300">
                   <strong>No.</strong> We only track card metadata—bank name, application dates, cancellation dates, and your notes. We never store or see your actual credit card numbers or PINs.
                 </p>
               </details>
 
-              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   What's the 12-month rule?
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <p className="mt-4 text-sm text-slate-300">
+                <p className="px-6 pb-6 text-sm text-slate-300">
                   Most Australian banks require you to wait 12 months after cancelling a card before you're eligible for sign-up bonuses on another card from that same bank. Reward Relay automatically tracks this for you.
                 </p>
               </details>
 
-              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   How do I upgrade from Free to Pro?
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <p className="mt-4 text-sm text-slate-300">
+                <p className="px-6 pb-6 text-sm text-slate-300">
                   Click "Upgrade to Pro" in your dashboard settings. Choose monthly or annual, start your 7-day trial, and all Pro features unlock immediately. You'll keep all your existing data.
                 </p>
               </details>
 
-              <details className="group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-white">
+              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   Is my data secure?
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <p className="mt-4 text-sm text-slate-300">
+                <p className="px-6 pb-6 text-sm text-slate-300">
                   Yes. Your data is encrypted in transit and at rest, stored in Australia, and protected by industry-standard security. We use Row Level Security so you can only access your own data.
                 </p>
               </details>

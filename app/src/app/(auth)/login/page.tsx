@@ -47,9 +47,7 @@ export default function LoginPage() {
   }
 
   return (
-    <>
-      <PublicHeader />
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-[var(--surface-muted)] px-4 text-white">
+      <div className="w-full px-4">
       <Card className="w-full max-w-md border border-[var(--border-default)] bg-[var(--surface)] shadow-xl">
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
