@@ -118,6 +118,36 @@ export interface ReferralCompletedEvent {
   cac_saved: number // Usually ~$20-25
 }
 
+// ===== Engagement & Onboarding Events =====
+
+export interface DailyInsightsViewedEvent {
+  count: number
+  types: string[]
+}
+
+export interface DailyInsightClickedEvent {
+  tip_type: string
+  title: string
+}
+
+export interface DealClickedEvent {
+  deal_id: string
+  title: string
+  merchant: string
+}
+
+export interface OnboardingQuestionAnsweredEvent {
+  question: string
+  answer: string
+  step: number
+}
+
+export interface OnboardingCompletedEvent {
+  spending_category: string
+  optimization_goal: string
+  churning_goal: string
+}
+
 // ===== Helper type for all events =====
 
 export type AnalyticsEvent =
@@ -137,6 +167,11 @@ export type AnalyticsEvent =
   | { name: 'subscription_cancelled'; properties: SubscriptionCancelledEvent }
   | { name: 'referral_sent'; properties: ReferralSentEvent }
   | { name: 'referral_completed'; properties: ReferralCompletedEvent }
+  | { name: 'daily_insights_viewed'; properties: DailyInsightsViewedEvent }
+  | { name: 'daily_insight_clicked'; properties: DailyInsightClickedEvent }
+  | { name: 'deal_clicked'; properties: DealClickedEvent }
+  | { name: 'onboarding_question_answered'; properties: OnboardingQuestionAnsweredEvent }
+  | { name: 'onboarding_completed'; properties: OnboardingCompletedEvent }
 
 // ===== CAC Estimation by Source =====
 
