@@ -38,7 +38,9 @@ export default function SignupPage() {
 
       if (error) throw error
 
-      toast.success("Account created! Check your email to confirm your account.")
+      toast.success("Account created! Check your email to confirm your account.", {
+        duration: Infinity,
+      })
       // Don't redirect yet - user needs to confirm email first
       setEmail("")
       setPassword("")
