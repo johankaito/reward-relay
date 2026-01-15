@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      beta_requests: {
+        Row: {
+          approved: boolean | null
+          created_at: string | null
+          email: string
+          id: string
+          invited_at: string | null
+          message: string | null
+          name: string | null
+          processed: boolean | null
+        }
+        Insert: {
+          approved?: boolean | null
+          created_at?: string | null
+          email: string
+          id?: string
+          invited_at?: string | null
+          message?: string | null
+          name?: string | null
+          processed?: boolean | null
+        }
+        Update: {
+          approved?: boolean | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          invited_at?: string | null
+          message?: string | null
+          name?: string | null
+          processed?: boolean | null
+        }
+        Relationships: []
+      }
       card_history: {
         Row: {
           card_id: string | null

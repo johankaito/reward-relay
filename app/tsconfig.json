@@ -34,6 +34,7 @@
     "node_modules",
     "monitor.ts",
     "test-interactive.ts",
-    "screenshot-home.ts"
+    "screenshot-home.ts",
+    "supabase/functions/**"
   ]
 }
