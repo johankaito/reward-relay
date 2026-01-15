@@ -1,10 +1,10 @@
-name: Weekly Card Catalog Scraping
+name: Daily Card Catalog Scraping
 
 on:
   schedule:
-    # Every Sunday at 2am AEST (4pm UTC Saturday during standard time, 6pm UTC Saturday during daylight saving)
-    # Using 16:00 UTC on Saturday as baseline (2am Sunday AEST standard time)
-    - cron: '0 16 * * 6'
+    # Every day at 2am AEST (4pm UTC during standard time, 6pm UTC during daylight saving)
+    # Using 16:00 UTC as baseline (2am AEST standard time)
+    - cron: '0 16 * * *'
   workflow_dispatch: # Allow manual triggers
 
 jobs:
