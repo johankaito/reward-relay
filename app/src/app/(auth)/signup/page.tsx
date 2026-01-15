@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { supabase } from "@/lib/supabase/client"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
+import { FEATURE_FLAGS } from "@/config/features"
 
 export default function SignupPage() {
   const router = useRouter()
@@ -18,6 +19,14 @@ export default function SignupPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+
+  // Redirect to home if in private beta mode
+  useEffect(() => {
+    if (FEATURE_FLAGS.privateBeta) {
+      toast.info("Sign up is currently unavailable. Request beta access on our homepage!")
+      router.push("/")
+    }
+  }, [router])
 
   // Track signup_started event when page loads
   useEffect(() => {
