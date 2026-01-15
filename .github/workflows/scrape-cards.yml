@@ -22,6 +22,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
+        with:
+          package_json_file: app/package.json
 
       - name: Install dependencies
         run: |
