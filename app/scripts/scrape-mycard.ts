@@ -10,11 +10,11 @@ import type { Database } from '../src/types/database.types';
 
 // Supabase setup
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error('❌ Missing Supabase credentials');
-  console.error('Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY environment variables');
+  console.error('Set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables');
   process.exit(1);
 }
 
