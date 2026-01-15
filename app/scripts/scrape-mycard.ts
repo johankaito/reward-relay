@@ -77,7 +77,7 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
 
       // Try multiple selector strategies
       const cardContainers = document.querySelectorAll(
-        '[data-testid="card-item"], .card-item, .product-card, .card-listing, article'
+        '.productcard, [class*="productcard"]'
       );
 
       cardContainers.forEach((container, index) => {
@@ -85,23 +85,17 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
           // Extract text content
           const text = container.textContent || '';
 
-          // Try to find card name (usually in h2, h3, or strong tags)
-          const nameEl = container.querySelector('h2, h3, h4, strong, .card-name, .product-name');
+          // Try to find card name (in h3 tags for MyCard)
+          const nameEl = container.querySelector('h3');
           const name = nameEl?.textContent?.trim() || `Card ${index + 1}`;
 
-          // Try to extract bank from name or separate field
-          let bank = 'Unknown';
-          const bankPatterns = [
-            /^(ANZ|NAB|Westpac|CommBank|Bankwest|St\.George|Bank of Melbourne|BankSA|HSBC|Citibank|American Express|AMEX)\s/i,
-            /(ANZ|NAB|Westpac|CommBank|Bankwest|St\.George|Bank of Melbourne|BankSA|HSBC|Citibank|American Express|AMEX)/i
-          ];
-
-          for (const pattern of bankPatterns) {
-            const match = name.match(pattern);
-            if (match) {
-              bank = match[1];
-              break;
-            }
+          // Extract bank from name - MyCard is the brand
+          let bank = 'MyCard';
+          // Check if it's a co-branded card (e.g., "MyCard Premier Qantas")
+          if (name.toLowerCase().includes('qantas')) {
+            bank = 'MyCard (Qantas)';
+          } else if (name.toLowerCase().includes('velocity')) {
+            bank = 'MyCard (Velocity)';
           }
 
           // Try to find annual fee
