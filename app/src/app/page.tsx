@@ -18,6 +18,8 @@ import {
 } from "lucide-react"
 import Header from "@/components/layout/Header"
 import { supabase } from "@/lib/supabase/client"
+import { BetaGate } from "@/components/ui/BetaGate"
+import { BetaOnly } from "@/components/ui/BetaOnly"
 
 export default function Home() {
   const router = useRouter()
@@ -154,7 +156,12 @@ export default function Home() {
                   <ChartBar className="h-6 w-6 text-teal-400" />
                 </div>
                 <p className="text-center text-sm font-semibold text-white">Track unlimited cards</p>
-                <p className="text-center text-xs text-slate-400">Pro tier removes all limits. Churn as many as you want.</p>
+                <BetaGate>
+                  <p className="text-center text-xs text-slate-400">Pro tier removes all limits. Churn as many as you want.</p>
+                </BetaGate>
+                <BetaOnly>
+                  <p className="text-center text-xs text-slate-400">Track all your cards in one place—no limits during beta.</p>
+                </BetaOnly>
               </div>
               <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-white/10">
@@ -266,9 +273,16 @@ export default function Home() {
                       <Sparkles className="h-6 w-6 text-purple-400" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-purple-400">
-                        Pro Goal
-                      </p>
+                      <BetaGate>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-purple-400">
+                          Pro Goal
+                        </p>
+                      </BetaGate>
+                      <BetaOnly>
+                        <p className="text-xs font-semibold uppercase tracking-wider text-purple-400">
+                          Example Goal
+                        </p>
+                      </BetaOnly>
                       <p className="text-lg font-bold text-white">Business Class Asia</p>
                     </div>
                   </div>
@@ -295,10 +309,12 @@ export default function Home() {
                       Sydney → Singapore return • Worth: $2,000
                     </div>
 
-                    <div className="flex items-center gap-2 rounded-xl border border-purple-400/20 bg-purple-500/10 px-3 py-2 text-xs text-purple-200">
-                      <Lightbulb className="h-4 w-4" />
-                      <span>Pro members: Calculate YOUR custom goals</span>
-                    </div>
+                    <BetaGate>
+                      <div className="flex items-center gap-2 rounded-xl border border-purple-400/20 bg-purple-500/10 px-3 py-2 text-xs text-purple-200">
+                        <Lightbulb className="h-4 w-4" />
+                        <span>Pro members: Calculate YOUR custom goals</span>
+                      </div>
+                    </BetaGate>
                   </div>
                 </div>
               </div>
@@ -311,9 +327,16 @@ export default function Home() {
               >
                 Start Tracking Your Cards
               </a>
-              <p className="mt-3 text-sm text-slate-400">
-                Start with free tier • Upgrade anytime
-              </p>
+              <BetaGate>
+                <p className="mt-3 text-sm text-slate-400">
+                  Start with free tier • Upgrade anytime
+                </p>
+              </BetaGate>
+              <BetaOnly>
+                <p className="mt-3 text-sm text-slate-400">
+                  Join the private beta • Free during testing
+                </p>
+              </BetaOnly>
             </div>
           </div>
 
@@ -382,15 +405,16 @@ export default function Home() {
           </div>
 
           {/* Pricing Section */}
-          <div className="mt-24 space-y-8">
-            <div className="text-center space-y-3">
-              <h2 className="text-3xl font-bold text-white sm:text-4xl">Simple, Transparent Pricing</h2>
-              <p className="text-lg text-slate-400">
-                Start free, upgrade when you're ready to unlock all features
-              </p>
-            </div>
+          <BetaGate>
+            <div className="mt-24 space-y-8">
+              <div className="text-center space-y-3">
+                <h2 className="text-3xl font-bold text-white sm:text-4xl">Simple, Transparent Pricing</h2>
+                <p className="text-lg text-slate-400">
+                  Start free, upgrade when you're ready to unlock all features
+                </p>
+              </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+              <div className="grid gap-6 md:grid-cols-3">
               {/* Free Tier */}
               <div className="flex flex-col rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
                 <div className="mb-6">
@@ -522,13 +546,89 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="text-center">
-              <p className="flex items-center justify-center gap-2 text-sm text-slate-300">
-                <Lightbulb className="h-5 w-5 text-teal-400" />
-                <span><strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)</span>
-              </p>
+              <div className="text-center">
+                <p className="flex items-center justify-center gap-2 text-sm text-slate-300">
+                  <Lightbulb className="h-5 w-5 text-teal-400" />
+                  <span><strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)</span>
+                </p>
+              </div>
             </div>
-          </div>
+          </BetaGate>
+
+          {/* Beta-Only Messaging */}
+          <BetaOnly>
+            <div className="mt-24 space-y-8">
+              <div className="mx-auto max-w-3xl text-center space-y-6">
+                <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-6 py-3 backdrop-blur-sm">
+                  <Lock className="h-5 w-5 text-teal-400" />
+                  <span className="text-sm font-semibold text-teal-300">Private Beta • Invite Only</span>
+                </div>
+
+                <h2 className="text-3xl font-bold text-white sm:text-4xl">
+                  Join the Private Beta
+                </h2>
+
+                <p className="text-lg text-slate-300">
+                  We're testing Reward Relay with a small group of Australian churners. During the private beta,
+                  all features are <strong className="text-teal-400">completely free</strong>.
+                </p>
+
+                <div className="grid gap-4 md:grid-cols-2 mt-8 text-left">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                    <div className="flex items-start gap-3">
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <div>
+                        <p className="font-semibold text-white">Unlimited everything</p>
+                        <p className="mt-1 text-sm text-slate-400">Track unlimited cards, get all recommendations, use every feature</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                    <div className="flex items-start gap-3">
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <div>
+                        <p className="font-semibold text-white">Shape the product</p>
+                        <p className="mt-1 text-sm text-slate-400">Your feedback directly influences features and improvements</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                    <div className="flex items-start gap-3">
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <div>
+                        <p className="font-semibold text-white">Early adopter benefits</p>
+                        <p className="mt-1 text-sm text-slate-400">Special pricing when we launch publicly (details TBA)</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                    <div className="flex items-start gap-3">
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <div>
+                        <p className="font-semibold text-white">Australian-first</p>
+                        <p className="mt-1 text-sm text-slate-400">Built specifically for Australian banks, cards, and churning rules</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6">
+                  <a
+                    href="/signup"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/30"
+                  >
+                    Request Beta Access
+                  </a>
+                  <p className="mt-3 text-sm text-slate-400">
+                    Limited spots available • Free during beta
+                  </p>
+                </div>
+              </div>
+            </div>
+          </BetaOnly>
 
           {/* FAQ Section */}
           <div className="mt-24 space-y-8">
@@ -537,15 +637,17 @@ export default function Home() {
             </div>
 
             <div className="mx-auto max-w-3xl space-y-4">
-              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
-                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
-                  What happens after the 7-day free trial?
-                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
-                </summary>
-                <p className="px-6 pb-6 text-sm text-slate-300">
-                  After 7 days, you'll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
-                </p>
-              </details>
+              <BetaGate>
+                <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
+                    What happens after the 7-day free trial?
+                    <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                  </summary>
+                  <p className="px-6 pb-6 text-sm text-slate-300">
+                    After 7 days, you'll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
+                  </p>
+                </details>
+              </BetaGate>
 
               <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                 <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
@@ -577,15 +679,17 @@ export default function Home() {
                 </p>
               </details>
 
-              <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
-                <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
-                  How do I upgrade from Free to Pro?
-                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
-                </summary>
-                <p className="px-6 pb-6 text-sm text-slate-300">
-                  Click "Upgrade to Pro" in your dashboard settings. Choose monthly or annual, start your 7-day trial, and all Pro features unlock immediately. You'll keep all your existing data.
-                </p>
-              </details>
+              <BetaGate>
+                <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
+                  <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
+                    How do I upgrade from Free to Pro?
+                    <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                  </summary>
+                  <p className="px-6 pb-6 text-sm text-slate-300">
+                    Click "Upgrade to Pro" in your dashboard settings. Choose monthly or annual, start your 7-day trial, and all Pro features unlock immediately. You'll keep all your existing data.
+                  </p>
+                </details>
+              </BetaGate>
 
               <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                 <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
