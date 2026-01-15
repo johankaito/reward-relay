@@ -17,6 +17,10 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const [showBetaForm, setShowBetaForm] = useState(false)
+  const [betaEmail, setBetaEmail] = useState("")
+  const [betaName, setBetaName] = useState("")
+  const [betaLoading, setBetaLoading] = useState(false)
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -42,6 +46,36 @@ export default function LoginPage() {
         error instanceof Error ? error.message : "Login failed. Try again."
       toast.error(message)
       setIsLoading(false)
+    }
+  }
+
+  const handleBetaRequest = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!betaEmail || !betaEmail.includes("@")) {
+      toast.error("Please enter a valid email address")
+      return
+    }
+
+    setBetaLoading(true)
+
+    try {
+      const { error } = await supabase.from("beta_requests").insert({
+        email: betaEmail.trim(),
+        name: betaName.trim() || null,
+      })
+
+      if (error) throw error
+
+      toast.success("Request submitted! We'll be in touch soon.")
+      setShowBetaForm(false)
+      setBetaEmail("")
+      setBetaName("")
+    } catch (error: any) {
+      console.error("Beta request error:", error)
+      toast.error(error.message || "Failed to submit request. Please try again.")
+    } finally {
+      setBetaLoading(false)
     }
   }
 
@@ -96,17 +130,79 @@ export default function LoginPage() {
               {isLoading ? "Logging in..." : "Log in"}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm text-slate-300">
-            Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-[var(--accent-strong)] underline">
-              Create one
-            </Link>
-          </div>
-          <div className="mt-2 text-center text-sm text-slate-300">
-            <Link href="/reset-password" className="text-[var(--accent)] underline">
-              Forgot password?
-            </Link>
-          </div>
+          {!showBetaForm ? (
+            <>
+              <div className="mt-4 text-center text-sm text-slate-300">
+                Don&apos;t have an account?{" "}
+                <button
+                  type="button"
+                  onClick={() => setShowBetaForm(true)}
+                  className="text-[var(--accent-strong)] underline hover:text-[var(--accent)] transition-colors"
+                >
+                  Request access
+                </button>
+              </div>
+              <div className="mt-2 text-center text-sm text-slate-300">
+                <Link href="/reset-password" className="text-[var(--accent)] underline">
+                  Forgot password?
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
+              <form onSubmit={handleBetaRequest} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="beta-email" className="text-slate-200">
+                    Email
+                  </Label>
+                  <Input
+                    id="beta-email"
+                    type="email"
+                    value={betaEmail}
+                    onChange={(e) => setBetaEmail(e.target.value)}
+                    required
+                    placeholder="you@example.com"
+                    className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="beta-name" className="text-slate-200">
+                    Name (optional)
+                  </Label>
+                  <Input
+                    id="beta-name"
+                    type="text"
+                    value={betaName}
+                    onChange={(e) => setBetaName(e.target.value)}
+                    placeholder="Your name"
+                    className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="submit"
+                    disabled={betaLoading}
+                    className="flex-1 text-white"
+                    style={{ background: "var(--gradient-cta)" }}
+                  >
+                    {betaLoading ? "Submitting..." : "Request Access"}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setShowBetaForm(false)
+                      setBetaEmail("")
+                      setBetaName("")
+                    }}
+                    variant="outline"
+                    className="border-[var(--border-default)] text-slate-300 hover:bg-[var(--surface-soft)]"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
+          )}
         </CardContent>
       </Card>
   )
