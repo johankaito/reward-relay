@@ -17,6 +17,7 @@ import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
 import { useCatalog } from "@/contexts/CatalogContext"
+import { useAnalytics } from "@/contexts/AnalyticsContext"
 import type { Database } from "@/types/database.types"
 import type { Recommendation } from "@/lib/recommendations"
 
@@ -25,6 +26,7 @@ type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 export default function DashboardPage() {
   const router = useRouter()
   const { catalogCards } = useCatalog()
+  const analytics = useAnalytics()
   const [email, setEmail] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [cards, setCards] = useState<UserCard[]>([])
@@ -44,6 +46,12 @@ export default function DashboardPage() {
 
     setEmail(session.user.email ?? null)
     setUserId(session.user.id)
+
+    // Identify user in PostHog
+    analytics.identifyUser(session.user.id, {
+      email: session.user.email,
+      created_at: session.user.created_at,
+    })
 
     // Load user cards
     const { data: userCardsResult, error } = await supabase
@@ -97,6 +105,20 @@ export default function DashboardPage() {
   }, [cards, catalogCards])
 
   const topRecommendation = recommendations.length > 0 ? recommendations[0] : null
+
+  // Track recommendation_viewed when recommendations are shown
+  useEffect(() => {
+    if (topRecommendation && userId) {
+      const signupDate = new Date() // We'll use current date as approximation
+      const daysSinceSignup = 0 // Placeholder - could be calculated properly
+
+      analytics.trackEvent("recommendation_viewed", {
+        card_index: 0, // First recommendation
+        is_pro: false, // Free tier for now
+        days_since_signup: daysSinceSignup,
+      })
+    }
+  }, [topRecommendation, userId, analytics])
 
   // Calculate projection to domestic flight (most achievable goal)
   const projection = useMemo(() => {

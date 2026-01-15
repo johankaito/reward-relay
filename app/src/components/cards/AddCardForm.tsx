@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase/client"
+import { useAnalytics } from "@/contexts/AnalyticsContext"
 import type { Database } from "@/types/database.types"
 import type { CardRecord } from "./CardGrid"
 
@@ -31,6 +32,7 @@ const statuses: Database["public"]["Tables"]["user_cards"]["Row"]["status"][] = 
 ]
 
 export function AddCardForm({ cards, onCreated }: Props) {
+  const analytics = useAnalytics()
   const [selectedCardId, setSelectedCardId] = useState<string>("")
   const [bank, setBank] = useState("")
   const [name, setName] = useState("")
@@ -75,6 +77,25 @@ export function AddCardForm({ cards, onCreated }: Props) {
       })
 
       if (error) throw error
+
+      // Track card_added event
+      // Get total cards count (need to query to get accurate count after insert)
+      const { count } = await supabase
+        .from("user_cards")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+
+      // Calculate days since signup
+      const {data: { user: fullUser }} = await supabase.auth.getUser()
+      const signupDate = fullUser?.created_at ? new Date(fullUser.created_at) : new Date()
+      const daysSinceSignup = Math.floor((Date.now() - signupDate.getTime()) / (1000 * 60 * 60 * 24))
+
+      analytics.trackEvent("card_added", {
+        issuer: bank || selectedCard?.bank || "Unknown",
+        card_name: name || selectedCard?.name || "Unknown",
+        cards_total: count || 1,
+        days_since_signup: daysSinceSignup,
+      })
 
       toast.success("Card tracked")
       setSelectedCardId("")

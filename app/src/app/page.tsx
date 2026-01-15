@@ -59,7 +59,8 @@ export default function Home() {
 
               <div className="space-y-6">
                 <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-                  Turn every card into maximum rewards—
+                  Turn every card into maximum rewards,
+                  <br/>
                   <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
                     seamlessly
                   </span>

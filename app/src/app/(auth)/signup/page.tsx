@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -10,12 +10,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { supabase } from "@/lib/supabase/client"
+import { useAnalytics } from "@/contexts/AnalyticsContext"
 
 export default function SignupPage() {
   const router = useRouter()
+  const analytics = useAnalytics()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+
+  // Track signup_started event when page loads
+  useEffect(() => {
+    const { source, campaign, medium } = analytics.getAcquisitionSource()
+    analytics.trackEvent("signup_started", {
+      source,
+      campaign,
+      medium,
+    })
+  }, [analytics])
 
   const handleSignup = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -35,6 +47,15 @@ export default function SignupPage() {
       })
 
       if (error) throw error
+
+      // Track signup completion
+      const { source, campaign, medium, cac_estimate } = analytics.getAcquisitionSource()
+      analytics.trackEvent("signup_completed", {
+        source,
+        campaign,
+        medium,
+        cac_estimate,
+      })
 
       toast.success("Account created! Check your email to confirm your account.", {
         duration: Infinity,

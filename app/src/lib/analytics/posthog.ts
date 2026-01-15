@@ -17,8 +17,15 @@ export function initPostHog() {
         },
         persistence: "localStorage", // Persist UTM params and user data
         loaded: (posthog) => {
+          // Set environment as super property (included in all events)
+          const environment = process.env.NEXT_PUBLIC_APP_ENV || "development"
+          posthog.register({
+            environment: environment,
+            app_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "local",
+          })
+
           if (process.env.NODE_ENV === "development") {
-            console.log("[PostHog] Initialized successfully")
+            console.log("[PostHog] Initialized successfully", { environment })
           }
         },
       })
