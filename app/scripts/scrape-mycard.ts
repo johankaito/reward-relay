@@ -33,6 +33,7 @@ interface ScrapedCard {
   points_currency: string | null;
   earn_rate_primary: number | null;
   application_link: string | null;
+  scrape_url: string;
   notes: string | null;
   scrape_source: string;
   last_scraped_at: string;
@@ -85,9 +86,71 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
           // Extract text content
           const text = container.textContent || '';
 
-          // Try to find card name (in h3 tags for MyCard)
+          // Strategy 1: Try to find card name from h3 tag
+          let name = '';
           const nameEl = container.querySelector('h3');
-          const name = nameEl?.textContent?.trim() || `Card ${index + 1}`;
+          if (nameEl?.textContent?.trim()) {
+            name = nameEl.textContent.trim();
+          }
+
+          // Strategy 2: Extract from "Explore [Card Name]" link
+          if (!name) {
+            const exploreLink = container.querySelector('a[href*="/credit-cards/"]');
+            if (exploreLink?.textContent) {
+              const exploreLinkText = exploreLink.textContent.trim();
+              const exploreMatch = exploreLinkText.match(/Explore\s+(.+)/i);
+              if (exploreMatch) {
+                name = exploreMatch[1].trim();
+              }
+            }
+          }
+
+          // Strategy 3: Extract from URL path (e.g., /credit-cards/simplicity-card → Simplicity Card)
+          let cardUrl = '';
+          const linkEl = container.querySelector('a[href*="/credit-cards/"]');
+          if (linkEl) {
+            const href = linkEl.getAttribute('href') || '';
+            cardUrl = href;
+
+            // Extract name from URL if we don't have one
+            if (!name) {
+              const urlMatch = href.match(/\/credit-cards\/([^/?]+)/);
+              if (urlMatch) {
+                // Convert slug to title case: "simplicity-card" → "Simplicity Card"
+                name = urlMatch[1]
+                  .split('-')
+                  .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(' ');
+              }
+            }
+          }
+
+          // Strategy 4: Extract from image alt text or filename
+          if (!name) {
+            const imgEl = container.querySelector('img');
+            if (imgEl) {
+              const alt = imgEl.getAttribute('alt');
+              const src = imgEl.getAttribute('src') || '';
+
+              if (alt && alt.trim()) {
+                name = alt.trim();
+              } else {
+                // Extract from image filename: "simplicity_card_art.png" → "Simplicity Card Art"
+                const imgMatch = src.match(/\/([^/]+)_card_art\./i);
+                if (imgMatch) {
+                  name = imgMatch[1]
+                    .split('_')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                }
+              }
+            }
+          }
+
+          // Fallback if all strategies failed
+          if (!name || name.length < 3) {
+            name = `MyCard ${index + 1}`;
+          }
 
           // Extract bank from name - MyCard is the brand
           let bank = 'MyCard';
@@ -126,9 +189,12 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
             earnRate = parseFloat(earnMatch[1]);
           }
 
-          // Find application link
-          const linkEl = container.querySelector('a[href*="apply"], a[href*="card"]');
-          const link = linkEl?.getAttribute('href') || null;
+          // Normalize URL to full URL
+          if (cardUrl && !cardUrl.startsWith('http')) {
+            cardUrl = cardUrl.startsWith('/')
+              ? `https://www.mycard.com.au${cardUrl}`
+              : `https://www.mycard.com.au/${cardUrl}`;
+          }
 
           results.push({
             name,
@@ -137,7 +203,7 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
             bonusPoints,
             spendReq,
             earnRate,
-            link,
+            link: cardUrl || null,
             rawText: text.substring(0, 500) // Keep first 500 chars for debugging
           });
         } catch (error) {
@@ -157,6 +223,10 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
         continue;
       }
 
+      // Generate a unique scrape_url - use the card URL or generate one from bank+name
+      const scrapeUrl = card.link ||
+        `https://www.mycard.com.au/credit-cards/${card.bank.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${card.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+
       const scrapedCard: ScrapedCard = {
         bank: card.bank,
         name: card.name,
@@ -170,6 +240,7 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
         points_currency: null, // Will need to determine from bank/card type
         earn_rate_primary: card.earnRate,
         application_link: card.link,
+        scrape_url: scrapeUrl,
         notes: null,
         scrape_source: 'mycard',
         last_scraped_at: new Date().toISOString(),
@@ -209,10 +280,11 @@ async function saveToSupabase(cards: ScrapedCard[]): Promise<void> {
   for (const card of cards) {
     try {
       // Upsert card (update if exists, insert if new)
+      // Using scrape_source + scrape_url as unique identifier
       const { error, data } = await supabase
         .from('cards')
         .upsert(card, {
-          onConflict: 'bank,name',
+          onConflict: 'scrape_source,scrape_url',
           ignoreDuplicates: false
         })
         .select()
