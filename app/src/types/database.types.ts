@@ -103,6 +103,7 @@ export type Database = {
           points_currency: string | null
           raw_data: Json | null
           scrape_source: string | null
+          scrape_url: string | null
           welcome_bonus_points: number | null
         }
         Insert: {
@@ -125,6 +126,7 @@ export type Database = {
           points_currency?: string | null
           raw_data?: Json | null
           scrape_source?: string | null
+          scrape_url?: string | null
           welcome_bonus_points?: number | null
         }
         Update: {
@@ -147,6 +149,7 @@ export type Database = {
           points_currency?: string | null
           raw_data?: Json | null
           scrape_source?: string | null
+          scrape_url?: string | null
           welcome_bonus_points?: number | null
         }
         Relationships: []

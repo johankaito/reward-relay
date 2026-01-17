@@ -22,6 +22,19 @@ const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_KEY);
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+// MyCard network mapping
+// Source: Citi-to-MyCard migration documentation (Nov 2025)
+// MyCard is issued by NAB. Most cards are on Mastercard network.
+const MYCARD_NETWORK_MAP: Record<string, string> = {
+  'simplicity': 'Mastercard',
+  'clear': 'Mastercard',
+  'rewards': 'Mastercard',
+  'premier': 'Mastercard',
+  'premier qantas': 'Mastercard',
+  'prestige': 'Mastercard',
+  'prestige qantas': 'Mastercard',
+};
+
 interface ScrapedCard {
   bank: string;
   name: string;
@@ -39,6 +52,60 @@ interface ScrapedCard {
   last_scraped_at: string;
   is_active: boolean;
   raw_data: any;
+}
+
+/**
+ * Determines card network using MyCard network mapping
+ */
+function determineNetwork(cardName: string, bank: string): string | null {
+  // For MyCard products, use mapping table
+  if (bank.toLowerCase().includes('mycard')) {
+    const nameLower = cardName.toLowerCase();
+    // Try exact matches and partial matches
+    for (const [key, network] of Object.entries(MYCARD_NETWORK_MAP)) {
+      if (nameLower.includes(key)) {
+        return network;
+      }
+    }
+  }
+
+  // Fallback: Check for network keywords in card name (less reliable)
+  const nameLower = cardName.toLowerCase();
+  if (nameLower.includes('visa')) return 'Visa';
+  if (nameLower.includes('mastercard')) return 'Mastercard';
+  if (nameLower.includes('amex')) return 'Amex';
+
+  // TODO: If network still not found, consider scraping issuing bank's website
+  // For MyCard -> check NAB website
+  // For other cards -> check corresponding bank website
+
+  return null;
+}
+
+/**
+ * Validates that card has required fields populated
+ */
+function validateCard(card: ScrapedCard): { valid: boolean; warnings: string[] } {
+  const warnings: string[] = [];
+
+  // CRITICAL: Network must be present
+  if (!card.network) {
+    warnings.push(`❌ CRITICAL: Missing network for ${card.bank} ${card.name}`);
+    return { valid: false, warnings };
+  }
+
+  // IMPORTANT: These fields should be present
+  if (!card.annual_fee && card.annual_fee !== 0) {
+    warnings.push(`⚠️  Missing annual_fee for ${card.bank} ${card.name}`);
+  }
+  if (!card.welcome_bonus_points) {
+    warnings.push(`⚠️  Missing welcome_bonus_points for ${card.bank} ${card.name}`);
+  }
+  if (!card.earn_rate_primary) {
+    warnings.push(`⚠️  Missing earn_rate_primary for ${card.bank} ${card.name}`);
+  }
+
+  return { valid: true, warnings };
 }
 
 async function scrapeMyCard(): Promise<ScrapedCard[]> {
@@ -230,9 +297,7 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
       const scrapedCard: ScrapedCard = {
         bank: card.bank,
         name: card.name,
-        network: card.name.toLowerCase().includes('visa') ? 'Visa' :
-                 card.name.toLowerCase().includes('mastercard') ? 'Mastercard' :
-                 card.name.toLowerCase().includes('amex') ? 'Amex' : null,
+        network: determineNetwork(card.name, card.bank),
         annual_fee: card.annualFee,
         welcome_bonus_points: card.bonusPoints,
         bonus_spend_requirement: card.spendReq,
@@ -248,8 +313,21 @@ async function scrapeMyCard(): Promise<ScrapedCard[]> {
         raw_data: card
       };
 
+      // Validate card before adding
+      const validation = validateCard(scrapedCard);
+      if (!validation.valid) {
+        // Skip cards without network - this is CRITICAL
+        validation.warnings.forEach(w => console.log(w));
+        console.log(`⏭️  Skipping card due to missing network\n`);
+        continue;
+      }
+
+      // Log warnings but still add card
+      validation.warnings.forEach(w => console.log(w));
+
       cards.push(scrapedCard);
       console.log(`✅ ${scrapedCard.bank} ${scrapedCard.name}`);
+      console.log(`   🌐 Network: ${scrapedCard.network}`);
       if (scrapedCard.welcome_bonus_points) {
         console.log(`   💰 ${scrapedCard.welcome_bonus_points.toLocaleString()} bonus points`);
       }
