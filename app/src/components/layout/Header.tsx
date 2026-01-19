@@ -40,7 +40,7 @@ export default function Header({ logoClickable = false }: HeaderProps) {
           <BetaGate>
             <a
               href="/signup"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/30"
+              className="inline-flex items-center justify-center rounded-full bg-teal-600 px-6 py-2 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30"
             >
               Sign up
             </a>

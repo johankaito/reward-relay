@@ -49,11 +49,11 @@ export default function Home() {
       {/* Sticky Header */}
       <Header logoClickable={false} />
 
-      <main className="relative z-10 flex-1 py-8 md:py-16">
+      <main className="relative z-10 flex-1 py-6 md:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12 xl:gap-16">
             {/* Left: Hero Content */}
-            <div className="flex flex-col justify-center space-y-8">
+            <div className="flex flex-col justify-center space-y-6">
               <div className="flex items-center gap-3">
                 <Image src="/logo.svg" alt="Reward Relay" width={40} height={40} className="drop-shadow-lg" />
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-teal-200 backdrop-blur-sm">
@@ -61,11 +61,11 @@ export default function Home() {
                 </span>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                   Turn every card into maximum rewards,
                   <br/>
-                  <span className="bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+                  <span className="text-teal-400">
                     seamlessly
                   </span>
                 </h1>
@@ -78,7 +78,7 @@ export default function Home() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
                   href="/login"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/30"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-teal-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30"
                 >
                   Log in
                 </a>
@@ -102,9 +102,9 @@ export default function Home() {
               <div className="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-2xl">
                 <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">Dashboard preview</p>
                 <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-slate-800/90 shadow-2xl backdrop-blur-sm">
-                  <div className="flex items-center justify-between bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-3">
+                  <div className="flex items-center justify-between bg-teal-600 px-4 py-3">
                     <span className="text-sm font-semibold text-white">Your next churn</span>
-                    <span className="rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-teal-700 shadow-lg">
                       Ready this month
                     </span>
                   </div>
@@ -114,7 +114,7 @@ export default function Home() {
                         <p className="text-xs font-medium text-slate-400">Recommended</p>
                         <p className="text-lg font-bold text-white">ANZ Rewards Black</p>
                       </div>
-                      <span className="rounded-full bg-gradient-to-r from-teal-500/20 to-cyan-500/20 px-3 py-1.5 text-sm font-bold text-teal-300 ring-1 ring-teal-400/30">
+                      <span className="rounded-full bg-teal-500/20 px-3 py-1.5 text-sm font-bold text-teal-300 ring-1 ring-teal-400/30">
                         $1,200 net
                       </span>
                     </div>
@@ -328,7 +328,7 @@ export default function Home() {
               <BetaGate>
                 <a
                   href="/signup"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/30"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-teal-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30"
                 >
                   Start Tracking Your Cards
                 </a>
@@ -458,7 +458,7 @@ export default function Home() {
 
               {/* Pro Monthly */}
               <div className="relative flex flex-col rounded-3xl border-2 border-teal-500/50 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 p-8 backdrop-blur-sm shadow-xl shadow-teal-500/20">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-4 py-1 text-xs font-bold text-white">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-teal-600 px-4 py-1 text-xs font-bold text-white">
                   MOST POPULAR
                 </div>
                 <div className="mb-6">
@@ -501,7 +501,7 @@ export default function Home() {
                 </ul>
                 <a
                   href="/signup"
-                  className="rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 px-6 py-3 text-center font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-teal-500/30"
+                  className="rounded-full bg-teal-600 px-6 py-3 text-center font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30"
                 >
                   Start 7-Day Trial
                 </a>

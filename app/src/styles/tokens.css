@@ -37,11 +37,11 @@
   --chart-4: #10b981;
   --chart-5: #6366f1;
 
-  /* Gradients */
+  /* Gradients - Using solid colors for iOS compatibility */
   --gradient-page: linear-gradient(to bottom, #eef2f7, #f7f8fb, #ffffff);
   --gradient-header: linear-gradient(to right, #e8f5ff, #ffffff, #e6fffa);
-  --gradient-accent: linear-gradient(135deg, #22d3ee, #0ea5a8);
-  --gradient-cta: linear-gradient(135deg, #0ea5a8, #0f766e);
+  --gradient-accent: #0ea5a8;
+  --gradient-cta: #0f766e;
 
   /* Radii */
   --radius: 0.625rem;
@@ -90,8 +90,8 @@
 
   --gradient-page: linear-gradient(to bottom, #0b1220, #0f172a, #0b1220);
   --gradient-header: linear-gradient(to right, #0b1220, #0f172a, #0b1220);
-  --gradient-accent: linear-gradient(135deg, #22d3ee, #0ea5a8);
-  --gradient-cta: linear-gradient(135deg, #22d3ee, #0ea5a8);
+  --gradient-accent: #0ea5a8;
+  --gradient-cta: #0d9488;
 
   --shadow-soft: 0 10px 35px -20px rgba(0, 0, 0, 0.45);
   --shadow-strong: 0 20px 45px -25px rgba(0, 0, 0, 0.55);
