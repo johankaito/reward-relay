@@ -39,31 +39,31 @@ async function testPostHogEvents() {
 
     console.log('📱 Opening landing page...')
     await page.goto(APP_URL, { waitUntil: 'networkidle0' })
-    await page.waitForTimeout(2000)
+    await new Promise(resolve => setTimeout(resolve, 2000))
 
     console.log('🖱️  Clicking "Log in" button...')
     const loginButton = await page.$('a[href="/login"]')
     if (loginButton) {
       await loginButton.click()
-      await page.waitForTimeout(2000)
+      await new Promise(resolve => setTimeout(resolve, 2000))
     }
 
     console.log('🔙 Going back to home...')
     await page.goBack()
-    await page.waitForTimeout(2000)
+    await new Promise(resolve => setTimeout(resolve, 2000))
 
     console.log('📜 Scrolling page...')
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight / 2))
-    await page.waitForTimeout(1000)
+    await new Promise(resolve => setTimeout(resolve, 1000))
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
-    await page.waitForTimeout(2000)
+    await new Promise(resolve => setTimeout(resolve, 2000))
 
     console.log('🖱️  Clicking buttons on the page...')
     const buttons = await page.$$('button, a[class*="button"], a[class*="rounded-full"]')
     for (let i = 0; i < Math.min(3, buttons.length); i++) {
       try {
         await buttons[i].click()
-        await page.waitForTimeout(1000)
+        await new Promise(resolve => setTimeout(resolve, 1000))
       } catch (e) {
         // Button might navigate away or be disabled
       }
@@ -76,7 +76,7 @@ async function testPostHogEvents() {
 
     // Keep browser open for a bit so you can see the results
     console.log('\n⏳ Keeping browser open for 5 seconds...')
-    await page.waitForTimeout(5000)
+    await new Promise(resolve => setTimeout(resolve, 5000))
 
   } catch (error) {
     console.error('❌ Error:', error)
