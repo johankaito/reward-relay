@@ -115,6 +115,9 @@ export function getRecommendations(
       // Exclude if user already has this card active
       if (activeCardIds.has(card.id)) return false;
 
+      // Exclude inactive/expired cards (treat null as active for backward compatibility)
+      if (card.is_active === false) return false;
+
       // Must have welcome bonus
       if (!card.welcome_bonus_points || card.welcome_bonus_points === 0) return false;
 
