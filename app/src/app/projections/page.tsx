@@ -24,7 +24,8 @@ type UserPoints = Database["public"]["Tables"]["user_points"]["Row"]
 
 export default function ProjectionsPage() {
   const router = useRouter()
-  const { catalogCards } = useCatalog()
+  const { catalogCards } = useCatalog() // Active cards only
+  const [allCatalogCards, setAllCatalogCards] = useState<Database["public"]["Tables"]["cards"]["Row"][]>([])
   const [userCards, setUserCards] = useState<UserCard[]>([])
   const [userPoints, setUserPoints] = useState<UserPoints | null>(null)
   const [loading, setLoading] = useState(true)
@@ -40,8 +41,8 @@ export default function ProjectionsPage() {
       return
     }
 
-    // Load user cards and points in parallel
-    const [userCardsResult, pointsResult] = await Promise.all([
+    // Load user cards, points, and ALL catalog cards (including inactive) in parallel
+    const [userCardsResult, pointsResult, allCardsResult] = await Promise.all([
       supabase
         .from("user_cards")
         .select("*")
@@ -50,7 +51,11 @@ export default function ProjectionsPage() {
         .from("user_points")
         .select("*")
         .eq("user_id", session.user.id)
-        .maybeSingle()
+        .maybeSingle(),
+      supabase
+        .from("cards")
+        .select("*")
+        .order("bank", { ascending: true })
     ])
 
     if (userCardsResult.error) {
@@ -61,6 +66,7 @@ export default function ProjectionsPage() {
 
     setUserCards(userCardsResult.data || [])
     setUserPoints(pointsResult.data)
+    setAllCatalogCards(allCardsResult.data || [])
     setLoading(false)
   }
 
@@ -71,10 +77,11 @@ export default function ProjectionsPage() {
   const selectedGoal = GOALS[selectedGoalId]
   const currentPoints = userPoints?.qantas_ff_balance || 0
 
+  // Calculate paths using ALL cards (including inactive) to detect unavailable cards
   const paths = useMemo(() => {
-    if (!selectedGoal || catalogCards.length === 0) return []
-    return calculateMultiCardPaths(selectedGoal, userCards, catalogCards, currentPoints)
-  }, [selectedGoal, userCards, catalogCards, currentPoints])
+    if (!selectedGoal || allCatalogCards.length === 0) return []
+    return calculateMultiCardPaths(selectedGoal, userCards, allCatalogCards, currentPoints)
+  }, [selectedGoal, userCards, allCatalogCards, currentPoints])
 
   const recommendedPath = paths[0]
   const alternativePaths = paths.slice(1, 4) // Show top 3 alternatives
