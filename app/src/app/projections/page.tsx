@@ -12,8 +12,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { GoalTimelineComparison } from "@/components/projections/GoalTimelineComparison"
 import { PointsBalanceWidget } from "@/components/profile/PointsBalanceWidget"
+import { UnavailableCardAlert } from "@/components/projections/UnavailableCardAlert"
 import { supabase } from "@/lib/supabase/client"
 import { GOALS, calculateMultiCardPaths, type RedemptionGoal } from "@/lib/projections"
+import { checkForUnavailableCards } from "@/lib/unavailable-cards"
 import { useCatalog } from "@/contexts/CatalogContext"
 import type { Database } from "@/types/database.types"
 
@@ -77,6 +79,11 @@ export default function ProjectionsPage() {
   const recommendedPath = paths[0]
   const alternativePaths = paths.slice(1, 4) // Show top 3 alternatives
 
+  // Check for unavailable cards in recommended path
+  const unavailableCard = useMemo(() => {
+    return checkForUnavailableCards(paths)
+  }, [paths])
+
   const domesticGoals = Object.values(GOALS).filter(g => g.category === "domestic")
   const internationalGoals = Object.values(GOALS).filter(g => g.category === "international")
 
@@ -116,6 +123,22 @@ export default function ProjectionsPage() {
           lastUpdated={userPoints?.last_updated_at ? new Date(userPoints.last_updated_at) : null}
           onBalanceUpdate={loadData}
         />
+
+        {/* Unavailable Card Alert */}
+        {unavailableCard && selectedGoal && (
+          <UnavailableCardAlert
+            cardName={unavailableCard.cardName}
+            cardBank={unavailableCard.cardBank}
+            goalLabel={selectedGoal.label}
+            onUpdateGoal={() => {
+              // Scroll to alternative paths
+              const alternativesSection = document.getElementById('alternative-paths')
+              if (alternativesSection) {
+                alternativesSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }
+            }}
+          />
+        )}
 
         {/* Goal Selector */}
         <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
@@ -220,11 +243,13 @@ export default function ProjectionsPage() {
 
         {/* Paths */}
         {paths.length > 0 ? (
-          <GoalTimelineComparison
-            recommendedPath={recommendedPath}
-            alternativePaths={alternativePaths}
-            currentPoints={currentPoints}
-          />
+          <div id="alternative-paths">
+            <GoalTimelineComparison
+              recommendedPath={recommendedPath}
+              alternativePaths={alternativePaths}
+              currentPoints={currentPoints}
+            />
+          </div>
         ) : (
           <Card className="border border-[var(--border-default)] bg-[var(--surface)]">
             <CardContent className="py-12 text-center">

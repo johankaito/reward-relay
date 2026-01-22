@@ -116,6 +116,11 @@ async function markCardInactive(supabase: any, cardId: string): Promise<void> {
   }
 }
 
+/**
+ * Track cards that were marked inactive for notification
+ */
+const inactivatedCardIds: string[] = [];
+
 // MyCard network mapping
 // Source: Citi-to-MyCard migration documentation (Nov 2025)
 // MyCard is issued by NAB. Most cards are on Mastercard network.
@@ -497,6 +502,7 @@ async function saveToSupabase(cards: ScrapedCard[]): Promise<void> {
         if (!stillExists) {
           console.log(`      ❌ Card page not found or unavailable`);
           await markCardInactive(supabase, card.id);
+          inactivatedCardIds.push(card.id); // Track for notifications
         } else {
           console.log(`      ✅ Card still exists (not in main listing but page accessible)`);
           // Keep as active - might be a featured/special card not in main list
@@ -573,6 +579,27 @@ async function main() {
     }
 
     await saveToSupabase(cards);
+
+    // Notify users if any cards became unavailable
+    if (inactivatedCardIds.length > 0) {
+      console.log(`\n📢 ${inactivatedCardIds.length} card(s) became unavailable - notifying affected users...\n`);
+
+      // Import and run notification script for each card
+      const { execSync } = await import('child_process');
+
+      for (const cardId of inactivatedCardIds) {
+        try {
+          console.log(`   Checking for affected users of card ${cardId}...`);
+          execSync(
+            `pnpm tsx scripts/notify-unavailable-card-users.ts ${cardId}`,
+            { stdio: 'inherit', cwd: process.cwd() }
+          );
+        } catch (error) {
+          console.error(`   ⚠️  Error notifying users for card ${cardId}:`, error);
+          // Continue with other cards even if one fails
+        }
+      }
+    }
 
     console.log('🎉 Scraping complete!\n');
     process.exit(0);
