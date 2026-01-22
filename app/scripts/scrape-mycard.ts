@@ -458,13 +458,12 @@ async function saveToSupabase(cards: ScrapedCard[]): Promise<void> {
   const scrapedUrls = new Set(cards.map(c => c.scrape_url));
 
   // Mark cards as inactive if they weren't found in this scrape
-  // Only affects cards from the same scrape source (mycard)
+  // Check ALL active cards regardless of scrape source
   console.log('🔍 Checking for cards that are no longer available...\n');
 
-  const { data: existingCards, error: fetchError } = await supabase
+  const { data: existingCards, error: fetchError} = await supabase
     .from('cards')
     .select('id, bank, name, scrape_url, is_active')
-    .eq('scrape_source', 'mycard')
     .eq('is_active', true);
 
   if (fetchError) {
