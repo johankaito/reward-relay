@@ -6,6 +6,13 @@ export function initPostHog() {
   if (typeof window !== "undefined") {
     // Only initialize if we have a key and haven't initialized yet
     const key = process.env.NEXT_PUBLIC_POSTHOG_KEY?.trim()
+
+    console.log("[PostHog] Attempting initialization...", {
+      hasKey: Boolean(key),
+      keyLength: key?.length,
+      alreadyLoaded: posthog.__loaded
+    })
+
     if (key && !posthog.__loaded) {
       posthog.init(key, {
         api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST?.trim() || "https://app.posthog.com",
@@ -29,10 +36,12 @@ export function initPostHog() {
             app_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "local",
           })
 
-          if (process.env.NODE_ENV === "development") {
-            console.log("[PostHog] Initialized successfully", { environment })
-          }
+          console.log("[PostHog] Initialized successfully", { environment })
         },
+      })
+    } else {
+      console.log("[PostHog] Skipping initialization", {
+        reason: !key ? "No API key" : "Already loaded"
       })
     }
   }
