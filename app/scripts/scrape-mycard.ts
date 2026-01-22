@@ -22,6 +22,100 @@ const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_KEY);
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+/**
+ * Verify if a card still exists by checking its page
+ * Returns true if page loads and contains card-related content
+ */
+async function verifyCardExists(url: string): Promise<boolean> {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
+
+  try {
+    const page = await browser.newPage();
+
+    // Set timeout and user agent
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+
+    // Try to load the page
+    const response = await page.goto(url, {
+      waitUntil: 'domcontentloaded',
+      timeout: 15000
+    }).catch(() => null);
+
+    // Check response status
+    if (!response || response.status() === 404 || response.status() >= 500) {
+      return false;
+    }
+
+    // Check if page contains card-related content
+    const hasContent = await page.evaluate(() => {
+      const bodyText = document.body.innerText.toLowerCase();
+
+      // Check for common "not found" or "unavailable" phrases
+      const notFoundPhrases = [
+        'page not found',
+        'not available',
+        'no longer available',
+        'has been removed',
+        'discontinued',
+        '404',
+      ];
+
+      for (const phrase of notFoundPhrases) {
+        if (bodyText.includes(phrase)) {
+          return false;
+        }
+      }
+
+      // Check for positive card-related content
+      const cardPhrases = [
+        'credit card',
+        'annual fee',
+        'bonus points',
+        'rewards',
+        'apply now',
+        'card features',
+      ];
+
+      let matches = 0;
+      for (const phrase of cardPhrases) {
+        if (bodyText.includes(phrase)) {
+          matches++;
+        }
+      }
+
+      // Require at least 2 card-related phrases
+      return matches >= 2;
+    });
+
+    return hasContent;
+
+  } catch (error) {
+    console.error(`      ⚠️  Error checking URL: ${error}`);
+    return false;
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Helper function to mark a card as inactive
+ */
+async function markCardInactive(supabase: any, cardId: string): Promise<void> {
+  const { error } = await supabase
+    .from('cards')
+    .update({ is_active: false })
+    .eq('id', cardId);
+
+  if (error) {
+    console.error(`      ❌ Error marking as inactive: ${error.message}`);
+  } else {
+    console.log(`      ✅ Marked as inactive`);
+  }
+}
+
 // MyCard network mapping
 // Source: Citi-to-MyCard migration documentation (Nov 2025)
 // MyCard is issued by NAB. Most cards are on Mastercard network.
@@ -371,31 +465,48 @@ async function saveToSupabase(cards: ScrapedCard[]): Promise<void> {
   if (fetchError) {
     console.error('⚠️  Error fetching existing cards:', fetchError.message);
   } else if (existingCards) {
-    const cardsToDeactivate = existingCards.filter(
+    const cardsNotFound = existingCards.filter(
       card => card.scrape_url && !scrapedUrls.has(card.scrape_url)
     );
 
-    if (cardsToDeactivate.length > 0) {
-      console.log(`⚠️  Found ${cardsToDeactivate.length} card(s) no longer on MyCard site:\n`);
+    if (cardsNotFound.length > 0) {
+      console.log(`⚠️  Found ${cardsNotFound.length} card(s) not in main listing - verifying...\n`);
 
-      for (const card of cardsToDeactivate) {
-        console.log(`   🚫 ${card.bank} ${card.name}`);
+      // Verify each card by visiting its page
+      for (const card of cardsNotFound) {
+        console.log(`   🔍 Checking: ${card.bank} ${card.name}`);
         console.log(`      URL: ${card.scrape_url}`);
 
-        const { error: updateError } = await supabase
+        // Get full card details with application_link
+        const { data: fullCard } = await supabase
           .from('cards')
-          .update({ is_active: false })
-          .eq('id', card.id);
+          .select('id, bank, name, scrape_url, application_link')
+          .eq('id', card.id)
+          .single();
 
-        if (updateError) {
-          console.error(`      ❌ Error marking as inactive: ${updateError.message}`);
-        } else {
-          console.log(`      ✅ Marked as inactive`);
+        const urlToCheck = fullCard?.application_link || card.scrape_url;
+
+        if (!urlToCheck) {
+          console.log(`      ⚠️  No URL to check, marking as inactive`);
+          await markCardInactive(supabase, card.id);
+          continue;
         }
+
+        const stillExists = await verifyCardExists(urlToCheck);
+
+        if (!stillExists) {
+          console.log(`      ❌ Card page not found or unavailable`);
+          await markCardInactive(supabase, card.id);
+        } else {
+          console.log(`      ✅ Card still exists (not in main listing but page accessible)`);
+          // Keep as active - might be a featured/special card not in main list
+        }
+
         console.log();
+        await delay(1000); // Rate limiting between page checks
       }
     } else {
-      console.log('✅ All existing MyCard cards still available\n');
+      console.log('✅ All existing MyCard cards still in main listing\n');
     }
   }
 
