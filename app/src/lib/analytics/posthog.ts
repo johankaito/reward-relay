@@ -7,11 +7,11 @@ export function initPostHog() {
     // Only initialize if we have a key and haven't initialized yet
     const key = process.env.NEXT_PUBLIC_POSTHOG_KEY?.trim()
 
-    console.log("[PostHog] Attempting initialization...", {
-      hasKey: Boolean(key),
-      keyLength: key?.length,
-      alreadyLoaded: posthog.__loaded
-    })
+    console.log("[PostHog] Attempting initialization...")
+    console.log("[PostHog] Has key:", Boolean(key))
+    console.log("[PostHog] Key length:", key?.length)
+    console.log("[PostHog] Already loaded:", posthog.__loaded)
+    console.log("[PostHog] Raw key value:", key)
 
     if (key && !posthog.__loaded) {
       posthog.init(key, {
@@ -40,9 +40,8 @@ export function initPostHog() {
         },
       })
     } else {
-      console.log("[PostHog] Skipping initialization", {
-        reason: !key ? "No API key" : "Already loaded"
-      })
+      console.log("[PostHog] Skipping initialization")
+      console.log("[PostHog] Reason:", !key ? "No API key" : "Already loaded")
     }
   }
 }
