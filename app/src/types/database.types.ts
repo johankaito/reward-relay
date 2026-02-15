@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.1"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       beta_requests: {
@@ -90,20 +115,26 @@ export type Database = {
           bonus_spend_currency: string | null
           bonus_spend_requirement: number | null
           bonus_spend_window_months: number | null
+          bonus_structure: Json | null
           created_at: string | null
           earn_rate_primary: number | null
           earn_rate_secondary: number | null
+          eligibility_restriction_months: number | null
+          first_card_only: boolean | null
           id: string
           is_active: boolean | null
           last_scraped_at: string | null
+          last_verified_at: string | null
           min_income: number | null
           name: string
           network: string | null
           notes: string | null
+          offer_expiry_date: string | null
           points_currency: string | null
           raw_data: Json | null
           scrape_source: string | null
           scrape_url: string | null
+          total_annual_fee: number | null
           welcome_bonus_points: number | null
         }
         Insert: {
@@ -113,20 +144,26 @@ export type Database = {
           bonus_spend_currency?: string | null
           bonus_spend_requirement?: number | null
           bonus_spend_window_months?: number | null
+          bonus_structure?: Json | null
           created_at?: string | null
           earn_rate_primary?: number | null
           earn_rate_secondary?: number | null
+          eligibility_restriction_months?: number | null
+          first_card_only?: boolean | null
           id?: string
           is_active?: boolean | null
           last_scraped_at?: string | null
+          last_verified_at?: string | null
           min_income?: number | null
           name: string
           network?: string | null
           notes?: string | null
+          offer_expiry_date?: string | null
           points_currency?: string | null
           raw_data?: Json | null
           scrape_source?: string | null
           scrape_url?: string | null
+          total_annual_fee?: number | null
           welcome_bonus_points?: number | null
         }
         Update: {
@@ -136,20 +173,26 @@ export type Database = {
           bonus_spend_currency?: string | null
           bonus_spend_requirement?: number | null
           bonus_spend_window_months?: number | null
+          bonus_structure?: Json | null
           created_at?: string | null
           earn_rate_primary?: number | null
           earn_rate_secondary?: number | null
+          eligibility_restriction_months?: number | null
+          first_card_only?: boolean | null
           id?: string
           is_active?: boolean | null
           last_scraped_at?: string | null
+          last_verified_at?: string | null
           min_income?: number | null
           name?: string
           network?: string | null
           notes?: string | null
+          offer_expiry_date?: string | null
           points_currency?: string | null
           raw_data?: Json | null
           scrape_source?: string | null
           scrape_url?: string | null
+          total_annual_fee?: number | null
           welcome_bonus_points?: number | null
         }
         Relationships: []
@@ -672,6 +715,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },

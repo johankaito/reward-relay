@@ -90,16 +90,27 @@ function calculateCardScore(card: Card): number {
   return pointsPerDollar * 10 + netValueScore;
 }
 
+export interface RecommendationOptions {
+  limit?: number;
+  pointsCurrency?: 'Qantas' | 'Velocity' | 'all';
+  includeFirstCardOnly?: boolean;
+}
+
 /**
  * Get personalized card recommendations based on user's portfolio
  * Returns top recommendations sorted by score
+ *
+ * @param pointsCurrency - Filter by points type ('Qantas', 'Velocity', or 'all')
+ * @param includeFirstCardOnly - If false, exclude cards that require first-time bank customers
  */
 export function getRecommendations(
   userCards: UserCard[],
   catalogCards: Card[],
-  options?: { limit?: number }
+  options?: RecommendationOptions
 ): Recommendation[] {
   const limit = options?.limit || 5;
+  const pointsCurrency = options?.pointsCurrency || 'all';
+  const includeFirstCardOnly = options?.includeFirstCardOnly ?? true;
   // Calculate bank eligibility
   const eligibility = calculateBankEligibility(userCards);
   const eligibilityMap = new Map(eligibility.map((e) => [e.bank.toLowerCase(), e]));
@@ -107,6 +118,11 @@ export function getRecommendations(
   // Get user's active card IDs to exclude
   const activeCardIds = new Set(
     userCards.filter((c) => c.status === "active").map((c) => c.card_id)
+  );
+
+  // Get set of banks user has/had cards with (for first-card-only filtering)
+  const userBanks = new Set(
+    userCards.map((c) => c.bank?.toLowerCase()).filter(Boolean) as string[]
   );
 
   // Filter and score catalog cards
@@ -120,6 +136,18 @@ export function getRecommendations(
 
       // Must have welcome bonus
       if (!card.welcome_bonus_points || card.welcome_bonus_points === 0) return false;
+
+      // Points currency filter
+      if (pointsCurrency && pointsCurrency !== 'all') {
+        if (card.points_currency !== pointsCurrency) return false;
+      }
+
+      // First-card-only filter
+      if (!includeFirstCardOnly && card.first_card_only) {
+        // If card requires first-time customer and user has had ANY card from this bank, exclude it
+        const hasHadBankCard = userBanks.has(card.bank.toLowerCase());
+        if (hasHadBankCard) return false;
+      }
 
       return true;
     })
