@@ -80,7 +80,7 @@ export default function ChurnHistoryPage() {
 
   const calculateDaysSince = (date: string | null) => {
     if (!date) return null
-    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/purity
+    // eslint-disable-next-line react-hooks/purity
     const days = Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24))
     return days
   }

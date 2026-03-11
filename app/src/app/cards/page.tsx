@@ -43,7 +43,7 @@ export default function CardsPage() {
         points_currency: card.points_currency,
         min_income: card.min_income
       }))
-      // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/purity
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCards(mapped)
     }
   }, [allCards])

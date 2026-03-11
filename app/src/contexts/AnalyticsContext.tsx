@@ -70,7 +70,7 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(ACQUISITION_TIMESTAMP_KEY, Date.now().toString())
     }
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/purity
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsInitialized(true)
   }, [searchParams])
 
