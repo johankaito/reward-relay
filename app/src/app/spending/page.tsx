@@ -88,6 +88,7 @@ export default function SpendingTrackerPage() {
       if (error) throw error;
 
       // Calculate current spend and deadlines
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const enrichedCards = (cards || []).map((card: any) => {
         const spendTarget = card.card?.bonus_spend_requirement || 0;
         const windowMonths = card.card?.bonus_spend_window_months || 3;

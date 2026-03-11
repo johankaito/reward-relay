@@ -11,7 +11,7 @@ interface AnalyticsContextType {
     eventName: T["name"],
     properties: T["properties"]
   ) => void
-  identifyUser: (userId: string, traits?: Record<string, any>) => void
+  identifyUser: (userId: string, traits?: Record<string, unknown>) => void
   trackPageView: (page: string) => void
   getAcquisitionSource: () => {
     source: string
@@ -70,6 +70,7 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(ACQUISITION_TIMESTAMP_KEY, Date.now().toString())
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/purity
     setIsInitialized(true)
   }, [searchParams])
 
@@ -90,7 +91,8 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      posthog.capture(eventName, properties as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      posthog.capture(eventName, properties as unknown as Record<string, any>)
 
       if (process.env.NODE_ENV === "development") {
         console.log("[Analytics] Event tracked:", eventName, properties)
@@ -99,7 +101,7 @@ export function AnalyticsProvider({ children }: { children: ReactNode }) {
     []
   )
 
-  const identifyUser = useCallback((userId: string, traits?: Record<string, any>) => {
+  const identifyUser = useCallback((userId: string, traits?: Record<string, unknown>) => {
     if (typeof window === "undefined" || !posthog.__loaded) return
 
     posthog.identify(userId, traits)

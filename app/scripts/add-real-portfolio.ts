@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import puppeteer, { Page } from 'puppeteer';
 import { readFileSync } from 'fs';
 

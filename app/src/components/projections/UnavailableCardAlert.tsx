@@ -35,7 +35,7 @@ export function UnavailableCardAlert({
             </h3>
             <p className="text-sm text-slate-200">
               The <span className="font-semibold text-orange-400">{cardBank} {cardName}</span> is no longer available.
-              Your "<span className="font-semibold">{goalLabel}</span>" goal currently uses this card in its recommended path.
+              Your &quot;<span className="font-semibold">{goalLabel}</span>&quot; goal currently uses this card in its recommended path.
             </p>
             <p className="text-sm font-medium text-orange-300">
               Action required: Update your goal to use a different card strategy.

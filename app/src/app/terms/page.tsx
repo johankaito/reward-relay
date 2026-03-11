@@ -71,7 +71,7 @@ export default function TermsOfService() {
               <li>Historical data storage and analysis</li>
             </ul>
             <div className="mt-4 rounded-xl border border-[var(--border-default)] bg-[var(--surface)] p-4 text-sm text-slate-400">
-              <strong>What We Don't Do:</strong> We do not access your actual credit card accounts, process payments on your behalf, store credit card numbers or CVVs, provide financial advice, or guarantee any financial outcomes.
+              <strong>What We Don&apos;t Do:</strong> We do not access your actual credit card accounts, process payments on your behalf, store credit card numbers or CVVs, provide financial advice, or guarantee any financial outcomes.
             </div>
           </section>
 
@@ -135,7 +135,7 @@ export default function TermsOfService() {
                 If we introduce subscription fees, we will:
               </p>
               <ul className="mt-2 list-disc space-y-1 pl-6 text-slate-300">
-                <li>Provide at least 30 days' advance notice via email</li>
+                <li>Provide at least 30 days&apos; advance notice via email</li>
                 <li>Clearly communicate all pricing, billing cycles, and terms</li>
                 <li>Offer an opt-out period before any charges begin</li>
                 <li>Comply with all Australian Consumer Law requirements for subscription services</li>
@@ -155,7 +155,7 @@ export default function TermsOfService() {
             <p className="text-slate-300">You agree not to:</p>
             <ul className="list-disc space-y-2 pl-6 text-slate-300">
               <li>Use the service for any illegal purpose or in violation of any laws</li>
-              <li>Attempt to gain unauthorized access to our systems or other users' accounts</li>
+              <li>Attempt to gain unauthorized access to our systems or other users&apos; accounts</li>
               <li>Upload viruses, malware, or other malicious code</li>
               <li>Scrape, copy, or reverse engineer any part of our service</li>
               <li>Use automated tools (bots, scripts) to access or interact with the service without permission</li>
@@ -180,9 +180,9 @@ export default function TermsOfService() {
 
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-slate-200">Service Provided "As Is"</h3>
+                <h3 className="text-lg font-semibold text-slate-200">Service Provided &quot;As Is&quot;</h3>
                 <p className="text-slate-300">
-                  Reward Relay is provided on an "as is" and "as available" basis without warranties of any kind, either express or implied, except as required by the Australian Consumer Law.
+                  Reward Relay is provided on an &quot;as is&quot; and &quot;as available&quot; basis without warranties of any kind, either express or implied, except as required by the Australian Consumer Law.
                 </p>
               </div>
 
@@ -334,7 +334,7 @@ export default function TermsOfService() {
             <ul className="list-disc space-y-2 pl-6 text-slate-300">
               <li>Notify you via email at least 30 days before changes take effect</li>
               <li>Post a notice on our website</li>
-              <li>Update the "Last updated" date at the top of these terms</li>
+              <li>Update the &quot;Last updated&quot; date at the top of these terms</li>
             </ul>
             <p className="mt-4 text-slate-300">
               Your continued use of Reward Relay after changes become effective constitutes acceptance of the revised Terms of Service. If you do not agree to the changes, you must stop using the service and may request account deletion.

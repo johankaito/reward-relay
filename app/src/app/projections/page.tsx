@@ -71,6 +71,7 @@ export default function ProjectionsPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/purity
     loadData()
   }, [router])
 

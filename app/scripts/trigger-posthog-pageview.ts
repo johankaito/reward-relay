@@ -20,7 +20,7 @@ async function triggerPageview() {
     const page = await browser.newPage()
 
     // Listen for PostHog events
-    let capturedEvents: string[] = []
+    const capturedEvents: string[] = []
     page.on('console', (msg) => {
       const text = msg.text()
       if (text.includes('PostHog')) {
@@ -54,9 +54,9 @@ async function triggerPageview() {
     // Manually trigger pageview event
     console.log('\n🎯 Manually triggering pageview event...')
     await page.evaluate(() => {
-      // @ts-ignore
+      // @ts-expect-error -- accessing internal property
       if (window.posthog) {
-        // @ts-ignore
+        // @ts-expect-error -- accessing internal property
         window.posthog.capture('$pageview', {
           $current_url: window.location.href,
           $pathname: window.location.pathname,
@@ -72,9 +72,9 @@ async function triggerPageview() {
     // Trigger another event - button click
     console.log('🖱️  Triggering click event...')
     await page.evaluate(() => {
-      // @ts-ignore
+      // @ts-expect-error -- accessing internal property
       if (window.posthog) {
-        // @ts-ignore
+        // @ts-expect-error -- accessing internal property
         window.posthog.capture('button_click', {
           button: 'test_button',
           location: 'landing_page',

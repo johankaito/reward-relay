@@ -10,14 +10,16 @@ interface HeaderProps {
   logoClickable?: boolean
 }
 
-export default function Header({ logoClickable = false }: HeaderProps) {
-  const LogoContent = () => (
+function LogoContent() {
+  return (
     <>
       <Image src="/logo.svg" alt="Reward Relay" width={32} height={32} className="drop-shadow-lg" />
       <span className="text-xl font-bold text-white">Reward Relay</span>
     </>
   )
+}
 
+export default function Header({ logoClickable = false }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0e1a]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">

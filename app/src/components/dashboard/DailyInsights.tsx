@@ -183,7 +183,7 @@ export function DailyInsights({ userId }: DailyInsightsProps) {
           <CardContent className="p-6">
             <div className="mb-4 flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-[var(--accent)]" />
-              <h2 className="text-lg font-semibold text-white">Today's Insights</h2>
+              <h2 className="text-lg font-semibold text-white">Today&apos;s Insights</h2>
             </div>
             <div className="space-y-3">
               {insights.map((insight) => {

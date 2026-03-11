@@ -71,9 +71,9 @@ export default function LoginPage() {
       setShowBetaForm(false)
       setBetaEmail("")
       setBetaName("")
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Beta request error:", error)
-      toast.error(error.message || "Failed to submit request. Please try again.")
+      toast.error((error as Error).message || "Failed to submit request. Please try again.")
     } finally {
       setBetaLoading(false)
     }

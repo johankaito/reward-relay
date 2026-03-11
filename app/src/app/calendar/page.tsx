@@ -12,7 +12,7 @@ interface UserCard {
   card_id: string | null;
   bank: string | null;
   name: string | null;
-  status: string;
+  status: string | null;
   application_date: string | null;
   approval_date: string | null;
   cancellation_date: string | null;
@@ -20,7 +20,8 @@ interface UserCard {
     id: string;
     bank: string;
     name: string;
-    welcome_bonus_points?: number;
+    welcome_bonus_points?: number | null;
+    [key: string]: unknown;
   } | null;
 }
 
@@ -69,8 +70,8 @@ export default function CalendarPage() {
       // Group cards by bank and calculate timelines
       const bankMap = new Map<string, UserCard[]>();
 
-      (cards || []).forEach((card: any) => {
-        const bank = card.card?.bank || "Unknown";
+      (cards || []).forEach((card) => {
+        const bank = card.card?.bank || card.bank || "Unknown";
         if (!bankMap.has(bank)) {
           bankMap.set(bank, []);
         }
@@ -243,7 +244,7 @@ export default function CalendarPage() {
                     </p>
                   </div>
                   {eligibilityStatus && (
-                    <Badge variant={eligibilityStatus.color as any} className="flex items-center gap-1">
+                    <Badge variant={eligibilityStatus.color as "default" | "secondary" | "destructive" | "outline"} className="flex items-center gap-1">
                       {StatusIcon && <StatusIcon className="h-3 w-3" />}
                       {eligibilityStatus.text}
                     </Badge>

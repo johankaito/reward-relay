@@ -108,7 +108,7 @@ export function OnboardingQuiz() {
           {step === 1 && (
             <div className="space-y-4">
               <p className="text-lg text-slate-300">
-                What's your primary spending category?
+                What&apos;s your primary spending category?
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <OptionButton
@@ -194,7 +194,7 @@ export function OnboardingQuiz() {
           {step === 3 && (
             <div className="space-y-4">
               <p className="text-lg text-slate-300">
-                What's your churning goal?
+                What&apos;s your churning goal?
               </p>
               <div className="grid grid-cols-1 gap-3">
                 <OptionButton

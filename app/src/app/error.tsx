@@ -25,7 +25,7 @@ export default function Error({
           Something went wrong!
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          We've been notified and will look into it. Please try again.
+          We&apos;ve been notified and will look into it. Please try again.
         </p>
         {process.env.NODE_ENV === "development" && (
           <pre className="text-sm bg-gray-100 dark:bg-gray-900 p-4 rounded mb-4 overflow-auto">

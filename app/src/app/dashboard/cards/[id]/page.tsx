@@ -51,6 +51,7 @@ export default function CardDetailsPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/purity
     loadCard()
   }, [cardId, router])
 

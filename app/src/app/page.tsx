@@ -130,7 +130,7 @@ export default function Home() {
                     </div>
                     <div className="rounded-xl border border-dashed border-white/20 bg-blue-500/10 p-3 backdrop-blur-sm">
                       <p className="text-xs leading-relaxed text-slate-200">
-                        Stay under 3 active cards to avoid credit score swings. We'll remind you before any
+                        Stay under 3 active cards to avoid credit score swings. We&apos;ll remind you before any
                         annual fee hits.
                       </p>
                     </div>
@@ -415,7 +415,7 @@ export default function Home() {
               <div className="text-center space-y-3">
                 <h2 className="text-3xl font-bold text-white sm:text-4xl">Simple, Transparent Pricing</h2>
                 <p className="text-lg text-slate-400">
-                  Start free, upgrade when you're ready to unlock all features
+                  Start free, upgrade when you&apos;re ready to unlock all features
                 </p>
               </div>
 
@@ -574,7 +574,7 @@ export default function Home() {
                 </h2>
 
                 <p className="text-lg text-slate-300">
-                  We're testing Reward Relay with a small group of Australian churners. During the private beta,
+                  We&apos;re testing Reward Relay with a small group of Australian churners. During the private beta,
                   all features are <strong className="text-teal-400">completely free</strong>.
                 </p>
 
@@ -641,7 +641,7 @@ export default function Home() {
                     <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                   </summary>
                   <p className="px-6 pb-6 text-sm text-slate-300">
-                    After 7 days, you'll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
+                    After 7 days, you&apos;ll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
                   </p>
                 </details>
               </BetaGate>
@@ -652,7 +652,7 @@ export default function Home() {
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <p className="px-6 pb-6 text-sm text-slate-300">
-                  Yes! Cancel anytime from your account settings. If you cancel mid-month, you'll keep Pro access until the end of your billing period. No penalties, no hassle.
+                  Yes! Cancel anytime from your account settings. If you cancel mid-month, you&apos;ll keep Pro access until the end of your billing period. No penalties, no hassle.
                 </p>
               </details>
 
@@ -668,11 +668,11 @@ export default function Home() {
 
               <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                 <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
-                  What's the 12-month rule?
+                  What&apos;s the 12-month rule?
                   <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <p className="px-6 pb-6 text-sm text-slate-300">
-                  Most Australian banks require you to wait 12 months after cancelling a card before you're eligible for sign-up bonuses on another card from that same bank. Reward Relay automatically tracks this for you.
+                  Most Australian banks require you to wait 12 months after cancelling a card before you&apos;re eligible for sign-up bonuses on another card from that same bank. Reward Relay automatically tracks this for you.
                 </p>
               </details>
 
@@ -683,7 +683,7 @@ export default function Home() {
                     <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
                   </summary>
                   <p className="px-6 pb-6 text-sm text-slate-300">
-                    Click "Upgrade to Pro" in your dashboard settings. Choose monthly or annual, start your 7-day trial, and all Pro features unlock immediately. You'll keep all your existing data.
+                    Click &quot;Upgrade to Pro&quot; in your dashboard settings. Choose monthly or annual, start your 7-day trial, and all Pro features unlock immediately. You&apos;ll keep all your existing data.
                   </p>
                 </details>
               </BetaGate>

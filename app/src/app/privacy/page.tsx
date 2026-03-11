@@ -24,7 +24,7 @@ export default function PrivacyPolicy() {
               <li><a href="#cookies" className="hover:text-white transition">7. Cookies and Analytics</a></li>
               <li><a href="#rights" className="hover:text-white transition">8. Your Rights</a></li>
               <li><a href="#breaches" className="hover:text-white transition">9. Data Breaches</a></li>
-              <li><a href="#children" className="hover:text-white transition">10. Children's Privacy</a></li>
+              <li><a href="#children" className="hover:text-white transition">10. Children&apos;s Privacy</a></li>
               <li><a href="#changes" className="hover:text-white transition">11. Changes to This Policy</a></li>
               <li><a href="#contact" className="hover:text-white transition">12. Contact Us</a></li>
             </ol>
@@ -48,7 +48,7 @@ export default function PrivacyPolicy() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-200">Credit Card Portfolio Information</h3>
                 <ul className="mt-2 list-disc space-y-1 pl-6 text-slate-300">
-                  <li>Credit card product names (e.g., "ANZ Rewards Black")</li>
+                  <li>Credit card product names (e.g., &quot;ANZ Rewards Black&quot;)</li>
                   <li>Application dates, approval dates, cancellation dates</li>
                   <li>Annual fee amounts and due dates</li>
                   <li>Sign-up bonus values and targets</li>
@@ -78,7 +78,7 @@ export default function PrivacyPolicy() {
             <ul className="list-disc space-y-2 pl-6 text-slate-300">
               <li><strong>Service Provision:</strong> To provide credit card tracking, churning recommendations, and annual fee reminders</li>
               <li><strong>Communication:</strong> To send you email reminders about annual fees, optimal churn timing, and account updates</li>
-              <li><strong>Service Improvement:</strong> To analyze usage patterns and improve our platform's functionality</li>
+              <li><strong>Service Improvement:</strong> To analyze usage patterns and improve our platform&apos;s functionality</li>
               <li><strong>Security:</strong> To detect and prevent fraud, abuse, and security incidents</li>
               <li><strong>Legal Compliance:</strong> To comply with applicable laws and regulations</li>
               <li><strong>Customer Support:</strong> To respond to your inquiries and provide technical assistance</li>
@@ -168,7 +168,7 @@ export default function PrivacyPolicy() {
               To exercise these rights, email us at <a href="mailto:support@rewardrelay.com.au" className="text-[var(--accent-strong)] hover:underline">support@rewardrelay.com.au</a>. We will respond within 30 days.
             </p>
             <p className="mt-2 text-sm text-slate-400">
-              We may charge a reasonable fee for providing access to your information in certain circumstances, or refuse access where permitted by law (e.g., where providing access would unreasonably impact others' privacy).
+              We may charge a reasonable fee for providing access to your information in certain circumstances, or refuse access where permitted by law (e.g., where providing access would unreasonably impact others&apos; privacy).
             </p>
           </section>
 
@@ -181,7 +181,7 @@ export default function PrivacyPolicy() {
               <li>Keep you logged in to your account</li>
               <li>Remember your preferences</li>
               <li>Understand how you use our service</li>
-              <li>Improve our platform's performance</li>
+              <li>Improve our platform&apos;s performance</li>
             </ul>
             <p className="mt-4 text-slate-300">
               You can control cookies through your browser settings. Note that disabling cookies may affect the functionality of our service.
@@ -223,7 +223,7 @@ export default function PrivacyPolicy() {
           </section>
 
           <section id="children" className="space-y-4">
-            <h2 className="text-2xl font-semibold">10. Children's Privacy</h2>
+            <h2 className="text-2xl font-semibold">10. Children&apos;s Privacy</h2>
             <p className="text-slate-300">
               Reward Relay is not intended for use by individuals under 18 years of age. We do not knowingly collect personal information from children. If you are a parent or guardian and believe your child has provided us with personal information, please contact us at <a href="mailto:support@rewardrelay.com.au" className="text-[var(--accent-strong)] hover:underline">support@rewardrelay.com.au</a>.
             </p>
@@ -237,7 +237,7 @@ export default function PrivacyPolicy() {
             <ul className="list-disc space-y-2 pl-6 text-slate-300">
               <li>Posting a notice on our website</li>
               <li>Sending an email to your registered email address</li>
-              <li>Updating the "Last updated" date at the top of this policy</li>
+              <li>Updating the &quot;Last updated&quot; date at the top of this policy</li>
             </ul>
             <p className="mt-4 text-slate-300">
               Your continued use of Reward Relay after changes become effective constitutes acceptance of the updated Privacy Policy.

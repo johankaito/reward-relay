@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
  * Orchestrator for Reward Relay Multi-Agent Development Loop

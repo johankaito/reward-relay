@@ -80,6 +80,7 @@ export default function ChurnHistoryPage() {
 
   const calculateDaysSince = (date: string | null) => {
     if (!date) return null
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/purity
     const days = Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24))
     return days
   }
@@ -156,7 +157,7 @@ export default function ChurnHistoryPage() {
                 Your churning timeline
               </h1>
               <p className="text-sm text-slate-300">
-                Track your churning history and see when you're eligible to reapply
+                Track your churning history and see when you&apos;re eligible to reapply
               </p>
             </div>
           </div>

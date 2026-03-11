@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import puppeteer from 'puppeteer'
 import { writeFileSync } from 'fs'
 
@@ -73,14 +74,14 @@ async function manualTestWalkthrough() {
 
     // Check PostHog status
     const posthogStatus = await page.evaluate(() => {
-      // @ts-ignore
+      // @ts-expect-error -- accessing internal property
       const ph = window.posthog
       if (!ph) {
         return { loaded: false, error: 'posthog object not found' }
       }
       return {
         loaded: ph.__loaded || false,
-        // @ts-ignore
+        // @ts-expect-error -- accessing internal property
         distinctId: ph.get_distinct_id ? ph.get_distinct_id() : 'no method'
       }
     })

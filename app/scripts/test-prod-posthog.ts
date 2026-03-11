@@ -49,7 +49,7 @@ async function testProdPostHog() {
 
     // Check if PostHog is loaded
     const posthogStatus = await page.evaluate(() => {
-      // @ts-ignore
+      // @ts-expect-error -- accessing internal property
       const ph = window.posthog
       if (!ph) {
         return { loaded: false, error: 'posthog object not found on window' }
@@ -57,13 +57,13 @@ async function testProdPostHog() {
 
       return {
         loaded: ph.__loaded || false,
-        // @ts-ignore
+        // @ts-expect-error -- accessing internal property
         config: ph.config ? {
           api_host: ph.config.api_host,
-          // @ts-ignore
+          // @ts-expect-error -- accessing internal property
           token: ph.config.token ? ph.config.token.substring(0, 10) + '...' : 'missing'
         } : 'no config',
-        // @ts-ignore
+        // @ts-expect-error -- accessing internal property
         distinctId: ph.get_distinct_id ? ph.get_distinct_id() : 'no distinct_id method'
       }
     })
@@ -78,9 +78,9 @@ async function testProdPostHog() {
       // Check if environment variables are present
       const envCheck = await page.evaluate(() => {
         return {
-          // @ts-ignore
+          // @ts-expect-error -- accessing internal property
           hasPostHogKey: typeof window !== 'undefined' && Boolean(process?.env?.NEXT_PUBLIC_POSTHOG_KEY),
-          // @ts-ignore
+          // @ts-expect-error -- accessing internal property
           hasPostHogHost: typeof window !== 'undefined' && Boolean(process?.env?.NEXT_PUBLIC_POSTHOG_HOST)
         }
       })
@@ -91,9 +91,9 @@ async function testProdPostHog() {
       // Try to capture a test event
       console.log('\n📊 Capturing test event...')
       await page.evaluate(() => {
-        // @ts-ignore
+        // @ts-expect-error -- accessing internal property
         if (window.posthog) {
-          // @ts-ignore
+          // @ts-expect-error -- accessing internal property
           window.posthog.capture('test_click_through', {
             source: 'automated_test',
             page: 'history'

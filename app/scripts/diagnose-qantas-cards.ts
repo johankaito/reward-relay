@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Diagnose why only 1 of 11 Qantas cards is showing in recommendations
  */

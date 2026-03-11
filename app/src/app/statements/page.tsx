@@ -38,7 +38,7 @@ interface Transaction {
   description: string;
   amount: number;
   category: string;
-  rawRow: any;
+  rawRow: Record<string, unknown>;
 }
 
 const CATEGORY_KEYWORDS = {
@@ -133,7 +133,7 @@ export default function StatementsPage() {
       complete: (results) => {
         try {
           const parsedTransactions: Transaction[] = [];
-          const data = results.data as any[];
+          const data = results.data as Record<string, string>[];
 
           // Detect bank format and parse accordingly
           const headers = Object.keys(data[0] || {}).map((h) => h.toLowerCase());
@@ -213,8 +213,8 @@ export default function StatementsPage() {
           } else {
             setTransactions(parsedTransactions);
           }
-        } catch (error: any) {
-          setParseError(`Failed to parse CSV: ${error.message}`);
+        } catch (error: unknown) {
+          setParseError(`Failed to parse CSV: ${(error as Error).message}`);
         }
       },
       error: (error) => {
@@ -276,9 +276,9 @@ export default function StatementsPage() {
       setFile(null);
       setTransactions([]);
       setSelectedCard("");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Upload error:", error);
-      alert(`Failed to upload transactions: ${error.message}`);
+      alert(`Failed to upload transactions: ${(error as Error).message}`);
     } finally {
       setUploading(false);
     }

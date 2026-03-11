@@ -50,9 +50,9 @@ export function BetaRequestForm({
       setShowForm(false)
       setEmail("")
       setName("")
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Beta request error:", error)
-      toast.error(error.message || "Failed to submit request. Please try again.")
+      toast.error((error as Error).message || "Failed to submit request. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -122,7 +122,7 @@ export function BetaRequestForm({
       </div>
 
       <p className="text-xs text-slate-400">
-        We'll review your request and send you an invite if accepted.
+        We&apos;ll review your request and send you an invite if accepted.
       </p>
     </form>
   )

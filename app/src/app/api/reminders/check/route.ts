@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     if (error) throw error;
 
     const today = new Date();
-    const promises: Promise<any>[] = [];
+    const promises: Promise<unknown>[] = [];
 
     for (const userCard of cards || []) {
       if (!userCard.cancellation_date) continue;
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
 
       // Determine which reminder to send
       let reminderType: "30_day" | "14_day" | "7_day" | null = null;
-      let emailTemplate: any = null;
+      let emailTemplate: typeof get7DayReminderEmail | null = null;
 
       if (daysUntilCancellation <= 7 && daysUntilCancellation > 0) {
         reminderType = "7_day";
@@ -137,10 +137,10 @@ export async function GET(request: Request) {
       remindersSent,
       totalCards: cards?.length || 0,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error checking reminders:", error);
     return NextResponse.json(
-      { error: error.message || "Internal server error" },
+      { error: (error as Error).message || "Internal server error" },
       { status: 500 }
     );
   }

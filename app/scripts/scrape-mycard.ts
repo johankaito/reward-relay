@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * MyCard.com.au Credit Card Scraper
  * Scrapes Australian credit card data and inserts directly into Supabase
@@ -451,7 +452,7 @@ async function saveToSupabase(cards: ScrapedCard[]): Promise<void> {
 
   const startTime = new Date();
   let cardsAdded = 0;
-  let cardsUpdated = 0;
+  const cardsUpdated = 0;
   let errors = 0;
 
   // Get all scrape URLs we found in this scrape
