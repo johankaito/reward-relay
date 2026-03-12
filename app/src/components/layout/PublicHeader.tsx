@@ -10,14 +10,14 @@ export function PublicHeader() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
           <Image src="/logo.svg" alt="Reward Relay" width={32} height={32} />
-          <span className="text-sm font-semibold text-white">Reward Relay</span>
+          <span className="text-sm font-semibold text-[var(--text-primary)]">Reward Relay</span>
         </Link>
 
         {/* Navigation */}
         <nav className="flex items-center gap-3">
           <Link
             href="/login"
-            className="rounded-full px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+            className="rounded-full px-4 py-2 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface-strong)]"
           >
             Log in
           </Link>

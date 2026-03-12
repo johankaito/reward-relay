@@ -55,44 +55,10 @@
   --card-foreground: var(--text-primary);
   --popover: var(--surface);
   --popover-foreground: var(--text-primary);
-  --primary: var(--text-primary);
-  --primary-foreground: var(--text-inverse);
-  --secondary: var(--surface-subtle);
-  --secondary-foreground: var(--text-primary);
-  --muted: var(--muted);
-  --muted-foreground: var(--text-secondary);
-  --accent: var(--accent);
-  --accent-foreground: var(--text-inverse);
-  --destructive: var(--danger);
-  --border: var(--border-default);
-  --input: var(--border-default);
-  --ring: var(--ring-strong);
-  --chart-1: var(--chart-1);
-  --chart-2: var(--chart-2);
-  --chart-3: var(--chart-3);
-  --chart-4: var(--chart-4);
-  --chart-5: var(--chart-5);
-  --sidebar: var(--surface-strong);
-  --sidebar-foreground: var(--text-inverse);
-  --sidebar-primary: var(--accent);
-  --sidebar-primary-foreground: var(--accent-contrast);
-  --sidebar-accent: var(--surface-muted);
-  --sidebar-accent-foreground: var(--text-inverse);
-  --sidebar-border: var(--border-default);
-  --sidebar-ring: var(--ring-strong);
-}
-
-.dark {
-  --background: var(--surface-muted);
-  --foreground: var(--text-primary);
-  --card: var(--surface);
-  --card-foreground: var(--text-primary);
-  --popover: var(--surface);
-  --popover-foreground: var(--text-primary);
   --primary: var(--accent);
   --primary-foreground: var(--accent-contrast);
   --secondary: var(--surface-strong);
-  --secondary-foreground: var(--text-inverse);
+  --secondary-foreground: var(--text-primary);
   --muted: var(--muted);
   --muted-foreground: var(--text-secondary);
   --accent: var(--accent);
@@ -106,60 +72,208 @@
   --chart-3: var(--chart-3);
   --chart-4: var(--chart-4);
   --chart-5: var(--chart-5);
-  --sidebar: var(--surface-muted);
-  --sidebar-foreground: var(--text-inverse);
+  --sidebar: var(--surface-strong);
+  --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--accent);
   --sidebar-primary-foreground: var(--accent-contrast);
-  --sidebar-accent: var(--surface-strong);
-  --sidebar-accent-foreground: var(--text-inverse);
+  --sidebar-accent: var(--surface-subtle);
+  --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border-default);
   --sidebar-ring: var(--ring-strong);
 }
 
+/* ─── Shimmer loading animation ─── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ─── Subtle fade-in for page content ─── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── Base styles ─── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    /* Smooth color transitions when theme changes */
+    color-scheme: light dark;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* GLOBAL BUTTON TRANSITIONS - Clean and Simple */
-  button:not(:disabled),
-  [role="button"]:not(:disabled),
-  [data-slot="button"]:not(:disabled) {
-    transition: all 0.2s ease;
+  /* Typography scale — comfortable and confident */
+  h1 {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 600;
   }
 
-  /* Hover state for ALL buttons - brightness increase + subtle lift */
-  button:not(:disabled):hover,
-  [data-slot="button"]:not(:disabled):hover {
-    filter: brightness(1.15);
-    transform: translateY(-1px);
+  h2 {
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    font-weight: 600;
   }
 
-  /* Hover state for outline buttons - subtle white fill */
-  button[data-variant="outline"]:not(:disabled):hover,
-  [data-slot="button"][data-variant="outline"]:not(:disabled):hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    filter: brightness(1.1);
+  h3 {
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    font-weight: 600;
   }
 
-  /* Active state - subtle press down */
-  button:not(:disabled):active,
-  [data-slot="button"]:not(:disabled):active {
-    transform: translateY(0);
-    filter: brightness(0.95);
+  /* Monospace: tabular numbers for financial data */
+  code, .font-mono, [class*="font-mono"] {
+    font-feature-settings: "tnum" 1, "zero" 1;
   }
 
-  /* Text selection styles */
+  /* Selection style — matches accent color */
   ::selection {
-    background-color: rgb(20 184 166 / 0.8); /* teal-500 with 80% opacity - more vibrant */
-    color: rgb(255 255 255); /* white text */
+    background-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--text-primary);
   }
 
   ::-moz-selection {
-    background-color: rgb(20 184 166 / 0.8); /* teal-500 with 80% opacity - more vibrant */
-    color: rgb(255 255 255); /* white text */
+    background-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--text-primary);
+  }
+
+  /* Focus rings — clean, uses accent */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 2px);
+  }
+}
+
+/* ─── Shimmer utility ─── */
+@layer utilities {
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--surface-muted) 25%,
+      var(--surface-strong) 50%,
+      var(--surface-muted) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
+  /* Content fade-in */
+  .animate-in {
+    animation: fadeIn 0.3s ease forwards;
+  }
+
+  /* Hide scrollbar but keep scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ─── Component-level enhancements ─── */
+@layer components {
+  /* Card hover: subtle lift + border lightening */
+  .card-interactive {
+    transition: box-shadow 0.2s ease, transform 0.18s ease, border-color 0.2s ease;
+  }
+  .card-interactive:hover {
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+  }
+
+  /* Button transitions — clean, no jitter */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [data-slot="button"]:not(:disabled) {
+    transition: filter 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  /* Primary/filled buttons: subtle brightness lift */
+  button:not(:disabled):not([data-variant="outline"]):not([data-variant="ghost"]):hover,
+  [data-slot="button"]:not(:disabled):not([data-variant="outline"]):not([data-variant="ghost"]):hover {
+    filter: brightness(1.1);
+  }
+
+  /* Outline/ghost buttons: subtle bg tint */
+  button[data-variant="outline"]:not(:disabled):hover,
+  [data-slot="button"][data-variant="outline"]:not(:disabled):hover {
+    background-color: color-mix(in srgb, var(--accent) 8%, transparent) !important;
+    border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important;
+  }
+
+  button[data-variant="ghost"]:not(:disabled):hover,
+  [data-slot="button"][data-variant="ghost"]:not(:disabled):hover {
+    background-color: color-mix(in srgb, var(--accent) 8%, transparent) !important;
+  }
+
+  /* Active: press down */
+  button:not(:disabled):active,
+  [data-slot="button"]:not(:disabled):active {
+    filter: brightness(0.95);
+  }
+
+  /* Nav links: smooth color transitions */
+  nav a,
+  nav button {
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  /* Input focus: accent ring */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    --tw-ring-color: var(--accent);
+    outline: none;
+  }
+}
+
+/* ─── Page view transitions (progressive enhancement) ─── */
+@supports (view-transition-name: none) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root) {
+    animation: 180ms ease-out both fade-out;
+  }
+
+  ::view-transition-new(root) {
+    animation: 180ms ease-in both fade-in;
+  }
+
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
   }
 }

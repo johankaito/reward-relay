@@ -39,7 +39,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#FF6B6B",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf6ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#130f07" },
+  ],
 }
 
 export default function RootLayout({
@@ -48,8 +51,27 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} ${plexMono.variable} antialiased flex flex-col min-h-screen`}>
+    <html lang="en" suppressHydrationWarning>
+      {/* Inline script: apply .dark class before paint to prevent flash */}
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('theme');
+                  if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body
+        className={`${spaceGrotesk.variable} ${plexMono.variable} antialiased flex flex-col min-h-screen`}
+      >
         <Providers>
           <div className="flex-1">{children}</div>
           <Footer />

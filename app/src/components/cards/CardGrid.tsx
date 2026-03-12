@@ -10,7 +10,7 @@ type Props = {
 export function CardGrid({ cards }: Props) {
   if (!cards.length) {
     return (
-      <div className="rounded-lg border border-dashed border-[var(--border-default)] bg-[var(--surface)] p-8 text-center text-sm text-slate-200">
+      <div className="rounded-lg border border-dashed border-[var(--border-default)] bg-[var(--surface)] p-8 text-center text-sm text-[var(--text-secondary)]">
         No cards found. Seed the catalog in Supabase to see results.
       </div>
     )

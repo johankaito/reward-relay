@@ -28,11 +28,11 @@ export function CardItem({ card }: { card: CardRecord }) {
             {card.points_currency || "Points"}
           </span>
         </div>
-        <CardTitle className="text-lg leading-tight text-white">
+        <CardTitle className="text-lg leading-tight text-[var(--text-primary)]">
           {card.name}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3 text-sm text-slate-200">
+      <CardContent className="space-y-3 text-sm text-[var(--text-secondary)]">
         <MetricRow label="Annual fee" value={formatMoney(card.annual_fee)} />
         <MetricRow
           label="Welcome bonus"
@@ -54,8 +54,8 @@ export function CardItem({ card }: { card: CardRecord }) {
 function MetricRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between rounded-xl bg-[var(--surface-muted)] px-3 py-2">
-      <span className="text-xs font-medium uppercase tracking-wide text-slate-400">{label}</span>
-      <span className="font-semibold text-white">{value}</span>
+      <span className="text-xs font-medium uppercase tracking-wide text-[var(--text-secondary)]">{label}</span>
+      <span className="font-semibold text-[var(--text-primary)]">{value}</span>
     </div>
   )
 }
