@@ -17,7 +17,7 @@ interface BetaRequestFormProps {
 
 export function BetaRequestForm({
   buttonText = "Request Beta Access",
-  buttonClassName = "inline-flex items-center justify-center gap-2 rounded-full bg-teal-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30",
+  buttonClassName = "inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/30",
   variant = "inline",
   subtitle = "Limited spots available • Free during beta",
 }: BetaRequestFormProps) {
@@ -85,7 +85,7 @@ export function BetaRequestForm({
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder="you@example.com"
-          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-400 backdrop-blur-sm transition-colors focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-400 backdrop-blur-sm transition-colors focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function BetaRequestForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Your name"
-          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-400 backdrop-blur-sm transition-colors focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-400 backdrop-blur-sm transition-colors focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
 
@@ -107,7 +107,7 @@ export function BetaRequestForm({
         <button
           type="submit"
           disabled={loading}
-          className="flex-1 rounded-full bg-teal-600 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex-1 rounded-full bg-emerald-600 px-6 py-2.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? "Submitting..." : "Submit Request"}
         </button>

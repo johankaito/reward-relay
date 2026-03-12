@@ -82,15 +82,15 @@ export default function LoginPage() {
   return (
       <Card className="w-full max-w-md mx-auto border border-[var(--border-default)] bg-[var(--surface)] shadow-xl">
         <CardHeader className="space-y-3">
-          <CardTitle className="text-2xl font-semibold text-white">
+          <CardTitle className="text-2xl font-semibold text-[var(--text-primary)]">
             Log in to your account
           </CardTitle>
-          <p className="text-sm text-slate-300">AU churners · private beta</p>
+          <p className="text-sm text-[var(--text-secondary)]">Australian credit card rewards tracker</p>
         </CardHeader>
         <CardContent className="space-y-6">
           <form onSubmit={handleLogin} className="space-y-4" name="login">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-200">
+              <Label htmlFor="email" className="text-[var(--text-primary)]">
                 Email
               </Label>
               <Input
@@ -102,11 +102,11 @@ export default function LoginPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 required
                 placeholder="you@example.com"
-                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-200">
+              <Label htmlFor="password" className="text-[var(--text-primary)]">
                 Password
               </Label>
               <Input
@@ -118,13 +118,12 @@ export default function LoginPage() {
                 onChange={(event) => setPassword(event.target.value)}
                 required
                 placeholder="••••••••"
-                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
               />
             </div>
             <Button
               type="submit"
-              className="w-full text-white"
-              style={{ background: "var(--gradient-cta)" }}
+              className="w-full"
               disabled={isLoading || !email || !password}
             >
               {isLoading ? "Logging in..." : "Log in"}
@@ -132,18 +131,18 @@ export default function LoginPage() {
           </form>
           {!showBetaForm ? (
             <>
-              <div className="mt-4 text-center text-sm text-slate-300">
+              <div className="mt-4 text-center text-sm text-[var(--text-secondary)]">
                 Don&apos;t have an account?{" "}
                 <button
                   type="button"
                   onClick={() => setShowBetaForm(true)}
-                  className="text-[var(--accent-strong)] underline hover:text-[var(--accent)] transition-colors"
+                  className="text-[var(--accent)] underline hover:text-[var(--accent-strong)] transition-colors"
                 >
                   Request access
                 </button>
               </div>
-              <div className="mt-2 text-center text-sm text-slate-300">
-                <Link href="/reset-password" className="text-[var(--accent)] underline">
+              <div className="mt-2 text-center text-sm text-[var(--text-secondary)]">
+                <Link href="/reset-password" className="text-[var(--accent)] underline hover:text-[var(--accent-strong)] transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -152,7 +151,7 @@ export default function LoginPage() {
             <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
               <form onSubmit={handleBetaRequest} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="beta-email" className="text-slate-200">
+                  <Label htmlFor="beta-email" className="text-[var(--text-primary)]">
                     Email
                   </Label>
                   <Input
@@ -162,11 +161,11 @@ export default function LoginPage() {
                     onChange={(e) => setBetaEmail(e.target.value)}
                     required
                     placeholder="you@example.com"
-                    className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                    className="border-[var(--border-default)] bg-[var(--surface-soft)] text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="beta-name" className="text-slate-200">
+                  <Label htmlFor="beta-name" className="text-[var(--text-primary)]">
                     Name (optional)
                   </Label>
                   <Input
@@ -175,15 +174,14 @@ export default function LoginPage() {
                     value={betaName}
                     onChange={(e) => setBetaName(e.target.value)}
                     placeholder="Your name"
-                    className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                    className="border-[var(--border-default)] bg-[var(--surface-soft)] text-[var(--text-primary)] placeholder:text-[var(--text-secondary)]"
                   />
                 </div>
                 <div className="flex gap-2">
                   <Button
                     type="submit"
                     disabled={betaLoading}
-                    className="flex-1 text-white"
-                    style={{ background: "var(--gradient-cta)" }}
+                    className="flex-1"
                   >
                     {betaLoading ? "Submitting..." : "Request Access"}
                   </Button>
@@ -195,7 +193,6 @@ export default function LoginPage() {
                       setBetaName("")
                     }}
                     variant="outline"
-                    className="border-[var(--border-default)] text-slate-300 hover:bg-[var(--surface-soft)]"
                   >
                     Cancel
                   </Button>

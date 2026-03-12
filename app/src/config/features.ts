@@ -21,7 +21,7 @@ export const FEATURE_FLAGS = {
    *
    * To launch publicly: Change this to `false` and redeploy
    */
-  privateBeta: true,
+  privateBeta: false,
 } as const
 
 export type FeatureFlags = typeof FEATURE_FLAGS

@@ -42,7 +42,7 @@ export default function Home() {
     <div className="relative flex flex-col bg-gradient-to-br from-[#0a0e1a] via-[#0f1419] to-[#050810] text-white">
       {/* Subtle gradient orbs for depth */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl"></div>
+        <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl"></div>
       </div>
 
@@ -56,8 +56,8 @@ export default function Home() {
             <div className="flex flex-col justify-center space-y-6">
               <div className="flex items-center gap-3">
                 <Image src="/logo.svg" alt="Reward Relay" width={40} height={40} className="drop-shadow-lg" />
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-teal-200 backdrop-blur-sm">
-                  Australian churners · Private beta
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-emerald-200 backdrop-blur-sm">
+                  Australian churners
                 </span>
               </div>
 
@@ -65,7 +65,7 @@ export default function Home() {
                 <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                   Turn every card into maximum rewards,
                   <br/>
-                  <span className="text-teal-400">
+                  <span className="text-emerald-400">
                     seamlessly
                   </span>
                 </h1>
@@ -78,7 +78,7 @@ export default function Home() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <a
                   href="/login"
-                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-teal-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/30"
                 >
                   Log in
                 </a>
@@ -102,9 +102,9 @@ export default function Home() {
               <div className="space-y-4 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl shadow-2xl">
                 <p className="text-sm font-semibold uppercase tracking-wide text-slate-400">Dashboard preview</p>
                 <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-slate-800/90 shadow-2xl backdrop-blur-sm">
-                  <div className="flex items-center justify-between bg-teal-600 px-4 py-3">
+                  <div className="flex items-center justify-between bg-emerald-600 px-4 py-3">
                     <span className="text-sm font-semibold text-white">Your next churn</span>
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-teal-700 shadow-lg">
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-700 shadow-lg">
                       Ready this month
                     </span>
                   </div>
@@ -114,7 +114,7 @@ export default function Home() {
                         <p className="text-xs font-medium text-slate-400">Recommended</p>
                         <p className="text-lg font-bold text-white">ANZ Rewards Black</p>
                       </div>
-                      <span className="rounded-full bg-teal-500/20 px-3 py-1.5 text-sm font-bold text-teal-300 ring-1 ring-teal-400/30">
+                      <span className="rounded-full bg-emerald-500/20 px-3 py-1.5 text-sm font-bold text-emerald-300 ring-1 ring-emerald-400/30">
                         $1,200 net
                       </span>
                     </div>
@@ -143,21 +143,21 @@ export default function Home() {
           {/* Social Proof / Trust Signals */}
           <div className="mt-16 md:mt-20">
             <div className="text-center mb-8">
-              <p className="text-sm font-semibold uppercase tracking-wider text-teal-400">
+              <p className="text-sm font-semibold uppercase tracking-wider text-emerald-400">
                 Built for Australian Churners
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
               <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-white/10">
-                  <Lock className="h-6 w-6 text-teal-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 ring-1 ring-white/10">
+                  <Lock className="h-6 w-6 text-emerald-400" />
                 </div>
                 <p className="text-center text-sm font-semibold text-white">Your data stays in Australia</p>
                 <p className="text-center text-xs text-slate-400">No offshore storage. Compliant with local privacy laws.</p>
               </div>
               <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-white/10">
-                  <ChartBar className="h-6 w-6 text-teal-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 ring-1 ring-white/10">
+                  <ChartBar className="h-6 w-6 text-emerald-400" />
                 </div>
                 <p className="text-center text-sm font-semibold text-white">Track unlimited cards</p>
                 <BetaGate>
@@ -168,8 +168,8 @@ export default function Home() {
                 </BetaOnly>
               </div>
               <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-white/10">
-                  <Zap className="h-6 w-6 text-teal-400" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 ring-1 ring-white/10">
+                  <Zap className="h-6 w-6 text-emerald-400" />
                 </div>
                 <p className="text-center text-sm font-semibold text-white">Never miss a cancellation deadline</p>
                 <p className="text-center text-xs text-slate-400">Email reminders at 30, 14, and 7 days before annual fee.</p>
@@ -191,11 +191,11 @@ export default function Home() {
               <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 ring-1 ring-white/10">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-emerald-500/20 ring-1 ring-white/10">
                       <Plane className="h-6 w-6 text-blue-400" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-teal-400">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
                         Example Goal
                       </p>
                       <p className="text-lg font-bold text-white">Free Domestic Flight</p>
@@ -204,7 +204,7 @@ export default function Home() {
 
                   <div className="space-y-3">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold text-teal-400">4</span>
+                      <span className="text-5xl font-bold text-emerald-400">4</span>
                       <span className="text-xl font-semibold text-slate-300">months</span>
                     </div>
 
@@ -216,7 +216,7 @@ export default function Home() {
                         <span className="text-slate-600">•</span>
                         <span>$375 fee</span>
                         <span className="text-slate-600">•</span>
-                        <span className="font-semibold text-teal-400">$75 net</span>
+                        <span className="font-semibold text-emerald-400">$75 net</span>
                       </div>
                     </div>
 
@@ -228,15 +228,15 @@ export default function Home() {
               </div>
 
               {/* International Flight Example */}
-              <div className="group relative overflow-hidden rounded-3xl border border-teal-500/30 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 p-6 backdrop-blur-sm transition-all hover:border-teal-500/50">
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-teal-500/10 blur-3xl"></div>
+              <div className="group relative overflow-hidden rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-emerald-500/10 p-6 backdrop-blur-sm transition-all hover:border-emerald-500/50">
+                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-emerald-500/10 blur-3xl"></div>
                 <div className="relative space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-teal-400/30">
-                      <Globe className="h-6 w-6 text-teal-400" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 ring-1 ring-emerald-400/30">
+                      <Globe className="h-6 w-6 text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-wider text-teal-400">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
                         Example Goal
                       </p>
                       <p className="text-lg font-bold text-white">International Economy</p>
@@ -245,7 +245,7 @@ export default function Home() {
 
                   <div className="space-y-3">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold text-teal-400">10</span>
+                      <span className="text-5xl font-bold text-emerald-400">10</span>
                       <span className="text-xl font-semibold text-slate-300">months</span>
                     </div>
 
@@ -257,7 +257,7 @@ export default function Home() {
                         <span className="text-slate-600">•</span>
                         <span>$670 fees</span>
                         <span className="text-slate-600">•</span>
-                        <span className="font-semibold text-teal-400">$130 net</span>
+                        <span className="font-semibold text-emerald-400">$130 net</span>
                       </div>
                     </div>
 
@@ -328,7 +328,7 @@ export default function Home() {
               <BetaGate>
                 <a
                   href="/signup"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-teal-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/30"
                 >
                   Start Tracking Your Cards
                 </a>
@@ -357,8 +357,8 @@ export default function Home() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {/* Visual Calendar */}
               <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 ring-1 ring-teal-400/30">
-                  <Calendar className="h-8 w-8 text-teal-400" />
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/20 ring-1 ring-emerald-400/30">
+                  <Calendar className="h-8 w-8 text-emerald-400" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">Visual Churning Calendar</h3>
@@ -383,7 +383,7 @@ export default function Home() {
 
               {/* CSV Upload */}
               <div className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 ring-1 ring-blue-400/30">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-emerald-500/20 ring-1 ring-blue-400/30">
                   <FileText className="h-8 w-8 text-blue-400" />
                 </div>
                 <div>
@@ -432,19 +432,19 @@ export default function Home() {
                 </div>
                 <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span>Track 2-3 cards</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span>Basic reminders</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span>12-month rule tracking</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span>Manual transaction entry</span>
                   </li>
                 </ul>
@@ -457,8 +457,8 @@ export default function Home() {
               </div>
 
               {/* Pro Monthly */}
-              <div className="relative flex flex-col rounded-3xl border-2 border-teal-500/50 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 p-8 backdrop-blur-sm shadow-xl shadow-teal-500/20">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-teal-600 px-4 py-1 text-xs font-bold text-white">
+              <div className="relative flex flex-col rounded-3xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/10 to-emerald-500/10 p-8 backdrop-blur-sm shadow-xl shadow-emerald-500/20">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-emerald-600 px-4 py-1 text-xs font-bold text-white">
                   MOST POPULAR
                 </div>
                 <div className="mb-6">
@@ -471,37 +471,37 @@ export default function Home() {
                 </div>
                 <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span><strong>Unlimited cards</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span><strong>Smart recommendations</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span><strong>Goal projections & timeline</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span><strong>CSV statement upload</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span>Daily insights & deals</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span>Streak rewards</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-teal-400" />
+                    <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
                     <span>Priority support</span>
                   </li>
                 </ul>
                 <a
                   href="/signup"
-                  className="rounded-full bg-teal-600 px-6 py-3 text-center font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:scale-105 hover:bg-teal-500 hover:shadow-xl hover:shadow-teal-500/30"
+                  className="rounded-full bg-emerald-600 px-6 py-3 text-center font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 hover:bg-emerald-500 hover:shadow-xl hover:shadow-emerald-500/30"
                 >
                   Start 7-Day Trial
                 </a>
@@ -553,7 +553,7 @@ export default function Home() {
 
               <div className="text-center">
                 <p className="flex items-center justify-center gap-2 text-sm text-slate-300">
-                  <Lightbulb className="h-5 w-5 text-teal-400" />
+                  <Lightbulb className="h-5 w-5 text-emerald-400" />
                   <span><strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)</span>
                 </p>
               </div>
@@ -564,9 +564,9 @@ export default function Home() {
           <BetaOnly>
             <div className="mt-24 space-y-8">
               <div className="mx-auto max-w-3xl text-center space-y-6">
-                <div className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-6 py-3 backdrop-blur-sm">
-                  <Lock className="h-5 w-5 text-teal-400" />
-                  <span className="text-sm font-semibold text-teal-300">Private Beta • Invite Only</span>
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-6 py-3 backdrop-blur-sm">
+                  <Lock className="h-5 w-5 text-emerald-400" />
+                  <span className="text-sm font-semibold text-emerald-300">Private Beta • Invite Only</span>
                 </div>
 
                 <h2 className="text-3xl font-bold text-white sm:text-4xl">
@@ -575,13 +575,13 @@ export default function Home() {
 
                 <p className="text-lg text-slate-300">
                   We&apos;re testing Reward Relay with a small group of Australian churners. During the private beta,
-                  all features are <strong className="text-teal-400">completely free</strong>.
+                  all features are <strong className="text-emerald-400">completely free</strong>.
                 </p>
 
                 <div className="grid gap-4 md:grid-cols-2 mt-8 text-left">
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                     <div className="flex items-start gap-3">
-                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-400" />
                       <div>
                         <p className="font-semibold text-white">Unlimited everything</p>
                         <p className="mt-1 text-sm text-slate-400">Track unlimited cards, get all recommendations, use every feature</p>
@@ -591,7 +591,7 @@ export default function Home() {
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                     <div className="flex items-start gap-3">
-                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-400" />
                       <div>
                         <p className="font-semibold text-white">Shape the product</p>
                         <p className="mt-1 text-sm text-slate-400">Your feedback directly influences features and improvements</p>
@@ -601,7 +601,7 @@ export default function Home() {
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                     <div className="flex items-start gap-3">
-                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-400" />
                       <div>
                         <p className="font-semibold text-white">Early adopter benefits</p>
                         <p className="mt-1 text-sm text-slate-400">Special pricing when we launch publicly (details TBA)</p>
@@ -611,7 +611,7 @@ export default function Home() {
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
                     <div className="flex items-start gap-3">
-                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-teal-400" />
+                      <Check className="mt-1 h-5 w-5 flex-shrink-0 text-emerald-400" />
                       <div>
                         <p className="font-semibold text-white">Australian-first</p>
                         <p className="mt-1 text-sm text-slate-400">Built specifically for Australian banks, cards, and churning rules</p>
@@ -638,7 +638,7 @@ export default function Home() {
                 <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                   <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                     What happens after the 7-day free trial?
-                    <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                    <span className="text-emerald-400 transition-transform group-open:rotate-180">▼</span>
                   </summary>
                   <p className="px-6 pb-6 text-sm text-slate-300">
                     After 7 days, you&apos;ll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
@@ -649,7 +649,7 @@ export default function Home() {
               <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                 <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   Can I cancel anytime?
-                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                  <span className="text-emerald-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <p className="px-6 pb-6 text-sm text-slate-300">
                   Yes! Cancel anytime from your account settings. If you cancel mid-month, you&apos;ll keep Pro access until the end of your billing period. No penalties, no hassle.
@@ -659,7 +659,7 @@ export default function Home() {
               <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                 <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   Do you store my credit card numbers?
-                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                  <span className="text-emerald-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <p className="px-6 pb-6 text-sm text-slate-300">
                   <strong>No.</strong> We only track card metadata—bank name, application dates, cancellation dates, and your notes. We never store or see your actual credit card numbers or PINs.
@@ -669,7 +669,7 @@ export default function Home() {
               <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                 <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   What&apos;s the 12-month rule?
-                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                  <span className="text-emerald-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <p className="px-6 pb-6 text-sm text-slate-300">
                   Most Australian banks require you to wait 12 months after cancelling a card before you&apos;re eligible for sign-up bonuses on another card from that same bank. Reward Relay automatically tracks this for you.
@@ -680,7 +680,7 @@ export default function Home() {
                 <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                   <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                     How do I upgrade from Free to Pro?
-                    <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                    <span className="text-emerald-400 transition-transform group-open:rotate-180">▼</span>
                   </summary>
                   <p className="px-6 pb-6 text-sm text-slate-300">
                     Click &quot;Upgrade to Pro&quot; in your dashboard settings. Choose monthly or annual, start your 7-day trial, and all Pro features unlock immediately. You&apos;ll keep all your existing data.
@@ -691,7 +691,7 @@ export default function Home() {
               <details className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.07]">
                 <summary className="flex cursor-pointer items-center justify-between p-6 text-lg font-semibold text-white list-none">
                   Is my data secure?
-                  <span className="text-teal-400 transition-transform group-open:rotate-180">▼</span>
+                  <span className="text-emerald-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
                 <p className="px-6 pb-6 text-sm text-slate-300">
                   Yes. Your data is encrypted in transit and at rest, stored in Australia, and protected by industry-standard security. We use Row Level Security so you can only access your own data.
