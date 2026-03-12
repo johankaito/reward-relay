@@ -3,23 +3,80 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Home, LayoutGrid, LogOut, Menu, Shield, Sparkles, History, Calculator, Wallet, Calendar, FileUp, Lightbulb, TrendingUp } from "lucide-react"
+import {
+  Home,
+  CreditCard,
+  LogOut,
+  Shield,
+  Sparkles,
+  Wallet,
+  CalendarDays,
+  Compass,
+  ChevronRight,
+  TrendingUp,
+  Upload,
+  History,
+  Scale,
+  Lightbulb,
+  Calendar,
+} from "lucide-react"
 import { useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { supabase } from "@/lib/supabase/client"
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/cards", label: "Cards", icon: LayoutGrid },
-  { href: "/recommendations", label: "Recommendations", icon: Lightbulb },
-  { href: "/projections", label: "Projections", icon: TrendingUp },
-  { href: "/spending", label: "Spending", icon: Wallet },
-  { href: "/statements", label: "Statements", icon: FileUp },
-  { href: "/calendar", label: "Calendar", icon: Calendar },
-  { href: "/history", label: "History", icon: History },
-  { href: "/compare", label: "Compare", icon: Calculator },
+type NavChild = {
+  href: string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+}
+
+type NavItem = {
+  href: string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  children?: NavChild[]
+}
+
+const navItems: NavItem[] = [
+  {
+    href: "/dashboard",
+    label: "Home",
+    icon: Home,
+  },
+  {
+    href: "/cards",
+    label: "Cards",
+    icon: CreditCard,
+  },
+  {
+    href: "/recommendations",
+    label: "Discover",
+    icon: Compass,
+    children: [
+      { href: "/recommendations", label: "Recommendations", icon: Lightbulb },
+      { href: "/compare", label: "Compare", icon: Scale },
+      { href: "/projections", label: "Projections", icon: TrendingUp },
+    ],
+  },
+  {
+    href: "/spending",
+    label: "Spending",
+    icon: Wallet,
+    children: [
+      { href: "/spending", label: "Tracker", icon: Wallet },
+      { href: "/statements", label: "Import Statements", icon: Upload },
+    ],
+  },
+  {
+    href: "/calendar",
+    label: "Timeline",
+    icon: CalendarDays,
+    children: [
+      { href: "/calendar", label: "Calendar", icon: Calendar },
+      { href: "/history", label: "History", icon: History },
+    ],
+  },
 ]
 
 type AppShellProps = {
@@ -31,14 +88,22 @@ export function AppShell({ children }: AppShellProps) {
   const router = useRouter()
   const [signingOut, setSigningOut] = useState(false)
 
-  const navMap = useMemo(
-    () =>
-      navItems.map((item) => ({
+  const navMap = useMemo(() => {
+    return navItems.map((item) => {
+      const isParentActive = pathname.startsWith(item.href)
+      const isChildActive = item.children?.some((c) => pathname.startsWith(c.href)) ?? false
+      const active = isParentActive || isChildActive
+
+      return {
         ...item,
-        active: pathname.startsWith(item.href),
-      })),
-    [pathname],
-  )
+        active,
+        children: item.children?.map((child) => ({
+          ...child,
+          active: pathname.startsWith(child.href),
+        })),
+      }
+    })
+  }, [pathname])
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -52,106 +117,138 @@ export function AppShell({ children }: AppShellProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--surface-muted)] text-white">
+    <div className="min-h-screen bg-[var(--surface-muted)]">
+      {/* Header */}
       <header className="sticky top-0 z-20 border-b border-[var(--border-default)] bg-[var(--surface)]/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <Menu className="h-5 w-5 text-slate-200 md:hidden" />
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <div
-                className="flex h-9 w-9 items-center justify-center rounded-2xl text-white shadow-sm"
-                style={{ background: "var(--gradient-cta)" }}
-              >
-                <Sparkles className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold leading-tight text-white">Reward Relay</p>
-                <p className="text-xs text-slate-300">AU churners</p>
-              </div>
-            </Link>
-            <span
-              className="hidden items-center gap-2 rounded-full px-3 py-1 text-xs font-medium md:inline-flex"
-              style={{
-                backgroundColor: "color-mix(in srgb, var(--accent) 10%, transparent)",
-                color: "var(--accent-strong)",
-              }}
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+          <Link href="/dashboard" className="flex items-center gap-2.5">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-xl text-white shadow-sm"
+              style={{ background: "var(--gradient-cta)" }}
             >
-              <Shield className="h-3 w-3" /> Private beta
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <span className="text-sm font-semibold text-[var(--text-primary)]">Reward Relay</span>
+          </Link>
+
+          <span
+            className="hidden items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium md:inline-flex"
+            style={{
+              backgroundColor: "color-mix(in srgb, var(--accent) 10%, transparent)",
+              color: "var(--accent-strong)",
+            }}
+          >
+            <Shield className="h-3 w-3" /> Beta
+          </span>
+
+          <div className="ml-auto flex items-center gap-2">
             <Button
               size="sm"
               className="hidden rounded-full text-white shadow-sm md:inline-flex"
               style={{ background: "var(--gradient-cta)" }}
               onClick={() => router.push("/cards")}
             >
-              <Sparkles className="mr-2 h-4 w-4" />
+              <CreditCard className="mr-1.5 h-3.5 w-3.5" />
               Add card
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={handleSignOut}
               disabled={signingOut}
+              className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              title="Sign out"
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              {signingOut ? "Signing out..." : "Sign out"}
+              <LogOut className="h-4 w-4" />
             </Button>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-6 pb-24 md:grid-cols-[240px_1fr] md:pb-6">
-        <Card className="hidden h-fit border border-[var(--border-default)] bg-[var(--surface)] text-white shadow-md md:block">
-          <nav className="space-y-1 p-3">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 px-4 py-6 pb-24 md:grid-cols-[220px_1fr] md:pb-6">
+        {/* Desktop Sidebar */}
+        <aside className="hidden h-fit md:block">
+          <nav className="rounded-xl border border-[var(--border-default)] bg-[var(--surface)] p-2 shadow-sm">
             {navMap.map((item) => {
               const Icon = item.icon
+              const hasChildren = !!(item.children && item.children.length > 0)
+              const showChildren = hasChildren && item.active
+
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-2 rounded-xl px-3 py-3 text-sm transition ${
-                    item.active
-                      ? "bg-white/10 text-white ring-1 ring-[var(--border-default)]"
-                      : "text-slate-300 hover:bg-white/5"
-                  }`}
-                >
-                  <span
-                    className={`h-2 w-2 rounded-full ${
-                      item.active ? "bg-[var(--accent)]" : "bg-white/30"
+                <div key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                      item.active
+                        ? "bg-[var(--surface-strong)] text-[var(--text-primary)]"
+                        : "text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)] hover:text-[var(--text-primary)]"
                     }`}
-                  />
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
+                  >
+                    <Icon
+                      className={`h-4 w-4 flex-shrink-0 ${
+                        item.active ? "text-[var(--accent)]" : ""
+                      }`}
+                    />
+                    <span className="flex-1">{item.label}</span>
+                    {hasChildren && (
+                      <ChevronRight
+                        className={`h-3.5 w-3.5 transition-transform ${
+                          item.active
+                            ? "rotate-90 text-[var(--text-secondary)]"
+                            : "text-[var(--text-secondary)]/40"
+                        }`}
+                      />
+                    )}
+                  </Link>
+
+                  {/* Sub-items: shown when parent is active */}
+                  {showChildren && item.children && (
+                    <div className="mb-1 ml-4 space-y-0.5 border-l border-[var(--border-default)] pl-2.5 pt-0.5">
+                      {item.children.map((child) => {
+                        const ChildIcon = child.icon
+                        return (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className={`flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors ${
+                              child.active
+                                ? "bg-[var(--surface-strong)] font-medium text-[var(--text-primary)]"
+                                : "text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)] hover:text-[var(--text-primary)]"
+                            }`}
+                          >
+                            <ChildIcon className="h-3.5 w-3.5 flex-shrink-0" />
+                            {child.label}
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
               )
             })}
           </nav>
-          <div className="mt-4 space-y-2 border-t border-white/10 p-3 text-xs text-slate-300">
-            <p className="font-semibold text-white">Next actions</p>
-            <p>Track your AMEX + churn target</p>
-            <p>Compare eligible cards</p>
-          </div>
-        </Card>
+        </aside>
 
-        <main className="space-y-6">{children}</main>
+        <main className="min-w-0 space-y-5">{children}</main>
       </div>
 
+      {/* Mobile Bottom Nav — exactly 5 items, no scroll */}
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--border-default)] bg-[var(--surface)]/95 backdrop-blur md:hidden">
-        <div className="mx-auto flex max-w-3xl items-center gap-1 overflow-x-auto px-2 py-2 text-xs font-medium text-white scrollbar-hide">
+        <div className="mx-auto grid max-w-sm grid-cols-5 px-2 py-1">
           {navMap.map((item) => {
             const Icon = item.icon
             return (
               <button
                 key={item.href}
                 onClick={() => router.push(item.href)}
-                className={`flex flex-col items-center gap-0.5 rounded-md px-2 py-1.5 transition-all whitespace-nowrap min-w-[60px] ${
-                  item.active ? "text-[var(--accent)]" : "text-slate-300 hover:text-white hover:bg-white/5"
+                className={`flex flex-col items-center gap-1 rounded-lg px-1 py-2 transition-colors ${
+                  item.active
+                    ? "text-[var(--accent)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
-                <span className="text-[10px] leading-tight">{item.label}</span>
+                <span className="text-[10px] font-medium leading-tight">{item.label}</span>
               </button>
             )
           })}

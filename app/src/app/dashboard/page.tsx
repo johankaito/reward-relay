@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Pencil, Trash2 } from "lucide-react"
+import { Pencil, TrendingUp, CreditCard, Clock } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { Badge } from "@/components/ui/badge"
@@ -19,7 +19,6 @@ import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
 import { useCatalog } from "@/contexts/CatalogContext"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
 import type { Database } from "@/types/database.types"
-import type { Recommendation } from "@/lib/recommendations"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 
@@ -47,13 +46,11 @@ export default function DashboardPage() {
     setEmail(session.user.email ?? null)
     setUserId(session.user.id)
 
-    // Identify user in PostHog
     analytics.identifyUser(session.user.id, {
       email: session.user.email,
       created_at: session.user.created_at,
     })
 
-    // Load user cards
     const { data: userCardsResult, error } = await supabase
       .from("user_cards")
       .select("*")
@@ -68,17 +65,17 @@ export default function DashboardPage() {
     setCards(userCardsResult || [])
     setLoading(false)
 
-    // Show welcome message on initial load from login
     if (showWelcome) {
       toast.success("Welcome back!")
     }
   }
 
   useEffect(() => {
-    // Check if coming from login by looking for a fresh session
     const checkAndLoad = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      const isNewLogin = !!(session && !email) // Fresh session and no email set yet
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      const isNewLogin = !!(session && !email)
       loadCards(isNewLogin)
     }
     checkAndLoad()
@@ -90,7 +87,7 @@ export default function DashboardPage() {
   }
 
   const handleUpdateComplete = () => {
-    loadCards(false) // Reload cards after edit/delete
+    loadCards(false)
   }
 
   const stats = useMemo(() => {
@@ -106,33 +103,37 @@ export default function DashboardPage() {
 
   const topRecommendation = recommendations.length > 0 ? recommendations[0] : null
 
-  // Track recommendation_viewed when recommendations are shown
   useEffect(() => {
     if (topRecommendation && userId) {
-      const signupDate = new Date() // We'll use current date as approximation
-      const daysSinceSignup = 0 // Placeholder - could be calculated properly
-
       analytics.trackEvent("recommendation_viewed", {
-        card_index: 0, // First recommendation
-        is_pro: false, // Free tier for now
-        days_since_signup: daysSinceSignup,
+        card_index: 0,
+        is_pro: false,
+        days_since_signup: 0,
       })
     }
   }, [topRecommendation, userId, analytics])
 
-  // Calculate projection to domestic flight (most achievable goal)
   const projection = useMemo(() => {
     if (catalogCards.length === 0) return null
-    const goal = GOALS.domesticFlight // 10,000 points
+    const goal = GOALS.domesticFlight
     const paths = calculateMultiCardPaths(goal, cards, catalogCards, 0)
     return paths.length > 0 ? { path: paths[0], goal } : null
   }, [cards, catalogCards])
 
+  // Derive display name from email
+  const displayName = email ? email.split("@")[0] : null
+
   if (loading) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-slate-200 shadow-sm">
-          Loading dashboard...
+        <div className="space-y-5">
+          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="grid grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-20 animate-pulse rounded-xl bg-[var(--surface)]" />
+            ))}
+          </div>
+          <div className="h-48 animate-pulse rounded-xl bg-[var(--surface)]" />
         </div>
       </AppShell>
     )
@@ -140,147 +141,93 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
-        {/* Daily Insights with Streak Tracking */}
-        {userId && <DailyInsights userId={userId} />}
-
-        {topRecommendation && (
-          <div className="space-y-3">
-            <RecommendationCard recommendation={topRecommendation} variant="hero" />
-            <p className="text-center text-sm text-slate-400">
-              Simple workflow: 1. Add your cards 2. Get instant recommendations
+      <div className="space-y-5">
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold text-[var(--text-primary)]">
+              {displayName ? `Hey, ${displayName}` : "Dashboard"}
+            </h1>
+            <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
+              Your credit card rewards overview
             </p>
           </div>
-        )}
-
-        {/* Projection Preview */}
-        {projection && (
-          <Card className="border border-[var(--accent)]/30 bg-gradient-to-br from-[var(--surface)] to-[color-mix(in_srgb,var(--accent)_5%,transparent)] shadow-md">
-            <CardContent className="pt-6">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl">{projection.goal.icon}</span>
-                    <p className="text-lg font-semibold text-white">Your Goal Path</p>
-                  </div>
-                  <p className="text-2xl font-bold text-[var(--accent)]">
-                    {projection.goal.label} in {projection.path.timeToGoal} months
-                  </p>
-                  <p className="text-sm text-slate-300">
-                    With {projection.path.cards.length} card{projection.path.cards.length > 1 ? 's' : ''}: {projection.path.cards.map(c => c.bank).join(' + ')}
-                  </p>
-                  <div className="flex items-center gap-4 text-xs text-slate-400">
-                    <span>{projection.path.totalPoints.toLocaleString()} points earned</span>
-                    <span>•</span>
-                    <span>${projection.path.totalCost} total fees</span>
-                    <span>•</span>
-                    <span>${projection.path.netValue.toFixed(0)} net value</span>
-                  </div>
-                </div>
-                <div>
-                  <Link href="/projections">
-                    <Button
-                      className="rounded-full text-white shadow-sm"
-                      style={{ background: "var(--gradient-cta)" }}
-                    >
-                      View All Goals
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        <div className="overflow-hidden rounded-3xl border border-[var(--border-default)] bg-[var(--surface)] p-6 shadow-md">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--accent)]">
-                Reward Relay
-              </p>
-              <h1 className="text-3xl font-semibold text-white">
-                Welcome{email ? `, ${email}` : ""} 👋
-              </h1>
-              <p className="text-sm text-slate-300">
-                Track your cards, stay ahead of fees, and know which bank you can churn next.
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div
-                className="rounded-full px-3 py-2 text-xs font-semibold text-[var(--accent-contrast)]"
-                style={{ background: "var(--gradient-accent)" }}
-              >
-                Week 1: Add your cards + churn target
-              </div>
-              <Button
-                size="sm"
-                className="rounded-full text-white shadow-sm"
-                style={{ background: "var(--gradient-cta)" }}
-                onClick={() => router.push("/cards")}
-              >
-                Start tracking
-              </Button>
-            </div>
-          </div>
+          <Button
+            size="sm"
+            className="rounded-full text-white shadow-sm"
+            style={{ background: "var(--gradient-cta)" }}
+            onClick={() => router.push("/cards")}
+          >
+            <CreditCard className="mr-1.5 h-3.5 w-3.5" />
+            Add card
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-300">Active cards</CardTitle>
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">
+                Active cards
+              </CardTitle>
             </CardHeader>
-            <CardContent className="text-4xl font-semibold text-white">
-              {stats.active}
+            <CardContent className="pb-4 pt-0">
+              <p className="text-3xl font-semibold text-[var(--text-primary)]">{stats.active}</p>
             </CardContent>
           </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-300">Pending / Applied</CardTitle>
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">
+                Pending
+              </CardTitle>
             </CardHeader>
-            <CardContent className="text-4xl font-semibold text-white">
-              {stats.pending}
+            <CardContent className="pb-4 pt-0">
+              <p className="text-3xl font-semibold text-[var(--text-primary)]">{stats.pending}</p>
             </CardContent>
           </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-300">Total tracked</CardTitle>
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">
+                Total tracked
+              </CardTitle>
             </CardHeader>
-            <CardContent className="text-4xl font-semibold text-white">
-              {stats.total}
+            <CardContent className="pb-4 pt-0">
+              <p className="text-3xl font-semibold text-[var(--text-primary)]">{stats.total}</p>
             </CardContent>
           </Card>
         </div>
 
-        <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
+        {/* Your cards */}
+        <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
           <CardHeader className="flex flex-col gap-2 space-y-0 md:flex-row md:items-center md:justify-between">
             <div>
-              <CardTitle className="text-white">Your cards</CardTitle>
-              <p className="text-sm text-slate-300">Status, applied dates, and cancel targets.</p>
+              <CardTitle className="text-[var(--text-primary)]">Your cards</CardTitle>
+              <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
+                Status, applied dates, and cancel targets
+              </p>
             </div>
             <Link href="/cards">
-              <Button
-                size="sm"
-                variant="outline"
-                className="rounded-full"
-              >
+              <Button size="sm" variant="outline" className="rounded-full">
                 Browse catalog
               </Button>
             </Link>
           </CardHeader>
           <CardContent>
             {cards.length === 0 ? (
-              <div className="flex flex-col items-start gap-3 rounded-2xl border border-dashed border-[var(--border-default)] bg-[var(--surface-muted)] p-5 text-sm text-slate-200">
-                <p className="text-base font-semibold text-white">No cards tracked yet</p>
-                <p>Add your cards and churn target to start seeing reminders and eligibility.</p>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    onClick={() => router.push("/cards")}
-                    className="rounded-full"
-                  >
-                    View card ideas
-                  </Button>
-                </div>
+              <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed border-[var(--border-default)] bg-[var(--surface-muted)] p-5">
+                <p className="font-medium text-[var(--text-primary)]">No cards tracked yet</p>
+                <p className="text-sm text-[var(--text-secondary)]">
+                  Add your current cards and churn target to start seeing reminders and eligibility.
+                </p>
+                <Button
+                  size="sm"
+                  onClick={() => router.push("/cards")}
+                  className="rounded-full"
+                  style={{ background: "var(--gradient-cta)" }}
+                >
+                  <CreditCard className="mr-1.5 h-3.5 w-3.5" />
+                  Browse cards
+                </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -290,19 +237,22 @@ export default function DashboardPage() {
                     <Link
                       key={card.id}
                       href={`/dashboard/cards/${card.id}`}
-                      className="flex flex-col gap-3 rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-4 shadow-sm transition-all hover:border-[var(--accent)] hover:shadow-md"
+                      className="group flex flex-col gap-3 rounded-xl border border-[var(--border-default)] bg-[var(--surface)] p-4 transition-all hover:border-[var(--accent)]/50 hover:shadow-sm"
                       data-card-item
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <Badge variant="secondary" className="bg-[var(--info-bg)] text-[var(--info-fg)]">
+                          <Badge
+                            variant="secondary"
+                            className="bg-[var(--info-bg)] text-[var(--info-fg)]"
+                          >
                             {card.bank || "Custom"}
                           </Badge>
-                          <p className="text-base font-semibold text-white">
+                          <p className="font-semibold text-[var(--text-primary)]">
                             {card.name || "Untitled card"}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1.5">
                           <Badge className="capitalize" style={statusStyle(status)}>
                             {status}
                           </Badge>
@@ -313,32 +263,34 @@ export default function DashboardPage() {
                               e.preventDefault()
                               handleEditCard(card)
                             }}
-                            className="h-8 w-8 p-0"
+                            className="h-7 w-7 p-0 opacity-0 transition-opacity group-hover:opacity-100"
                           >
-                            <Pencil className="h-4 w-4" />
+                            <Pencil className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-3 text-xs text-slate-300 md:text-sm">
-                        <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2">
-                          <p className="text-[11px] uppercase tracking-wide text-slate-400">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2">
+                          <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--text-secondary)]">
                             Applied
                           </p>
-                          <p className="font-semibold text-white">
+                          <p className="mt-0.5 text-sm font-semibold text-[var(--text-primary)]">
                             {card.application_date || "—"}
                           </p>
                         </div>
-                        <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2">
-                          <p className="text-[11px] uppercase tracking-wide text-slate-400">
+                        <div className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2">
+                          <p className="text-[10px] font-medium uppercase tracking-wide text-[var(--text-secondary)]">
                             Cancel by
                           </p>
-                          <p className="font-semibold text-white">
-                            {card.cancellation_date || "Add date"}
+                          <p className="mt-0.5 text-sm font-semibold text-[var(--text-primary)]">
+                            {card.cancellation_date || (
+                              <span className="text-[var(--text-secondary)]">Add date</span>
+                            )}
                           </p>
                         </div>
                       </div>
                       {card.notes && (
-                        <p className="rounded-xl bg-[var(--surface-soft)] px-3 py-2 text-xs text-slate-200 ring-1 ring-[var(--border-default)]">
+                        <p className="rounded-lg bg-[var(--surface-soft)] px-3 py-2 text-xs text-[var(--text-secondary)] ring-1 ring-[var(--border-default)]">
                           {card.notes}
                         </p>
                       )}
@@ -349,6 +301,64 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Top recommendation */}
+        {topRecommendation && (
+          <div>
+            <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">
+              Top opportunity
+            </p>
+            <RecommendationCard recommendation={topRecommendation} variant="hero" />
+          </div>
+        )}
+
+        {/* Projection preview */}
+        {projection && (
+          <Card className="border border-[var(--accent)]/20 bg-[var(--surface)] shadow-sm">
+            <CardContent className="pt-5">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-[var(--accent)]" />
+                    <p className="text-sm font-medium text-[var(--text-secondary)]">
+                      Goal projection
+                    </p>
+                  </div>
+                  <p className="text-xl font-semibold text-[var(--text-primary)]">
+                    {projection.goal.label} in{" "}
+                    <span className="text-[var(--accent)]">
+                      {projection.path.timeToGoal} months
+                    </span>
+                  </p>
+                  <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)]">
+                    <span>{projection.path.totalPoints.toLocaleString()} pts</span>
+                    <span>·</span>
+                    <span>${projection.path.totalCost} fees</span>
+                    <span>·</span>
+                    <span className="text-[var(--success-fg)]">
+                      ${projection.path.netValue.toFixed(0)} net value
+                    </span>
+                  </div>
+                </div>
+                <Link href="/projections">
+                  <Button variant="outline" size="sm" className="rounded-full">
+                    View all goals
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Daily insights — shown last, supplementary */}
+        {userId && (
+          <div>
+            <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">
+              Today&apos;s activity
+            </p>
+            <DailyInsights userId={userId} />
+          </div>
+        )}
       </div>
 
       <EditCardModal
@@ -372,7 +382,7 @@ function statusStyle(status: string) {
     return { backgroundColor: "var(--warning-bg)", color: "var(--warning-fg)" }
   }
   if (status === "cancelled") {
-    return { backgroundColor: "var(--surface-strong)", color: "var(--text-primary)" }
+    return { backgroundColor: "var(--surface-strong)", color: "var(--text-secondary)" }
   }
   return {}
 }

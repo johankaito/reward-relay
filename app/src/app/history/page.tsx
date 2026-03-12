@@ -137,8 +137,13 @@ export default function ChurnHistoryPage() {
   if (loading) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-slate-200 shadow-sm">
-          Loading churn history...
+        <div className="space-y-5">
+          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="grid grid-cols-4 gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-20 animate-pulse rounded-xl bg-[var(--surface)]" />
+            ))}
+          </div>
         </div>
       </AppShell>
     )
@@ -147,53 +152,49 @@ export default function ChurnHistoryPage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        <div className="overflow-hidden rounded-3xl border border-[var(--border-default)] bg-[var(--surface)] p-6 shadow-md">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--accent)]">
-                Churn History
-              </p>
-              <h1 className="text-3xl font-semibold text-white">
-                Your churning timeline
-              </h1>
-              <p className="text-sm text-slate-300">
-                Track your churning history and see when you&apos;re eligible to reapply
-              </p>
-            </div>
-          </div>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+            History
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+            Churn history
+          </h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            All tracked cards with eligibility status
+          </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Total Churned</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Total churned</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-white">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
               {stats.totalChurned}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Active Cards</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Active cards</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-white">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
               {stats.activeCards}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Banks Churned</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Banks churned</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-white">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
               {stats.banksChurned}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Eligible Now</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Eligible now</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-[var(--success)]">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--success-fg)]">
               {stats.eligibleBanks}
             </CardContent>
           </Card>
@@ -203,7 +204,7 @@ export default function ChurnHistoryPage() {
         <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
           <CardHeader className="border-b border-[var(--border-default)]">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <CardTitle className="text-white">Filter History</CardTitle>
+              <CardTitle className="text-[var(--text-primary)]">Filter history</CardTitle>
               <div className="flex gap-2">
                 <Select value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
                   <SelectTrigger className="w-[140px]">
@@ -233,7 +234,7 @@ export default function ChurnHistoryPage() {
           </CardHeader>
           <CardContent className="pt-6">
             {filteredCards.length === 0 ? (
-              <div className="text-center text-sm text-slate-400 py-8">
+              <div className="py-8 text-center text-sm text-[var(--text-secondary)]">
                 No cards match your filters
               </div>
             ) : (
@@ -253,25 +254,28 @@ export default function ChurnHistoryPage() {
                     >
                       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div className="flex items-start gap-3">
-                          <div className={`mt-1 ${isCancelled ? "text-slate-500" : "text-[var(--accent)]"}`}>
+                          <div className={`mt-0.5 ${isCancelled ? "text-[var(--text-secondary)]/40" : "text-[var(--accent)]"}`}>
                             {isCancelled ? <XCircle className="h-5 w-5" /> : <CheckCircle className="h-5 w-5" />}
                           </div>
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
-                              <p className={`font-semibold ${isCancelled ? "text-slate-400" : "text-white"}`}>
-                                {card.bank} - {card.name}
+                              <p className={`font-semibold ${isCancelled ? "text-[var(--text-secondary)]" : "text-[var(--text-primary)]"}`}>
+                                {card.bank} — {card.name}
                               </p>
                               <Badge
-                                variant={isCancelled ? "secondary" : "default"}
-                                className={isCancelled ? "bg-slate-700" : ""}
+                                style={
+                                  isCancelled
+                                    ? { backgroundColor: "var(--surface-strong)", color: "var(--text-secondary)" }
+                                    : { backgroundColor: "var(--success-bg)", color: "var(--success-fg)" }
+                                }
                               >
                                 {card.status}
                               </Badge>
                             </div>
-                            <div className="flex flex-wrap gap-4 text-xs text-slate-400">
+                            <div className="flex flex-wrap gap-4 text-xs text-[var(--text-secondary)]">
                               <div className="flex items-center gap-1">
                                 <Calendar className="h-3 w-3" />
-                                Applied: {card.application_date || "N/A"}
+                                Applied: {card.application_date || "—"}
                               </div>
                               {isCancelled && card.cancellation_date && (
                                 <div className="flex items-center gap-1">
@@ -280,25 +284,23 @@ export default function ChurnHistoryPage() {
                                 </div>
                               )}
                               {card.annual_fee && (
-                                <div>
-                                  Fee: ${card.annual_fee}
-                                </div>
+                                <div>Fee: ${card.annual_fee}</div>
                               )}
                             </div>
                             {card.notes && (
-                              <p className="text-xs text-slate-500 mt-1">{card.notes}</p>
+                              <p className="mt-0.5 text-xs text-[var(--text-secondary)]">{card.notes}</p>
                             )}
                           </div>
                         </div>
 
                         {isCancelled && eligibility && (
                           <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-slate-400" />
+                            <Clock className="h-4 w-4 text-[var(--text-secondary)]" />
                             <Badge
-                              variant={eligibility.eligible ? "default" : "secondary"}
-                              className={eligibility.eligible
-                                ? "bg-[var(--success-bg)] text-[var(--success-fg)]"
-                                : "bg-[var(--warning-bg)] text-[var(--warning-fg)]"
+                              style={
+                                eligibility.eligible
+                                  ? { backgroundColor: "var(--success-bg)", color: "var(--success-fg)" }
+                                  : { backgroundColor: "var(--warning-bg)", color: "var(--warning-fg)" }
                               }
                             >
                               {eligibility.message}

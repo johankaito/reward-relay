@@ -294,21 +294,23 @@ export default function StatementsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
-        <div className="flex items-center gap-3">
-          <FileUp className="h-8 w-8 text-primary" />
-          <div>
-            <h1 className="text-3xl font-bold">Upload Statement</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Import bank statements to automatically track spending
+      <div className="space-y-5">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+            Spending
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+            Import statements
+          </h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            Upload a bank CSV to automatically categorise your spending
           </p>
         </div>
-      </div>
 
       {/* Card Selection */}
-      <Card className="p-6">
-        <Label htmlFor="card-select" className="text-lg font-semibold mb-3 block">
-          Select Card
+      <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
+        <Label htmlFor="card-select" className="mb-2 block text-sm font-semibold text-[var(--text-primary)]">
+          Select card
         </Label>
         <Select value={selectedCard} onValueChange={setSelectedCard}>
           <SelectTrigger id="card-select">
@@ -325,18 +327,18 @@ export default function StatementsPage() {
       </Card>
 
       {/* File Upload */}
-      <Card className="p-6">
+      <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
         <div
-          className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 text-center cursor-pointer hover:border-primary transition-colors"
+          className="cursor-pointer rounded-xl border-2 border-dashed border-[var(--border-default)] p-10 text-center transition-colors hover:border-[var(--accent)]/50"
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
           onClick={() => document.getElementById("file-input")?.click()}
         >
-          <Upload className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-          <p className="text-lg font-medium mb-2">
+          <Upload className="mx-auto mb-3 h-10 w-10 text-[var(--text-secondary)]/40" />
+          <p className="mb-1 font-medium text-[var(--text-primary)]">
             Drop your CSV file here or click to browse
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-[var(--text-secondary)]">
             Supports CommBank, ANZ, NAB, Westpac formats
           </p>
           <input
@@ -354,21 +356,27 @@ export default function StatementsPage() {
         </div>
 
         {parseError && (
-          <div className="mt-4 p-4 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800 flex items-start gap-2">
-            <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-red-600 dark:text-red-400">{parseError}</p>
+          <div
+            className="mt-4 flex items-start gap-2 rounded-lg border p-3"
+            style={{
+              backgroundColor: "color-mix(in srgb, var(--danger) 10%, transparent)",
+              borderColor: "color-mix(in srgb, var(--danger) 30%, transparent)",
+            }}
+          >
+            <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--danger)]" />
+            <p className="text-sm text-[var(--danger)]">{parseError}</p>
           </div>
         )}
       </Card>
 
       {/* Transaction Preview */}
       {transactions.length > 0 && (
-        <Card className="p-6">
-          <div className="flex justify-between items-center mb-4">
+        <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
+          <div className="mb-4 flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold">Preview Transactions</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {transactions.length} transactions • Total: ${totalAmount.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              <h2 className="font-semibold text-[var(--text-primary)]">Preview</h2>
+              <p className="text-sm text-[var(--text-secondary)]">
+                {transactions.length} transactions · ${totalAmount.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
             <Button
@@ -379,7 +387,7 @@ export default function StatementsPage() {
             </Button>
           </div>
 
-          <div className="border rounded-lg overflow-hidden">
+          <div className="overflow-hidden rounded-lg border border-[var(--border-default)]">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -419,7 +427,7 @@ export default function StatementsPage() {
               </TableBody>
             </Table>
             {transactions.length > 50 && (
-              <div className="p-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900">
+              <div className="bg-[var(--surface-muted)] p-3 text-center text-sm text-[var(--text-secondary)]">
                 Showing first 50 of {transactions.length} transactions
               </div>
             )}
@@ -428,24 +436,24 @@ export default function StatementsPage() {
       )}
 
       {/* Supported Formats */}
-      <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-3">Supported Bank Formats</h3>
-        <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+      <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
+        <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Supported formats</h3>
+        <div className="space-y-2 text-sm text-[var(--text-secondary)]">
           <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span>CommBank: Date, Description, Debit, Credit, Balance</span>
+            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
+            <span>CommBank — Date, Description, Debit, Credit, Balance</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span>ANZ: Date, Description, Amount, Balance</span>
+            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
+            <span>ANZ — Date, Description, Amount, Balance</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span>NAB: Date, Description, Amount, Balance, Category</span>
+            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
+            <span>NAB — Date, Description, Amount, Balance, Category</span>
           </div>
           <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span>Westpac: Date, Narrative, Debit, Credit, Balance</span>
+            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
+            <span>Westpac — Date, Narrative, Debit, Credit, Balance</span>
           </div>
         </div>
       </Card>

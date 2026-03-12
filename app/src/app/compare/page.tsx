@@ -245,8 +245,13 @@ export default function ComparePage() {
   if (loading) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-slate-200 shadow-sm">
-          Loading card comparison...
+        <div className="space-y-5">
+          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="grid grid-cols-4 gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-20 animate-pulse rounded-xl bg-[var(--surface)]" />
+            ))}
+          </div>
         </div>
       </AppShell>
     )
@@ -255,53 +260,49 @@ export default function ComparePage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        <div className="overflow-hidden rounded-3xl border border-[var(--border-default)] bg-[var(--surface)] p-6 shadow-md">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--accent)]">
-                Card Comparison
-              </p>
-              <h1 className="text-3xl font-semibold text-white">
-                Find your next churn
-              </h1>
-              <p className="text-sm text-slate-300">
-                Compare eligible cards by net value and see personalized recommendations
-              </p>
-            </div>
-          </div>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+            Discover
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+            Compare cards
+          </h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            Ranked by net value with personalised eligibility checks
+          </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Eligible Cards</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Eligible cards</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-white">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
               {stats.eligibleCards}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Avg Net Value</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Avg net value</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-[var(--success)]">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--success-fg)]">
               ${stats.avgNetValue.toFixed(0)}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Best Card Value</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Best card value</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-[var(--info)]">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--accent)]">
               ${stats.bestCard?.netValue.toFixed(0) || 0}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Next 3 Cards</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Next 3 cards</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-white">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
               ${stats.totalPotentialValue.toFixed(0)}
             </CardContent>
           </Card>
@@ -311,7 +312,7 @@ export default function ComparePage() {
         <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
           <CardHeader className="border-b border-[var(--border-default)]">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <CardTitle className="text-white">Card Rankings</CardTitle>
+              <CardTitle className="text-[var(--text-primary)]">Card rankings</CardTitle>
               <div className="flex gap-2">
                 <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
                   <SelectTrigger className="w-[160px]">
@@ -336,7 +337,7 @@ export default function ComparePage() {
           </CardHeader>
           <CardContent className="pt-6">
             {cardsWithAnalysis.length === 0 ? (
-              <div className="text-center text-sm text-slate-400 py-8">
+              <div className="py-8 text-center text-sm text-[var(--text-secondary)]">
                 No cards match your criteria
               </div>
             ) : (
@@ -355,21 +356,21 @@ export default function ComparePage() {
                         <div className="flex items-start justify-between">
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
-                              <p className="font-semibold text-white">
-                                {card.bank} - {card.name}
+                              <p className="font-semibold text-[var(--text-primary)]">
+                                {card.bank} — {card.name}
                               </p>
                               {index === 0 && card.eligibility.canApply && (
-                                <Badge className="bg-[var(--accent)] text-white">
-                                  Top Pick
+                                <Badge style={{ backgroundColor: "var(--accent)", color: "white" }}>
+                                  Top pick
                                 </Badge>
                               )}
                               {!card.eligibility.canApply && (
-                                <Badge variant="secondary" className="bg-red-900/20 text-red-400">
-                                  Not Eligible
+                                <Badge style={{ backgroundColor: "var(--warning-bg)", color: "var(--warning-fg)" }}>
+                                  Not eligible
                                 </Badge>
                               )}
                             </div>
-                            <div className="flex flex-wrap gap-4 text-xs text-slate-400">
+                            <div className="flex flex-wrap gap-4 text-xs text-[var(--text-secondary)]">
                               <div className="flex items-center gap-1">
                                 <TrendingUp className="h-3 w-3" />
                                 {card.welcome_bonus_points?.toLocaleString() || 0} points
@@ -390,11 +391,11 @@ export default function ComparePage() {
                         {/* Eligibility Status */}
                         <div className="flex items-center gap-2 text-sm">
                           {card.eligibility.canApply ? (
-                            <Check className="h-4 w-4 text-green-500" />
+                            <Check className="h-4 w-4 text-[var(--success-fg)]" />
                           ) : (
-                            <X className="h-4 w-4 text-red-500" />
+                            <X className="h-4 w-4 text-[var(--danger)]" />
                           )}
-                          <span className={card.eligibility.canApply ? "text-green-400" : "text-red-400"}>
+                          <span className={card.eligibility.canApply ? "text-[var(--success-fg)]" : "text-[var(--danger)]"}>
                             {card.eligibility.reason}
                           </span>
                         </div>
@@ -414,9 +415,9 @@ export default function ComparePage() {
                       {/* Net Value Display */}
                       <div className="flex flex-col items-end gap-2">
                         <div className="text-right">
-                          <p className="text-xs text-slate-400">Net Value</p>
+                          <p className="text-xs text-[var(--text-secondary)]">Net value</p>
                           <p className={`text-2xl font-bold ${
-                            card.netValue > 0 ? "text-green-400" : "text-red-400"
+                            card.netValue > 0 ? "text-[var(--success-fg)]" : "text-[var(--danger)]"
                           }`}>
                             ${card.netValue.toFixed(0)}
                           </p>
@@ -430,12 +431,12 @@ export default function ComparePage() {
                                   className={`h-2 w-2 rounded-full ${
                                     i < Math.floor(card.recommendation.score / 20)
                                       ? "bg-[var(--accent)]"
-                                      : "bg-slate-700"
+                                      : "bg-[var(--surface-strong)]"
                                   }`}
                                 />
                               ))}
                             </div>
-                            <span className="text-xs text-slate-400">
+                            <span className="text-xs text-[var(--text-secondary)]">
                               {card.recommendation.score}%
                             </span>
                           </div>
@@ -476,20 +477,20 @@ export default function ComparePage() {
         {/* Eligibility Calculator Info */}
         <Card className="border border-[var(--border-default)] bg-[var(--surface-muted)] shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-[var(--text-primary)]">
               <AlertCircle className="h-5 w-5 text-[var(--accent)]" />
-              How Eligibility Works
+              How eligibility works
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 text-sm text-slate-300">
+          <CardContent className="space-y-3 text-sm text-[var(--text-secondary)]">
             <p>
-              <strong className="text-white">12-Month Rule:</strong> Most Australian banks require you to wait 12 months after cancelling before you can receive welcome bonuses again.
+              <strong className="text-[var(--text-primary)]">12-month rule:</strong> Most Australian banks require you to wait 12 months after cancelling before you can receive welcome bonuses again.
             </p>
             <p>
-              <strong className="text-white">Net Value:</strong> Calculated as (Welcome Bonus Points × $0.01) - Annual Fee. This gives you the first-year value of each card.
+              <strong className="text-[var(--text-primary)]">Net value:</strong> Calculated as (Welcome Bonus Points × $0.01) − Annual Fee. This gives you the first-year value of each card.
             </p>
             <p>
-              <strong className="text-white">Recommendations:</strong> Based on eligibility, net value, spend requirements, and your current portfolio. Higher scores mean better matches for your situation.
+              <strong className="text-[var(--text-primary)]">Scores:</strong> Based on eligibility, net value, spend requirements, and your current portfolio. Higher scores mean better matches for your situation.
             </p>
           </CardContent>
         </Card>

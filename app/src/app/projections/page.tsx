@@ -98,8 +98,10 @@ export default function ProjectionsPage() {
   if (loading) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-slate-200 shadow-sm">
-          Loading projections...
+        <div className="space-y-5">
+          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="h-24 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="h-48 animate-pulse rounded-xl bg-[var(--surface)]" />
         </div>
       </AppShell>
     )
@@ -107,22 +109,18 @@ export default function ProjectionsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* Header */}
-        <div className="overflow-hidden rounded-3xl border border-[var(--border-default)] bg-[var(--surface)] p-6 shadow-md">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--accent)]">
-                Churning Projections
-              </p>
-              <h1 className="text-3xl font-semibold text-white">
-                Your path to rewards
-              </h1>
-              <p className="text-sm text-slate-300">
-                See how many cards and months it takes to reach your travel goals
-              </p>
-            </div>
-          </div>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+            Discover
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+            Projections
+          </h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            How many cards and months to reach your travel goals
+          </p>
         </div>
 
         {/* Points Balance Widget */}
@@ -151,9 +149,9 @@ export default function ProjectionsPage() {
         {/* Goal Selector */}
         <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-white">
+            <CardTitle className="flex items-center gap-2 text-[var(--text-primary)]">
               <Target className="h-5 w-5 text-[var(--accent)]" />
-              Choose Your Goal
+              Choose your goal
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -174,7 +172,7 @@ export default function ProjectionsPage() {
                     <span className="text-2xl">{goal.icon}</span>
                     <div className="flex-1 text-left">
                       <p className="font-semibold">{goal.label}</p>
-                      <p className="text-xs text-slate-400">{goal.description}</p>
+                      <p className="text-xs text-[var(--text-secondary)]">{goal.description}</p>
                     </div>
                     <Badge variant="secondary">
                       {goal.pointsRequired.toLocaleString()} pts
@@ -194,7 +192,7 @@ export default function ProjectionsPage() {
                     <span className="text-2xl">{goal.icon}</span>
                     <div className="flex-1 text-left">
                       <p className="font-semibold">{goal.label}</p>
-                      <p className="text-xs text-slate-400">{goal.description}</p>
+                      <p className="text-xs text-[var(--text-secondary)]">{goal.description}</p>
                     </div>
                     <Badge variant="secondary">
                       {goal.pointsRequired.toLocaleString()} pts
@@ -212,18 +210,18 @@ export default function ProjectionsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-slate-400">Selected Goal</p>
-                  <p className="text-2xl font-bold text-white">
-                    {selectedGoal.icon} {selectedGoal.label}
+                  <p className="text-sm text-[var(--text-secondary)]">Selected goal</p>
+                  <p className="text-2xl font-bold text-[var(--text-primary)]">
+                    {selectedGoal.label}
                   </p>
-                  <p className="text-sm text-slate-300">{selectedGoal.description}</p>
+                  <p className="text-sm text-[var(--text-secondary)]">{selectedGoal.description}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-slate-400">Points Needed</p>
+                  <p className="text-sm text-[var(--text-secondary)]">Points Needed</p>
                   <p className="text-2xl font-bold text-[var(--accent)]">
                     {Math.max(0, selectedGoal.pointsRequired - currentPoints).toLocaleString()}
                   </p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-[var(--text-secondary)]">
                     of {selectedGoal.pointsRequired.toLocaleString()} required
                   </p>
                 </div>
@@ -239,7 +237,7 @@ export default function ProjectionsPage() {
                     }}
                   />
                 </div>
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-[var(--text-secondary)]">
                   {currentPoints > 0
                     ? `${Math.floor((currentPoints / selectedGoal.pointsRequired) * 100)}% complete`
                     : "Start earning points to track progress"}
@@ -261,11 +259,11 @@ export default function ProjectionsPage() {
         ) : (
           <Card className="border border-[var(--border-default)] bg-[var(--surface)]">
             <CardContent className="py-12 text-center">
-              <TrendingUp className="mx-auto h-12 w-12 text-slate-400" />
-              <p className="mt-4 text-lg font-semibold text-white">
+              <TrendingUp className="mx-auto h-12 w-12 text-[var(--text-secondary)]/40" />
+              <p className="mt-4 text-lg font-semibold text-[var(--text-primary)]">
                 No paths available
               </p>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-[var(--text-secondary)]">
                 Add some cards to your portfolio to see personalized churning paths
               </p>
               <Button

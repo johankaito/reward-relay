@@ -111,8 +111,13 @@ export default function RecommendationsPage() {
   if (loading) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-slate-200 shadow-sm">
-          Loading recommendations...
+        <div className="space-y-5">
+          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="grid grid-cols-3 gap-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-20 animate-pulse rounded-xl bg-[var(--surface)]" />
+            ))}
+          </div>
         </div>
       </AppShell>
     )
@@ -121,45 +126,41 @@ export default function RecommendationsPage() {
   return (
     <AppShell>
       <div className="space-y-6">
-        <div className="overflow-hidden rounded-3xl border border-[var(--border-default)] bg-[var(--surface)] p-6 shadow-md">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--accent)]">
-                Smart Recommendations
-              </p>
-              <h1 className="text-3xl font-semibold text-white">
-                Your next card opportunities
-              </h1>
-              <p className="text-sm text-slate-300">
-                Personalized recommendations based on your churning history and bank eligibility
-              </p>
-            </div>
-          </div>
+        <div>
+          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+            Discover
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+            Recommendations
+          </h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            Personalized card opportunities based on your churning history
+          </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-4">
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3">
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Total Cards</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Total cards</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-white">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
               {stats.total}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Eligible Now</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Eligible now</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-[var(--success)]">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--success-fg)]">
               {stats.eligible}
             </CardContent>
           </Card>
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-slate-400">Coming Soon</CardTitle>
+            <CardHeader className="pb-1 pt-4">
+              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Coming soon</CardTitle>
             </CardHeader>
-            <CardContent className="text-2xl font-semibold text-[var(--warning)]">
+            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--warning-fg)]">
               {stats.comingSoon}
             </CardContent>
           </Card>
@@ -169,7 +170,7 @@ export default function RecommendationsPage() {
         <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
           <CardHeader className="border-b border-[var(--border-default)]">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <CardTitle className="text-white">Filter & Sort</CardTitle>
+              <CardTitle className="text-[var(--text-primary)]">Filter & sort</CardTitle>
               <div className="flex gap-2">
                 <Select value={filter} onValueChange={(v) => setFilter(v as FilterType)}>
                   <SelectTrigger className="w-[140px]">
@@ -217,7 +218,7 @@ export default function RecommendationsPage() {
           </CardHeader>
           <CardContent className="pt-6">
             {filteredRecommendations.length === 0 ? (
-              <div className="text-center text-sm text-slate-400 py-8">
+              <div className="py-8 text-center text-sm text-[var(--text-secondary)]">
                 {filter === "eligible"
                   ? "No cards are currently eligible. Check back later!"
                   : filter === "coming_soon"
