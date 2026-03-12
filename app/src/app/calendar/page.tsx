@@ -180,10 +180,10 @@ export default function CalendarPage() {
   if (loading) {
     return (
       <AppShell>
-        <div className="space-y-5">
+        <div className="space-y-3">
           <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-40 animate-pulse rounded-xl bg-[var(--surface)]" />
+            <div key={i} className="h-28 animate-pulse rounded-xl bg-[var(--surface)]" />
           ))}
         </div>
       </AppShell>
@@ -192,23 +192,23 @@ export default function CalendarPage() {
 
   return (
     <AppShell>
-      <div className="space-y-5">
+      <div className="space-y-3">
         {/* Page header */}
         <div>
           <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
             Timeline
           </p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+          <h1 className="mt-0.5 text-2xl font-semibold text-[var(--text-primary)]">
             Churning calendar
           </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          <p className="mt-0.5 text-sm text-[var(--text-secondary)]">
             Card lifecycle and bank re-eligibility windows
           </p>
         </div>
 
         {bankTimelines.length === 0 ? (
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="py-10 text-center">
+            <CardContent className="py-8 text-center">
               <CalendarDays className="mx-auto mb-3 h-8 w-8 text-[var(--text-secondary)]/40" />
               <p className="font-medium text-[var(--text-primary)]">No card history yet</p>
               <p className="mt-1 text-sm text-[var(--text-secondary)]">
@@ -217,7 +217,7 @@ export default function CalendarPage() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {bankTimelines.map((timeline) => {
               const eligibilityStatus = getEligibilityStatus(timeline.daysUntilEligible)
               const StatusIcon = eligibilityStatus?.icon
@@ -228,131 +228,122 @@ export default function CalendarPage() {
                   className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm"
                   data-bank-timeline={timeline.bank}
                 >
-                  <CardContent className="p-5">
+                  <CardContent className="p-4">
                     {/* Bank header */}
-                    <div className="mb-4 flex items-center justify-between">
-                      <div>
-                        <h2 className="text-lg font-semibold text-[var(--text-primary)]">
+                    <div className="mb-2 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-sm font-semibold text-[var(--text-primary)]">
                           {timeline.bank}
                         </h2>
-                        <p className="text-sm text-[var(--text-secondary)]">
-                          {timeline.cards.length} card
-                          {timeline.cards.length > 1 ? "s" : ""} tracked
-                        </p>
-                      </div>
-                      {eligibilityStatus && (
-                        <Badge style={eligibilityStatus.style} className="flex items-center gap-1">
-                          {StatusIcon && <StatusIcon className="h-3 w-3" />}
-                          {eligibilityStatus.text}
-                        </Badge>
-                      )}
-                    </div>
-
-                    {/* Eligibility info */}
-                    {timeline.eligibilityDate && (
-                      <div
-                        className="mb-4 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm"
-                        style={{
-                          backgroundColor: "color-mix(in srgb, var(--accent) 8%, transparent)",
-                          border: "1px solid color-mix(in srgb, var(--accent) 20%, transparent)",
-                        }}
-                      >
-                        <Clock className="h-4 w-4 flex-shrink-0 text-[var(--accent)]" />
-                        <span className="text-[var(--text-primary)]">
-                          {timeline.daysUntilEligible === 0
-                            ? "You are eligible to reapply for this bank."
-                            : `Eligible to reapply: ${formatDate(timeline.eligibilityDate)}`}
+                        <span className="text-xs text-[var(--text-secondary)]">
+                          {timeline.cards.length} card{timeline.cards.length > 1 ? "s" : ""}
                         </span>
                       </div>
-                    )}
+                      <div className="flex items-center gap-2">
+                        {timeline.eligibilityDate && (
+                          <span className="flex items-center gap-1 text-xs text-[var(--text-secondary)]">
+                            <Clock className="h-3 w-3 text-[var(--accent)]" />
+                            {timeline.daysUntilEligible === 0
+                              ? "Eligible now"
+                              : `Eligible ${formatDate(timeline.eligibilityDate)}`}
+                          </span>
+                        )}
+                        {eligibilityStatus && (
+                          <Badge style={eligibilityStatus.style} className="flex items-center gap-1 text-xs">
+                            {StatusIcon && <StatusIcon className="h-3 w-3" />}
+                            {eligibilityStatus.text}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
 
-                    {/* Card timelines */}
-                    <div className="space-y-4">
+                    {/* Card timelines — compact inline rows */}
+                    <div className="space-y-2">
                       {timeline.cards.map(({ card, stages }) => (
                         <div
                           key={card.id}
-                          className="border-l-2 border-[var(--border-default)] pl-4"
+                          className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2"
                         >
-                          <h3 className="mb-2 text-sm font-semibold text-[var(--text-primary)]">
+                          <p className="mb-1.5 text-xs font-semibold text-[var(--text-primary)]">
                             {card.card?.name || card.name || "Unknown card"}
-                          </h3>
+                          </p>
 
-                          <div className="space-y-1.5">
+                          {/* Stages as a single inline row */}
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                             {/* Applied */}
-                            <div className="flex items-center gap-2.5">
+                            <div className="flex items-center gap-1">
                               {stages.applied.complete ? (
-                                <CheckCircle className="h-4 w-4 text-[var(--text-secondary)]" />
+                                <CheckCircle className="h-3 w-3 text-[var(--text-secondary)]" />
                               ) : (
-                                <XCircle className="h-4 w-4 text-[var(--text-secondary)]/40" />
+                                <XCircle className="h-3 w-3 text-[var(--text-secondary)]/40" />
                               )}
-                              <span className="text-sm text-[var(--text-primary)]">Applied</span>
-                              <span className="text-xs text-[var(--text-secondary)]">
-                                {formatDate(stages.applied.date)}
-                              </span>
+                              <span className="text-xs text-[var(--text-secondary)]">Applied</span>
+                              {stages.applied.date && (
+                                <span className="text-xs text-[var(--text-secondary)]/60">
+                                  {formatDate(stages.applied.date)}
+                                </span>
+                              )}
                             </div>
+
+                            {stages.applied.complete && <span className="text-xs text-[var(--border-default)]">›</span>}
 
                             {/* Approved */}
-                            <div className="flex items-center gap-2.5">
+                            <div className="flex items-center gap-1">
                               {stages.approved.complete ? (
-                                <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
+                                <CheckCircle className="h-3 w-3 text-[var(--success-fg)]" />
                               ) : (
-                                <Clock className="h-4 w-4 text-[var(--text-secondary)]/40" />
+                                <Clock className="h-3 w-3 text-[var(--text-secondary)]/40" />
                               )}
-                              <span className="text-sm text-[var(--text-primary)]">Approved</span>
-                              <span className="text-xs text-[var(--text-secondary)]">
-                                {formatDate(stages.approved.date)}
-                              </span>
+                              <span className="text-xs text-[var(--text-secondary)]">Approved</span>
+                              {stages.approved.date && (
+                                <span className="text-xs text-[var(--text-secondary)]/60">
+                                  {formatDate(stages.approved.date)}
+                                </span>
+                              )}
                             </div>
 
-                            {/* Active */}
-                            <div className="flex items-center gap-2.5">
-                              {stages.active.complete ? (
-                                <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
-                              ) : (
-                                <Clock className="h-4 w-4 text-[var(--text-secondary)]/40" />
-                              )}
-                              <span className="text-sm text-[var(--text-primary)]">Active</span>
-                              {card.status === "active" && (
+                            {/* Active badge */}
+                            {stages.active.complete && (
+                              <>
+                                <span className="text-xs text-[var(--border-default)]">›</span>
                                 <Badge
                                   className="text-xs"
-                                  style={{
-                                    backgroundColor: "var(--success-bg)",
-                                    color: "var(--success-fg)",
-                                  }}
+                                  style={{ backgroundColor: "var(--success-bg)", color: "var(--success-fg)" }}
                                 >
-                                  Current
+                                  Active
                                 </Badge>
-                              )}
-                            </div>
+                              </>
+                            )}
 
                             {/* Cancelled */}
                             {stages.cancelled.complete && (
-                              <div className="flex items-center gap-2.5">
-                                <XCircle className="h-4 w-4 text-[var(--danger)]" />
-                                <span className="text-sm text-[var(--text-primary)]">
-                                  Cancelled
-                                </span>
-                                <span className="text-xs text-[var(--text-secondary)]">
-                                  {formatDate(stages.cancelled.date)}
-                                </span>
-                              </div>
+                              <>
+                                <span className="text-xs text-[var(--border-default)]">›</span>
+                                <div className="flex items-center gap-1">
+                                  <XCircle className="h-3 w-3 text-[var(--danger)]" />
+                                  <span className="text-xs text-[var(--text-secondary)]">Cancelled</span>
+                                  <span className="text-xs text-[var(--text-secondary)]/60">
+                                    {formatDate(stages.cancelled.date)}
+                                  </span>
+                                </div>
+                              </>
                             )}
 
                             {/* Eligible again */}
                             {stages.eligible.date && (
-                              <div className="flex items-center gap-2.5">
-                                {stages.eligible.complete ? (
-                                  <CheckCircle className="h-4 w-4 text-[var(--accent)]" />
-                                ) : (
-                                  <Clock className="h-4 w-4 text-[var(--warning-fg)]" />
-                                )}
-                                <span className="text-sm text-[var(--text-primary)]">
-                                  Eligible to reapply
-                                </span>
-                                <span className="text-xs text-[var(--text-secondary)]">
-                                  {formatDate(stages.eligible.date)}
-                                </span>
-                              </div>
+                              <>
+                                <span className="text-xs text-[var(--border-default)]">›</span>
+                                <div className="flex items-center gap-1">
+                                  {stages.eligible.complete ? (
+                                    <CheckCircle className="h-3 w-3 text-[var(--accent)]" />
+                                  ) : (
+                                    <Clock className="h-3 w-3 text-[var(--warning-fg)]" />
+                                  )}
+                                  <span className="text-xs text-[var(--text-secondary)]">
+                                    Eligible {formatDate(stages.eligible.date)}
+                                  </span>
+                                </div>
+                              </>
                             )}
                           </div>
                         </div>
@@ -366,31 +357,20 @@ export default function CalendarPage() {
         )}
 
         {/* Legend */}
-        <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-          <CardContent className="px-4 py-3">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
-              Legend
-            </p>
-            <div className="grid grid-cols-2 gap-2 text-xs md:grid-cols-4">
-              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
-                <CheckCircle className="h-3.5 w-3.5 text-[var(--success-fg)]" />
-                Completed
-              </div>
-              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
-                <Clock className="h-3.5 w-3.5 text-[var(--warning-fg)]" />
-                Pending
-              </div>
-              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
-                <XCircle className="h-3.5 w-3.5 text-[var(--danger)]" />
-                Cancelled
-              </div>
-              <div className="flex items-center gap-2 text-[var(--text-secondary)]">
-                <CheckCircle className="h-3.5 w-3.5 text-[var(--accent)]" />
-                Eligible
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-1 text-xs text-[var(--text-secondary)]">
+          <div className="flex items-center gap-1.5">
+            <CheckCircle className="h-3 w-3 text-[var(--success-fg)]" /> Completed
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Clock className="h-3 w-3 text-[var(--warning-fg)]" /> Pending
+          </div>
+          <div className="flex items-center gap-1.5">
+            <XCircle className="h-3 w-3 text-[var(--danger)]" /> Cancelled
+          </div>
+          <div className="flex items-center gap-1.5">
+            <CheckCircle className="h-3 w-3 text-[var(--accent)]" /> Eligible
+          </div>
+        </div>
       </div>
     </AppShell>
   )

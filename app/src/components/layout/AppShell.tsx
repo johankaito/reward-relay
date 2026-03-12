@@ -7,7 +7,6 @@ import {
   Home,
   CreditCard,
   LogOut,
-  Shield,
   Sparkles,
   Wallet,
   CalendarDays,
@@ -130,16 +129,6 @@ export function AppShell({ children }: AppShellProps) {
             </div>
             <span className="text-sm font-semibold text-[var(--text-primary)]">Reward Relay</span>
           </Link>
-
-          <span
-            className="hidden items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium md:inline-flex"
-            style={{
-              backgroundColor: "color-mix(in srgb, var(--accent) 10%, transparent)",
-              color: "var(--accent-strong)",
-            }}
-          >
-            <Shield className="h-3 w-3" /> Beta
-          </span>
 
           <div className="ml-auto flex items-center gap-2">
             <Button

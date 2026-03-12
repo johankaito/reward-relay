@@ -466,7 +466,7 @@ export default function Home() {
                   <p className="mt-2 text-sm text-slate-400">For serious churners</p>
                 </div>
                 <div className="mb-6">
-                  <span className="text-5xl font-bold text-white">$39</span>
+                  <span className="text-5xl font-bold text-white">$9.99</span>
                   <span className="text-slate-400">/month</span>
                 </div>
                 <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
@@ -505,22 +505,22 @@ export default function Home() {
                 >
                   Start 7-Day Trial
                 </a>
-                <p className="mt-3 text-center text-xs text-slate-400">Then $39/month • Cancel anytime</p>
+                <p className="mt-3 text-center text-xs text-slate-400">Then $9.99/month • Cancel anytime</p>
               </div>
 
               {/* Pro Annual */}
               <div className="flex flex-col rounded-3xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-8 backdrop-blur-sm">
                 <div className="mb-6">
                   <h3 className="text-2xl font-bold text-white">Pro Annual</h3>
-                  <p className="mt-2 text-sm text-purple-300">Save $78/year</p>
+                  <p className="mt-2 text-sm text-purple-300">Save ~$21/year</p>
                 </div>
                 <div className="mb-6">
                   <div>
-                    <span className="text-5xl font-bold text-white">$390</span>
+                    <span className="text-5xl font-bold text-white">$99</span>
                     <span className="text-slate-400">/year</span>
                   </div>
                   <p className="mt-2 text-sm text-slate-400">
-                    <span className="font-semibold text-purple-300">$32.50/month</span> effective
+                    <span className="font-semibold text-purple-300">$8.25/month</span> effective
                   </p>
                 </div>
                 <ul className="mb-8 flex-1 space-y-3 text-sm text-slate-300">
@@ -530,7 +530,7 @@ export default function Home() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
-                    <span><strong>17% discount ($78 saved)</strong></span>
+                    <span><strong>~17% discount (~$21 saved)</strong></span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-400" />
@@ -547,7 +547,7 @@ export default function Home() {
                 >
                   Start Annual Trial
                 </a>
-                <p className="mt-3 text-center text-xs text-slate-400">7-day trial • Then $390 billed annually</p>
+                <p className="mt-3 text-center text-xs text-slate-400">7-day trial • Then $99 billed annually</p>
               </div>
             </div>
 
@@ -641,7 +641,7 @@ export default function Home() {
                     <span className="text-emerald-400 transition-transform group-open:rotate-180">▼</span>
                   </summary>
                   <p className="px-6 pb-6 text-sm text-slate-300">
-                    After 7 days, you&apos;ll be charged $39/month (or $390/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
+                    After 7 days, you&apos;ll be charged $9.99/month (or $99/year for annual). You can cancel anytime before the trial ends with no charge. No credit card tricks—just honest billing.
                   </p>
                 </details>
               </BetaGate>
