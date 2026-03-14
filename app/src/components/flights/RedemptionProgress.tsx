@@ -4,9 +4,15 @@ interface RedemptionProgressProps {
   userBalance: number
   pointsRequired: number
   program: 'qff' | 'velocity'
+  transferredPoints?: number
 }
 
-export function RedemptionProgress({ userBalance, pointsRequired, program }: RedemptionProgressProps) {
+export function RedemptionProgress({
+  userBalance,
+  pointsRequired,
+  program,
+  transferredPoints = 0,
+}: RedemptionProgressProps) {
   const percentage = Math.min(100, Math.round((userBalance / pointsRequired) * 100))
   const canBook = userBalance >= pointsRequired
   const pointsNeeded = Math.max(0, pointsRequired - userBalance)
@@ -21,8 +27,13 @@ export function RedemptionProgress({ userBalance, pointsRequired, program }: Red
           <div className="h-2 w-full rounded-full bg-green-500" />
         </div>
         <p className="text-xs font-medium text-green-600">Ready to book</p>
+        {transferredPoints > 0 && (
+          <p className="text-xs text-[var(--text-secondary)]">
+            Includes {transferredPoints.toLocaleString()} pts transferred from Amex MR (2:1 ratio)
+          </p>
+        )}
         <p className="text-xs text-[var(--text-secondary)]">
-          {userBalance.toLocaleString()} / {pointsRequired.toLocaleString()} pts
+          {(userBalance - transferredPoints).toLocaleString()} / {pointsRequired.toLocaleString()} pts
         </p>
       </div>
     )
@@ -44,8 +55,13 @@ export function RedemptionProgress({ userBalance, pointsRequired, program }: Red
           ? `Almost there — ${pointsNeeded.toLocaleString()} ${programLabel} pts to go`
           : `${pointsNeeded.toLocaleString()} ${programLabel} pts to go`}
       </p>
+      {transferredPoints > 0 && (
+        <p className="text-xs text-[var(--text-secondary)]">
+          Includes {transferredPoints.toLocaleString()} pts transferred from Amex MR (2:1 ratio)
+        </p>
+      )}
       <p className="text-xs text-[var(--text-secondary)]">
-        {userBalance.toLocaleString()} / {pointsRequired.toLocaleString()} pts
+        {(userBalance - transferredPoints).toLocaleString()} / {pointsRequired.toLocaleString()} pts
       </p>
     </div>
   )
