@@ -130,8 +130,8 @@ export default function ProfitPage() {
   )
 
   const fbtResults = useMemo((): FbtResult[] => {
-    if (!isBusiness) return []
     const businessCards = allCards.filter((c) => c.is_business)
+    if (businessCards.length === 0) return []
     return calculateFbtExposure(
       businessCards.map((c) => ({
         bonus_earned_at: c.bonusEarnedAt || null,
@@ -178,35 +178,39 @@ export default function ProfitPage() {
                 Export CSV
               </Button>
             )}
-            {isBusiness && allCards.length > 0 && (
-              <Button variant="outline" size="sm" asChild>
-                <a href="/api/business/report" download>
-                  <Download className="mr-1.5 h-3.5 w-3.5" />
-                  Annual Report (PDF)
-                </a>
-              </Button>
+            {allCards.length > 0 && (
+              <ProGate feature="annual report" isPro={isBusiness} requiredTier="business">
+                <Button variant="outline" size="sm" asChild>
+                  <a href="/api/business/report" download>
+                    <Download className="mr-1.5 h-3.5 w-3.5" />
+                    Annual Report (PDF)
+                  </a>
+                </Button>
+              </ProGate>
             )}
           </div>
         </div>
 
-        {/* All / Personal / Business tabs — only when business cards exist */}
+        {/* All / Personal / Business tabs — only when business cards exist, Business tier only */}
         {hasBusinessCards && (
-          <div className="flex gap-1 rounded-lg border border-[var(--border-default)] bg-[var(--surface)] p-1">
-            {(['all', 'personal', 'business'] as Tab[]).map((tab) => (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => setActiveTab(tab)}
-                className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
-                  activeTab === tab
-                    ? 'bg-[var(--accent)] text-white'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          <ProGate feature="personal/business P&L split" isPro={isBusiness} requiredTier="business">
+            <div className="flex gap-1 rounded-lg border border-[var(--border-default)] bg-[var(--surface)] p-1">
+              {(['all', 'personal', 'business'] as Tab[]).map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
+                    activeTab === tab
+                      ? 'bg-[var(--accent)] text-white'
+                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </ProGate>
         )}
 
         {isEmpty ? (
@@ -256,8 +260,9 @@ export default function ProfitPage() {
             </Card>
 
             {/* FBT exposure section — Business tier only */}
-            {isBusiness && fbtResults.length > 0 && (
-              <div className="space-y-2">
+            {fbtResults.length > 0 && (
+              <ProGate feature="FBT calculator" isPro={isBusiness} requiredTier="business">
+            <div className="space-y-2">
                 {fbtResults.map((result) => (
                   <div
                     key={result.fbtYear}
@@ -303,6 +308,7 @@ export default function ProfitPage() {
                   </div>
                 ))}
               </div>
+              </ProGate>
             )}
 
             {/* Financial year breakdown — Pro only */}
