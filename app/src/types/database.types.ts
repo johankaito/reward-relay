@@ -39,6 +39,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      credit_inquiries: {
+        Row: {
+          id: string
+          user_id: string
+          bank: string
+          card_name: string
+          application_date: string
+          outcome: 'approved' | 'declined' | 'pending' | 'withdrawn' | null
+          notes: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          bank: string
+          card_name: string
+          application_date: string
+          outcome?: 'approved' | 'declined' | 'pending' | 'withdrawn' | null
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          bank?: string
+          card_name?: string
+          application_date?: string
+          outcome?: 'approved' | 'declined' | 'pending' | 'withdrawn' | null
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       beta_requests: {
         Row: {
           approved: boolean | null
