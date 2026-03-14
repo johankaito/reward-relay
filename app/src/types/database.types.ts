@@ -412,7 +412,10 @@ export type Database = {
           category: string | null
           created_at: string | null
           description: string | null
+          excluded: boolean
+          exclusion_reason: string | null
           id: string
+          merchant: string | null
           transaction_date: string
           updated_at: string | null
           user_card_id: string | null
@@ -423,7 +426,10 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           description?: string | null
+          excluded?: boolean
+          exclusion_reason?: string | null
           id?: string
+          merchant?: string | null
           transaction_date?: string
           updated_at?: string | null
           user_card_id?: string | null
@@ -434,7 +440,10 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           description?: string | null
+          excluded?: boolean
+          exclusion_reason?: string | null
           id?: string
+          merchant?: string | null
           transaction_date?: string
           updated_at?: string | null
           user_card_id?: string | null
