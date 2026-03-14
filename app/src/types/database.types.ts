@@ -544,6 +544,7 @@ export type Database = {
           created_at: string | null
           current_spend: number | null
           id: string
+          is_business: boolean
           name: string | null
           next_eligible_date: string | null
           notes: string | null
@@ -566,6 +567,7 @@ export type Database = {
           created_at?: string | null
           current_spend?: number | null
           id?: string
+          is_business?: boolean
           name?: string | null
           next_eligible_date?: string | null
           notes?: string | null
@@ -588,6 +590,7 @@ export type Database = {
           created_at?: string | null
           current_spend?: number | null
           id?: string
+          is_business?: boolean
           name?: string | null
           next_eligible_date?: string | null
           notes?: string | null
