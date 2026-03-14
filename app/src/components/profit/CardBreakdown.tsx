@@ -13,6 +13,7 @@ export interface ProfitCard {
   pointsProgram: string
   welcomeBonusPoints: number
   fy: string
+  is_business: boolean
 }
 
 interface CardBreakdownProps {
