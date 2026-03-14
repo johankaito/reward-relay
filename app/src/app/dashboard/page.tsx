@@ -14,6 +14,7 @@ import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
 import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
+import { LoyaltyBalanceWidget } from "@/components/dashboard/LoyaltyBalanceWidget"
 import { BadgeGrid } from "@/components/gamification/BadgeGrid"
 import { triggerCelebration } from "@/components/gamification/CelebrationOverlay"
 import { supabase } from "@/lib/supabase/client"
@@ -380,6 +381,11 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Loyalty balance widget */}
+        {userId && (
+          <LoyaltyBalanceWidget userId={userId} />
         )}
 
         {/* Daily insights — shown last, supplementary */}
