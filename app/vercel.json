@@ -3,5 +3,8 @@
     "deploymentEnabled": false
   },
   "buildCommand": "pnpm run build",
-  "installCommand": "rm -rf node_modules && pnpm install --force"
+  "installCommand": "rm -rf node_modules && pnpm install --force",
+  "crons": [
+    { "path": "/api/cron/loyalty-expiry", "schedule": "0 22 * * *" }
+  ]
 }
