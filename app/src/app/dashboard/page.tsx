@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
+import { LoyaltyBalanceWidget } from "@/components/dashboard/LoyaltyBalanceWidget"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
@@ -348,6 +349,11 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Loyalty balance widget */}
+        {userId && (
+          <LoyaltyBalanceWidget userId={userId} />
         )}
 
         {/* Daily insights — shown last, supplementary */}

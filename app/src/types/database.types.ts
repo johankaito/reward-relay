@@ -39,6 +39,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      loyalty_balances: {
+        Row: {
+          id: string
+          user_id: string
+          program: string
+          balance: number
+          expiry_date: string | null
+          last_updated: string | null
+          notes: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          program: string
+          balance?: number
+          expiry_date?: string | null
+          last_updated?: string | null
+          notes?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          program?: string
+          balance?: number
+          expiry_date?: string | null
+          last_updated?: string | null
+          notes?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       beta_requests: {
         Row: {
           approved: boolean | null
