@@ -17,9 +17,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase/client"
+import { CadenceAdvisor } from "@/components/inquiries/CadenceAdvisor"
 import type { Database } from "@/types/database.types"
 
 type CreditInquiry = Database["public"]["Tables"]["credit_inquiries"]["Row"]
+type BankRule = Database["public"]["Tables"]["bank_rules"]["Row"]
 
 type OutcomeType = "approved" | "declined" | "pending" | "withdrawn"
 
@@ -63,6 +65,7 @@ const DEFAULT_FORM = {
 export default function InquiriesPage() {
   const router = useRouter()
   const [inquiries, setInquiries] = useState<CreditInquiry[]>([])
+  const [bankRules, setBankRules] = useState<BankRule[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [form, setForm] = useState(DEFAULT_FORM)
@@ -79,16 +82,24 @@ export default function InquiriesPage() {
       return
     }
 
-    const { data, error } = await supabase
-      .from("credit_inquiries")
-      .select("*")
-      .order("application_date", { ascending: false })
+    const [inquiriesResult, rulesResult] = await Promise.all([
+      supabase
+        .from("credit_inquiries")
+        .select("*")
+        .order("application_date", { ascending: false }),
+      supabase.from("bank_rules").select("*").order("bank"),
+    ])
 
-    if (error) {
-      toast.error(error.message || "Unable to load inquiries")
+    if (inquiriesResult.error) {
+      toast.error(inquiriesResult.error.message || "Unable to load inquiries")
     } else {
-      setInquiries(data ?? [])
+      setInquiries(inquiriesResult.data ?? [])
     }
+
+    if (!rulesResult.error) {
+      setBankRules(rulesResult.data ?? [])
+    }
+
     setLoading(false)
   }
 
@@ -543,6 +554,15 @@ export default function InquiriesPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Safe Cadence Advisor — Pro feature */}
+        {bankRules.length > 0 && (
+          <CadenceAdvisor
+            inquiries={inquiries}
+            bankRules={bankRules}
+            isPro={false}
+          />
+        )}
       </div>
     </AppShell>
   )
