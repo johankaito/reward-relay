@@ -15,6 +15,7 @@ import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
 import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
 import { BadgeGrid } from "@/components/gamification/BadgeGrid"
+import { triggerCelebration } from "@/components/gamification/CelebrationOverlay"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
@@ -69,6 +70,24 @@ export default function DashboardPage() {
 
     if (showWelcome) {
       toast.success("Welcome back!")
+    }
+
+    // Check for newly earned badges in the last 5 minutes
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
+    const { data: recentBadges } = await supabase
+      .from('user_badges')
+      .select('badge_type, earned_at, badge_definitions(name, icon_emoji)')
+      .eq('user_id', session.user.id)
+      .gte('earned_at', fiveMinutesAgo)
+
+    if (recentBadges && recentBadges.length > 0) {
+      void triggerCelebration('medium')
+      recentBadges.forEach((badge) => {
+        const def = badge.badge_definitions as { name: string; icon_emoji: string } | null
+        if (def) {
+          toast.success(`${def.icon_emoji} Badge unlocked: ${def.name}!`)
+        }
+      })
     }
   }
 
