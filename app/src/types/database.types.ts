@@ -39,6 +39,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      badge_definitions: {
+        Row: {
+          id: string
+          badge_type: string
+          name: string
+          description: string
+          icon_emoji: string
+          tier: 'free' | 'pro' | null
+        }
+        Insert: {
+          id?: string
+          badge_type: string
+          name: string
+          description: string
+          icon_emoji: string
+          tier?: 'free' | 'pro' | null
+        }
+        Update: {
+          id?: string
+          badge_type?: string
+          name?: string
+          description?: string
+          icon_emoji?: string
+          tier?: 'free' | 'pro' | null
+        }
+        Relationships: []
+      }
       bank_rules: {
         Row: {
           id: string
@@ -107,6 +134,59 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      leaderboard_cache: {
+        Row: {
+          rank: number
+          user_hash: string
+          total_aud_earned: number
+          cards_churned: number
+          updated_at: string | null
+        }
+        Insert: {
+          rank: number
+          user_hash: string
+          total_aud_earned: number
+          cards_churned: number
+          updated_at?: string | null
+        }
+        Update: {
+          rank?: number
+          user_hash?: string
+          total_aud_earned?: number
+          cards_churned?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          id: string
+          user_id: string
+          badge_type: string
+          earned_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          badge_type: string
+          earned_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          badge_type?: string
+          earned_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_type_fkey"
+            columns: ["badge_type"]
+            isOneToOne: false
+            referencedRelation: "badge_definitions"
+            referencedColumns: ["badge_type"]
+          },
+        ]
       }
       beta_requests: {
         Row: {
@@ -682,6 +762,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_badge: { Args: { p_user_id: string; p_badge_type: string }; Returns: undefined }
       update_user_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
