@@ -82,19 +82,11 @@ export async function GET(req: NextRequest) {
 
   if (!newDeals?.length) return NextResponse.json({ ok: true, sent: 0 })
 
-  // Query pro/trialing subscribers; fall back to all users if table unavailable
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: proUsers } = await (supabase as any)
-    .from("stripe_subscriptions")
+  const { data: userProfiles } = await supabase
+    .from("user_profiles")
     .select("user_id")
-    .in("status", ["active", "trialing"])
 
-  // Fall back to all user_profiles if stripe_subscriptions is not available
-  const userList: Array<{ user_id: string }> =
-    proUsers ??
-    ((
-      await supabase.from("user_profiles").select("user_id")
-    ).data ?? [])
+  const userList: Array<{ user_id: string }> = userProfiles ?? []
 
   let sent = 0
   for (const user of userList) {
