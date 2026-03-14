@@ -14,6 +14,7 @@ import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
 import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
+import { BadgeGrid } from "@/components/gamification/BadgeGrid"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
@@ -363,6 +364,9 @@ export default function DashboardPage() {
             <DailyInsights userId={userId} />
           </div>
         )}
+
+        {/* Achievements */}
+        {userId && <BadgeGrid userId={userId} />}
       </div>
 
       <EditCardModal

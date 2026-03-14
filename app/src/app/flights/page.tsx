@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import { RedemptionProgress } from '@/components/flights/RedemptionProgress'
 import { supabase } from '@/lib/supabase/client'
+import { calculateEffectiveBalance, type TransferPartner } from '@/lib/transferPartners'
 
 interface LoyaltyBalance {
   id: string
@@ -46,6 +47,8 @@ interface RouteWithBalance extends AwardFlightRoute {
   percentage: number
   canBook: boolean
   almostThere: boolean
+  transferredPoints: number
+  bookableViaTransfer: boolean
 }
 
 type ProgramFilter = 'all' | 'qff' | 'velocity'
@@ -71,9 +74,11 @@ const PROGRAM_LABELS: Record<string, string> = {
 
 export default function FlightsPage() {
   const router = useRouter()
-  const [routes, setRoutes] = useState<RouteWithBalance[]>([])
+  const [routes, setRoutes] = useState<AwardFlightRoute[]>([])
+  const [balanceMap, setBalanceMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [hasBalances, setHasBalances] = useState(false)
+  const [includeAmexTransfers, setIncludeAmexTransfers] = useState(false)
 
   const [programFilter, setProgramFilter] = useState<ProgramFilter>('all')
   const [cabinFilter, setCabinFilter] = useState<CabinFilter>('all')
@@ -100,21 +105,12 @@ export default function FlightsPage() {
       const balances: LoyaltyBalance[] = (balancesData as LoyaltyBalance[] | null) ?? []
       setHasBalances(balances.length > 0)
 
-      const balanceMap: Record<string, number> = balances.reduce(
+      const map: Record<string, number> = balances.reduce(
         (acc, b) => ({ ...acc, [b.program]: b.balance }),
         {},
       )
-
-      const rawRoutes = (routesData as AwardFlightRoute[] | null) ?? []
-      const enriched: RouteWithBalance[] = rawRoutes.map((route) => {
-        const userBalance = balanceMap[route.program] ?? 0
-        const percentage = Math.min(100, Math.round((userBalance / route.points_required) * 100))
-        const canBook = userBalance >= route.points_required
-        const almostThere = percentage >= 70 && !canBook
-        return { ...route, userBalance, percentage, canBook, almostThere }
-      })
-
-      setRoutes(enriched)
+      setBalanceMap(map)
+      setRoutes((routesData as AwardFlightRoute[] | null) ?? [])
       setLoading(false)
     }
 
@@ -122,7 +118,31 @@ export default function FlightsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const filtered = routes.filter((r) => {
+  const enrichedRoutes: RouteWithBalance[] = routes.map((route) => {
+    const rawBalance = balanceMap[route.program] ?? 0
+    const amexBalance = balanceMap['amex_mr'] ?? 0
+    const isTransferEligible = route.program === 'qff' || route.program === 'velocity'
+
+    let userBalance = rawBalance
+    let transferredPoints = 0
+    let bookableViaTransfer = false
+
+    if (includeAmexTransfers && isTransferEligible && amexBalance > 0) {
+      const result = calculateEffectiveBalance(rawBalance, amexBalance, route.program as TransferPartner)
+      const wasBookable = rawBalance >= route.points_required
+      userBalance = result.effectiveBalance
+      transferredPoints = result.transferredPoints
+      bookableViaTransfer = !wasBookable && result.effectiveBalance >= route.points_required
+    }
+
+    const percentage = Math.min(100, Math.round((userBalance / route.points_required) * 100))
+    const canBook = userBalance >= route.points_required
+    const almostThere = percentage >= 70 && !canBook
+
+    return { ...route, userBalance, percentage, canBook, almostThere, transferredPoints, bookableViaTransfer }
+  })
+
+  const filtered = enrichedRoutes.filter((r) => {
     if (programFilter !== 'all' && r.program !== programFilter) return false
     if (cabinFilter !== 'all' && r.cabin_class !== cabinFilter) return false
     if (originFilter !== 'all' && r.origin_iata !== originFilter) return false
@@ -174,8 +194,8 @@ export default function FlightsPage() {
           </Card>
         )}
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3">
+        {/* Filters + Amex toggle */}
+        <div className="flex flex-wrap items-center gap-3">
           <Select
             value={programFilter}
             onValueChange={(v) => setProgramFilter(v as ProgramFilter)}
@@ -213,6 +233,17 @@ export default function FlightsPage() {
               <SelectItem value="BNE">Brisbane (BNE)</SelectItem>
             </SelectContent>
           </Select>
+
+          {/* Amex MR toggle */}
+          <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border-default)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
+            <input
+              type="checkbox"
+              checked={includeAmexTransfers}
+              onChange={(e) => setIncludeAmexTransfers(e.target.checked)}
+              className="h-4 w-4 accent-[var(--accent)]"
+            />
+            Include Amex MR transfers
+          </label>
         </div>
 
         {/* Can book now */}
@@ -321,11 +352,19 @@ function RouteCard({
           </span>
         </div>
 
+        {/* Amex transfer badge */}
+        {route.bookableViaTransfer && (
+          <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+            Bookable via Amex MR transfer
+          </span>
+        )}
+
         {/* Progress */}
         <RedemptionProgress
           userBalance={route.userBalance}
           pointsRequired={route.points_required}
           program={route.program}
+          transferredPoints={route.transferredPoints}
         />
 
         {/* Book button */}
