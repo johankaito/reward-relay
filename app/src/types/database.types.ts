@@ -39,6 +39,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      award_flight_routes: {
+        Row: {
+          id: string
+          program: 'qff' | 'velocity'
+          origin: string
+          destination: string
+          origin_city: string
+          destination_city: string
+          cabin_class: 'economy' | 'business' | 'first'
+          points_required: number
+          taxes_aud: number
+          booking_url: string | null
+          valid_from: string | null
+          valid_until: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          program: 'qff' | 'velocity'
+          origin: string
+          destination: string
+          origin_city: string
+          destination_city: string
+          cabin_class: 'economy' | 'business' | 'first'
+          points_required: number
+          taxes_aud?: number
+          booking_url?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          program?: 'qff' | 'velocity'
+          origin?: string
+          destination?: string
+          origin_city?: string
+          destination_city?: string
+          cabin_class?: 'economy' | 'business' | 'first'
+          points_required?: number
+          taxes_aud?: number
+          booking_url?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       bank_rules: {
         Row: {
           id: string
