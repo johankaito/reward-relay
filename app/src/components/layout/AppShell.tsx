@@ -19,6 +19,7 @@ import {
   Lightbulb,
   Calendar,
   Search,
+  BarChart2,
 } from "lucide-react"
 import { useMemo, useState } from "react"
 
@@ -80,6 +81,11 @@ const navItems: NavItem[] = [
       { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/history", label: "History", icon: History },
     ],
+  },
+  {
+    href: "/profit",
+    label: "P&L",
+    icon: BarChart2,
   },
 ]
 
