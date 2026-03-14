@@ -18,6 +18,7 @@ import {
   Scale,
   Lightbulb,
   Calendar,
+  Search,
 } from "lucide-react"
 import { useMemo, useState } from "react"
 
@@ -47,6 +48,10 @@ const navItems: NavItem[] = [
     href: "/cards",
     label: "Cards",
     icon: CreditCard,
+    children: [
+      { href: "/cards", label: "Catalog", icon: CreditCard },
+      { href: "/inquiries", label: "Inquiries", icon: Search },
+    ],
   },
   {
     href: "/recommendations",
