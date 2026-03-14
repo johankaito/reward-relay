@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { TrendingUp, Download } from "lucide-react"
 import { AppShell } from "@/components/layout/AppShell"
@@ -20,19 +20,36 @@ interface FYRow {
   netValue: number
 }
 
+type Tab = 'all' | 'personal' | 'business'
+
 function fmtAud(n: number) {
   return n.toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 })
 }
 
+function computeSummary(cards: ProfitCard[]) {
+  const totalBonusAud = cards.reduce((s, c) => s + c.bonusAud, 0)
+  const totalFees = cards.reduce((s, c) => s + c.fee, 0)
+  const byFy: Record<string, FYRow> = {}
+  for (const c of cards) {
+    if (!byFy[c.fy]) byFy[c.fy] = { fy: c.fy, bonusAud: 0, fee: 0, netValue: 0 }
+    byFy[c.fy].bonusAud += c.bonusAud
+    byFy[c.fy].fee += c.fee
+    byFy[c.fy].netValue += c.netValue
+  }
+  return {
+    totalBonusAud,
+    totalFees,
+    netProfit: totalBonusAud - totalFees,
+    fyRows: Object.values(byFy).sort((a, b) => b.fy.localeCompare(a.fy)),
+  }
+}
+
 export default function ProfitPage() {
   const router = useRouter()
-  const [cards, setCards] = useState<ProfitCard[]>([])
-  const [fyRows, setFyRows] = useState<FYRow[]>([])
-  const [totalBonusAud, setTotalBonusAud] = useState(0)
-  const [totalFees, setTotalFees] = useState(0)
-  const [netProfit, setNetProfit] = useState(0)
+  const [allCards, setAllCards] = useState<ProfitCard[]>([])
   const [isPro, setIsPro] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<Tab>('all')
 
   useEffect(() => {
     async function load() {
@@ -44,7 +61,6 @@ export default function ProfitPage() {
         return
       }
 
-      // Check pro status from user metadata or profile
       const meta = session.user.user_metadata as Record<string, unknown>
       const proFlag = meta?.is_pro === true || meta?.subscription_tier === "pro" || meta?.subscription_tier === "business"
       setIsPro(proFlag)
@@ -52,7 +68,7 @@ export default function ProfitPage() {
       const { data: earnedCards } = await supabase
         .from("user_cards")
         .select(`
-          id, bank, name, annual_fee, bonus_earned_at,
+          id, bank, name, annual_fee, bonus_earned_at, is_business,
           cards!card_id (
             welcome_bonus_points,
             points_currency,
@@ -86,36 +102,28 @@ export default function ProfitPage() {
           pointsProgram: program,
           welcomeBonusPoints: points,
           fy,
+          is_business: row.is_business ?? false,
         }
       })
 
-      setCards(profitCards)
-
-      // Aggregate totals
-      const totalBonus = profitCards.reduce((s, c) => s + c.bonusAud, 0)
-      const totalFee = profitCards.reduce((s, c) => s + c.fee, 0)
-      setTotalBonusAud(totalBonus)
-      setTotalFees(totalFee)
-      setNetProfit(totalBonus - totalFee)
-
-      // Group by financial year
-      const byFy: Record<string, FYRow> = {}
-      for (const c of profitCards) {
-        if (!byFy[c.fy]) {
-          byFy[c.fy] = { fy: c.fy, bonusAud: 0, fee: 0, netValue: 0 }
-        }
-        byFy[c.fy].bonusAud += c.bonusAud
-        byFy[c.fy].fee += c.fee
-        byFy[c.fy].netValue += c.netValue
-      }
-      setFyRows(
-        Object.values(byFy).sort((a, b) => b.fy.localeCompare(a.fy))
-      )
-
+      setAllCards(profitCards)
       setLoading(false)
     }
     void load()
   }, [router])
+
+  const hasBusinessCards = useMemo(() => allCards.some((c) => c.is_business), [allCards])
+
+  const visibleCards = useMemo(() => {
+    if (activeTab === 'personal') return allCards.filter((c) => !c.is_business)
+    if (activeTab === 'business') return allCards.filter((c) => c.is_business)
+    return allCards
+  }, [allCards, activeTab])
+
+  const { totalBonusAud, totalFees, netProfit, fyRows } = useMemo(
+    () => computeSummary(visibleCards),
+    [visibleCards],
+  )
 
   if (loading) {
     return (
@@ -132,7 +140,7 @@ export default function ProfitPage() {
     )
   }
 
-  const isEmpty = cards.length === 0
+  const isEmpty = allCards.length === 0
 
   return (
     <AppShell>
@@ -143,17 +151,37 @@ export default function ProfitPage() {
             <h1 className="text-xl font-semibold text-[var(--text-primary)]">Net Profit</h1>
             <p className="mt-0.5 text-sm text-[var(--text-secondary)]">Your churning P&amp;L</p>
           </div>
-          {isPro && cards.length > 0 && (
+          {isPro && allCards.length > 0 && (
             <Button
               variant="outline"
               size="sm"
-              onClick={() => exportProfitCsv(cards)}
+              onClick={() => exportProfitCsv(visibleCards)}
             >
               <Download className="mr-1.5 h-3.5 w-3.5" />
               Export CSV
             </Button>
           )}
         </div>
+
+        {/* All / Personal / Business tabs — only when business cards exist */}
+        {hasBusinessCards && (
+          <div className="flex gap-1 rounded-lg border border-[var(--border-default)] bg-[var(--surface)] p-1">
+            {(['all', 'personal', 'business'] as Tab[]).map((tab) => (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
+                  activeTab === tab
+                    ? 'bg-[var(--accent)] text-white'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        )}
 
         {isEmpty ? (
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
@@ -171,7 +199,7 @@ export default function ProfitPage() {
             <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
               <CardHeader className="pb-2 pt-5">
                 <CardTitle className="text-sm font-medium text-[var(--text-secondary)]">
-                  All-time summary
+                  {activeTab === 'all' ? 'All-time summary' : activeTab === 'personal' ? 'Personal cards summary' : 'Business cards summary'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -252,7 +280,7 @@ export default function ProfitPage() {
 
             {/* Card breakdown — Pro only */}
             <ProGate feature="card breakdown" isPro={isPro} previewRows={3}>
-              <CardBreakdown cards={cards} />
+              <CardBreakdown cards={visibleCards} />
             </ProGate>
 
             {/* Leaderboard */}

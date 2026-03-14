@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase/client"
+import { Switch } from "@/components/ui/switch"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
 import type { Database } from "@/types/database.types"
 import type { CardRecord } from "./CardGrid"
@@ -43,6 +44,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
   const [cancellationDate, setCancellationDate] = useState("")
   const [annualFee, setAnnualFee] = useState("")
   const [notes, setNotes] = useState("")
+  const [isBusiness, setIsBusiness] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const selectedCard = useMemo(
@@ -74,6 +76,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
         cancellation_date: cancellationDate || null,
         annual_fee: annualFee ? Number(annualFee) : selectedCard?.annual_fee ?? null,
         notes: notes || null,
+        is_business: isBusiness,
       })
 
       if (error) throw error
@@ -106,6 +109,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
       setCancellationDate("")
       setAnnualFee("")
       setNotes("")
+      setIsBusiness(false)
       onCreated?.()
     } catch (error) {
       const message =
@@ -251,6 +255,17 @@ export function AddCardForm({ cards, onCreated }: Props) {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add reminder or spend target"
               className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+            />
+          </div>
+
+          <div className="md:col-span-2 flex items-center justify-between rounded-lg border border-[var(--border-default)] p-3">
+            <div>
+              <p className="text-sm font-medium text-[var(--text-primary)]">Business card</p>
+              <p className="text-xs text-[var(--text-secondary)]">Flag for FBT tracking and business P&L</p>
+            </div>
+            <Switch
+              checked={isBusiness}
+              onCheckedChange={setIsBusiness}
             />
           </div>
 

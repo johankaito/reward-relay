@@ -266,12 +266,19 @@ export default function DashboardPage() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <Badge
-                            variant="secondary"
-                            className="bg-[var(--info-bg)] text-[var(--info-fg)]"
-                          >
-                            {card.bank || "Custom"}
-                          </Badge>
+                          <div className="flex items-center gap-1.5">
+                            <Badge
+                              variant="secondary"
+                              className="bg-[var(--info-bg)] text-[var(--info-fg)]"
+                            >
+                              {card.bank || "Custom"}
+                            </Badge>
+                            {card.is_business && (
+                              <Badge style={{ backgroundColor: 'var(--info-bg)', color: 'var(--info-fg)', opacity: 0.8 }}>
+                                Business
+                              </Badge>
+                            )}
+                          </div>
                           <p className="font-semibold text-[var(--text-primary)]">
                             {card.name || "Untitled card"}
                           </p>
