@@ -20,6 +20,7 @@ import {
   Calendar,
   Search,
   BarChart2,
+  Plane,
 } from "lucide-react"
 import { useMemo, useState } from "react"
 
@@ -86,6 +87,11 @@ const navItems: NavItem[] = [
     href: "/profit",
     label: "P&L",
     icon: BarChart2,
+  },
+  {
+    href: "/flights",
+    label: "Flights",
+    icon: Plane,
   },
 ]
 
@@ -232,16 +238,16 @@ export function AppShell({ children }: AppShellProps) {
         <main className="min-w-0 space-y-5">{children}</main>
       </div>
 
-      {/* Mobile Bottom Nav — exactly 5 items, no scroll */}
+      {/* Mobile Bottom Nav — 6 items, scrollable */}
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--border-default)] bg-[var(--surface)]/95 backdrop-blur md:hidden">
-        <div className="mx-auto grid max-w-sm grid-cols-5 px-2 py-1">
+        <div className="mx-auto flex max-w-sm overflow-x-auto px-2 py-1">
           {navMap.map((item) => {
             const Icon = item.icon
             return (
               <button
                 key={item.href}
                 onClick={() => router.push(item.href)}
-                className={`flex flex-col items-center gap-1 rounded-lg px-1 py-2 transition-colors ${
+                className={`flex min-w-[56px] flex-1 flex-col items-center gap-1 rounded-lg px-1 py-2 transition-colors ${
                   item.active
                     ? "text-[var(--accent)]"
                     : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
