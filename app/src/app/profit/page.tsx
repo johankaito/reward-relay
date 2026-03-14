@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase/client"
 import { getPointValue, getFinancialYear } from "@/lib/pointValuations"
 import { CardBreakdown, type ProfitCard } from "@/components/profit/CardBreakdown"
+import { Leaderboard } from "@/components/gamification/Leaderboard"
 import { exportProfitCsv } from "@/lib/exportProfitCsv"
 
 interface FYRow {
@@ -253,6 +254,9 @@ export default function ProfitPage() {
             <ProGate feature="card breakdown" isPro={isPro} previewRows={3}>
               <CardBreakdown cards={cards} />
             </ProGate>
+
+            {/* Leaderboard */}
+            <Leaderboard isPro={isPro} />
           </>
         )}
       </div>
