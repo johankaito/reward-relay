@@ -8,12 +8,18 @@ interface ProGateProps {
   children: React.ReactNode
   isPro?: boolean
   previewRows?: number
+  requiredTier?: 'pro' | 'business'
 }
 
-export function ProGate({ feature, children, isPro = false, previewRows }: ProGateProps) {
+export function ProGate({ feature, children, isPro = false, previewRows, requiredTier = 'pro' }: ProGateProps) {
   if (isPro) {
     return <>{children}</>
   }
+
+  const isBusiness = requiredTier === 'business'
+  const label = isBusiness ? 'Business feature' : 'Pro feature'
+  const ctaLabel = isBusiness ? 'Upgrade to Business' : 'Upgrade to Pro'
+  const upgradeHref = isBusiness ? '/settings#upgrade-business' : '/settings#upgrade'
 
   return (
     <div className="relative">
@@ -36,7 +42,7 @@ export function ProGate({ feature, children, isPro = false, previewRows }: ProGa
           <Lock className="h-5 w-5 text-[var(--accent)]" />
         </div>
         <div className="text-center">
-          <p className="text-sm font-semibold text-[var(--text-primary)]">Pro feature</p>
+          <p className="text-sm font-semibold text-[var(--text-primary)]">{label}</p>
           {feature && (
             <p className="mt-0.5 text-xs text-[var(--text-secondary)]">{feature}</p>
           )}
@@ -45,9 +51,9 @@ export function ProGate({ feature, children, isPro = false, previewRows }: ProGa
           size="sm"
           className="mt-1 text-white shadow-sm"
           style={{ background: "var(--gradient-cta)" }}
-          onClick={() => window.location.href = "/settings#upgrade"}
+          onClick={() => window.location.href = upgradeHref}
         >
-          Upgrade to Pro
+          {ctaLabel}
         </Button>
       </div>
     </div>
