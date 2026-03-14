@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
+import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
@@ -142,6 +143,9 @@ export default function DashboardPage() {
   return (
     <AppShell>
       <div className="space-y-5">
+        {/* Bonus confirmation banners */}
+        <BonusConfirmationBanner />
+
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
