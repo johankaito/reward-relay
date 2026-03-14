@@ -7,6 +7,7 @@ import { AppShell } from "@/components/layout/AppShell"
 import { SpendProgressBar } from "@/components/tracker/SpendProgressBar"
 import { TransactionForm } from "@/components/tracker/TransactionForm"
 import { TransactionList } from "@/components/tracker/TransactionList"
+import { FileUpload } from "@/components/tracker/FileUpload"
 import { supabase } from "@/lib/supabase/client"
 
 type CardDetail = {
@@ -42,6 +43,7 @@ export default function TrackerDetailPage() {
   const [loading, setLoading] = useState(true)
   const [userId, setUserId] = useState<string | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [addTab, setAddTab] = useState<"manual" | "upload">("manual")
 
   const loadCard = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser()
@@ -134,12 +136,34 @@ export default function TrackerDetailPage() {
         {/* Add Transaction */}
         {userId && (
           <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface)] p-4">
-            <h2 className="mb-3 font-semibold text-[var(--text-primary)]">Add Transaction</h2>
-            <TransactionForm
-              userCardId={card.id}
-              userId={userId}
-              onSuccess={handleSpendChange}
-            />
+            <div className="mb-3 flex items-center gap-1">
+              {(["manual", "upload"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setAddTab(tab)}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                    addTab === tab
+                      ? "bg-[var(--surface-strong)] text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  {tab === "manual" ? "Manual entry" : "Upload statement"}
+                </button>
+              ))}
+            </div>
+            {addTab === "manual" ? (
+              <TransactionForm
+                userCardId={card.id}
+                userId={userId}
+                onSuccess={handleSpendChange}
+              />
+            ) : (
+              <FileUpload
+                userCardId={card.id}
+                userId={userId}
+                onSuccess={handleSpendChange}
+              />
+            )}
           </div>
         )}
 
