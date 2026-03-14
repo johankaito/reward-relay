@@ -682,6 +682,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_bonus_eligibility: { Args: { p_user_card_id: string }; Returns: boolean }
       update_user_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {
