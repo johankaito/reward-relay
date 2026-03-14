@@ -461,48 +461,66 @@ export type Database = {
       }
       user_cards: {
         Row: {
+          alert_enabled: boolean
           annual_fee: number | null
           application_date: string | null
           approval_date: string | null
           bank: string | null
+          bonus_earned: boolean
+          bonus_earned_at: string | null
+          bonus_earned_suggested: boolean
+          bonus_spend_deadline: string | null
           cancellation_date: string | null
           card_id: string | null
           created_at: string | null
           current_spend: number | null
           id: string
           name: string | null
+          next_eligible_date: string | null
           notes: string | null
           spend_updated_at: string | null
           status: string | null
           user_id: string
         }
         Insert: {
+          alert_enabled?: boolean
           annual_fee?: number | null
           application_date?: string | null
           approval_date?: string | null
           bank?: string | null
+          bonus_earned?: boolean
+          bonus_earned_at?: string | null
+          bonus_earned_suggested?: boolean
+          bonus_spend_deadline?: string | null
           cancellation_date?: string | null
           card_id?: string | null
           created_at?: string | null
           current_spend?: number | null
           id?: string
           name?: string | null
+          next_eligible_date?: string | null
           notes?: string | null
           spend_updated_at?: string | null
           status?: string | null
           user_id: string
         }
         Update: {
+          alert_enabled?: boolean
           annual_fee?: number | null
           application_date?: string | null
           approval_date?: string | null
           bank?: string | null
+          bonus_earned?: boolean
+          bonus_earned_at?: string | null
+          bonus_earned_suggested?: boolean
+          bonus_spend_deadline?: string | null
           cancellation_date?: string | null
           card_id?: string | null
           created_at?: string | null
           current_spend?: number | null
           id?: string
           name?: string | null
+          next_eligible_date?: string | null
           notes?: string | null
           spend_updated_at?: string | null
           status?: string | null
