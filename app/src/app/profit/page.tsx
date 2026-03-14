@@ -167,16 +167,26 @@ export default function ProfitPage() {
             <h1 className="text-xl font-semibold text-[var(--text-primary)]">Net Profit</h1>
             <p className="mt-0.5 text-sm text-[var(--text-secondary)]">Your churning P&amp;L</p>
           </div>
-          {isPro && allCards.length > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => exportProfitCsv(visibleCards)}
-            >
-              <Download className="mr-1.5 h-3.5 w-3.5" />
-              Export CSV
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {isPro && allCards.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => exportProfitCsv(visibleCards)}
+              >
+                <Download className="mr-1.5 h-3.5 w-3.5" />
+                Export CSV
+              </Button>
+            )}
+            {isBusiness && allCards.length > 0 && (
+              <Button variant="outline" size="sm" asChild>
+                <a href="/api/business/report" download>
+                  <Download className="mr-1.5 h-3.5 w-3.5" />
+                  Annual Report (PDF)
+                </a>
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* All / Personal / Business tabs — only when business cards exist */}
