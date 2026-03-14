@@ -59,11 +59,11 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    href: "/spending",
+    href: "/tracker",
     label: "Spending",
     icon: Wallet,
     children: [
-      { href: "/spending", label: "Tracker", icon: Wallet },
+      { href: "/tracker", label: "Tracker", icon: Wallet },
       { href: "/statements", label: "Import Statements", icon: Upload },
     ],
   },
