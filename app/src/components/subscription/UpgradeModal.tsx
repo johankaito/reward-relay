@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { X, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -26,10 +27,11 @@ const PRO_FEATURES = [
 
 const BUSINESS_FEATURES = [
   'Everything in Pro',
-  'Business card flagging',
-  'FBT exposure tracking',
-  'ATO-ready PDF export',
-  'Priority support SLA',
+  'Business card tracking',
+  'FBT exposure calculator',
+  'ATO-ready annual PDF report',
+  'Business vs personal P&L split',
+  'Priority support',
 ]
 
 function FeatureList({ items, included }: { items: string[]; included: boolean }) {
@@ -49,8 +51,29 @@ function FeatureList({ items, included }: { items: string[]; included: boolean }
   )
 }
 
+async function startCheckout(plan: 'monthly' | 'annual' | 'business_monthly' | 'business_annual') {
+  const res = await fetch('/api/stripe/checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ plan }),
+  })
+  const json = await res.json() as { url?: string; error?: string }
+  if (json.url) window.location.href = json.url
+}
+
 export function UpgradeModal({ open, onClose, defaultTier = 'pro' }: UpgradeModalProps) {
+  const [loading, setLoading] = useState<string | null>(null)
+
   if (!open) return null
+
+  async function handleCheckout(plan: 'monthly' | 'annual' | 'business_monthly' | 'business_annual') {
+    setLoading(plan)
+    try {
+      await startCheckout(plan)
+    } finally {
+      setLoading(null)
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -84,9 +107,12 @@ export function UpgradeModal({ open, onClose, defaultTier = 'pro' }: UpgradeModa
 
           {/* Pro */}
           <div
-            className="rounded-xl border-2 p-4"
-            style={{ borderColor: defaultTier === 'pro' ? 'var(--accent)' : 'var(--border)' }}
+            className="relative rounded-xl border-2 p-4"
+            style={{ borderColor: 'var(--accent)' }}
           >
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-semibold text-white" style={{ background: 'var(--gradient-cta)' }}>
+              Most Popular
+            </div>
             <div className="mb-3">
               <p className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">Pro</p>
               <p className="mt-1 text-2xl font-bold text-[var(--text-primary)]">$9.99</p>
@@ -96,11 +122,11 @@ export function UpgradeModal({ open, onClose, defaultTier = 'pro' }: UpgradeModa
             <Button
               className="mt-4 w-full text-white"
               size="sm"
-              style={{ background: defaultTier === 'pro' ? 'var(--gradient-cta)' : undefined }}
-              variant={defaultTier === 'pro' ? 'default' : 'outline'}
-              onClick={() => { window.location.href = '/settings#upgrade' }}
+              style={{ background: 'var(--gradient-cta)' }}
+              disabled={loading === 'monthly'}
+              onClick={() => void handleCheckout('monthly')}
             >
-              Get Pro
+              {loading === 'monthly' ? 'Redirecting…' : 'Start Free Trial — $9.99/month'}
             </Button>
           </div>
 
@@ -120,9 +146,10 @@ export function UpgradeModal({ open, onClose, defaultTier = 'pro' }: UpgradeModa
               size="sm"
               style={{ background: defaultTier === 'business' ? 'var(--gradient-cta)' : undefined }}
               variant={defaultTier === 'business' ? 'default' : 'outline'}
-              onClick={() => { window.location.href = '/settings#upgrade-business' }}
+              disabled={loading === 'business_monthly'}
+              onClick={() => void handleCheckout('business_monthly')}
             >
-              Get Business
+              {loading === 'business_monthly' ? 'Redirecting…' : 'Start Trial — $19.99/month'}
             </Button>
           </div>
         </div>
