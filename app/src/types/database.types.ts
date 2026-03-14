@@ -39,6 +39,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      bank_rules: {
+        Row: {
+          id: string
+          bank: string
+          rule_months: number
+          rule_type: 'bonus_cooldown' | 'application_cooldown' | null
+          rule_description: string
+          source_url: string | null
+          confidence: 'high' | 'medium' | 'low' | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          bank: string
+          rule_months: number
+          rule_type?: 'bonus_cooldown' | 'application_cooldown' | null
+          rule_description: string
+          source_url?: string | null
+          confidence?: 'high' | 'medium' | 'low' | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          bank?: string
+          rule_months?: number
+          rule_type?: 'bonus_cooldown' | 'application_cooldown' | null
+          rule_description?: string
+          source_url?: string | null
+          confidence?: 'high' | 'medium' | 'low' | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       credit_inquiries: {
         Row: {
           id: string
