@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { TrendingUp, Download } from "lucide-react"
+import { TrendingUp, Download, AlertTriangle, CheckCircle } from "lucide-react"
 import { AppShell } from "@/components/layout/AppShell"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ProGate } from "@/components/ui/ProGate"
@@ -12,6 +12,7 @@ import { getPointValue, getFinancialYear } from "@/lib/pointValuations"
 import { CardBreakdown, type ProfitCard } from "@/components/profit/CardBreakdown"
 import { Leaderboard } from "@/components/gamification/Leaderboard"
 import { exportProfitCsv } from "@/lib/exportProfitCsv"
+import { calculateFbtExposure, type FbtResult } from "@/lib/fbt"
 
 interface FYRow {
   fy: string
@@ -48,6 +49,7 @@ export default function ProfitPage() {
   const router = useRouter()
   const [allCards, setAllCards] = useState<ProfitCard[]>([])
   const [isPro, setIsPro] = useState(false)
+  const [isBusiness, setIsBusiness] = useState(false)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<Tab>('all')
 
@@ -62,8 +64,10 @@ export default function ProfitPage() {
       }
 
       const meta = session.user.user_metadata as Record<string, unknown>
-      const proFlag = meta?.is_pro === true || meta?.subscription_tier === "pro" || meta?.subscription_tier === "business"
+      const businessFlag = meta?.subscription_tier === "business"
+      const proFlag = meta?.is_pro === true || meta?.subscription_tier === "pro" || businessFlag
       setIsPro(proFlag)
+      setIsBusiness(businessFlag)
 
       const { data: earnedCards } = await supabase
         .from("user_cards")
@@ -124,6 +128,18 @@ export default function ProfitPage() {
     () => computeSummary(visibleCards),
     [visibleCards],
   )
+
+  const fbtResults = useMemo((): FbtResult[] => {
+    if (!isBusiness) return []
+    const businessCards = allCards.filter((c) => c.is_business)
+    return calculateFbtExposure(
+      businessCards.map((c) => ({
+        bonus_earned_at: c.bonusEarnedAt || null,
+        welcomeBonusPoints: c.welcomeBonusPoints,
+        pointsProgram: c.pointsProgram,
+      })),
+    )
+  }, [allCards, isBusiness])
 
   if (loading) {
     return (
@@ -228,6 +244,56 @@ export default function ProfitPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* FBT exposure section — Business tier only */}
+            {isBusiness && fbtResults.length > 0 && (
+              <div className="space-y-2">
+                {fbtResults.map((result) => (
+                  <div
+                    key={result.fbtYear}
+                    className={`rounded-xl border p-4 ${
+                      result.thresholdExceeded
+                        ? 'border-yellow-500/40 bg-yellow-500/10'
+                        : 'border-green-500/40 bg-green-500/10'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      {result.thresholdExceeded ? (
+                        <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-400" />
+                      ) : (
+                        <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-green-400" />
+                      )}
+                      <div className="space-y-1 text-sm">
+                        {result.thresholdExceeded ? (
+                          <>
+                            <p className="font-semibold text-yellow-300">
+                              FBT Exposure Indicator — {result.fbtYear}
+                            </p>
+                            <p className="text-[var(--text-secondary)]">
+                              You earned {result.totalBusinessPoints.toLocaleString()} business card points (~{fmtAud(result.totalBusinessAud)}) this FBT year.
+                              This exceeds the 250,000-point indicative threshold.
+                            </p>
+                            <p className="text-[var(--text-secondary)]">
+                              Indicative FBT exposure: ~{fmtAud(result.estimatedFbtLiability)} (47% of ~{fmtAud(result.estimatedTaxableValue)})
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="font-semibold text-green-300">
+                              Under FBT threshold — {result.fbtYear}
+                            </p>
+                            <p className="text-[var(--text-secondary)]">
+                              {result.totalBusinessPoints.toLocaleString()} business card points earned — under the 250,000-point indicative threshold.
+                            </p>
+                          </>
+                        )}
+                        <p className="text-xs text-[var(--text-secondary)]/70">{result.disclaimer}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Financial year breakdown — Pro only */}
             <ProGate feature="profit breakdown" isPro={isPro} previewRows={3}>
