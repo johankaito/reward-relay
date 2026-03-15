@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plane, ExternalLink } from 'lucide-react'
+import { Plane, ExternalLink, Search } from 'lucide-react'
 
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -15,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { RedemptionProgress } from '@/components/flights/RedemptionProgress'
+import { AwardRouteCard, type AwardRouteRow } from '@/components/flights/AwardRouteCard'
 import { supabase } from '@/lib/supabase/client'
 import { calculateEffectiveBalance, type TransferPartner } from '@/lib/transferPartners'
 
@@ -72,13 +74,24 @@ const PROGRAM_LABELS: Record<string, string> = {
   velocity: 'Velocity',
 }
 
+/** Conversion rate: cents per point for dollar value display */
+const CENTS_PER_POINT = 2
+
 export default function FlightsPage() {
   const router = useRouter()
+
+  // Legacy routes from award_flight_routes (balance-aware sweet spot)
   const [routes, setRoutes] = useState<AwardFlightRoute[]>([])
   const [balanceMap, setBalanceMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
   const [hasBalances, setHasBalances] = useState(false)
   const [includeAmexTransfers, setIncludeAmexTransfers] = useState(false)
+
+  // Award routes search (qantas_routes table)
+  const [awardRoutes, setAwardRoutes] = useState<AwardRouteRow[]>([])
+  const [routeSearch, setRouteSearch] = useState('')
+  const [searchResults, setSearchResults] = useState<AwardRouteRow[]>([])
+  const [searchNotFound, setSearchNotFound] = useState(false)
 
   const [programFilter, setProgramFilter] = useState<ProgramFilter>('all')
   const [cabinFilter, setCabinFilter] = useState<CabinFilter>('all')
@@ -94,13 +107,19 @@ export default function FlightsPage() {
         return
       }
 
-      const [{ data: balancesData }, { data: routesData }] = await Promise.all([
-        supabase.from('loyalty_balances' as never).select('*'),
-        supabase
-          .from('award_flight_routes' as never)
-          .select('*')
-          .order('points_required', { ascending: true }),
-      ])
+      const [{ data: balancesData }, { data: routesData }, { data: awardRoutesData }] =
+        await Promise.all([
+          supabase.from('loyalty_balances' as never).select('*'),
+          supabase
+            .from('award_flight_routes' as never)
+            .select('*')
+            .order('points_required', { ascending: true }),
+          supabase
+            .from('award_routes' as never)
+            .select('*')
+            .eq('program', 'qantas')
+            .order('distance_miles', { ascending: true }),
+        ])
 
       const balances: LoyaltyBalance[] = (balancesData as LoyaltyBalance[] | null) ?? []
       setHasBalances(balances.length > 0)
@@ -111,6 +130,7 @@ export default function FlightsPage() {
       )
       setBalanceMap(map)
       setRoutes((routesData as AwardFlightRoute[] | null) ?? [])
+      setAwardRoutes((awardRoutesData as AwardRouteRow[] | null) ?? [])
       setLoading(false)
     }
 
@@ -153,6 +173,28 @@ export default function FlightsPage() {
   const almostThereRoutes = filtered.filter((r) => r.almostThere)
   const otherRoutes = filtered.filter((r) => !r.canBook && !r.almostThere)
 
+  const handleSearch = (query: string) => {
+    setRouteSearch(query)
+    if (!query.trim()) {
+      setSearchResults([])
+      setSearchNotFound(false)
+      return
+    }
+    const q = query.toLowerCase().trim()
+    const results = awardRoutes.filter((r) => {
+      return (
+        r.origin_iata.toLowerCase().includes(q) ||
+        r.destination_iata.toLowerCase().includes(q) ||
+        (r.origin_city?.toLowerCase().includes(q) ?? false) ||
+        (r.destination_city?.toLowerCase().includes(q) ?? false) ||
+        `${r.origin_iata}${r.destination_iata}`.toLowerCase().includes(q.replace(/[\s–-]/g, '')) ||
+        `${r.origin_iata}-${r.destination_iata}`.toLowerCase().includes(q)
+      )
+    })
+    setSearchResults(results)
+    setSearchNotFound(results.length === 0)
+  }
+
   if (loading) {
     return (
       <AppShell>
@@ -179,127 +221,202 @@ export default function FlightsPage() {
           </p>
         </div>
 
-        {/* No balances empty state */}
-        {!hasBalances && (
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="py-12 text-center">
-              <Plane className="mx-auto mb-3 h-8 w-8 text-[var(--text-secondary)]" />
-              <p className="text-sm font-medium text-[var(--text-primary)]">
-                No loyalty balances found
-              </p>
-              <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                Add your loyalty balances to see what you can book
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Filters + Amex toggle */}
-        <div className="flex flex-wrap items-center gap-3">
-          <Select
-            value={programFilter}
-            onValueChange={(v) => setProgramFilter(v as ProgramFilter)}
-          >
-            <SelectTrigger className="w-36">
-              <SelectValue placeholder="Program" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All programs</SelectItem>
-              <SelectItem value="qff">Qantas FF</SelectItem>
-              <SelectItem value="velocity">Velocity</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={cabinFilter} onValueChange={(v) => setCabinFilter(v as CabinFilter)}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Cabin" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All cabins</SelectItem>
-              <SelectItem value="economy">Economy</SelectItem>
-              <SelectItem value="business">Business</SelectItem>
-              <SelectItem value="first">First</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={originFilter} onValueChange={(v) => setOriginFilter(v as OriginFilter)}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Origin" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All origins</SelectItem>
-              <SelectItem value="SYD">Sydney (SYD)</SelectItem>
-              <SelectItem value="MEL">Melbourne (MEL)</SelectItem>
-              <SelectItem value="BNE">Brisbane (BNE)</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Amex MR toggle */}
-          <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border-default)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
-            <input
-              type="checkbox"
-              checked={includeAmexTransfers}
-              onChange={(e) => setIncludeAmexTransfers(e.target.checked)}
-              className="h-4 w-4 accent-[var(--accent)]"
-            />
-            Include Amex MR transfers
-          </label>
-        </div>
-
-        {/* Can book now */}
-        {canBookRoutes.length > 0 && (
-          <section>
-            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-green-600">
-              <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
-              Can book now ({canBookRoutes.length})
+        {/* Route Search — Qantas award pricing */}
+        {awardRoutes.length > 0 && (
+          <section className="space-y-3">
+            <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+              Qantas Classic Rewards — Route Search
             </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {canBookRoutes.map((route) => (
-                <RouteCard key={route.id} route={route} accent="green" />
-              ))}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-secondary)]" />
+              <Input
+                value={routeSearch}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Search by IATA (SYD, LHR) or city name (Sydney, London)…"
+                className="pl-9"
+              />
             </div>
+
+            {/* Search results */}
+            {routeSearch.trim() && searchResults.length > 0 && (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {searchResults.map((route) => (
+                  <AwardRouteCard key={route.id} route={route} centsPerPoint={CENTS_PER_POINT} />
+                ))}
+              </div>
+            )}
+
+            {/* Not found fallback */}
+            {searchNotFound && (
+              <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+                <CardContent className="py-6 text-center">
+                  <Plane className="mx-auto mb-3 h-7 w-7 text-[var(--text-secondary)]/40" />
+                  <p className="text-sm font-medium text-[var(--text-primary)]">
+                    Route not in our database
+                  </p>
+                  <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                    Check{' '}
+                    <a
+                      href="https://www.qantas.com/us/en/frequent-flyer/use-points/classic-flight-rewards.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-0.5 text-[var(--accent)] hover:underline"
+                    >
+                      qantas.com
+                      <ExternalLink className="h-3 w-3" />
+                    </a>{' '}
+                    for the full zone chart.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Show all Qantas routes when no search active */}
+            {!routeSearch.trim() && (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {awardRoutes.map((route) => (
+                  <AwardRouteCard key={route.id} route={route} centsPerPoint={CENTS_PER_POINT} />
+                ))}
+              </div>
+            )}
           </section>
         )}
 
-        {/* Almost there */}
-        {almostThereRoutes.length > 0 && (
-          <section>
-            <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-amber-600">
-              <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
-              Almost there ({almostThereRoutes.length})
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {almostThereRoutes.map((route) => (
-                <RouteCard key={route.id} route={route} accent="amber" />
-              ))}
-            </div>
-          </section>
+        {/* Divider */}
+        {awardRoutes.length > 0 && (
+          <div className="border-t border-[var(--border-default)]" />
         )}
 
-        {/* All routes grid */}
-        {otherRoutes.length > 0 && (
-          <section>
-            <h2 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
-              All routes ({otherRoutes.length})
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {otherRoutes.map((route) => (
-                <RouteCard key={route.id} route={route} accent="default" />
-              ))}
-            </div>
-          </section>
-        )}
+        {/* My Points — balance-aware sweet spot */}
+        <section>
+          <h2 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
+            My Points Sweet Spot
+          </h2>
 
-        {/* Empty filtered state */}
-        {filtered.length === 0 && hasBalances && (
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="py-12 text-center">
-              <p className="text-sm text-[var(--text-secondary)]">
-                No routes match your filters.
-              </p>
-            </CardContent>
-          </Card>
-        )}
+          {/* No balances empty state */}
+          {!hasBalances && (
+            <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+              <CardContent className="py-12 text-center">
+                <Plane className="mx-auto mb-3 h-8 w-8 text-[var(--text-secondary)]" />
+                <p className="text-sm font-medium text-[var(--text-primary)]">
+                  No loyalty balances found
+                </p>
+                <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                  Add your loyalty balances to see what you can book
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Filters + Amex toggle */}
+          {hasBalances && (
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <Select
+                value={programFilter}
+                onValueChange={(v) => setProgramFilter(v as ProgramFilter)}
+              >
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Program" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All programs</SelectItem>
+                  <SelectItem value="qff">Qantas FF</SelectItem>
+                  <SelectItem value="velocity">Velocity</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={cabinFilter} onValueChange={(v) => setCabinFilter(v as CabinFilter)}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Cabin" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All cabins</SelectItem>
+                  <SelectItem value="economy">Economy</SelectItem>
+                  <SelectItem value="business">Business</SelectItem>
+                  <SelectItem value="first">First</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={originFilter} onValueChange={(v) => setOriginFilter(v as OriginFilter)}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Origin" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All origins</SelectItem>
+                  <SelectItem value="SYD">Sydney (SYD)</SelectItem>
+                  <SelectItem value="MEL">Melbourne (MEL)</SelectItem>
+                  <SelectItem value="BNE">Brisbane (BNE)</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Amex MR toggle */}
+              <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border-default)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
+                <input
+                  type="checkbox"
+                  checked={includeAmexTransfers}
+                  onChange={(e) => setIncludeAmexTransfers(e.target.checked)}
+                  className="h-4 w-4 accent-[var(--accent)]"
+                />
+                Include Amex MR transfers
+              </label>
+            </div>
+          )}
+
+          {/* Can book now */}
+          {canBookRoutes.length > 0 && (
+            <div className="mb-4">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-green-600">
+                <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
+                Can book now ({canBookRoutes.length})
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {canBookRoutes.map((route) => (
+                  <RouteCard key={route.id} route={route} accent="green" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Almost there */}
+          {almostThereRoutes.length > 0 && (
+            <div className="mb-4">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-amber-600">
+                <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
+                Almost there ({almostThereRoutes.length})
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {almostThereRoutes.map((route) => (
+                  <RouteCard key={route.id} route={route} accent="amber" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* All routes grid */}
+          {otherRoutes.length > 0 && hasBalances && (
+            <div>
+              <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
+                All routes ({otherRoutes.length})
+              </h3>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {otherRoutes.map((route) => (
+                  <RouteCard key={route.id} route={route} accent="default" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Empty filtered state */}
+          {filtered.length === 0 && hasBalances && (
+            <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+              <CardContent className="py-12 text-center">
+                <p className="text-sm text-[var(--text-secondary)]">
+                  No routes match your filters.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </section>
       </div>
     </AppShell>
   )
