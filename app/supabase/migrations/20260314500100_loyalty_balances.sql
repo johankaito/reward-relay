@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS public.loyalty_balances (
   UNIQUE(user_id, program)  -- one row per program per user
 );
 
-CREATE INDEX idx_loyalty_balances_user ON public.loyalty_balances(user_id);
+CREATE INDEX IF NOT EXISTS idx_loyalty_balances_user ON public.loyalty_balances(user_id);
 
 ALTER TABLE public.loyalty_balances ENABLE ROW LEVEL SECURITY;
 
