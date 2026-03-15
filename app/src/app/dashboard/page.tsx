@@ -13,6 +13,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
+import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
+import { BadgeGrid } from "@/components/gamification/BadgeGrid"
+import { triggerCelebration } from "@/components/gamification/CelebrationOverlay"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
@@ -67,6 +70,24 @@ export default function DashboardPage() {
 
     if (showWelcome) {
       toast.success("Welcome back!")
+    }
+
+    // Check for newly earned badges in the last 5 minutes
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
+    const { data: recentBadges } = await supabase
+      .from('user_badges')
+      .select('badge_type, earned_at, badge_definitions(name, icon_emoji)')
+      .eq('user_id', session.user.id)
+      .gte('earned_at', fiveMinutesAgo)
+
+    if (recentBadges && recentBadges.length > 0) {
+      void triggerCelebration('medium')
+      recentBadges.forEach((badge) => {
+        const def = badge.badge_definitions as { name: string; icon_emoji: string } | null
+        if (def) {
+          toast.success(`${def.icon_emoji} Badge unlocked: ${def.name}!`)
+        }
+      })
     }
   }
 
@@ -142,6 +163,9 @@ export default function DashboardPage() {
   return (
     <AppShell>
       <div className="space-y-5">
+        {/* Bonus confirmation banners */}
+        <BonusConfirmationBanner />
+
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
@@ -242,12 +266,19 @@ export default function DashboardPage() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <Badge
-                            variant="secondary"
-                            className="bg-[var(--info-bg)] text-[var(--info-fg)]"
-                          >
-                            {card.bank || "Custom"}
-                          </Badge>
+                          <div className="flex items-center gap-1.5">
+                            <Badge
+                              variant="secondary"
+                              className="bg-[var(--info-bg)] text-[var(--info-fg)]"
+                            >
+                              {card.bank || "Custom"}
+                            </Badge>
+                            {card.is_business && (
+                              <Badge style={{ backgroundColor: 'var(--info-bg)', color: 'var(--info-fg)', opacity: 0.8 }}>
+                                Business
+                              </Badge>
+                            )}
+                          </div>
                           <p className="font-semibold text-[var(--text-primary)]">
                             {card.name || "Untitled card"}
                           </p>
@@ -359,6 +390,9 @@ export default function DashboardPage() {
             <DailyInsights userId={userId} />
           </div>
         )}
+
+        {/* Achievements */}
+        {userId && <BadgeGrid userId={userId} />}
       </div>
 
       <EditCardModal

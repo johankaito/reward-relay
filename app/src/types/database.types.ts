@@ -39,6 +39,203 @@ export type Database = {
   }
   public: {
     Tables: {
+      badge_definitions: {
+        Row: {
+          id: string
+          badge_type: string
+          name: string
+          description: string
+          icon_emoji: string
+          tier: 'free' | 'pro' | null
+        }
+        Insert: {
+          id?: string
+          badge_type: string
+          name: string
+          description: string
+          icon_emoji: string
+          tier?: 'free' | 'pro' | null
+        }
+        Update: {
+          id?: string
+          badge_type?: string
+          name?: string
+          description?: string
+          icon_emoji?: string
+          tier?: 'free' | 'pro' | null
+        }
+        Relationships: []
+      }
+      award_flight_routes: {
+        Row: {
+          id: string
+          program: 'qff' | 'velocity'
+          origin: string
+          destination: string
+          origin_city: string
+          destination_city: string
+          cabin_class: 'economy' | 'business' | 'first'
+          points_required: number
+          taxes_aud: number
+          booking_url: string | null
+          valid_from: string | null
+          valid_until: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          program: 'qff' | 'velocity'
+          origin: string
+          destination: string
+          origin_city: string
+          destination_city: string
+          cabin_class: 'economy' | 'business' | 'first'
+          points_required: number
+          taxes_aud?: number
+          booking_url?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          program?: 'qff' | 'velocity'
+          origin?: string
+          destination?: string
+          origin_city?: string
+          destination_city?: string
+          cabin_class?: 'economy' | 'business' | 'first'
+          points_required?: number
+          taxes_aud?: number
+          booking_url?: string | null
+          valid_from?: string | null
+          valid_until?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      bank_rules: {
+        Row: {
+          id: string
+          bank: string
+          rule_months: number
+          rule_type: 'bonus_cooldown' | 'application_cooldown' | null
+          rule_description: string
+          source_url: string | null
+          confidence: 'high' | 'medium' | 'low' | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          bank: string
+          rule_months: number
+          rule_type?: 'bonus_cooldown' | 'application_cooldown' | null
+          rule_description: string
+          source_url?: string | null
+          confidence?: 'high' | 'medium' | 'low' | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          bank?: string
+          rule_months?: number
+          rule_type?: 'bonus_cooldown' | 'application_cooldown' | null
+          rule_description?: string
+          source_url?: string | null
+          confidence?: 'high' | 'medium' | 'low' | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      credit_inquiries: {
+        Row: {
+          id: string
+          user_id: string
+          bank: string
+          card_name: string
+          application_date: string
+          outcome: 'approved' | 'declined' | 'pending' | 'withdrawn' | null
+          notes: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          bank: string
+          card_name: string
+          application_date: string
+          outcome?: 'approved' | 'declined' | 'pending' | 'withdrawn' | null
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          bank?: string
+          card_name?: string
+          application_date?: string
+          outcome?: 'approved' | 'declined' | 'pending' | 'withdrawn' | null
+          notes?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      leaderboard_cache: {
+        Row: {
+          rank: number
+          user_hash: string
+          total_aud_earned: number
+          cards_churned: number
+          updated_at: string | null
+        }
+        Insert: {
+          rank: number
+          user_hash: string
+          total_aud_earned: number
+          cards_churned: number
+          updated_at?: string | null
+        }
+        Update: {
+          rank?: number
+          user_hash?: string
+          total_aud_earned?: number
+          cards_churned?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      user_badges: {
+        Row: {
+          id: string
+          user_id: string
+          badge_type: string
+          earned_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          badge_type: string
+          earned_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          badge_type?: string
+          earned_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_type_fkey"
+            columns: ["badge_type"]
+            isOneToOne: false
+            referencedRelation: "badge_definitions"
+            referencedColumns: ["badge_type"]
+          },
+        ]
+      }
       beta_requests: {
         Row: {
           approved: boolean | null
@@ -346,6 +543,39 @@ export type Database = {
           },
         ]
       }
+      loyalty_balances: {
+        Row: {
+          id: string
+          user_id: string
+          program: 'qff' | 'velocity' | 'amex_mr'
+          balance: number
+          expiry_date: string | null
+          last_updated: string | null
+          notes: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          program: 'qff' | 'velocity' | 'amex_mr'
+          balance?: number
+          expiry_date?: string | null
+          last_updated?: string | null
+          notes?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          program?: 'qff' | 'velocity' | 'amex_mr'
+          balance?: number
+          expiry_date?: string | null
+          last_updated?: string | null
+          notes?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       scrape_logs: {
         Row: {
           cards_updated: number | null
@@ -475,6 +705,7 @@ export type Database = {
           created_at: string | null
           current_spend: number | null
           id: string
+          is_business: boolean
           name: string | null
           next_eligible_date: string | null
           notes: string | null
@@ -497,6 +728,7 @@ export type Database = {
           created_at?: string | null
           current_spend?: number | null
           id?: string
+          is_business?: boolean
           name?: string | null
           next_eligible_date?: string | null
           notes?: string | null
@@ -519,6 +751,7 @@ export type Database = {
           created_at?: string | null
           current_spend?: number | null
           id?: string
+          is_business?: boolean
           name?: string | null
           next_eligible_date?: string | null
           notes?: string | null
@@ -613,6 +846,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_bonus_eligibility: { Args: { p_user_card_id: string }; Returns: boolean }
+      award_badge: { Args: { p_user_id: string; p_badge_type: string }; Returns: undefined }
       update_user_streak: { Args: { p_user_id: string }; Returns: undefined }
     }
     Enums: {

@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase/client"
+import { Switch } from "@/components/ui/switch"
 import type { Database } from "@/types/database.types"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
@@ -46,6 +47,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
   const [cancellationDate, setCancellationDate] = useState("")
   const [annualFee, setAnnualFee] = useState("")
   const [notes, setNotes] = useState("")
+  const [isBusiness, setIsBusiness] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -57,6 +59,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
       setCancellationDate(card.cancellation_date || "")
       setAnnualFee(card.annual_fee ? String(card.annual_fee) : "")
       setNotes(card.notes || "")
+      setIsBusiness(card.is_business || false)
     }
   }, [card])
 
@@ -77,6 +80,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
           cancellation_date: cancellationDate || null,
           annual_fee: annualFee ? Number(annualFee) : null,
           notes: notes || null,
+          is_business: isBusiness,
         })
         .eq("id", card.id)
 
@@ -229,6 +233,17 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add reminder or notes"
               className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white"
+            />
+          </div>
+
+          <div className="flex items-center justify-between rounded-lg border border-[var(--border-default)] p-3">
+            <div>
+              <p className="text-sm font-medium text-[var(--text-primary)]">Business card</p>
+              <p className="text-xs text-[var(--text-secondary)]">Flag for FBT tracking and business P&L</p>
+            </div>
+            <Switch
+              checked={isBusiness}
+              onCheckedChange={setIsBusiness}
             />
           </div>
 
