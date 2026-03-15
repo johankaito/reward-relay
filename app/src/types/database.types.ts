@@ -719,10 +719,14 @@ export type Database = {
           created_at: string | null
           current_streak_days: number | null
           free_days_earned: number | null
+          has_added_card: boolean
+          has_set_spending: boolean
+          has_viewed_gap: boolean
           id: string
           last_active_date: string | null
           longest_streak_days: number | null
           onboarding_completed_at: string | null
+          onboarding_dismissed_at: string | null
           optimization_goal: string | null
           spending_category: string | null
           updated_at: string | null
@@ -733,10 +737,14 @@ export type Database = {
           created_at?: string | null
           current_streak_days?: number | null
           free_days_earned?: number | null
+          has_added_card?: boolean
+          has_set_spending?: boolean
+          has_viewed_gap?: boolean
           id?: string
           last_active_date?: string | null
           longest_streak_days?: number | null
           onboarding_completed_at?: string | null
+          onboarding_dismissed_at?: string | null
           optimization_goal?: string | null
           spending_category?: string | null
           updated_at?: string | null
@@ -747,10 +755,14 @@ export type Database = {
           created_at?: string | null
           current_streak_days?: number | null
           free_days_earned?: number | null
+          has_added_card?: boolean
+          has_set_spending?: boolean
+          has_viewed_gap?: boolean
           id?: string
           last_active_date?: string | null
           longest_streak_days?: number | null
           onboarding_completed_at?: string | null
+          onboarding_dismissed_at?: string | null
           optimization_goal?: string | null
           spending_category?: string | null
           updated_at?: string | null
