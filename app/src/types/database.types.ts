@@ -39,6 +39,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      velocity_award_pricing: {
+        Row: {
+          id: string
+          origin_iata: string
+          destination_iata: string
+          origin_city: string | null
+          destination_city: string | null
+          partner: string | null
+          economy_pts_min: number | null
+          economy_pts_max: number | null
+          business_pts_min: number | null
+          business_pts_max: number | null
+          is_domestic: boolean
+          is_dynamic: boolean
+          notes: string | null
+          data_last_updated: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          origin_iata: string
+          destination_iata: string
+          origin_city?: string | null
+          destination_city?: string | null
+          partner?: string | null
+          economy_pts_min?: number | null
+          economy_pts_max?: number | null
+          business_pts_min?: number | null
+          business_pts_max?: number | null
+          is_domestic?: boolean
+          is_dynamic?: boolean
+          notes?: string | null
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          origin_iata?: string
+          destination_iata?: string
+          origin_city?: string | null
+          destination_city?: string | null
+          partner?: string | null
+          economy_pts_min?: number | null
+          economy_pts_max?: number | null
+          business_pts_min?: number | null
+          business_pts_max?: number | null
+          is_domestic?: boolean
+          is_dynamic?: boolean
+          notes?: string | null
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       qantas_award_zones: {
         Row: {
           id: string
