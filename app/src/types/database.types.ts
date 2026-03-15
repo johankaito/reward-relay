@@ -39,6 +39,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      qantas_award_zones: {
+        Row: {
+          id: string
+          zone: number
+          distance_min_miles: number
+          distance_max_miles: number
+          economy_pts: number
+          premium_economy_pts: number
+          business_pts: number
+          first_pts: number | null
+          applies_to: string
+          effective_date: string
+          data_last_updated: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          zone: number
+          distance_min_miles: number
+          distance_max_miles: number
+          economy_pts: number
+          premium_economy_pts: number
+          business_pts: number
+          first_pts?: number | null
+          applies_to: string
+          effective_date: string
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          zone?: number
+          distance_min_miles?: number
+          distance_max_miles?: number
+          economy_pts?: number
+          premium_economy_pts?: number
+          business_pts?: number
+          first_pts?: number | null
+          applies_to?: string
+          effective_date?: string
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       badge_definitions: {
         Row: {
           id: string
