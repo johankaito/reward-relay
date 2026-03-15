@@ -3,10 +3,13 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase/client"
 import { AppShell } from "@/components/layout/AppShell"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { StatCard } from "@/components/ui/stat-card"
+import { Badge } from "@/components/ui/badge"
+import { AlertCircle, CheckCircle, Clock, TrendingUp, Plus, Pencil } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -15,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { SpendingSliderWizard } from "@/components/forms/SpendingSliderWizard"
 
 interface UserCard {
   id: string
@@ -247,6 +251,9 @@ export default function SpendingTrackerPage() {
     date: new Date().toISOString().split("T")[0],
     category: "general",
   })
+  const [userId, setUserId] = useState<string | null>(null)
+  const [hasSpendingProfile, setHasSpendingProfile] = useState<boolean | null>(null)
+  const [editingProfile, setEditingProfile] = useState(false)
 
   useEffect(() => {
     void loadUserCards()
@@ -258,6 +265,16 @@ export default function SpendingTrackerPage() {
         data: { user },
       } = await supabase.auth.getUser()
       if (!user) return
+
+      setUserId(user.id)
+
+      // Check spending profile existence
+      const { data: profile } = await supabase
+        .from("spending_profiles")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle()
+      setHasSpendingProfile(!!profile)
 
       const { data: cards, error } = await supabase
         .from("user_cards")
@@ -327,6 +344,11 @@ export default function SpendingTrackerPage() {
     }
   }
 
+  const cardsNeedingSpend = userCards.filter(
+    (c) => (c.current_spend || 0) < (c.spend_target || 0)
+  ).length
+  const totalTarget = userCards.reduce((sum, c) => sum + (c.spend_target || 0), 0)
+
   if (loading) {
     return (
       <AppShell>
@@ -358,6 +380,70 @@ export default function SpendingTrackerPage() {
           </h1>
         </div>
 
+        {/* Spending profile wizard — shown when no profile exists or editing */}
+        {userId && (hasSpendingProfile === false || editingProfile) && (
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardContent className="p-5">
+              <SpendingSliderWizard
+                userId={userId}
+                stepLabel="Your Spending Profile"
+                onSaved={() => {
+                  setHasSpendingProfile(true)
+                  setEditingProfile(false)
+                }}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Profile summary row (when profile exists and not editing) */}
+        {userId && hasSpendingProfile && !editingProfile && (
+          <div className="flex items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--surface)] px-4 py-3">
+            <div>
+              <p className="text-xs font-medium text-[var(--text-secondary)]">Spending profile</p>
+              <p className="text-sm font-semibold text-[var(--text-primary)]">Active</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="rounded-full text-[var(--text-secondary)]"
+              onClick={() => setEditingProfile(true)}
+            >
+              <Pencil className="mr-1.5 h-3.5 w-3.5" />
+              Edit
+            </Button>
+          </div>
+        )}
+
+        {/* Summary stats */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardContent className="px-4 py-3">
+              <p className="text-xs text-[var(--text-secondary)]">Active cards</p>
+              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+                {userCards.length}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardContent className="px-4 py-3">
+              <p className="text-xs text-[var(--text-secondary)]">Needs spend</p>
+              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+                {cardsNeedingSpend}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardContent className="px-4 py-3">
+              <p className="text-xs text-[var(--text-secondary)]">Total target</p>
+              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+                {formatCurrency(totalTarget)}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Card spending progress */}
         {userCards.length === 0 ? (
           <div className="glass-panel premium-glow flex flex-col items-center gap-4 rounded-2xl px-8 py-16 text-center">
             <p
