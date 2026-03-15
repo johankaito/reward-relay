@@ -15,10 +15,11 @@ import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
 import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
 import { WelcomeOverlay } from "@/components/onboarding/WelcomeOverlay"
+import { SetupChecklist } from "@/components/onboarding/SetupChecklist"
 import { BadgeGrid } from "@/components/gamification/BadgeGrid"
 import { triggerCelebration } from "@/components/gamification/CelebrationOverlay"
 import { supabase } from "@/lib/supabase/client"
-import { getOnboardingProgress } from "@/lib/onboarding"
+import { getOnboardingProgress, type OnboardingProgress } from "@/lib/onboarding"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
 import { formatPointsWithValue } from "@/lib/points"
@@ -39,6 +40,7 @@ export default function DashboardPage() {
   const [editingCard, setEditingCard] = useState<UserCard | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [showWelcomeOverlay, setShowWelcomeOverlay] = useState(false)
+  const [onboardingProgress, setOnboardingProgress] = useState<OnboardingProgress | null>(null)
 
   const loadCards = async (showWelcome = false) => {
     const {
@@ -95,12 +97,13 @@ export default function DashboardPage() {
       })
     }
 
+    // Load onboarding progress for checklist banner and welcome overlay
+    const progress = await getOnboardingProgress(session.user.id)
+    setOnboardingProgress(progress)
+
     // Show welcome overlay for new users: no cards and onboarding not completed/dismissed
-    if (loadedCards.length === 0) {
-      const progress = await getOnboardingProgress(session.user.id)
-      if (!progress.onboardingCompletedAt && !progress.onboardingDismissedAt) {
-        setShowWelcomeOverlay(true)
-      }
+    if (loadedCards.length === 0 && !progress.onboardingCompletedAt && !progress.onboardingDismissedAt) {
+      setShowWelcomeOverlay(true)
     }
   }
 
@@ -186,6 +189,11 @@ export default function DashboardPage() {
       <div className="space-y-5">
         {/* Bonus confirmation banners */}
         <BonusConfirmationBanner />
+
+        {/* Onboarding setup checklist */}
+        {onboardingProgress && !onboardingProgress.onboardingCompletedAt && (
+          <SetupChecklist progress={onboardingProgress} />
+        )}
 
         {/* Page header */}
         <div className="flex items-center justify-between">
