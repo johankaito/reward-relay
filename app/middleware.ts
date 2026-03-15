@@ -2,7 +2,18 @@ import { type NextRequest, NextResponse } from "next/server"
 import { createServerClient, type CookieOptions } from "@supabase/ssr"
 import type { Database } from "@/types/database.types"
 
-const PROTECTED_PATHS = ["/dashboard", "/cards"]
+const PROTECTED_PATHS = [
+  "/dashboard",
+  "/cards",
+  "/tracker",
+  "/deals",
+  "/insights",
+  "/milestones",
+  "/flights",
+  "/business",
+  "/inquiries",
+  "/profit",
+]
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -78,5 +89,18 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/cards", "/cards/:path*"],
+  matcher: [
+    "/dashboard",
+    "/cards",
+    "/cards/:path*",
+    "/tracker",
+    "/tracker/:path*",
+    "/deals",
+    "/insights",
+    "/milestones",
+    "/flights",
+    "/business",
+    "/inquiries",
+    "/profit",
+  ],
 }

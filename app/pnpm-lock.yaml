@@ -62,9 +62,6 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.89.0
         version: 2.89.0
-      '@types/canvas-confetti':
-        specifier: ^1.9.0
-        version: 1.9.0
       '@types/papaparse':
         specifier: ^5.5.2
         version: 5.5.2
@@ -132,6 +129,9 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.18
+      '@types/canvas-confetti':
+        specifier: ^1.9.0
+        version: 1.9.0
       '@types/node':
         specifier: ^20
         version: 20.19.27

@@ -112,7 +112,7 @@ export function BadgeGrid({ userId }: BadgeGridProps) {
                   return (
                     <div
                       key={badge.badge_type}
-                      title={`${badge.name} — earned ${formatDate(earnedAt)}`}
+                      title={`${badge.name} — earned ${formatDate(earnedAt ?? null)}`}
                       className="group relative flex flex-col items-center gap-1.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] p-3 text-center transition-all hover:border-[var(--accent)]/50 hover:shadow-sm"
                     >
                       <span className="text-2xl">{badge.icon_emoji}</span>
