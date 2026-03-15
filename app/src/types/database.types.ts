@@ -66,6 +66,48 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_exclusion_periods: {
+        Row: {
+          id: string
+          bank_name: string
+          bank_slug: string
+          exclusion_months: number | null
+          exclusion_note: string | null
+          tc_exact_quote: string | null
+          applies_to: string | null
+          confidence_pct: number | null
+          source_url: string | null
+          data_last_updated: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          bank_name: string
+          bank_slug: string
+          exclusion_months?: number | null
+          exclusion_note?: string | null
+          tc_exact_quote?: string | null
+          applies_to?: string | null
+          confidence_pct?: number | null
+          source_url?: string | null
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          bank_name?: string
+          bank_slug?: string
+          exclusion_months?: number | null
+          exclusion_note?: string | null
+          tc_exact_quote?: string | null
+          applies_to?: string | null
+          confidence_pct?: number | null
+          source_url?: string | null
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       award_flight_routes: {
         Row: {
           id: string
