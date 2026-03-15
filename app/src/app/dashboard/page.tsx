@@ -14,9 +14,11 @@ import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
 import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
+import { WelcomeOverlay } from "@/components/onboarding/WelcomeOverlay"
 import { BadgeGrid } from "@/components/gamification/BadgeGrid"
 import { triggerCelebration } from "@/components/gamification/CelebrationOverlay"
 import { supabase } from "@/lib/supabase/client"
+import { getOnboardingProgress } from "@/lib/onboarding"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
 import { formatPointsWithValue } from "@/lib/points"
@@ -36,6 +38,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [editingCard, setEditingCard] = useState<UserCard | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [showWelcomeOverlay, setShowWelcomeOverlay] = useState(false)
 
   const loadCards = async (showWelcome = false) => {
     const {
@@ -66,7 +69,8 @@ export default function DashboardPage() {
       return
     }
 
-    setCards(userCardsResult || [])
+    const loadedCards = userCardsResult || []
+    setCards(loadedCards)
     setLoading(false)
 
     if (showWelcome) {
@@ -89,6 +93,14 @@ export default function DashboardPage() {
           toast.success(`${def.icon_emoji} Badge unlocked: ${def.name}!`)
         }
       })
+    }
+
+    // Show welcome overlay for new users: no cards and onboarding not completed/dismissed
+    if (loadedCards.length === 0) {
+      const progress = await getOnboardingProgress(session.user.id)
+      if (!progress.onboardingCompletedAt && !progress.onboardingDismissedAt) {
+        setShowWelcomeOverlay(true)
+      }
     }
   }
 
@@ -163,6 +175,14 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
+      {showWelcomeOverlay && userId && (
+        <WelcomeOverlay
+          userId={userId}
+          displayName={displayName}
+          onDismiss={() => setShowWelcomeOverlay(false)}
+        />
+      )}
+
       <div className="space-y-5">
         {/* Bonus confirmation banners */}
         <BonusConfirmationBanner />
