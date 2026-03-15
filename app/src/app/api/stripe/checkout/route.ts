@@ -3,9 +3,11 @@ import Stripe from 'stripe'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
 import { PLANS, type PlanKey } from '@/lib/stripe/config'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
-  apiVersion: '2026-02-25.clover',
-})
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY
+  if (!key) throw new Error('STRIPE_SECRET_KEY is not configured')
+  return new Stripe(key, { apiVersion: '2026-02-25.clover' })
+}
 
 export async function POST(request: Request) {
   const supabase = await getSupabaseServerClient()
@@ -22,6 +24,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })
   }
 
+  const stripe = getStripe()
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: 'subscription',
     line_items: [{ price: planConfig.priceId, quantity: 1 }],
