@@ -17,6 +17,7 @@ import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmatio
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
+import { formatPointsWithValue } from "@/lib/points"
 import { useCatalog } from "@/contexts/CatalogContext"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
 import type { Database } from "@/types/database.types"
@@ -335,7 +336,7 @@ export default function DashboardPage() {
                     </span>
                   </p>
                   <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)]">
-                    <span>{projection.path.totalPoints.toLocaleString()} pts</span>
+                    <span>{formatPointsWithValue(projection.path.totalPoints, "qantas", "flights_business")}</span>
                     <span>·</span>
                     <span>${projection.path.totalCost} fees</span>
                     <span>·</span>
