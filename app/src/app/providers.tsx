@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes"
 import type { ReactNode } from "react"
 import { Toaster } from "@/components/ui/sonner"
 import { CatalogProvider } from "@/contexts/CatalogContext"
+import { OnboardingProvider } from "@/contexts/OnboardingContext"
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider"
 
 type Props = {
@@ -15,8 +16,10 @@ export function Providers({ children }: Props) {
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <AnalyticsProvider>
         <CatalogProvider>
-          {children}
-          <Toaster richColors position="top-right" />
+          <OnboardingProvider>
+            {children}
+            <Toaster richColors position="top-right" />
+          </OnboardingProvider>
         </CatalogProvider>
       </AnalyticsProvider>
     </ThemeProvider>
