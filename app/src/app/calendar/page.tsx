@@ -5,7 +5,12 @@ import { supabase } from "@/lib/supabase/client"
 import { AppShell } from "@/components/layout/AppShell"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CalendarDays, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react"
+import { CalendarDays, Clock, CheckCircle, XCircle, AlertCircle, Info } from "lucide-react"
+import {
+  computeEligibility,
+  formatEligibilityLabel,
+  type BankExclusionPeriod,
+} from "@/lib/eligibility"
 
 interface UserCard {
   id: string
@@ -27,9 +32,13 @@ interface UserCard {
 
 interface BankTimeline {
   bank: string
+  bankSlug: string
   cards: CardTimeline[]
   eligibilityDate: Date | null
   daysUntilEligible: number | null
+  hasUnknownWindow: boolean
+  exclusionMonths: number | null
+  exclusionNote: string | null
 }
 
 interface CardTimeline {
@@ -43,12 +52,33 @@ interface CardTimeline {
   }
 }
 
+/**
+ * Normalize a bank display name to a slug for matching against bank_exclusion_periods.
+ * Maps common bank name variants to the slugs used in the DB.
+ */
+function bankNameToSlug(bank: string): string {
+  const lower = bank.toLowerCase()
+  if (lower.includes('anz')) return 'anz'
+  if (lower.includes('westpac')) return 'westpac'
+  if (lower.includes('st.george') || lower.includes('stgeorge') || lower.includes('bank of melbourne') || lower.includes('banksa')) return 'stgeorge-bom-banksa'
+  if (lower.includes('bankwest')) return 'bankwest'
+  if (lower.includes('commbank') || lower.includes('commonwealth')) return 'commbank'
+  if (lower.includes('nab')) return 'nab'
+  if (lower.includes('amex') || lower.includes('american express')) return 'amex-au'
+  if (lower.includes('hsbc') && lower.includes('qantas')) return 'hsbc-au-qantas'
+  if (lower.includes('hsbc') && lower.includes('star')) return 'hsbc-au-star-alliance'
+  if (lower.includes('hsbc')) return 'hsbc-au-qantas'
+  if (lower.includes('virgin money')) return 'virgin-money-au'
+  if (lower.includes('macquarie')) return 'macquarie'
+  return lower.replace(/\s+/g, '-')
+}
+
 export default function CalendarPage() {
   const [bankTimelines, setBankTimelines] = useState<BankTimeline[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadTimelines()
+    void loadTimelines()
   }, [])
 
   const loadTimelines = async () => {
@@ -58,13 +88,23 @@ export default function CalendarPage() {
       } = await supabase.auth.getUser()
       if (!user) return
 
-      const { data: cards, error } = await supabase
-        .from("user_cards")
-        .select(`*, card:cards(*)`)
-        .eq("user_id", user.id)
-        .order("application_date", { ascending: false })
+      const [{ data: cards, error: cardsError }, { data: exclusionData }] = await Promise.all([
+        supabase
+          .from("user_cards")
+          .select(`*, card:cards(*)`)
+          .eq("user_id", user.id)
+          .order("application_date", { ascending: false }),
+        supabase
+          .from("bank_exclusion_periods" as never)
+          .select("bank_slug, bank_name, exclusion_months, exclusion_note, applies_to"),
+      ])
 
-      if (error) throw error
+      if (cardsError) throw cardsError
+
+      const exclusionMap = new Map<string, BankExclusionPeriod>()
+      ;((exclusionData as BankExclusionPeriod[] | null) ?? []).forEach((ep) => {
+        exclusionMap.set(ep.bank_slug, ep)
+      })
 
       const bankMap = new Map<string, UserCard[]>()
 
@@ -77,68 +117,95 @@ export default function CalendarPage() {
       const timelines: BankTimeline[] = []
 
       bankMap.forEach((bankCards, bank) => {
-        const cardTimelines = bankCards.map((card) => ({
-          card,
-          stages: {
-            applied: {
-              date: card.application_date ? new Date(card.application_date) : null,
-              complete: !!card.application_date,
-            },
-            approved: {
-              date: card.approval_date ? new Date(card.approval_date) : null,
-              complete: !!card.approval_date,
-            },
-            active: {
-              date: null,
-              complete: card.status === "active",
-            },
-            cancelled: {
-              date: card.cancellation_date ? new Date(card.cancellation_date) : null,
-              complete: !!card.cancellation_date && card.status === "cancelled",
-            },
-            eligible: {
-              date: card.cancellation_date
-                ? new Date(
-                    new Date(card.cancellation_date).setMonth(
-                      new Date(card.cancellation_date).getMonth() + 12,
-                    ),
-                  )
-                : null,
-              complete: false,
-            },
-          },
-        }))
+        const bankSlug = bankNameToSlug(bank)
+        const exclusionPeriod = exclusionMap.get(bankSlug) ?? null
+        const exclusionMonths = exclusionPeriod?.exclusion_months ?? null
 
         const cancelledCards = bankCards.filter((c) => c.cancellation_date)
+        const mostRecentApplicationDate =
+          bankCards.length > 0
+            ? bankCards.reduce((latest, card) => {
+                if (!card.application_date) return latest
+                if (!latest) return card.application_date
+                return card.application_date > latest ? card.application_date : latest
+              }, null as string | null)
+            : null
+
+        const eligibilityResult = computeEligibility(
+          bankSlug,
+          bank,
+          mostRecentApplicationDate,
+          exclusionPeriod,
+        )
+
+        const cardTimelines = bankCards.map((card) => {
+          const eligibleDate =
+            exclusionMonths !== null && card.cancellation_date
+              ? (() => {
+                  const d = new Date(card.cancellation_date)
+                  d.setMonth(d.getMonth() + exclusionMonths)
+                  return d
+                })()
+              : null
+
+          const today = new Date()
+
+          return {
+            card,
+            stages: {
+              applied: {
+                date: card.application_date ? new Date(card.application_date) : null,
+                complete: !!card.application_date,
+              },
+              approved: {
+                date: card.approval_date ? new Date(card.approval_date) : null,
+                complete: !!card.approval_date,
+              },
+              active: {
+                date: null,
+                complete: card.status === "active",
+              },
+              cancelled: {
+                date: card.cancellation_date ? new Date(card.cancellation_date) : null,
+                complete: !!card.cancellation_date && card.status === "cancelled",
+              },
+              eligible: {
+                date: eligibleDate,
+                complete: eligibleDate !== null && eligibleDate <= today,
+              },
+            },
+          }
+        })
+
         let eligibilityDate: Date | null = null
         let daysUntilEligible: number | null = null
 
-        if (cancelledCards.length > 0) {
+        if (cancelledCards.length > 0 && exclusionMonths !== null) {
           const mostRecentCancellation = cancelledCards.reduce((latest, card) => {
             const cardDate = new Date(card.cancellation_date!)
             return !latest || cardDate > new Date(latest.cancellation_date!) ? card : latest
           })
 
-          eligibilityDate = new Date(
-            new Date(mostRecentCancellation.cancellation_date!).setMonth(
-              new Date(mostRecentCancellation.cancellation_date!).getMonth() + 12,
-            ),
-          )
+          eligibilityDate = new Date(mostRecentCancellation.cancellation_date!)
+          eligibilityDate.setMonth(eligibilityDate.getMonth() + exclusionMonths)
 
           const today = new Date()
           const daysRemaining = Math.ceil(
             (eligibilityDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
           )
           daysUntilEligible = daysRemaining > 0 ? daysRemaining : 0
-
-          cardTimelines.forEach((ct) => {
-            if (ct.stages.eligible.date && ct.stages.eligible.date <= today) {
-              ct.stages.eligible.complete = true
-            }
-          })
         }
 
-        timelines.push({ bank, cards: cardTimelines, eligibilityDate, daysUntilEligible })
+        timelines.push({
+          bank,
+          bankSlug,
+          cards: cardTimelines,
+          eligibilityDate,
+          daysUntilEligible,
+          hasUnknownWindow: eligibilityResult.hasUnknownWindow && cancelledCards.length > 0,
+          exclusionMonths,
+          exclusionNote: exclusionPeriod?.exclusion_note ?? null,
+        })
       })
 
       timelines.sort((a, b) => {
@@ -161,7 +228,15 @@ export default function CalendarPage() {
     return date.toLocaleDateString("en-AU", { day: "2-digit", month: "short", year: "numeric" })
   }
 
-  const getEligibilityStatus = (daysUntilEligible: number | null) => {
+  const getEligibilityStatus = (timeline: BankTimeline) => {
+    if (timeline.hasUnknownWindow) {
+      return {
+        text: "Check bank website",
+        style: { backgroundColor: "var(--surface-strong)", color: "var(--text-secondary)" },
+        icon: Info,
+      }
+    }
+    const { daysUntilEligible } = timeline
     if (daysUntilEligible === null) return null
     if (daysUntilEligible === 0) {
       return { text: "Eligible now", style: { backgroundColor: "var(--success-bg)", color: "var(--success-fg)" }, icon: CheckCircle }
@@ -219,7 +294,7 @@ export default function CalendarPage() {
         ) : (
           <div className="space-y-3">
             {bankTimelines.map((timeline) => {
-              const eligibilityStatus = getEligibilityStatus(timeline.daysUntilEligible)
+              const eligibilityStatus = getEligibilityStatus(timeline)
               const StatusIcon = eligibilityStatus?.icon
 
               return (
@@ -238,9 +313,14 @@ export default function CalendarPage() {
                         <span className="text-xs text-[var(--text-secondary)]">
                           {timeline.cards.length} card{timeline.cards.length > 1 ? "s" : ""}
                         </span>
+                        {timeline.exclusionMonths !== null && (
+                          <span className="text-xs text-[var(--text-secondary)]/60">
+                            · {timeline.exclusionMonths}mo window
+                          </span>
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
-                        {timeline.eligibilityDate && (
+                        {timeline.eligibilityDate && !timeline.hasUnknownWindow && (
                           <span className="flex items-center gap-1 text-xs text-[var(--text-secondary)]">
                             <Clock className="h-3 w-3 text-[var(--accent)]" />
                             {timeline.daysUntilEligible === 0
@@ -256,6 +336,13 @@ export default function CalendarPage() {
                         )}
                       </div>
                     </div>
+
+                    {/* Unknown window notice */}
+                    {timeline.hasUnknownWindow && timeline.exclusionNote && (
+                      <p className="mb-2 text-xs text-[var(--text-secondary)] italic">
+                        {timeline.exclusionNote}
+                      </p>
+                    )}
 
                     {/* Card timelines — compact inline rows */}
                     <div className="space-y-2">
@@ -345,6 +432,19 @@ export default function CalendarPage() {
                                 </div>
                               </>
                             )}
+
+                            {/* Unknown window indicator */}
+                            {timeline.hasUnknownWindow && stages.cancelled.complete && (
+                              <>
+                                <span className="text-xs text-[var(--border-default)]">›</span>
+                                <div className="flex items-center gap-1">
+                                  <Info className="h-3 w-3 text-[var(--text-secondary)]/60" />
+                                  <span className="text-xs text-[var(--text-secondary)]/60">
+                                    Check bank website
+                                  </span>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       ))}
@@ -369,6 +469,9 @@ export default function CalendarPage() {
           </div>
           <div className="flex items-center gap-1.5">
             <CheckCircle className="h-3 w-3 text-[var(--accent)]" /> Eligible
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Info className="h-3 w-3 text-[var(--text-secondary)]/60" /> Unknown window
           </div>
         </div>
       </div>
