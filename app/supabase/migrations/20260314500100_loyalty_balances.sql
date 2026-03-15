@@ -14,6 +14,11 @@ CREATE INDEX IF NOT EXISTS idx_loyalty_balances_user ON public.loyalty_balances(
 
 ALTER TABLE public.loyalty_balances ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users view own balances" ON public.loyalty_balances;
+DROP POLICY IF EXISTS "Users insert own balances" ON public.loyalty_balances;
+DROP POLICY IF EXISTS "Users update own balances" ON public.loyalty_balances;
+DROP POLICY IF EXISTS "Users delete own balances" ON public.loyalty_balances;
+
 CREATE POLICY "Users view own balances" ON public.loyalty_balances FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users insert own balances" ON public.loyalty_balances FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users update own balances" ON public.loyalty_balances FOR UPDATE USING (auth.uid() = user_id);
