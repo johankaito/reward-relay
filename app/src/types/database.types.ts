@@ -39,6 +39,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      qantas_award_zones: {
+        Row: {
+          id: string
+          zone: number
+          distance_min_miles: number
+          distance_max_miles: number
+          economy_pts: number
+          premium_economy_pts: number
+          business_pts: number
+          first_pts: number | null
+          applies_to: string
+          effective_date: string
+          data_last_updated: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          zone: number
+          distance_min_miles: number
+          distance_max_miles: number
+          economy_pts: number
+          premium_economy_pts: number
+          business_pts: number
+          first_pts?: number | null
+          applies_to: string
+          effective_date: string
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          zone?: number
+          distance_min_miles?: number
+          distance_max_miles?: number
+          economy_pts?: number
+          premium_economy_pts?: number
+          business_pts?: number
+          first_pts?: number | null
+          applies_to?: string
+          effective_date?: string
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       badge_definitions: {
         Row: {
           id: string
@@ -63,6 +108,48 @@ export type Database = {
           description?: string
           icon_emoji?: string
           tier?: 'free' | 'pro' | null
+        }
+        Relationships: []
+      }
+      bank_exclusion_periods: {
+        Row: {
+          id: string
+          bank_name: string
+          bank_slug: string
+          exclusion_months: number | null
+          exclusion_note: string | null
+          tc_exact_quote: string | null
+          applies_to: string | null
+          confidence_pct: number | null
+          source_url: string | null
+          data_last_updated: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          bank_name: string
+          bank_slug: string
+          exclusion_months?: number | null
+          exclusion_note?: string | null
+          tc_exact_quote?: string | null
+          applies_to?: string | null
+          confidence_pct?: number | null
+          source_url?: string | null
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          bank_name?: string
+          bank_slug?: string
+          exclusion_months?: number | null
+          exclusion_note?: string | null
+          tc_exact_quote?: string | null
+          applies_to?: string | null
+          confidence_pct?: number | null
+          source_url?: string | null
+          data_last_updated?: string
+          created_at?: string | null
         }
         Relationships: []
       }
@@ -802,10 +889,14 @@ export type Database = {
           created_at: string | null
           current_streak_days: number | null
           free_days_earned: number | null
+          has_added_card: boolean
+          has_set_spending: boolean
+          has_viewed_gap: boolean
           id: string
           last_active_date: string | null
           longest_streak_days: number | null
           onboarding_completed_at: string | null
+          onboarding_dismissed_at: string | null
           optimization_goal: string | null
           spending_category: string | null
           updated_at: string | null
@@ -816,10 +907,14 @@ export type Database = {
           created_at?: string | null
           current_streak_days?: number | null
           free_days_earned?: number | null
+          has_added_card?: boolean
+          has_set_spending?: boolean
+          has_viewed_gap?: boolean
           id?: string
           last_active_date?: string | null
           longest_streak_days?: number | null
           onboarding_completed_at?: string | null
+          onboarding_dismissed_at?: string | null
           optimization_goal?: string | null
           spending_category?: string | null
           updated_at?: string | null
@@ -830,10 +925,14 @@ export type Database = {
           created_at?: string | null
           current_streak_days?: number | null
           free_days_earned?: number | null
+          has_added_card?: boolean
+          has_set_spending?: boolean
+          has_viewed_gap?: boolean
           id?: string
           last_active_date?: string | null
           longest_streak_days?: number | null
           onboarding_completed_at?: string | null
+          onboarding_dismissed_at?: string | null
           optimization_goal?: string | null
           spending_category?: string | null
           updated_at?: string | null

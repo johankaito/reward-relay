@@ -5,6 +5,7 @@ import { ExternalLink, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import type { Recommendation } from "@/lib/recommendations"
+import { formatPointsAsDollars, formatPointsWithValue } from "@/lib/points"
 
 interface RecommendationCardProps {
   recommendation: Recommendation
@@ -42,10 +43,12 @@ export function RecommendationCard({
         <div className="flex items-baseline gap-4 text-sm">
           {card.welcome_bonus_points && (
             <div>
-              <span className="text-xl font-bold text-[var(--text-primary)]">
-                {card.welcome_bonus_points.toLocaleString()}
+              <span className="text-xl font-bold text-[var(--accent)]">
+                {formatPointsAsDollars(card.welcome_bonus_points, card.points_currency ?? "default")}
               </span>
-              <span className="ml-1 text-[var(--text-secondary)]">pts</span>
+              <span className="ml-1 text-xs text-[var(--text-secondary)]">
+                ({card.welcome_bonus_points.toLocaleString()} pts)
+              </span>
             </div>
           )}
           {card.annual_fee !== null && (
@@ -97,12 +100,15 @@ export function RecommendationCard({
           <div className="flex flex-wrap items-baseline gap-6">
             {card.welcome_bonus_points && (
               <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-[var(--text-primary)]">
-                    {card.welcome_bonus_points.toLocaleString()}
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-4xl font-bold text-[var(--accent)]">
+                    {formatPointsAsDollars(card.welcome_bonus_points, card.points_currency ?? "default")}
                   </span>
-                  <span className="text-base text-[var(--text-secondary)]">bonus points</span>
+                  <span className="text-sm text-[var(--text-secondary)]">bonus value</span>
                 </div>
+                <p className="mt-0.5 text-xs text-[var(--text-secondary)]">
+                  {formatPointsWithValue(card.welcome_bonus_points, card.points_currency ?? "default")}
+                </p>
                 {card.bonus_spend_requirement && (
                   <p className="mt-1 text-sm text-[var(--text-secondary)]">
                     Spend ${card.bonus_spend_requirement.toLocaleString()} in{" "}
