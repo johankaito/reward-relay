@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { AlertCircle, CheckCircle, Clock, TrendingUp, Plus } from "lucide-react"
+import { AlertCircle, CheckCircle, Clock, TrendingUp, Plus, Pencil } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { SpendingSliderWizard } from "@/components/forms/SpendingSliderWizard"
 
 interface UserCard {
   id: string
@@ -63,6 +64,9 @@ export default function SpendingTrackerPage() {
     date: new Date().toISOString().split("T")[0],
     category: "general",
   })
+  const [userId, setUserId] = useState<string | null>(null)
+  const [hasSpendingProfile, setHasSpendingProfile] = useState<boolean | null>(null)
+  const [editingProfile, setEditingProfile] = useState(false)
 
   useEffect(() => {
     loadUserCards()
@@ -74,6 +78,16 @@ export default function SpendingTrackerPage() {
         data: { user },
       } = await supabase.auth.getUser()
       if (!user) return
+
+      setUserId(user.id)
+
+      // Check spending profile existence
+      const { data: profile } = await supabase
+        .from("spending_profiles")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle()
+      setHasSpendingProfile(!!profile)
 
       const { data: cards, error } = await supabase
         .from("user_cards")
@@ -218,6 +232,41 @@ export default function SpendingTrackerPage() {
             Track progress toward minimum spend requirements
           </p>
         </div>
+
+        {/* Spending profile wizard — shown when no profile exists or editing */}
+        {userId && (hasSpendingProfile === false || editingProfile) && (
+          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+            <CardContent className="p-5">
+              <SpendingSliderWizard
+                userId={userId}
+                stepLabel="Your Spending Profile"
+                onSaved={() => {
+                  setHasSpendingProfile(true)
+                  setEditingProfile(false)
+                }}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Profile summary row (when profile exists and not editing) */}
+        {userId && hasSpendingProfile && !editingProfile && (
+          <div className="flex items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--surface)] px-4 py-3">
+            <div>
+              <p className="text-xs font-medium text-[var(--text-secondary)]">Spending profile</p>
+              <p className="text-sm font-semibold text-[var(--text-primary)]">Active</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="rounded-full text-[var(--text-secondary)]"
+              onClick={() => setEditingProfile(true)}
+            >
+              <Pencil className="mr-1.5 h-3.5 w-3.5" />
+              Edit
+            </Button>
+          </div>
+        )}
 
         {/* Summary stats */}
         <div className="grid grid-cols-3 gap-3">
