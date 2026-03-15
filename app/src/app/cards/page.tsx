@@ -6,6 +6,7 @@ import { toast } from "sonner"
 import { AddCardForm } from "@/components/cards/AddCardForm"
 import { CardFilters } from "@/components/cards/CardFilters"
 import { CardGrid, type CardRecord } from "@/components/cards/CardGrid"
+import { CardsEmptyState } from "@/components/cards/CardsEmptyState"
 import { AppShell } from "@/components/layout/AppShell"
 import { useCatalog } from "@/contexts/CatalogContext"
 import { supabase } from "@/lib/supabase/client"
@@ -16,6 +17,7 @@ export default function CardsPage() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState("")
   const [bank, setBank] = useState<string | null>(null)
+  const [userCardCount, setUserCardCount] = useState<number | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -26,6 +28,13 @@ export default function CardsPage() {
         window.location.href = `/login?redirect=${encodeURIComponent("/cards")}`
         return
       }
+
+      // Check if user has any tracked cards for empty state
+      const { count } = await supabase
+        .from("user_cards")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", session.user.id)
+      setUserCardCount(count ?? 0)
       setLoading(false)
     }
     checkAuth()
@@ -74,8 +83,11 @@ export default function CardsPage() {
           </p>
         </div>
 
+        {/* Value-driven empty state when no cards tracked yet */}
+        {userCardCount === 0 && <CardsEmptyState />}
+
         <AddCardForm cards={cards} onCreated={() => {
-          // Redirect to dashboard to see the newly added card
+          setUserCardCount((c) => (c ?? 0) + 1)
           window.location.href = '/dashboard';
         }} />
 

@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { SpendingEmptyState } from "@/components/forms/SpendingEmptyState"
 
 interface UserCard {
   id: string
@@ -249,22 +250,7 @@ export default function SpendingTrackerPage() {
 
         {/* Card spending progress */}
         {userCards.length === 0 ? (
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
-              <p className="font-medium text-[var(--text-primary)]">No active cards</p>
-              <p className="text-sm text-[var(--text-secondary)]">
-                Add cards with spending requirements to track your progress.
-              </p>
-              <Button
-                size="sm"
-                className="rounded-full"
-                style={{ background: "var(--gradient-cta)" }}
-                onClick={() => (window.location.href = "/cards")}
-              >
-                Add cards
-              </Button>
-            </CardContent>
-          </Card>
+          <SpendingEmptyState />
         ) : (
           <div className="space-y-4">
             {userCards.map((card) => {
