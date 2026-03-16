@@ -59,3 +59,15 @@ export function ProGate({ feature, children, isPro = false, previewRows, require
     </div>
   )
 }
+
+/**
+ * ProBadge — small badge to indicate a Pro feature label
+ */
+export function ProBadge({ label = "Pro" }: { label?: string }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--accent)]/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--accent)]">
+      <Lock className="h-2.5 w-2.5" />
+      {label}
+    </span>
+  )
+}
