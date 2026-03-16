@@ -79,7 +79,7 @@ export function LoyaltyBalanceWidget({ userId }: Props) {
     const { error } = await supabase.from("loyalty_balances").upsert(
       {
         user_id: userId,
-        program,
+        program: program as 'qff' | 'velocity' | 'amex_mr',
         balance: balanceVal,
         expiry_date: editState.expiry || null,
         notes: editState.notes || null,
