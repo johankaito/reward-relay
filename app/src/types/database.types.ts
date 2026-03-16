@@ -39,6 +39,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      award_routes: {
+        Row: {
+          id: string
+          origin_iata: string
+          destination_iata: string
+          origin_city: string | null
+          destination_city: string | null
+          distance_miles: number
+          program: string
+          zone: number | null
+          economy_pts: number | null
+          premium_economy_pts: number | null
+          business_pts: number | null
+          first_pts: number | null
+          is_domestic: boolean
+          is_dynamic: boolean
+          notes: string | null
+          data_last_updated: string
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          origin_iata: string
+          destination_iata: string
+          origin_city?: string | null
+          destination_city?: string | null
+          distance_miles: number
+          program: string
+          zone?: number | null
+          economy_pts?: number | null
+          premium_economy_pts?: number | null
+          business_pts?: number | null
+          first_pts?: number | null
+          is_domestic?: boolean
+          is_dynamic?: boolean
+          notes?: string | null
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          origin_iata?: string
+          destination_iata?: string
+          origin_city?: string | null
+          destination_city?: string | null
+          distance_miles?: number
+          program?: string
+          zone?: number | null
+          economy_pts?: number | null
+          premium_economy_pts?: number | null
+          business_pts?: number | null
+          first_pts?: number | null
+          is_domestic?: boolean
+          is_dynamic?: boolean
+          notes?: string | null
+          data_last_updated?: string
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       qantas_award_zones: {
         Row: {
           id: string
