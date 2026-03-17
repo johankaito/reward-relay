@@ -6,6 +6,11 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.log('ANTHROPIC_API_KEY not set — skipping extraction regression tests')
+  process.exit(0)
+}
+
 interface TestFixture {
   slug: string
   file: string
