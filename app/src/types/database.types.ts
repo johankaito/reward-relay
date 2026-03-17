@@ -515,13 +515,16 @@ export type Database = {
           bonus_spend_window_months: number | null
           bonus_structure: Json | null
           change_detected_at: string | null
+          change_hash: string | null
           created_at: string | null
           earn_rate_primary: number | null
           earn_rate_secondary: number | null
           eligibility_restriction_months: number | null
+          extraction_confidence: number | null
           first_card_only: boolean | null
           id: string
           is_active: boolean | null
+          last_extracted_at: string | null
           last_scraped_at: string | null
           last_verified_at: string | null
           min_income: number | null
@@ -547,13 +550,16 @@ export type Database = {
           bonus_spend_window_months?: number | null
           bonus_structure?: Json | null
           change_detected_at?: string | null
+          change_hash?: string | null
           created_at?: string | null
           earn_rate_primary?: number | null
           earn_rate_secondary?: number | null
           eligibility_restriction_months?: number | null
+          extraction_confidence?: number | null
           first_card_only?: boolean | null
           id?: string
           is_active?: boolean | null
+          last_extracted_at?: string | null
           last_scraped_at?: string | null
           last_verified_at?: string | null
           min_income?: number | null
@@ -579,13 +585,16 @@ export type Database = {
           bonus_spend_window_months?: number | null
           bonus_structure?: Json | null
           change_detected_at?: string | null
+          change_hash?: string | null
           created_at?: string | null
           earn_rate_primary?: number | null
           earn_rate_secondary?: number | null
           eligibility_restriction_months?: number | null
+          extraction_confidence?: number | null
           first_card_only?: boolean | null
           id?: string
           is_active?: boolean | null
+          last_extracted_at?: string | null
           last_scraped_at?: string | null
           last_verified_at?: string | null
           min_income?: number | null
@@ -603,6 +612,53 @@ export type Database = {
           welcome_bonus_points?: number | null
         }
         Relationships: []
+      }
+      extraction_log: {
+        Row: {
+          id: string
+          card_id: string | null
+          run_at: string | null
+          model_used: string | null
+          confidence_score: number | null
+          change_hash: string | null
+          hash_changed: boolean | null
+          conflicts_detected: Json | null
+          raw_output: Json | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          card_id?: string | null
+          run_at?: string | null
+          model_used?: string | null
+          confidence_score?: number | null
+          change_hash?: string | null
+          hash_changed?: boolean | null
+          conflicts_detected?: Json | null
+          raw_output?: Json | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          card_id?: string | null
+          run_at?: string | null
+          model_used?: string | null
+          confidence_score?: number | null
+          change_hash?: string | null
+          hash_changed?: boolean | null
+          conflicts_detected?: Json | null
+          raw_output?: Json | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extraction_log_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       daily_insights: {
         Row: {
@@ -1062,6 +1118,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      card_corrections: {
+        Row: {
+          id: string
+          card_id: string | null
+          field: string
+          reported_value: string
+          reported_by: string | null
+          status: 'pending' | 'verified' | 'dismissed' | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          card_id?: string | null
+          field: string
+          reported_value: string
+          reported_by?: string | null
+          status?: 'pending' | 'verified' | 'dismissed' | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          card_id?: string | null
+          field?: string
+          reported_value?: string
+          reported_by?: string | null
+          status?: 'pending' | 'verified' | 'dismissed' | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_corrections_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "cards"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       cdr_products: {
         Row: {
