@@ -19,6 +19,7 @@
     "test:smoke": "tsx tests/testing-agent.ts smoke",
     "test:regression": "tsx tests/testing-agent.ts regression",
     "test:watch": "tsx tests/testing-agent.ts watch",
+    "test:extraction": "tsx tests/card-extraction.test.ts",
     "precommit": "pnpm test:smoke"
   },
   "dependencies": {
