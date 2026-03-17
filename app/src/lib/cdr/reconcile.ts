@@ -1,6 +1,5 @@
 import type { ExtractedCard } from '@/types/extraction'
 
-// Placeholder — full implementation in CA-7
 export interface CdrProduct {
   id: string
   product_id: string
@@ -26,16 +25,72 @@ export interface ReconciliationResult {
   isDiscontinued: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function reconcileCardData(
-  _cdrProduct: CdrProduct,
-  _extractedCard: ExtractedCard
+  cdrProduct: CdrProduct,
+  extractedCard: ExtractedCard
 ): ReconciliationResult {
-  // Placeholder implementation — CA-7 will complete this
+  const conflicts: Conflict[] = []
+  let resolvedAnnualFee: number | null = null
+  let requiresReview = false
+
+  // Check if product is discontinued in CDR
+  const isDiscontinued = cdrProduct.is_active === false
+
+  // Annual fee reconciliation
+  if (cdrProduct.annual_fee_amount !== null && extractedCard.annualFee?.amount !== undefined) {
+    const cdrFee = cdrProduct.annual_fee_amount
+    const extractedFee = extractedCard.annualFee.amount
+    const difference = Math.abs(cdrFee - extractedFee)
+
+    if (difference > 10) {
+      // Significant discrepancy — flag as conflict
+      conflicts.push({
+        field: 'annualFee',
+        cdrValue: cdrFee,
+        extractedValue: extractedFee,
+        difference,
+      })
+      requiresReview = true
+      console.warn(
+        `Annual fee conflict for ${cdrProduct.product_name}: CDR=$${cdrFee}, LLM=$${extractedFee} (diff=$${difference})`
+      )
+    } else {
+      // Within tolerance — use CDR value as authoritative
+      resolvedAnnualFee = cdrFee
+    }
+  } else if (cdrProduct.annual_fee_amount !== null) {
+    // CDR has fee but LLM didn't extract it — use CDR
+    resolvedAnnualFee = cdrProduct.annual_fee_amount
+  } else if (extractedCard.annualFee?.amount !== undefined) {
+    // No CDR data — use LLM extracted value
+    resolvedAnnualFee = extractedCard.annualFee.amount
+  }
+
+  // Loyalty program name check (informational only, no conflict flagging)
+  if (
+    cdrProduct.loyalty_program_name &&
+    extractedCard.earnRates?.length > 0
+  ) {
+    const extractedPrograms = extractedCard.earnRates.map((r) =>
+      r.programName.toLowerCase()
+    )
+    const cdrProgram = cdrProduct.loyalty_program_name.toLowerCase()
+    const programMatches = extractedPrograms.some(
+      (p) => p.includes(cdrProgram) || cdrProgram.includes(p)
+    )
+    if (!programMatches) {
+      conflicts.push({
+        field: 'loyaltyProgram',
+        cdrValue: cdrProduct.loyalty_program_name,
+        extractedValue: extractedCard.earnRates[0]?.programName ?? null,
+      })
+    }
+  }
+
   return {
-    conflicts: [],
-    resolvedAnnualFee: null,
-    requiresReview: false,
-    isDiscontinued: false,
+    conflicts,
+    resolvedAnnualFee,
+    requiresReview: requiresReview || isDiscontinued,
+    isDiscontinued,
   }
 }
