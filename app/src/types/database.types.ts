@@ -514,6 +514,7 @@ export type Database = {
           bonus_spend_requirement: number | null
           bonus_spend_window_months: number | null
           bonus_structure: Json | null
+          change_detected_at: string | null
           created_at: string | null
           earn_rate_primary: number | null
           earn_rate_secondary: number | null
@@ -525,6 +526,7 @@ export type Database = {
           last_verified_at: string | null
           min_income: number | null
           name: string
+          needs_verification: boolean | null
           network: string | null
           notes: string | null
           offer_expiry_date: string | null
@@ -533,6 +535,7 @@ export type Database = {
           scrape_source: string | null
           scrape_url: string | null
           total_annual_fee: number | null
+          verification_priority: string | null
           welcome_bonus_points: number | null
         }
         Insert: {
@@ -543,6 +546,7 @@ export type Database = {
           bonus_spend_requirement?: number | null
           bonus_spend_window_months?: number | null
           bonus_structure?: Json | null
+          change_detected_at?: string | null
           created_at?: string | null
           earn_rate_primary?: number | null
           earn_rate_secondary?: number | null
@@ -554,6 +558,7 @@ export type Database = {
           last_verified_at?: string | null
           min_income?: number | null
           name: string
+          needs_verification?: boolean | null
           network?: string | null
           notes?: string | null
           offer_expiry_date?: string | null
@@ -562,6 +567,7 @@ export type Database = {
           scrape_source?: string | null
           scrape_url?: string | null
           total_annual_fee?: number | null
+          verification_priority?: string | null
           welcome_bonus_points?: number | null
         }
         Update: {
@@ -572,6 +578,7 @@ export type Database = {
           bonus_spend_requirement?: number | null
           bonus_spend_window_months?: number | null
           bonus_structure?: Json | null
+          change_detected_at?: string | null
           created_at?: string | null
           earn_rate_primary?: number | null
           earn_rate_secondary?: number | null
@@ -583,6 +590,7 @@ export type Database = {
           last_verified_at?: string | null
           min_income?: number | null
           name?: string
+          needs_verification?: boolean | null
           network?: string | null
           notes?: string | null
           offer_expiry_date?: string | null
@@ -591,6 +599,7 @@ export type Database = {
           scrape_source?: string | null
           scrape_url?: string | null
           total_annual_fee?: number | null
+          verification_priority?: string | null
           welcome_bonus_points?: number | null
         }
         Relationships: []
@@ -1054,6 +1063,66 @@ export type Database = {
         }
         Relationships: []
       }
+      cdr_products: {
+        Row: {
+          id: string
+          product_id: string
+          bank_slug: string
+          bank_name: string
+          product_name: string
+          product_category: string | null
+          annual_fee_amount: number | null
+          annual_fee_waiver_condition: string | null
+          loyalty_program_name: string | null
+          purchase_rate: number | null
+          min_credit_limit: number | null
+          raw_json: Json
+          cdr_effective_from: string | null
+          last_fetched_at: string | null
+          is_active: boolean | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          bank_slug: string
+          bank_name: string
+          product_name: string
+          product_category?: string | null
+          annual_fee_amount?: number | null
+          annual_fee_waiver_condition?: string | null
+          loyalty_program_name?: string | null
+          purchase_rate?: number | null
+          min_credit_limit?: number | null
+          raw_json: Json
+          cdr_effective_from?: string | null
+          last_fetched_at?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          bank_slug?: string
+          bank_name?: string
+          product_name?: string
+          product_category?: string | null
+          annual_fee_amount?: number | null
+          annual_fee_waiver_condition?: string | null
+          loyalty_program_name?: string | null
+          purchase_rate?: number | null
+          min_credit_limit?: number | null
+          raw_json?: Json
+          cdr_effective_from?: string | null
+          last_fetched_at?: string | null
+          is_active?: boolean | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1197,3 +1266,5 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
+export type CdrProduct = Tables<'cdr_products'>
