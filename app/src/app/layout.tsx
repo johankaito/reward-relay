@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next"
-import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google"
+import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
 import { Footer } from "@/components/Footer"
 
-const spaceGrotesk = Space_Grotesk({
+const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-grotesk",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 })
 
@@ -70,7 +71,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} ${plexMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${plusJakartaSans.variable} ${plexMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <Providers>
           <div className="flex-1">{children}</div>
