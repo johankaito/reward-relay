@@ -77,6 +77,8 @@
   --warning-fg: #fbbf24;
   --info-bg: rgba(192, 188, 255, 0.12);
   --info-fg: #c3c0ff;
+  --accent-bg: rgba(78, 222, 163, 0.15);
+  --accent-fg: #4edea3;
 
   /* ─── Charts ─── */
   --chart-1: #4edea3;
