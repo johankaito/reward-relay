@@ -3,13 +3,9 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase/client"
 import { AppShell } from "@/components/layout/AppShell"
-import { Card, CardContent } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { AlertCircle, CheckCircle, Clock, TrendingUp, Plus } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -51,12 +47,143 @@ interface SpendingTransaction {
   category: string
 }
 
+// ─── SVG Arc constants ───────────────────────────────────────────────────────
+const RADIUS = 80
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+const ARC_LENGTH = CIRCUMFERENCE * 0.667 // 240 degrees
+
+function SpendArc({ spent, target }: { spent: number; target: number }) {
+  const pct = target > 0 ? Math.min(spent / target, 1) : 0
+  const filledLength = ARC_LENGTH * pct
+  const viewBoxSize = (RADIUS + 14) * 2
+  const center = RADIUS + 14
+  // Start arc from bottom-left (-210deg) spanning 240 degrees
+  const rotation = -210
+
+  return (
+    <div
+      className="progress-arc-container flex items-center justify-center"
+      style={{ position: "relative" }}
+    >
+      <style>{`
+        .progress-arc-container { transition: transform 300ms ease-out; }
+        .progress-arc-container:hover { transform: scale(1.02); }
+        .progress-arc-container:hover .progress-arc-path {
+          stroke-width: 12 !important;
+          filter: drop-shadow(0 0 12px rgba(78,222,163,0.6));
+        }
+        .progress-arc-container:hover .progress-center-amount {
+          text-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+      `}</style>
+      <svg
+        width={viewBoxSize}
+        height={viewBoxSize}
+        viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+        style={{ overflow: "visible" }}
+      >
+        {/* Track */}
+        <circle
+          cx={center}
+          cy={center}
+          r={RADIUS}
+          fill="none"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth={10}
+          strokeDasharray={`${ARC_LENGTH} ${CIRCUMFERENCE - ARC_LENGTH}`}
+          strokeLinecap="round"
+          transform={`rotate(${rotation} ${center} ${center})`}
+        />
+        {/* Fill */}
+        <circle
+          className="progress-arc-path arc-glow"
+          cx={center}
+          cy={center}
+          r={RADIUS}
+          fill="none"
+          stroke="#4edea3"
+          strokeWidth={10}
+          strokeDasharray={`${filledLength} ${CIRCUMFERENCE - filledLength}`}
+          strokeLinecap="round"
+          transform={`rotate(${rotation} ${center} ${center})`}
+          style={{
+            transition: "stroke-dasharray 600ms ease-out, stroke-width 300ms ease-out, filter 300ms ease-out",
+          }}
+        />
+        {/* Center text */}
+        <foreignObject x={center - 72} y={center - 38} width={144} height={76}>
+          <div
+            className="flex flex-col items-center justify-center"
+            style={{ height: "100%", textAlign: "center" }}
+          >
+            <span
+              className="progress-center-amount tabular-nums font-bold text-white"
+              style={{
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: "1.875rem",
+                lineHeight: 1.1,
+                transition: "text-shadow 300ms ease-out",
+              }}
+            >
+              {formatCurrencyCompact(spent)}
+            </span>
+            <span
+              style={{
+                fontSize: "0.7rem",
+                color: "rgba(255,255,255,0.4)",
+                fontFamily: "Inter, sans-serif",
+                marginTop: 3,
+              }}
+            >
+              of {formatCurrencyCompact(target)}
+            </span>
+          </div>
+        </foreignObject>
+      </svg>
+    </div>
+  )
+}
+
+function formatCurrencyCompact(amount: number): string {
+  if (amount >= 1000) return `$${(amount / 1000).toFixed(1)}k`
+  return `$${Math.round(amount)}`
+}
+
+function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(amount)
+}
+
+function formatDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString("en-AU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  })
+}
+
+function getPaceStatus(card: UserCard): { label: string; color: string } {
+  if (!card.spend_deadline || !card.spend_target) return { label: "On Track", color: "text-[#4edea3]" }
+
+  const remaining = card.spend_target - card.current_spend
+  if (remaining <= 0) return { label: "Bonus Earned", color: "text-[#4edea3]" }
+
+  const daysLeft = Math.ceil(
+    (new Date(card.spend_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
+  )
+  if (daysLeft <= 0) return { label: "Will Miss Bonus", color: "text-[#ffb4ab]" }
+
+  const dailyNeeded = remaining / daysLeft
+  if (dailyNeeded > 100) return { label: "Will Miss Bonus", color: "text-[#ffb4ab]" }
+  if (dailyNeeded > 50) return { label: "Behind Pace", color: "text-amber-400" }
+  return { label: "On Track", color: "text-[#4edea3]" }
+}
+
 export default function SpendingTrackerPage() {
   const [userCards, setUserCards] = useState<UserCard[]>([])
   const [transactions, setTransactions] = useState<Record<string, SpendingTransaction[]>>({})
   const [loading, setLoading] = useState(true)
-  const [selectedCard, setSelectedCard] = useState<UserCard | null>(null)
-  const [isAddingTransaction, setIsAddingTransaction] = useState(false)
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newTransaction, setNewTransaction] = useState({
     amount: "",
     description: "",
@@ -65,7 +192,7 @@ export default function SpendingTrackerPage() {
   })
 
   useEffect(() => {
-    loadUserCards()
+    void loadUserCards()
   }, [])
 
   const loadUserCards = async () => {
@@ -88,13 +215,11 @@ export default function SpendingTrackerPage() {
       const enrichedCards = (cards || []).map((card: any) => {
         const spendTarget = card.card?.bonus_spend_requirement || 0
         const windowMonths = card.card?.bonus_spend_window_months || 3
-
         let deadline = null
         if (card.activated_date && spendTarget > 0) {
-          const activatedDate = new Date(card.activated_date)
-          deadline = new Date(activatedDate.setMonth(activatedDate.getMonth() + windowMonths))
+          const d = new Date(card.activated_date)
+          deadline = new Date(d.setMonth(d.getMonth() + windowMonths))
         }
-
         return {
           ...card,
           current_spend: card.current_spend || 0,
@@ -104,334 +229,301 @@ export default function SpendingTrackerPage() {
       })
 
       setUserCards(enrichedCards)
+      if (enrichedCards.length > 0) {
+        setSelectedCardId(enrichedCards[0].id)
+      }
 
-      const cardIds = enrichedCards.map((c) => c.id)
-      await loadTransactions(cardIds)
-    } catch (error) {
-      console.error("Error loading cards:", error)
+      const transactionMap: Record<string, SpendingTransaction[]> = {}
+      for (const c of enrichedCards) transactionMap[c.id] = []
+      setTransactions(transactionMap)
+    } catch (err) {
+      console.error("Error loading cards:", err)
     } finally {
       setLoading(false)
     }
   }
 
-  const loadTransactions = async (cardIds: string[]) => {
-    const transactionMap: Record<string, SpendingTransaction[]> = {}
-    cardIds.forEach((id) => {
-      transactionMap[id] = []
-    })
-    setTransactions(transactionMap)
-  }
-
   const handleAddTransaction = async () => {
-    if (!selectedCard || !newTransaction.amount) return
+    const activeCard = userCards.find((c) => c.id === selectedCardId)
+    if (!activeCard || !newTransaction.amount) return
 
     try {
-      const newSpend = (selectedCard.current_spend || 0) + parseFloat(newTransaction.amount)
-
+      const newSpend = activeCard.current_spend + parseFloat(newTransaction.amount)
       const { error } = await supabase
         .from("user_cards")
         .update({ current_spend: newSpend })
-        .eq("id", selectedCard.id)
-
+        .eq("id", activeCard.id)
       if (error) throw error
 
-      setUserCards((cards) =>
-        cards.map((c: UserCard) =>
-          c.id === selectedCard.id ? { ...c, current_spend: newSpend } : c,
-        ),
+      setUserCards((prev) =>
+        prev.map((c) => (c.id === activeCard.id ? { ...c, current_spend: newSpend } : c)),
       )
-
       setNewTransaction({
         amount: "",
         description: "",
         date: new Date().toISOString().split("T")[0],
         category: "general",
       })
-      setIsAddingTransaction(false)
-      setSelectedCard(null)
-    } catch (error) {
-      console.error("Error adding transaction:", error)
+      setIsDialogOpen(false)
+    } catch (err) {
+      console.error("Error adding transaction:", err)
     }
   }
-
-  const getSpendingStatus = (card: UserCard) => {
-    if (!card.spend_target) return { status: "no_target", color: "gray" }
-
-    const progress = (card.current_spend / card.spend_target) * 100
-    const daysLeft = card.spend_deadline
-      ? Math.ceil(
-          (new Date(card.spend_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
-        )
-      : null
-
-    if (progress >= 100) return { status: "completed", icon: CheckCircle }
-    if (daysLeft !== null && daysLeft < 14) return { status: "urgent", icon: AlertCircle }
-    if (daysLeft !== null && daysLeft < 30) return { status: "warning", icon: Clock }
-    return { status: "on_track", icon: TrendingUp }
-  }
-
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(amount)
-
-  const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString("en-AU", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    })
 
   if (loading) {
     return (
       <AppShell>
         <div className="space-y-5">
-          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
-          <div className="grid grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 animate-pulse rounded-xl bg-[var(--surface)]" />
-            ))}
-          </div>
+          <div className="h-14 animate-pulse rounded-xl bg-[#1b1f2c]" />
+          <div className="h-64 animate-pulse rounded-2xl bg-[#1b1f2c]" />
           {[1, 2].map((i) => (
-            <div key={i} className="h-32 animate-pulse rounded-xl bg-[var(--surface)]" />
+            <div key={i} className="h-20 animate-pulse rounded-xl bg-[#1b1f2c]" />
           ))}
         </div>
       </AppShell>
     )
   }
 
-  const cardsNeedingSpend = userCards.filter(
-    (c) => c.spend_target > 0 && c.current_spend < c.spend_target,
-  ).length
-  const totalTarget = userCards.reduce((sum, c) => sum + (c.spend_target || 0), 0)
+  const activeCard = userCards.find((c) => c.id === selectedCardId) ?? userCards[0] ?? null
+  const pace = activeCard ? getPaceStatus(activeCard) : null
 
   return (
     <AppShell>
-      <div className="space-y-5">
+      <div className="space-y-6 pb-10">
         {/* Page header */}
         <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
-            Spending
-          </p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-            Spend tracker
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4edea3]">Spending</p>
+          <h1
+            className="mt-1 bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-2xl font-black text-transparent"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            Spend Tracker
           </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Track progress toward minimum spend requirements
-          </p>
         </div>
 
-        {/* Summary stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="px-4 py-3">
-              <p className="text-xs text-[var(--text-secondary)]">Active cards</p>
-              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                {userCards.length}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="px-4 py-3">
-              <p className="text-xs text-[var(--text-secondary)]">Needs spend</p>
-              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                {cardsNeedingSpend}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="px-4 py-3">
-              <p className="text-xs text-[var(--text-secondary)]">Total target</p>
-              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                {formatCurrency(totalTarget)}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Card spending progress */}
         {userCards.length === 0 ? (
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
-              <p className="font-medium text-[var(--text-primary)]">No active cards</p>
-              <p className="text-sm text-[var(--text-secondary)]">
-                Add cards with spending requirements to track your progress.
-              </p>
-              <Button
-                size="sm"
-                className="rounded-full"
-                style={{ background: "var(--gradient-cta)" }}
-                onClick={() => (window.location.href = "/cards")}
-              >
-                Add cards
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="glass-panel premium-glow flex flex-col items-center gap-4 rounded-2xl px-8 py-16 text-center">
+            <p
+              className="font-semibold text-white"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              No active cards
+            </p>
+            <p className="text-sm text-[#bbcabf]">
+              Add cards with spending requirements to track your progress.
+            </p>
+            <Button
+              className="rounded-full font-bold text-[#003824]"
+              style={{ background: "var(--gradient-cta)" }}
+              onClick={() => (window.location.href = "/cards")}
+            >
+              Add cards
+            </Button>
+          </div>
         ) : (
-          <div className="space-y-4">
-            {userCards.map((card) => {
-              const status = getSpendingStatus(card)
-              const progress = card.spend_target ? (card.current_spend / card.spend_target) * 100 : 0
-              const StatusIcon = status.icon || TrendingUp
-
-              const badgeStyle =
-                status.status === "completed"
-                  ? { backgroundColor: "var(--success-bg)", color: "var(--success-fg)" }
-                  : status.status === "urgent"
-                    ? { backgroundColor: "var(--danger)", color: "white" }
-                    : status.status === "warning"
-                      ? { backgroundColor: "var(--warning-bg)", color: "var(--warning-fg)" }
-                      : { backgroundColor: "var(--info-bg)", color: "var(--info-fg)" }
-
-              return (
-                <Card
-                  key={card.id}
-                  className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm"
-                  data-spending-card={card.id}
+          <>
+            {/* Card selector */}
+            {userCards.length > 1 && (
+              <div>
+                <Label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-[#bbcabf]">
+                  Tracking card
+                </Label>
+                <select
+                  value={selectedCardId ?? ""}
+                  onChange={(e) => setSelectedCardId(e.target.value)}
+                  className="w-full rounded-xl border border-white/10 bg-[#1b1f2c] px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#4edea3]/40"
                 >
-                  <CardContent className="p-5">
-                    <div className="space-y-4">
-                      {/* Card header */}
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <h3 className="font-semibold text-[var(--text-primary)]">
-                            {card.card.bank} — {card.card.name}
-                          </h3>
-                          <div className="mt-1.5 flex flex-wrap gap-2">
-                            <Badge style={badgeStyle}>
-                              <StatusIcon className="mr-1 h-3 w-3" />
-                              {status.status === "completed"
-                                ? "Target met"
-                                : status.status === "urgent"
-                                  ? "Urgent"
-                                  : status.status === "warning"
-                                    ? "Deadline soon"
-                                    : "On track"}
-                            </Badge>
-                            {card.spend_deadline && (
-                              <Badge
-                                variant="outline"
-                                className="border-[var(--border-default)] text-[var(--text-secondary)]"
-                              >
-                                Due {formatDate(card.spend_deadline)}
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                        <Dialog
-                          open={isAddingTransaction && selectedCard?.id === card.id}
-                          onOpenChange={(open) => {
-                            setIsAddingTransaction(open)
-                            if (open) setSelectedCard(card)
-                          }}
-                        >
-                          <DialogTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-shrink-0 rounded-full"
-                            >
-                              <Plus className="mr-1.5 h-3.5 w-3.5" />
-                              Add spend
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Record transaction</DialogTitle>
-                              <DialogDescription>
-                                Record a purchase made with {card.card.name}
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="space-y-4">
-                              <div>
-                                <Label htmlFor="amount">Amount (AUD)</Label>
-                                <Input
-                                  id="amount"
-                                  type="number"
-                                  step="0.01"
-                                  placeholder="100.00"
-                                  value={newTransaction.amount}
-                                  onChange={(e) =>
-                                    setNewTransaction({ ...newTransaction, amount: e.target.value })
-                                  }
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="description">Description</Label>
-                                <Input
-                                  id="description"
-                                  placeholder="e.g., Groceries at Woolworths"
-                                  value={newTransaction.description}
-                                  onChange={(e) =>
-                                    setNewTransaction({
-                                      ...newTransaction,
-                                      description: e.target.value,
-                                    })
-                                  }
-                                />
-                              </div>
-                              <div>
-                                <Label htmlFor="date">Date</Label>
-                                <Input
-                                  id="date"
-                                  type="date"
-                                  value={newTransaction.date}
-                                  onChange={(e) =>
-                                    setNewTransaction({ ...newTransaction, date: e.target.value })
-                                  }
-                                />
-                              </div>
-                              <Button onClick={handleAddTransaction} className="w-full">
-                                Save transaction
-                              </Button>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
-                      </div>
+                  {userCards.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.card.bank} — {c.card.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
-                      {/* Progress */}
-                      {card.spend_target > 0 && (
-                        <div className="space-y-1.5">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="font-medium text-[var(--text-primary)]">
-                              {formatCurrency(card.current_spend)}
-                            </span>
-                            <span className="text-[var(--text-secondary)]">
-                              of {formatCurrency(card.spend_target)}
-                            </span>
-                          </div>
-                          <Progress value={Math.min(progress, 100)} className="h-2" />
-                          <p className="text-xs text-[var(--text-secondary)]">
-                            {progress >= 100
-                              ? "Spending requirement met — bonus points incoming"
-                              : `${formatCurrency(card.spend_target - card.current_spend)} remaining to earn ${card.card.welcome_bonus_points?.toLocaleString() || "bonus"} points`}
+            {activeCard && pace && (
+              <>
+                {/* Arc + stats */}
+                <div className="flex flex-col gap-5 md:flex-row md:items-center">
+                  {/* Arc — 60% width */}
+                  <div className="flex flex-[3] items-center justify-center py-4">
+                    <SpendArc spent={activeCard.current_spend} target={activeCard.spend_target} />
+                  </div>
+
+                  {/* Stats panel — 40% width */}
+                  <div className="glass-panel premium-glow flex flex-[2] flex-col gap-5 rounded-2xl p-6">
+                    {activeCard.spend_deadline && (
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                          Days Remaining
+                        </p>
+                        <p
+                          className="mt-0.5 text-5xl font-black tabular-nums text-white"
+                          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                        >
+                          {Math.max(
+                            0,
+                            Math.ceil(
+                              (new Date(activeCard.spend_deadline).getTime() - Date.now()) /
+                                86400000,
+                            ),
+                          )}
+                        </p>
+                      </div>
+                    )}
+
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                        Pace
+                      </p>
+                      <p
+                        className={`mt-0.5 text-lg font-bold ${pace.color}`}
+                        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                      >
+                        {pace.label}
+                      </p>
+                    </div>
+
+                    {activeCard.spend_deadline &&
+                      activeCard.spend_target > activeCard.current_spend && (
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                            Daily Target
+                          </p>
+                          <p className="mt-0.5 text-lg font-bold tabular-nums text-white">
+                            {(() => {
+                              const daysLeft = Math.ceil(
+                                (new Date(activeCard.spend_deadline).getTime() - Date.now()) /
+                                  86400000,
+                              )
+                              if (daysLeft <= 0) return "—"
+                              return (
+                                formatCurrency(
+                                  (activeCard.spend_target - activeCard.current_spend) / daysLeft,
+                                ) + "/day"
+                              )
+                            })()}
                           </p>
                         </div>
                       )}
 
-                      {/* Recent transactions */}
-                      {transactions[card.id]?.length > 0 && (
-                        <div className="border-t border-[var(--border-default)] pt-3">
-                          <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
-                            Recent transactions
-                          </h4>
-                          <div className="space-y-1">
-                            {transactions[card.id].slice(0, 3).map((txn) => (
-                              <div
-                                key={txn.id}
-                                className="flex justify-between text-sm text-[var(--text-secondary)]"
-                              >
-                                <span>{txn.description}</span>
-                                <span>{formatCurrency(txn.amount)}</span>
-                              </div>
-                            ))}
-                          </div>
+                    {!!activeCard.card.welcome_bonus_points && (
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                          Earn on Completion
+                        </p>
+                        <p
+                          className="mt-0.5 text-lg font-bold tabular-nums text-[#c3c0ff]"
+                          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                        >
+                          {activeCard.card.welcome_bonus_points.toLocaleString()} pts
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Recent transactions */}
+                {(transactions[activeCard.id]?.length ?? 0) > 0 && (
+                  <div>
+                    <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                      Recent Transactions
+                    </p>
+                    <div className="space-y-2">
+                      {transactions[activeCard.id].slice(0, 5).map((txn) => (
+                        <div
+                          key={txn.id}
+                          className="flex items-center justify-between py-2 text-sm"
+                        >
+                          <span className="text-[#dfe2f3]">{txn.description}</span>
+                          <span className="tabular-nums font-medium text-white">
+                            {formatCurrency(txn.amount)}
+                          </span>
                         </div>
-                      )}
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
+                  </div>
+                )}
+
+                {/* CTA */}
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      className="w-full rounded-full py-6 text-base font-bold text-[#003824]"
+                      style={{ background: "var(--gradient-cta)" }}
+                    >
+                      + Add Transaction
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="border border-white/10 bg-[#1b1f2c]">
+                    <DialogHeader>
+                      <DialogTitle className="text-white">Record Transaction</DialogTitle>
+                      <DialogDescription className="text-[#bbcabf]">
+                        Record a purchase made with {activeCard.card.name}
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="amount" className="text-[#bbcabf]">
+                          Amount (AUD)
+                        </Label>
+                        <Input
+                          id="amount"
+                          type="number"
+                          step="0.01"
+                          placeholder="100.00"
+                          value={newTransaction.amount}
+                          onChange={(e) =>
+                            setNewTransaction({ ...newTransaction, amount: e.target.value })
+                          }
+                          className="border-white/10 bg-[#262a37] text-white"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="description" className="text-[#bbcabf]">
+                          Description
+                        </Label>
+                        <Input
+                          id="description"
+                          placeholder="e.g., Groceries at Woolworths"
+                          value={newTransaction.description}
+                          onChange={(e) =>
+                            setNewTransaction({
+                              ...newTransaction,
+                              description: e.target.value,
+                            })
+                          }
+                          className="border-white/10 bg-[#262a37] text-white"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="txn-date" className="text-[#bbcabf]">
+                          Date
+                        </Label>
+                        <Input
+                          id="txn-date"
+                          type="date"
+                          value={newTransaction.date}
+                          onChange={(e) =>
+                            setNewTransaction({ ...newTransaction, date: e.target.value })
+                          }
+                          className="border-white/10 bg-[#262a37] text-white"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleAddTransaction}
+                        className="w-full rounded-full font-bold text-[#003824]"
+                        style={{ background: "var(--gradient-cta)" }}
+                      >
+                        Save Transaction
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </>
+            )}
+          </>
         )}
       </div>
     </AppShell>
