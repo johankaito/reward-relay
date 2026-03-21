@@ -1,195 +1,96 @@
 /* =====================================================
    REWARD RELAY — Design Tokens
-   Color system: emerald green accent, neutral grays
+   Color system: Financial Luminary — dark-mode only
    ===================================================== */
 
-/* ─── LIGHT THEME (default) ─── */
 :root {
-  /* Surfaces — clean whites and light grays */
-  --surface: #ffffff;
-  --surface-muted: #f8fafc;
-  --surface-soft: #f1f5f9;
-  --surface-strong: #e2e8f0;
-  --surface-subtle: #cbd5e1;
+  /* ─── Surface hierarchy ─── */
+  --surface: #0f131f;
+  --surface-dim: #0f131f;
+  --surface-container-lowest: #0a0e1a;
+  --surface-container-low: #171b28;
+  --surface-container: #1b1f2c;
+  --surface-container-high: #262a37;
+  --surface-container-highest: #313442;
+  --surface-bright: #353946;
+  --background: #0f131f;
 
-  /* Text — near-black to mid-gray */
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-inverse: #ffffff;
+  /* ─── Text ─── */
+  --on-surface: #dfe2f3;
+  --on-surface-variant: #bbcabf;
+  --on-background: #dfe2f3;
 
-  /* Accent — emerald green (money, growth, rewards) */
-  --accent: #059669;
-  --accent-strong: #047857;
-  --accent-contrast: #ffffff;
+  /* ─── Brand / Primary ─── */
+  --primary: #4edea3;
+  --primary-container: #10b981;
+  --primary-fixed: #6ffbbe;
+  --primary-fixed-dim: #4edea3;
+  --on-primary: #003824;
 
-  /* Semantic */
-  --border-default: #e2e8f0;
-  --muted: #f1f5f9;
-  --ring-strong: #059669;
+  /* ─── Secondary ─── */
+  --secondary: #d0bcff;
+  --secondary-container: #571bc1;
+  --on-secondary-container: #c4abff;
 
-  --success-bg: #f0fdf4;
-  --success-fg: #16a34a;
-  --warning-bg: #fffbeb;
-  --warning-fg: #d97706;
-  --info-bg: #eff6ff;
-  --info-fg: #2563eb;
-  --danger: #dc2626;
+  /* ─── Tertiary ─── */
+  --tertiary: #c3c0ff;
+  --tertiary-container: #9a98ff;
 
-  /* Charts */
-  --chart-1: #059669;
-  --chart-2: #3b82f6;
-  --chart-3: #f59e0b;
-  --chart-4: #ef4444;
-  --chart-5: #8b5cf6;
+  /* ─── Outline ─── */
+  --outline: #86948a;
+  --outline-variant: #3c4a42;
 
-  /* Gradients */
-  --gradient-page: linear-gradient(to bottom, #f8fafc, #ffffff, #f8fafc);
-  --gradient-header: linear-gradient(to right, #f8fafc, #ffffff, #f8fafc);
-  --gradient-accent: #059669;
-  --gradient-cta: linear-gradient(135deg, #059669 0%, #047857 100%);
+  /* ─── Semantic ─── */
+  --error: #ffb4ab;
+  --error-container: #93000a;
+  --surface-tint: #4edea3;
 
-  /* Radii */
-  --radius: 0.5rem;
+  /* ─── Gradients ─── */
+  --gradient-cta: linear-gradient(135deg, #4edea3 0%, #10b981 100%);
+  --shadow-ambient: 0px 24px 48px -12px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0px 8px 24px -8px rgba(0, 0, 0, 0.3);
 
-  /* Shadows — clean and minimal */
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
-  --shadow-strong: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-}
+  /* ─── Border radius ─── */
+  --radius: 1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
 
-/* ─── DARK THEME (system preference) ─── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Surfaces — near-black to zinc */
-    --surface: #111113;
-    --surface-muted: #0a0a0b;
-    --surface-soft: #18181b;
-    --surface-strong: #27272a;
-    --surface-subtle: #3f3f46;
+  /* ─── Legacy aliases (used by globals.css @theme inline) ─── */
+  --surface-muted: var(--surface-container-lowest);
+  --surface-soft: var(--surface-container-low);
+  --surface-strong: var(--surface-container-high);
+  --surface-subtle: var(--surface-container-highest);
+  --text-primary: var(--on-surface);
+  --text-secondary: var(--on-surface-variant);
+  --text-inverse: var(--on-primary);
+  --accent: var(--primary);
+  --accent-strong: var(--primary-fixed);
+  --accent-contrast: var(--on-primary);
+  --border-default: rgba(255, 255, 255, 0.05);
+  --muted: var(--surface-container);
+  --ring-strong: var(--primary);
+  --danger: var(--error);
 
-    /* Text — white to zinc */
-    --text-primary: #fafafa;
-    --text-secondary: #a1a1aa;
-    --text-inverse: #0a0a0b;
-
-    /* Accent — brighter emerald on dark bg */
-    --accent: #10b981;
-    --accent-strong: #34d399;
-    --accent-contrast: #ffffff;
-
-    /* Semantic */
-    --border-default: #27272a;
-    --muted: #18181b;
-    --ring-strong: #10b981;
-
-    --success-bg: rgba(16, 185, 129, 0.12);
-    --success-fg: #34d399;
-    --warning-bg: rgba(245, 158, 11, 0.12);
-    --warning-fg: #fbbf24;
-    --info-bg: rgba(59, 130, 246, 0.12);
-    --info-fg: #60a5fa;
-    --danger: #f87171;
-
-    /* Charts */
-    --chart-1: #10b981;
-    --chart-2: #60a5fa;
-    --chart-3: #fbbf24;
-    --chart-4: #f87171;
-    --chart-5: #a78bfa;
-
-    /* Gradients */
-    --gradient-page: linear-gradient(to bottom, #0a0a0b, #111113, #0a0a0b);
-    --gradient-header: linear-gradient(to right, #0a0a0b, #111113, #0a0a0b);
-    --gradient-accent: #10b981;
-    --gradient-cta: linear-gradient(135deg, #10b981 0%, #059669 100%);
-
-    /* Shadows */
-    --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-    --shadow-strong: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-  }
-}
-
-/* ─── EXPLICIT .dark CLASS (manual override) ─── */
-.dark {
-  --surface: #111113;
-  --surface-muted: #0a0a0b;
-  --surface-soft: #18181b;
-  --surface-strong: #27272a;
-  --surface-subtle: #3f3f46;
-
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-inverse: #0a0a0b;
-
-  --accent: #10b981;
-  --accent-strong: #34d399;
-  --accent-contrast: #ffffff;
-
-  --border-default: #27272a;
-  --muted: #18181b;
-  --ring-strong: #10b981;
-
-  --success-bg: rgba(16, 185, 129, 0.12);
-  --success-fg: #34d399;
+  --success-bg: rgba(78, 222, 163, 0.12);
+  --success-fg: #4edea3;
   --warning-bg: rgba(245, 158, 11, 0.12);
   --warning-fg: #fbbf24;
-  --info-bg: rgba(59, 130, 246, 0.12);
-  --info-fg: #60a5fa;
-  --danger: #f87171;
+  --info-bg: rgba(192, 188, 255, 0.12);
+  --info-fg: #c3c0ff;
 
-  --chart-1: #10b981;
-  --chart-2: #60a5fa;
+  /* ─── Charts ─── */
+  --chart-1: #4edea3;
+  --chart-2: #d0bcff;
   --chart-3: #fbbf24;
-  --chart-4: #f87171;
-  --chart-5: #a78bfa;
+  --chart-4: #ffb4ab;
+  --chart-5: #9a98ff;
 
-  --gradient-page: linear-gradient(to bottom, #0a0a0b, #111113, #0a0a0b);
-  --gradient-header: linear-gradient(to right, #0a0a0b, #111113, #0a0a0b);
-  --gradient-accent: #10b981;
-  --gradient-cta: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  /* ─── Gradients (legacy aliases) ─── */
+  --gradient-page: linear-gradient(to bottom, #0a0e1a, #0f131f, #0a0e1a);
+  --gradient-header: linear-gradient(to right, #0a0e1a, #0f131f, #0a0e1a);
+  --gradient-accent: #4edea3;
 
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-  --shadow-strong: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-}
-
-/* ─── EXPLICIT .light CLASS (force light on dark system) ─── */
-.light {
-  --surface: #ffffff;
-  --surface-muted: #f8fafc;
-  --surface-soft: #f1f5f9;
-  --surface-strong: #e2e8f0;
-  --surface-subtle: #cbd5e1;
-
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-inverse: #ffffff;
-
-  --accent: #059669;
-  --accent-strong: #047857;
-  --accent-contrast: #ffffff;
-
-  --border-default: #e2e8f0;
-  --muted: #f1f5f9;
-  --ring-strong: #059669;
-
-  --success-bg: #f0fdf4;
-  --success-fg: #16a34a;
-  --warning-bg: #fffbeb;
-  --warning-fg: #d97706;
-  --info-bg: #eff6ff;
-  --info-fg: #2563eb;
-  --danger: #dc2626;
-
-  --chart-1: #059669;
-  --chart-2: #3b82f6;
-  --chart-3: #f59e0b;
-  --chart-4: #ef4444;
-  --chart-5: #8b5cf6;
-
-  --gradient-page: linear-gradient(to bottom, #f8fafc, #ffffff, #f8fafc);
-  --gradient-header: linear-gradient(to right, #f8fafc, #ffffff, #f8fafc);
-  --gradient-accent: #059669;
-  --gradient-cta: linear-gradient(135deg, #059669 0%, #047857 100%);
-
-  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
-  --shadow-strong: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  /* ─── Shadows (legacy aliases) ─── */
+  --shadow-soft: var(--shadow-card);
+  --shadow-strong: var(--shadow-ambient);
 }

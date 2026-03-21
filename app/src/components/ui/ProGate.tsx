@@ -10,6 +10,17 @@ interface ProGateProps {
   feature: string
   children: ReactNode
   teaserText?: string
+  isPro?: boolean
+  previewRows?: number
+  requiredTier?: string
+}
+
+export function ProBadge() {
+  return (
+    <span className="ml-1.5 inline-flex items-center rounded-full bg-gradient-to-r from-teal-500/20 to-cyan-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-teal-400 ring-1 ring-teal-400/30">
+      Pro
+    </span>
+  )
 }
 
 export function ProGate({ feature, children, teaserText }: ProGateProps) {
