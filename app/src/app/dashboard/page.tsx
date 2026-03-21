@@ -7,30 +7,19 @@ import { toast } from "sonner"
 import { Pencil, TrendingUp, CreditCard, Clock } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
+import { ProGate } from "@/components/ui/ProGate"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
-import { BonusConfirmationBanner } from "@/components/dashboard/BonusConfirmationBanner"
-import { LoyaltyBalanceWidget } from "@/components/dashboard/LoyaltyBalanceWidget"
-import { BadgeGrid } from "@/components/gamification/BadgeGrid"
-import { triggerCelebration } from "@/components/gamification/CelebrationOverlay"
-import { WelcomeOverlay } from "@/components/onboarding/WelcomeOverlay"
-import { SetupChecklist } from "@/components/onboarding/SetupChecklist"
-import { GapReveal } from "@/components/onboarding/GapReveal"
 import { supabase } from "@/lib/supabase/client"
-import { getOnboardingProgress, markOnboardingStep, type OnboardingProgress } from "@/lib/onboarding"
-import { buildGapAnalysis, type GapAnalysis } from "@/lib/gap-analysis"
 import { getRecommendations } from "@/lib/recommendations"
 import { GOALS, calculateMultiCardPaths } from "@/lib/projections"
-import { formatPointsWithValue } from "@/lib/points"
 import { useCatalog } from "@/contexts/CatalogContext"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
 import type { Database } from "@/types/database.types"
-
-type DB = Database
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 
@@ -44,10 +33,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [editingCard, setEditingCard] = useState<UserCard | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [showWelcomeOverlay, setShowWelcomeOverlay] = useState(false)
-  const [onboardingProgress, setOnboardingProgress] = useState<OnboardingProgress | null>(null)
-  const [gapAnalysis, setGapAnalysis] = useState<GapAnalysis | null>(null)
-  const [spendingProfile, setSpendingProfile] = useState<DB["public"]["Tables"]["spending_profiles"]["Row"] | null>(null)
 
   const loadCards = async (showWelcome = false) => {
     const {
@@ -78,58 +63,11 @@ export default function DashboardPage() {
       return
     }
 
-    const loadedCards = userCardsResult || []
-    setCards(loadedCards)
+    setCards(userCardsResult || [])
     setLoading(false)
 
     if (showWelcome) {
       toast.success("Welcome back!")
-    }
-
-    // Check for newly earned badges in the last 5 minutes
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
-    const { data: recentBadges } = await supabase
-      .from('user_badges')
-      .select('badge_type, earned_at, badge_definitions(name, icon_emoji)')
-      .eq('user_id', session.user.id)
-      .gte('earned_at', fiveMinutesAgo)
-
-    if (recentBadges && recentBadges.length > 0) {
-      void triggerCelebration('medium')
-      recentBadges.forEach((badge) => {
-        const def = badge.badge_definitions as { name: string; icon_emoji: string } | null
-        if (def) {
-          toast.success(`${def.icon_emoji} Badge unlocked: ${def.name}!`)
-        }
-      })
-    }
-
-    // Load onboarding progress for checklist banner and welcome overlay
-    const [progress, spendResult] = await Promise.all([
-      getOnboardingProgress(session.user.id),
-      supabase
-        .from("spending_profiles")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .maybeSingle(),
-    ])
-    setOnboardingProgress(progress)
-    const profile = spendResult.data ?? null
-    setSpendingProfile(profile)
-
-    // Mark has_added_card if user has cards (backfill for existing users)
-    if (loadedCards.length > 0 && !progress.hasAddedCard) {
-      await markOnboardingStep(session.user.id, "has_added_card")
-    }
-
-    // Mark has_set_spending if user has a spending profile (backfill)
-    if (profile && !progress.hasSetSpending) {
-      await markOnboardingStep(session.user.id, "has_set_spending")
-    }
-
-    // Show welcome overlay for new users: no cards and onboarding not completed/dismissed
-    if (loadedCards.length === 0 && !progress.onboardingCompletedAt && !progress.onboardingDismissedAt) {
-      setShowWelcomeOverlay(true)
     }
   }
 
@@ -158,11 +96,6 @@ export default function DashboardPage() {
     const pending = cards.filter((c) => c.status === "pending").length
     return { active, pending, total: cards.length }
   }, [cards])
-
-  const computedGapAnalysis = useMemo(() => {
-    if (catalogCards.length === 0) return null
-    return buildGapAnalysis(cards, catalogCards, spendingProfile)
-  }, [cards, catalogCards, spendingProfile])
 
   const recommendations = useMemo(() => {
     if (cards.length === 0 || catalogCards.length === 0) return []
@@ -209,35 +142,7 @@ export default function DashboardPage() {
 
   return (
     <AppShell>
-      {showWelcomeOverlay && userId && (
-        <WelcomeOverlay
-          userId={userId}
-          displayName={displayName}
-          onDismiss={() => setShowWelcomeOverlay(false)}
-        />
-      )}
-
       <div className="space-y-5">
-        {/* Bonus confirmation banners */}
-        <BonusConfirmationBanner />
-
-        {/* Onboarding setup checklist */}
-        {onboardingProgress && !onboardingProgress.onboardingCompletedAt && (
-          <SetupChecklist progress={onboardingProgress} />
-        )}
-
-        {/* Gap reveal: shown when cards + spending both set */}
-        {userId && onboardingProgress?.hasAddedCard && onboardingProgress?.hasSetSpending && computedGapAnalysis && (
-          <GapReveal
-            userId={userId}
-            gap={computedGapAnalysis}
-            onViewed={() =>
-              setOnboardingProgress((p) => p ? { ...p, hasViewedGap: true } : p)
-            }
-          />
-        )}
-
-
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
@@ -338,19 +243,12 @@ export default function DashboardPage() {
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="space-y-1">
-                          <div className="flex items-center gap-1.5">
-                            <Badge
-                              variant="secondary"
-                              className="bg-[var(--info-bg)] text-[var(--info-fg)]"
-                            >
-                              {card.bank || "Custom"}
-                            </Badge>
-                            {card.is_business && (
-                              <Badge style={{ backgroundColor: 'var(--info-bg)', color: 'var(--info-fg)', opacity: 0.8 }}>
-                                Business
-                              </Badge>
-                            )}
-                          </div>
+                          <Badge
+                            variant="secondary"
+                            className="bg-[var(--info-bg)] text-[var(--info-fg)]"
+                          >
+                            {card.bank || "Custom"}
+                          </Badge>
                           <p className="font-semibold text-[var(--text-primary)]">
                             {card.name || "Untitled card"}
                           </p>
@@ -417,59 +315,55 @@ export default function DashboardPage() {
 
         {/* Projection preview */}
         {projection && (
-          <Card className="border border-[var(--accent)]/20 bg-[var(--surface)] shadow-sm">
-            <CardContent className="pt-5">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-[var(--accent)]" />
-                    <p className="text-sm font-medium text-[var(--text-secondary)]">
-                      Goal projection
+          <ProGate feature="goal projections & timeline">
+            <Card className="border border-[var(--accent)]/20 bg-[var(--surface)] shadow-sm">
+              <CardContent className="pt-5">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-[var(--accent)]" />
+                      <p className="text-sm font-medium text-[var(--text-secondary)]">
+                        Goal projection
+                      </p>
+                    </div>
+                    <p className="text-xl font-semibold text-[var(--text-primary)]">
+                      {projection.goal.label} in{" "}
+                      <span className="text-[var(--accent)]">
+                        {projection.path.timeToGoal} months
+                      </span>
                     </p>
+                    <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)]">
+                      <span>{projection.path.totalPoints.toLocaleString()} pts</span>
+                      <span>·</span>
+                      <span>${projection.path.totalCost} fees</span>
+                      <span>·</span>
+                      <span className="text-[var(--success-fg)]">
+                        ${projection.path.netValue.toFixed(0)} net value
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xl font-semibold text-[var(--text-primary)]">
-                    {projection.goal.label} in{" "}
-                    <span className="text-[var(--accent)]">
-                      {projection.path.timeToGoal} months
-                    </span>
-                  </p>
-                  <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)]">
-                    <span>{formatPointsWithValue(projection.path.totalPoints, "qantas", "flights_business")}</span>
-                    <span>·</span>
-                    <span>${projection.path.totalCost} fees</span>
-                    <span>·</span>
-                    <span className="text-[var(--success-fg)]">
-                      ${projection.path.netValue.toFixed(0)} net value
-                    </span>
-                  </div>
+                  <Link href="/projections">
+                    <Button variant="outline" size="sm" className="rounded-full">
+                      View all goals
+                    </Button>
+                  </Link>
                 </div>
-                <Link href="/projections">
-                  <Button variant="outline" size="sm" className="rounded-full">
-                    View all goals
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Loyalty balance widget */}
-        {userId && (
-          <LoyaltyBalanceWidget userId={userId} />
+              </CardContent>
+            </Card>
+          </ProGate>
         )}
 
         {/* Daily insights — shown last, supplementary */}
         {userId && (
-          <div>
-            <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">
-              Today&apos;s activity
-            </p>
-            <DailyInsights userId={userId} />
-          </div>
+          <ProGate feature="daily insights & deals">
+            <div>
+              <p className="mb-2 text-sm font-medium text-[var(--text-secondary)]">
+                Today&apos;s activity
+              </p>
+              <DailyInsights userId={userId} />
+            </div>
+          </ProGate>
         )}
-
-        {/* Achievements */}
-        {userId && <BadgeGrid userId={userId} />}
       </div>
 
       <EditCardModal

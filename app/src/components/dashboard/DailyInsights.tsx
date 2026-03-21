@@ -4,34 +4,23 @@ import { useEffect, useState } from "react"
 import { Flame, Sparkles, AlertCircle, TrendingUp, ExternalLink } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { supabase } from "@/lib/supabase/client"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
-import { getEligibleDeals, type Deal } from "@/lib/deals"
 import type { Database } from "@/types/database.types"
 
 type DailyInsight = Database["public"]["Tables"]["daily_insights"]["Row"]
 type UserProfile = Database["public"]["Tables"]["user_profiles"]["Row"]
+type Deal = Database["public"]["Tables"]["deals"]["Row"]
 
 interface DailyInsightsProps {
   userId: string
-}
-
-function isElevatedOffer(deal: Deal): boolean {
-  const text = `${deal.title} ${deal.description}`.toLowerCase()
-  return (
-    text.includes("elevated") ||
-    text.includes("increased bonus") ||
-    text.includes("limited time") ||
-    /\b[1-9]\d{2,}[,\s]?\d{3}\b/.test(text)
-  )
 }
 
 export function DailyInsights({ userId }: DailyInsightsProps) {
   const { trackEvent } = useAnalytics()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [insights, setInsights] = useState<DailyInsight[]>([])
-  const [eligibleDeals, setEligibleDeals] = useState<Deal[]>([])
+  const [hotDeal, setHotDeal] = useState<Deal | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -59,8 +48,16 @@ export function DailyInsights({ userId }: DailyInsightsProps) {
 
       setInsights(insightsData || [])
 
-      const deals = await getEligibleDeals(userId, supabase)
-      setEligibleDeals(deals.slice(0, 3))
+      const { data: dealData } = await supabase
+        .from("deals")
+        .select("*")
+        .eq("is_active", true)
+        .gte("valid_until", new Date().toISOString())
+        .order("click_count", { ascending: false })
+        .limit(1)
+        .single()
+
+      setHotDeal(dealData)
 
       if (insightsData && insightsData.length > 0) {
         await supabase
@@ -131,7 +128,8 @@ export function DailyInsights({ userId }: DailyInsightsProps) {
   const daysUntilFreePremium = 7 - (streakDays % 7)
   const streakProgress = streakDays > 0 ? ((7 - daysUntilFreePremium) / 7) * 100 : 0
 
-  const hasContent = streakDays > 0 || insights.length > 0 || eligibleDeals.length > 0
+  // Don't render if nothing to show
+  const hasContent = streakDays > 0 || insights.length > 0 || hotDeal
 
   if (!hasContent) return null
 
@@ -223,68 +221,30 @@ export function DailyInsights({ userId }: DailyInsightsProps) {
           </div>
         )}
 
-        {/* Eligible deals */}
-        <div className="px-4 py-3">
-          <div className="mb-2.5 flex items-center gap-1.5">
-            <TrendingUp className="h-3.5 w-3.5 text-[var(--accent)]" />
-            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
-              Deals for you
-            </p>
-          </div>
-          {eligibleDeals.length === 0 ? (
-            <p className="text-sm text-[var(--text-secondary)]">
-              No new offers matching your eligible banks right now. Check back soon.
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {eligibleDeals.map((deal) => (
-                <div
-                  key={deal.id}
-                  className="flex items-start justify-between gap-4 rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2.5"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <Badge
-                        style={{
-                          backgroundColor: "var(--success-bg, #d1fae5)",
-                          color: "var(--success-fg, #065f46)",
-                        }}
-                        className="text-xs"
-                      >
-                        Eligible for you
-                      </Badge>
-                      {isElevatedOffer(deal) && (
-                        <Badge
-                          className="text-xs"
-                          style={{
-                            backgroundColor: "color-mix(in srgb, var(--accent) 15%, transparent)",
-                            color: "var(--accent)",
-                          }}
-                        >
-                          🔥 Elevated offer
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">
-                      {deal.title}
-                    </p>
-                    {deal.merchant && deal.merchant !== "Various" && (
-                      <p className="text-xs text-[var(--text-secondary)]">{deal.merchant}</p>
-                    )}
-                  </div>
-                  <Button
-                    onClick={() => handleDealClick(deal)}
-                    size="sm"
-                    variant="outline"
-                    className="flex-shrink-0 rounded-full"
-                  >
-                    View <ExternalLink className="ml-1.5 h-3 w-3" />
-                  </Button>
-                </div>
-              ))}
+        {/* Hot deal */}
+        {hotDeal && (
+          <div className="flex items-center justify-between gap-4 px-4 py-3">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
+                Hot deal
+              </p>
+              <p className="mt-0.5 truncate text-sm font-medium text-[var(--text-primary)]">
+                {hotDeal.title}
+              </p>
+              {hotDeal.merchant && (
+                <p className="text-xs text-[var(--text-secondary)]">{hotDeal.merchant}</p>
+              )}
             </div>
-          )}
-        </div>
+            <Button
+              onClick={() => handleDealClick(hotDeal)}
+              size="sm"
+              variant="outline"
+              className="flex-shrink-0 rounded-full"
+            >
+              View <ExternalLink className="ml-1.5 h-3 w-3" />
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

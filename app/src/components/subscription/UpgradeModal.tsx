@@ -1,159 +1,151 @@
 "use client"
 
-import { useState } from "react"
-import { X, Check } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Check, Sparkles } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { useAnalytics } from "@/contexts/AnalyticsContext"
+import { PLANS } from "@/lib/stripe/config"
 
 interface UpgradeModalProps {
   open: boolean
-  onClose: () => void
-  defaultTier?: 'pro' | 'business'
+  onOpenChange: (open: boolean) => void
 }
 
 const FREE_FEATURES = [
-  'Up to 3 cards tracked',
-  'Basic P&L summary',
-  'Card recommendations',
+  "Track up to 3 cards",
+  "Basic reminders",
+  "12-month rule tracking",
+  "Manual transaction entry",
 ]
 
 const PRO_FEATURES = [
-  'Unlimited cards',
-  'Full P&L history',
-  'CSV export',
-  'Annual fee tracking',
-  'Spending tracker',
-  'Email reminders',
+  "Unlimited cards",
+  "All personalised recommendations",
+  "Card comparison tool (ranked by net value)",
+  "Goal projections & timeline",
+  "Daily insights & deals",
+  "CSV statement upload",
+  "Priority support",
 ]
 
-const BUSINESS_FEATURES = [
-  'Everything in Pro',
-  'Business card tracking',
-  'FBT exposure calculator',
-  'ATO-ready annual PDF report',
-  'Business vs personal P&L split',
-  'Priority support',
-]
+export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
+  const { trackEvent } = useAnalytics()
+  const [loading, setLoading] = useState<"monthly" | "annual" | null>(null)
 
-function FeatureList({ items, included }: { items: string[]; included: boolean }) {
-  return (
-    <ul className="space-y-2 text-sm">
-      {items.map((item) => (
-        <li key={item} className="flex items-start gap-2">
-          <Check
-            className={`mt-0.5 h-4 w-4 shrink-0 ${included ? 'text-[var(--accent)]' : 'text-[var(--text-tertiary)]'}`}
-          />
-          <span className={included ? 'text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'}>
-            {item}
-          </span>
-        </li>
-      ))}
-    </ul>
-  )
-}
+  useEffect(() => {
+    if (open) {
+      trackEvent("upgrade_clicked", {
+        source: "paywall",
+      })
+    }
+  }, [open, trackEvent])
 
-async function startCheckout(plan: 'monthly' | 'annual' | 'business_monthly' | 'business_annual') {
-  const res = await fetch('/api/stripe/checkout', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ plan }),
-  })
-  const json = await res.json() as { url?: string; error?: string }
-  if (json.url) window.location.href = json.url
-}
-
-export function UpgradeModal({ open, onClose, defaultTier = 'pro' }: UpgradeModalProps) {
-  const [loading, setLoading] = useState<string | null>(null)
-
-  if (!open) return null
-
-  async function handleCheckout(plan: 'monthly' | 'annual' | 'business_monthly' | 'business_annual') {
+  const handleCheckout = async (plan: "monthly" | "annual") => {
     setLoading(plan)
+
+    trackEvent("checkout_started", {
+      tier: "pro",
+      trial_status: "no_trial",
+      days_since_signup: 0,
+    })
+
     try {
-      await startCheckout(plan)
-    } finally {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      })
+
+      const data = await res.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        console.error("No checkout URL returned")
+        setLoading(null)
+      }
+    } catch {
+      console.error("Checkout failed")
       setLoading(null)
     }
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div
-        className="relative w-full max-w-3xl rounded-2xl p-6 shadow-2xl"
-        style={{ background: 'var(--surface)' }}
-      >
-        <button
-          className="absolute right-4 top-4 rounded-full p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-          onClick={onClose}
-        >
-          <X className="h-5 w-5" />
-        </button>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="border-[var(--border-default)] bg-[var(--surface)] text-white sm:max-w-xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-2xl text-white">
+            <Sparkles className="h-6 w-6 text-teal-400" />
+            Upgrade to Pro
+          </DialogTitle>
+          <DialogDescription className="text-slate-300">
+            Unlock all features with a 7-day free trial
+          </DialogDescription>
+        </DialogHeader>
 
-        <h2 className="mb-1 text-xl font-bold text-[var(--text-primary)]">Upgrade your plan</h2>
-        <p className="mb-6 text-sm text-[var(--text-secondary)]">
-          Choose the plan that fits your card strategy.
-        </p>
-
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2">
           {/* Free */}
-          <div className="rounded-xl border border-[var(--border)] p-4">
-            <div className="mb-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">Free</p>
-              <p className="mt-1 text-2xl font-bold text-[var(--text-primary)]">$0</p>
-              <p className="text-xs text-[var(--text-secondary)]">forever</p>
-            </div>
-            <FeatureList items={FREE_FEATURES} included />
+          <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] p-4">
+            <p className="text-sm font-semibold text-slate-400">Free</p>
+            <p className="mt-1 text-2xl font-bold text-white">$0</p>
+            <p className="text-xs text-slate-400">Current plan</p>
+            <ul className="mt-4 space-y-2">
+              {FREE_FEATURES.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-sm text-slate-300">
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500" />
+                  {f}
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Pro */}
-          <div
-            className="relative rounded-xl border-2 p-4"
-            style={{ borderColor: 'var(--accent)' }}
-          >
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-3 py-0.5 text-xs font-semibold text-white" style={{ background: 'var(--gradient-cta)' }}>
-              Most Popular
-            </div>
-            <div className="mb-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">Pro</p>
-              <p className="mt-1 text-2xl font-bold text-[var(--text-primary)]">$9.99</p>
-              <p className="text-xs text-[var(--text-secondary)]">per month</p>
-            </div>
-            <FeatureList items={PRO_FEATURES} included />
-            <Button
-              className="mt-4 w-full text-white"
-              size="sm"
-              style={{ background: 'var(--gradient-cta)' }}
-              disabled={loading === 'monthly'}
-              onClick={() => void handleCheckout('monthly')}
-            >
-              {loading === 'monthly' ? 'Redirecting…' : 'Start Free Trial — $9.99/month'}
-            </Button>
-          </div>
-
-          {/* Business */}
-          <div
-            className="rounded-xl border-2 p-4"
-            style={{ borderColor: defaultTier === 'business' ? 'var(--accent)' : 'var(--border)' }}
-          >
-            <div className="mb-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">Business</p>
-              <p className="mt-1 text-2xl font-bold text-[var(--text-primary)]">$19.99</p>
-              <p className="text-xs text-[var(--text-secondary)]">per month</p>
-            </div>
-            <FeatureList items={BUSINESS_FEATURES} included />
-            <Button
-              className="mt-4 w-full text-white"
-              size="sm"
-              style={{ background: defaultTier === 'business' ? 'var(--gradient-cta)' : undefined }}
-              variant={defaultTier === 'business' ? 'default' : 'outline'}
-              disabled={loading === 'business_monthly'}
-              onClick={() => void handleCheckout('business_monthly')}
-            >
-              {loading === 'business_monthly' ? 'Redirecting…' : 'Start Trial — $19.99/month'}
-            </Button>
+          <div className="rounded-xl border-2 border-teal-500/50 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 p-4">
+            <p className="text-sm font-semibold text-teal-400">Pro</p>
+            <p className="mt-1 text-2xl font-bold text-white">
+              $9.99<span className="text-sm font-normal text-slate-400">/mo</span>
+            </p>
+            <p className="text-xs text-teal-300">7-day free trial</p>
+            <ul className="mt-4 space-y-2">
+              {PRO_FEATURES.map((f) => (
+                <li key={f} className="flex items-start gap-2 text-sm text-slate-200">
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-teal-400" />
+                  {f}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </div>
-    </div>
+
+        <div className="flex flex-col gap-3 pt-2">
+          <Button
+            onClick={() => handleCheckout("monthly")}
+            disabled={loading !== null}
+            className="w-full rounded-full text-white shadow-lg"
+            style={{ background: "var(--gradient-cta)" }}
+          >
+            {loading === "monthly" ? "Redirecting..." : `Start Trial — ${PLANS.monthly.display}`}
+          </Button>
+          <Button
+            onClick={() => handleCheckout("annual")}
+            disabled={loading !== null}
+            variant="outline"
+            className="w-full rounded-full"
+          >
+            {loading === "annual" ? "Redirecting..." : `Start Trial — ${PLANS.annual.display} (${PLANS.annual.savings})`}
+          </Button>
+          <p className="text-center text-xs text-slate-400">
+            Cancel anytime during your 7-day trial. No charge until trial ends.
+          </p>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }

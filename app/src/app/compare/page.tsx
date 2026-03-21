@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import { TrendingUp, DollarSign, Calendar, AlertCircle, Check, X, ExternalLink } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
+import { ProGate } from "@/components/ui/ProGate"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -259,6 +260,10 @@ export default function ComparePage() {
 
   return (
     <AppShell>
+      <ProGate
+        feature="card comparison"
+        teaserText="Australians with optimised card portfolios earn up to $800 more per year in points & bonuses."
+      >
       <div className="space-y-6">
         <div>
           <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
@@ -495,6 +500,7 @@ export default function ComparePage() {
           </CardContent>
         </Card>
       </div>
+      </ProGate>
     </AppShell>
   )
 }

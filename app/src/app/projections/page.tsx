@@ -15,7 +15,6 @@ import { PointsBalanceWidget } from "@/components/profile/PointsBalanceWidget"
 import { UnavailableCardAlert } from "@/components/projections/UnavailableCardAlert"
 import { supabase } from "@/lib/supabase/client"
 import { GOALS, calculateMultiCardPaths, type RedemptionGoal } from "@/lib/projections"
-import { formatPointsWithValue } from "@/lib/points"
 import { checkForUnavailableCards } from "@/lib/unavailable-cards"
 import { useCatalog } from "@/contexts/CatalogContext"
 import type { Database } from "@/types/database.types"
@@ -218,12 +217,12 @@ export default function ProjectionsPage() {
                   <p className="text-sm text-[var(--text-secondary)]">{selectedGoal.description}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-[var(--text-secondary)]">Goal value</p>
+                  <p className="text-sm text-[var(--text-secondary)]">Points Needed</p>
                   <p className="text-2xl font-bold text-[var(--accent)]">
-                    {Math.max(0, selectedGoal.pointsRequired - currentPoints).toLocaleString()} pts
+                    {Math.max(0, selectedGoal.pointsRequired - currentPoints).toLocaleString()}
                   </p>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    {formatPointsWithValue(selectedGoal.pointsRequired, "qantas", "flights_business")}
+                    of {selectedGoal.pointsRequired.toLocaleString()} required
                   </p>
                 </div>
               </div>

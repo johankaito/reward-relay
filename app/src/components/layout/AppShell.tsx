@@ -18,16 +18,11 @@ import {
   Scale,
   Lightbulb,
   Calendar,
-  Search,
-  BarChart2,
-  Plane,
-  Lock,
 } from "lucide-react"
 import { useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase/client"
-import { useOnboarding } from "@/contexts/OnboardingContext"
 
 type NavChild = {
   href: string
@@ -40,7 +35,6 @@ type NavItem = {
   label: string
   icon: React.ComponentType<{ className?: string }>
   children?: NavChild[]
-  lockKey?: "optimise" | "track" | "rewards"
 }
 
 const navItems: NavItem[] = [
@@ -53,16 +47,11 @@ const navItems: NavItem[] = [
     href: "/cards",
     label: "Cards",
     icon: CreditCard,
-    children: [
-      { href: "/cards", label: "Catalog", icon: CreditCard },
-      { href: "/inquiries", label: "Inquiries", icon: Search },
-    ],
   },
   {
     href: "/recommendations",
     label: "Discover",
     icon: Compass,
-    lockKey: "optimise",
     children: [
       { href: "/recommendations", label: "Recommendations", icon: Lightbulb },
       { href: "/compare", label: "Compare", icon: Scale },
@@ -70,12 +59,11 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    href: "/tracker",
+    href: "/spending",
     label: "Spending",
     icon: Wallet,
-    lockKey: "track",
     children: [
-      { href: "/tracker", label: "Tracker", icon: Wallet },
+      { href: "/spending", label: "Tracker", icon: Wallet },
       { href: "/statements", label: "Import Statements", icon: Upload },
     ],
   },
@@ -83,30 +71,12 @@ const navItems: NavItem[] = [
     href: "/calendar",
     label: "Timeline",
     icon: CalendarDays,
-    lockKey: "rewards",
     children: [
       { href: "/calendar", label: "Calendar", icon: Calendar },
       { href: "/history", label: "History", icon: History },
     ],
   },
-  {
-    href: "/profit",
-    label: "P&L",
-    icon: BarChart2,
-    lockKey: "rewards",
-  },
-  {
-    href: "/flights",
-    label: "Flights",
-    icon: Plane,
-  },
 ]
-
-const LOCK_MESSAGES: Record<string, string> = {
-  optimise: "Add your cards first",
-  track: "Set your spending profile",
-  rewards: "Get your first recommendation",
-}
 
 type AppShellProps = {
   children: React.ReactNode
@@ -116,36 +86,23 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [signingOut, setSigningOut] = useState(false)
-  const [tooltipKey, setTooltipKey] = useState<string | null>(null)
-  const { progress } = useOnboarding()
-
-  const isLocked = (lockKey?: string): boolean => {
-    if (!lockKey || !progress) return false
-    if (lockKey === "optimise") return !progress.hasAddedCard
-    if (lockKey === "track") return !progress.hasSetSpending
-    if (lockKey === "rewards") return !progress.hasViewedGap
-    return false
-  }
 
   const navMap = useMemo(() => {
     return navItems.map((item) => {
       const isParentActive = pathname.startsWith(item.href)
       const isChildActive = item.children?.some((c) => pathname.startsWith(c.href)) ?? false
       const active = isParentActive || isChildActive
-      const locked = isLocked(item.lockKey)
 
       return {
         ...item,
         active,
-        locked,
         children: item.children?.map((child) => ({
           ...child,
           active: pathname.startsWith(child.href),
         })),
       }
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, progress])
+  }, [pathname])
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -156,11 +113,6 @@ export function AppShell({ children }: AppShellProps) {
       return
     }
     router.replace("/")
-  }
-
-  const handleLockedNavClick = (lockKey: string) => {
-    const msg = LOCK_MESSAGES[lockKey] ?? "Complete setup first"
-    toast.info(msg, { icon: "🔒" })
   }
 
   return (
@@ -210,30 +162,6 @@ export function AppShell({ children }: AppShellProps) {
               const Icon = item.icon
               const hasChildren = !!(item.children && item.children.length > 0)
               const showChildren = hasChildren && item.active
-              const locked = item.locked
-
-              if (locked) {
-                const tooltipMsg = LOCK_MESSAGES[item.lockKey ?? ""] ?? "Complete setup first"
-                return (
-                  <div key={item.href} className="relative">
-                    <button
-                      onClick={() => handleLockedNavClick(item.lockKey ?? "")}
-                      onMouseEnter={() => setTooltipKey(item.href)}
-                      onMouseLeave={() => setTooltipKey(null)}
-                      className="flex w-full cursor-not-allowed items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium opacity-40 transition-colors"
-                    >
-                      <Icon className="h-4 w-4 flex-shrink-0" />
-                      <span className="flex-1 text-left">{item.label}</span>
-                      <Lock className="h-3 w-3 text-[var(--text-secondary)]" />
-                    </button>
-                    {tooltipKey === item.href && (
-                      <div className="absolute left-full top-1/2 z-30 ml-2 -translate-y-1/2 whitespace-nowrap rounded-lg bg-[var(--surface-strong)] px-3 py-1.5 text-xs text-[var(--text-primary)] shadow-lg ring-1 ring-[var(--border-default)]">
-                        🔒 {tooltipMsg}
-                      </div>
-                    )}
-                  </div>
-                )
-              }
 
               return (
                 <div key={item.href}>
@@ -293,28 +221,19 @@ export function AppShell({ children }: AppShellProps) {
         <main className="min-w-0 space-y-5">{children}</main>
       </div>
 
-      {/* Mobile Bottom Nav — 6 items, scrollable */}
+      {/* Mobile Bottom Nav — exactly 5 items, no scroll */}
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--border-default)] bg-[var(--surface)]/95 backdrop-blur md:hidden">
-        <div className="mx-auto flex max-w-sm overflow-x-auto px-2 py-1">
+        <div className="mx-auto grid max-w-sm grid-cols-5 px-2 py-1">
           {navMap.map((item) => {
             const Icon = item.icon
-            const locked = item.locked
             return (
               <button
                 key={item.href}
-                onClick={() => {
-                  if (locked && item.lockKey) {
-                    handleLockedNavClick(item.lockKey)
-                  } else {
-                    router.push(item.href)
-                  }
-                }}
+                onClick={() => router.push(item.href)}
                 className={`flex flex-col items-center gap-1 rounded-lg px-1 py-2 transition-colors ${
-                  locked
-                    ? "cursor-not-allowed opacity-40"
-                    : item.active
-                      ? "text-[var(--accent)]"
-                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  item.active
+                    ? "text-[var(--accent)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
