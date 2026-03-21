@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reward Relay | Spend Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular { font-variant-numeric: tabular-nums; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .arc-glow {
+            filter: drop-shadow(0 0 8px rgba(78, 222, 163, 0.4));
+        }
+        .premium-glow {
+            box-shadow: 0 0 20px rgba(78, 222, 163, 0.15), inset 0 0 10px rgba(78, 222, 163, 0.05);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f131f; }
+        ::-webkit-scrollbar-thumb { background: #313442; border-radius: 10px; }
+        .progress-arc-container {
+            transition: transform 300ms ease-out;
+        }
+        .progress-arc-container:hover {
+            transform: scale(1.02);
+        }
+        .progress-arc-path {
+            transition: stroke-width 300ms ease-out, filter 300ms ease-out;
+        }
+        .progress-arc-container:hover .progress-arc-path {
+            stroke-width: 12;
+            filter: drop-shadow(0 0 12px rgba(78, 222, 163, 0.6));
+        }
+        .progress-center-text {
+            transition: color 300ms ease-out, text-shadow 300ms ease-out;
+        }
+        .progress-arc-container:hover .progress-center-text {
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#353946",
+              "on-primary-container": "#00422b",
+              "inverse-primary": "#006c49",
+              "surface-container-high": "#262a37",
+              "on-primary": "#003824",
+              "tertiary-fixed": "#e2dfff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-container-highest": "#313442",
+              "primary": "#4edea3",
+              "error": "#ffb4ab",
+              "background": "#0f131f",
+              "on-secondary-fixed": "#23005c",
+              "surface-container-low": "#171b28",
+              "tertiary-container": "#9a98ff",
+              "on-error": "#690005",
+              "on-tertiary-fixed": "#0f0069",
+              "tertiary": "#c3c0ff",
+              "surface-container-lowest": "#0a0e1a",
+              "outline": "#86948a",
+              "surface-tint": "#4edea3",
+              "surface-container": "#1b1f2c",
+              "secondary": "#d0bcff",
+              "on-tertiary": "#1d00a5",
+              "surface": "#0f131f",
+              "on-error-container": "#ffdad6",
+              "error-container": "#93000a",
+              "primary-container": "#10b981",
+              "inverse-on-surface": "#2c303d",
+              "secondary-container": "#571bc1",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "surface-variant": "#313442",
+              "on-secondary-fixed-variant": "#5516be",
+              "on-secondary": "#3c0091",
+              "on-surface": "#dfe2f3",
+              "on-tertiary-container": "#2300bf",
+              "tertiary-fixed-dim": "#c3c0ff",
+              "surface-dim": "#0f131f",
+              "primary-fixed": "#6ffbbe",
+              "secondary-fixed-dim": "#d0bcff",
+              "on-surface-variant": "#bbcabf",
+              "on-secondary-container": "#c4abff",
+              "on-background": "#dfe2f3",
+              "inverse-surface": "#dfe2f3",
+              "outline-variant": "#3c4a42",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary-fixed": "#002113",
+              "secondary-fixed": "#e9ddff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 antialiased">
+<nav class="hidden md:flex flex-col border-r border-white/5 h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#171b28] font-['Plus_Jakarta_Sans'] antialiased tracking-tight shadow-none z-50">
+<div class="p-8">
+<span class="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</span>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">The Financial Luminary</p>
+</div>
+<div class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-lg" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-medium">Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-lg" href="#">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="font-medium">Cards</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-[#1b1f2c] text-[#4edea3] rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-medium">Track</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-lg" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium">Redeem</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-lg" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-medium">Account</span>
+</a>
+</div>
+<div class="p-6">
+<button class="w-full bg-gradient-to-br from-[#4edea3] to-[#10b981] text-[#003824] font-bold py-3 rounded-full title-sm scale-95 active:scale-90 transition-transform shadow-lg shadow-primary/10">
+                Add New Card
+            </button>
+</div>
+</nav>
+<nav class="md:hidden fixed bottom-0 w-full z-50 h-20 pb-safe bg-[#0f131f]/80 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-6 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Cards</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#4edea3] scale-110 active:bg-white/5">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Track</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Redeem</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Account</span>
+</div>
+</nav>
+<main class="md:ml-64 min-h-screen">
+<header class="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center justify-between px-10 h-16 w-full max-w-[1440px] mx-auto">
+<h1 class="text-lg font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent font-['Plus_Jakarta_Sans']">Spend Tracker</h1>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-300 hover:opacity-80 transition-opacity cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-slate-300 hover:opacity-80 transition-opacity cursor-pointer">settings</span>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAljC47sH-5T-TEVCGUnezELWFf3f0iTj4CdYTn8ZRNZmKPI82pqUZ_1mrEbzBh9yPij5HJ7wlB4EKjmFTpnzMv1_4rK-hfbw33rjZScyvL_iKsh1jIMpNbCwWdvdBwOX_RTb31A7Eq7lJqy7Z7YhaxLyxQR84kWW-fxLsBksq-nIQonotEQWMRx-dBBqy6mLb94p83BVDXvjX6bAHYvsFgFanpSoUYsDuMNhLRh_oSlM1ApWFp4iWyxH3W-3DFWBUbskLg1N81VFh1"/>
+</div>
+</div>
+</div>
+</header>
+<section class="max-w-[1440px] mx-auto px-10 pt-10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
+<span class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Est. Rewards</span>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-tertiary tabular tracking-tighter">85,000</span>
+<span class="text-slate-500 text-[10px] uppercase font-bold tracking-widest">MR Pts</span>
+</div>
+</div>
+<div class="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
+<span class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Time Remaining</span>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-headline font-bold text-white tabular tracking-tighter">42</span>
+<span class="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Days</span>
+</div>
+</div>
+<div class="bg-gradient-to-br from-secondary-container/20 to-surface-container-low p-6 rounded-2xl relative overflow-hidden group border border-white/5 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-secondary text-xl">stars</span>
+<h3 class="text-sm font-headline font-bold tracking-tight">Maximize Return</h3>
+</div>
+<p class="text-slate-400 text-[11px] leading-relaxed">Prime Visa: earn <span class="text-secondary font-bold">5% back</span> at Amazon.</p>
+</div>
+<a class="mt-3 text-secondary text-[10px] font-bold uppercase tracking-widest inline-flex items-center gap-2 group-hover:gap-3 transition-all" href="#">
+                        Strategy <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<div class="bg-surface-container-low p-6 rounded-2xl border border-white/5 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute -right-10 -top-10 w-24 h-24 bg-white/5 blur-[40px] rounded-full"></div>
+<div>
+<h3 class="text-sm font-headline font-bold tracking-tight mb-1">Upcoming Bills</h3>
+<p class="text-slate-400 text-[11px] leading-relaxed">Due: <span class="text-on-surface font-bold tabular">$4,120.50</span> (3 cards)</p>
+</div>
+<div class="flex -space-x-3 mt-3">
+<div class="w-8 h-8 rounded-full bg-[#3b5998] border-2 border-[#1b1f2c] flex items-center justify-center text-[8px] font-bold shadow-lg">AX</div>
+<div class="w-8 h-8 rounded-full bg-[#117dbe] border-2 border-[#1b1f2c] flex items-center justify-center text-[8px] font-bold shadow-lg">CH</div>
+<div class="w-8 h-8 rounded-full bg-[#ed1c24] border-2 border-[#1b1f2c] flex items-center justify-center text-[8px] font-bold shadow-lg">WF</div>
+</div>
+</div>
+</div>
+</section>
+<div class="max-w-[1440px] mx-auto p-10">
+<div class="grid grid-cols-12 gap-10">
+<div class="col-span-12 lg:col-span-5">
+<div class="bg-surface-container-low rounded-2xl p-10 relative overflow-hidden flex flex-col items-center text-center border border-white/5 h-full">
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full"></div>
+<div class="relative w-full">
+<h2 class="text-slate-500 font-label text-[11px] uppercase tracking-[0.2em] font-bold mb-10">Amex Platinum Bonus Progress</h2>
+<div class="relative w-80 h-48 mx-auto progress-arc-container">
+<svg class="w-full h-full transform -rotate-180" viewBox="0 0 100 55">
+<path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" opacity="0.6" stroke="#262a37" stroke-linecap="round" stroke-width="10"></path>
+<path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#313442" stroke-dasharray="0.5 7.5" stroke-linecap="round" stroke-width="10"></path>
+<path class="arc-glow progress-arc-path" d="M 10 50 A 40 40 0 0 1 65 14" fill="none" stroke="url(#arc-gradient)" stroke-dasharray="126" stroke-dashoffset="38" stroke-linecap="round" stroke-width="10"></path>
+<defs>
+<linearGradient id="arc-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#4edea3"></stop>
+<stop offset="100%" stop-color="#a7f3d0"></stop>
+</linearGradient>
+</defs>
+</svg>
+<div class="absolute top-[18px] right-[72px] w-3 h-3 bg-[#a7f3d0] rounded-full blur-[4px]"></div>
+<div class="absolute bottom-0 inset-x-0 flex flex-col items-center pb-2">
+<span class="text-5xl font-headline font-extrabold tabular tracking-tight text-white progress-center-text">$3,200</span>
+<span class="text-slate-500 font-label text-[10px] uppercase tracking-[0.15em] font-bold mt-2">of <span class="text-slate-400 tabular tracking-normal">$5,000</span> Goal</span>
+</div>
+</div>
+</div>
+<div class="mt-12 flex flex-col items-center gap-6">
+<div class="flex items-center gap-2.5 bg-primary/10 px-5 py-2 rounded-full border border-primary/30 premium-glow">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-primary font-bold text-xs uppercase tracking-widest">On track</span>
+</div>
+<p class="text-slate-400 text-sm max-w-[300px] leading-relaxed">You need to spend <span class="text-on-surface font-semibold tabular">$42.85</span> per day for the next <span class="text-on-surface font-semibold">42 days</span> to hit your bonus.</p>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-7">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-2xl font-headline font-bold tracking-tight">Recent Activity</h3>
+<p class="text-slate-500 text-sm mt-1.5 font-medium">Real-time spend tracking from connected accounts</p>
+</div>
+<button class="bg-surface-container-highest/50 border border-white/5 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-surface-bright transition-all flex items-center gap-2.5">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                            Filter
+                        </button>
+</div>
+<div class="bg-surface-container/30 rounded-2xl overflow-hidden border border-white/5">
+<div class="divide-y divide-white/5">
+<div class="p-6 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl">shopping_bag</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface text-base group-hover:text-primary transition-colors">Apple Store</h4>
+<p class="text-slate-500 text-xs mt-0.5 font-medium">Electronics &amp; Gadgets</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-headline font-bold tabular tracking-tight text-xl">$1,299.00</span>
+<div class="flex items-center justify-end gap-2 mt-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary premium-glow"></span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-primary">Qualified</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-secondary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl">restaurant</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface text-base group-hover:text-primary transition-colors">Nobu Malibu</h4>
+<p class="text-slate-500 text-xs mt-0.5 font-medium">Dining &amp; Bars</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-headline font-bold tabular tracking-tight text-xl">$482.50</span>
+<div class="flex items-center justify-end gap-2 mt-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-primary">Qualified</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-error group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl">local_gas_station</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface text-base group-hover:text-primary transition-colors">Chevron Station</h4>
+<p class="text-slate-500 text-xs mt-0.5 font-medium">Travel &amp; Transit</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-headline font-bold tabular tracking-tight text-xl text-slate-500 line-through decoration-slate-600">$84.12</span>
+<div class="flex items-center justify-end gap-2 mt-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-error">Non-Qualified</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-tertiary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl">flight_takeoff</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface text-base group-hover:text-primary transition-colors">United Airlines</h4>
+<p class="text-slate-500 text-xs mt-0.5 font-medium">Travel &amp; Transit</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-headline font-bold tabular tracking-tight text-xl">$1,120.00</span>
+<div class="flex items-center justify-end gap-2 mt-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary/40 animate-pulse"></span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-primary/60">Pending</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group border-b-0">
+<div class="flex items-center gap-5">
+<div class="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-slate-400 group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl">shopping_cart</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface text-base group-hover:text-primary transition-colors">Whole Foods Market</h4>
+<p class="text-slate-500 text-xs mt-0.5 font-medium">Groceries</p>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-headline font-bold tabular tracking-tight text-xl">$214.30</span>
+<div class="flex items-center justify-end gap-2 mt-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-primary">Qualified</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-5 bg-surface-container-high/30 border-t border-white/5 flex justify-center">
+<button class="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2 px-8">Load More Activity</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed top-0 right-0 w-[600px] h-[600px] bg-primary/5 blur-[150px] -z-10 rounded-full"></div>
+<div class="fixed bottom-0 left-0 w-[900px] h-[900px] bg-secondary/5 blur-[180px] -z-10 rounded-full"></div>
+
+</body></html>

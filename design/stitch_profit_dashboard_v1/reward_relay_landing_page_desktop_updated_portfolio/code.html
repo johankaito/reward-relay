@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reward Relay | Master the Churn</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#86948a",
+              "primary-fixed-dim": "#4edea3",
+              "surface-container-high": "#262a37",
+              "secondary-fixed-dim": "#d0bcff",
+              "on-surface-variant": "#bbcabf",
+              "surface-container-highest": "#313442",
+              "on-secondary-fixed": "#23005c",
+              "tertiary-fixed": "#e2dfff",
+              "on-tertiary-fixed": "#0f0069",
+              "on-surface": "#dfe2f3",
+              "surface-container-lowest": "#0a0e1a",
+              "surface-container": "#1b1f2c",
+              "tertiary-fixed-dim": "#c3c0ff",
+              "on-primary": "#003824",
+              "surface": "#0f131f",
+              "secondary-fixed": "#e9ddff",
+              "secondary-container": "#571bc1",
+              "on-secondary-fixed-variant": "#5516be",
+              "primary-fixed": "#6ffbbe",
+              "primary-container": "#10b981",
+              "on-error-container": "#ffdad6",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "primary": "#4edea3",
+              "on-tertiary-container": "#2300bf",
+              "error-container": "#93000a",
+              "surface-container-low": "#171b28",
+              "on-primary-fixed": "#002113",
+              "inverse-surface": "#dfe2f3",
+              "secondary": "#d0bcff",
+              "on-background": "#dfe2f3",
+              "inverse-primary": "#006c49",
+              "surface-tint": "#4edea3",
+              "surface-bright": "#353946",
+              "on-secondary-container": "#c4abff",
+              "tertiary": "#c3c0ff",
+              "surface-dim": "#0f131f",
+              "surface-variant": "#313442",
+              "on-error": "#690005",
+              "inverse-on-surface": "#2c303d",
+              "on-secondary": "#3c0091",
+              "on-primary-fixed-variant": "#005236",
+              "on-primary-container": "#00422b",
+              "error": "#ffb4ab",
+              "tertiary-container": "#9a98ff",
+              "on-tertiary": "#1d00a5",
+              "outline-variant": "#3c4a42",
+              "background": "#0f131f"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(27, 31, 44, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #4edea3 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, #4edea3 0%, #10b981 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30">
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[800px] flex items-center justify-center px-8 overflow-hidden">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
+<div class="absolute top-[10%] left-[-10%] w-[600px] h-[600px] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[10%] right-[-10%] w-[600px] h-[600px] bg-secondary/5 blur-[120px] rounded-full"></div>
+</div>
+<div class="max-w-5xl mx-auto text-center relative z-10 pt-20">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-label text-xs font-semibold mb-8 uppercase tracking-widest">
+                Command Your Wealth
+            </div>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold tracking-tight text-on-surface mb-6 leading-[1.1]">Master the <span class="text-[#10b981]">Churn</span></h1>
+<p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mx-auto mb-10 leading-relaxed">
+                The high-stakes command center for credit card optimization and point maximization. Orchestrate your credit portfolio with the precision of a master.
+            </p>
+<div class="flex flex-col md:flex-row items-center justify-center gap-4">
+<button class="w-full md:w-auto px-10 py-4 bg-primary-gradient text-on-primary-container font-headline font-bold text-lg rounded-full shadow-lg shadow-primary/20 hover:scale-105 transition-transform">Join the Elite</button>
+<button class="w-full md:w-auto px-10 py-4 glass-card border border-outline-variant/30 text-on-surface font-headline font-bold text-lg rounded-full hover:bg-surface-bright transition-colors">View Live Dashboard</button>
+</div>
+<div class="mt-20 pt-10 border-t border-outline-variant/10">
+<p class="text-slate-500 font-medium text-sm mb-6 tracking-widest uppercase">Trusted by 5,000+ Aussie Points Hackers</p>
+<div class="flex flex-wrap justify-center items-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="font-headline font-bold text-2xl">AMEX</div>
+<div class="font-headline font-bold text-2xl">QANTAS</div>
+<div class="font-headline font-bold text-2xl">VELOCITY</div>
+<div class="font-headline font-bold text-2xl">COMMBANK</div>
+<div class="font-headline font-bold text-2xl">ANZ</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How it Works Section -->
+<section class="py-24 px-8 bg-surface-container-low">
+<div class="max-w-4xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-headline font-extrabold mb-4">How it Works</h2>
+<div class="h-1.5 w-16 bg-primary mx-auto rounded-full"></div>
+</div>
+<div class="space-y-16">
+<!-- Step 1 -->
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="w-16 h-16 shrink-0 rounded-full bg-primary-container/20 flex items-center justify-center text-primary border border-primary/20">
+<span class="text-2xl font-headline font-bold">1</span>
+</div>
+<div>
+<h3 class="text-2xl font-headline font-bold mb-3">Connect Your Vault</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+                            Securely link your bank accounts using military-grade encryption to aggregate your entire financial footprint.
+                        </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="w-16 h-16 shrink-0 rounded-full bg-primary-container/20 flex items-center justify-center text-primary border border-primary/20">
+<span class="text-2xl font-headline font-bold">2</span>
+</div>
+<div>
+<h3 class="text-2xl font-headline font-bold mb-3">Algorithm Audit</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+                            Our proprietary engine analyzes your spending patterns against 500+ credit card offers to find your optimal path.
+                        </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="w-16 h-16 shrink-0 rounded-full bg-primary-container/20 flex items-center justify-center text-primary border border-primary/20">
+<span class="text-2xl font-headline font-bold">3</span>
+</div>
+<div>
+<h3 class="text-2xl font-headline font-bold mb-3">Execute &amp; Conquer</h3>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+                            Receive real-time notifications on when to spend, when to apply, and when to close to keep your credit score pristine.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Visual Showcase Section -->
+<section class="py-24 px-8 max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Spend Progress -->
+<div class="md:col-span-12 lg:col-span-5 bg-surface-container rounded-lg p-10 flex flex-col items-center justify-center text-center overflow-hidden border border-outline-variant/10">
+<h3 class="font-headline text-3xl font-bold mb-10">Active Card Progress</h3>
+<div class="relative w-64 h-64">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-highest" cx="128" cy="128" fill="transparent" r="110" stroke="currentColor" stroke-width="16"></circle>
+<circle class="text-primary" cx="128" cy="128" fill="transparent" r="110" stroke="currentColor" stroke-dasharray="691" stroke-dashoffset="103" stroke-linecap="round" stroke-width="16"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-5xl font-headline font-extrabold tabular-nums">$3,420</span>
+<span class="text-sm text-on-surface-variant font-medium mt-1 uppercase tracking-widest">OF $4,000 GOAL</span>
+</div>
+</div>
+<div class="mt-10 px-6 py-2 rounded-full bg-primary/10 text-primary text-sm font-bold tracking-widest">85% COMPLETE — 12 DAYS LEFT</div>
+</div>
+<!-- Portfolio Integration -->
+<div class="md:col-span-12 lg:col-span-7 bg-surface-container rounded-lg p-10 relative overflow-hidden flex flex-col justify-between border border-outline-variant/10">
+<div class="relative z-10">
+<h3 class="font-headline text-3xl font-bold mb-4">Portfolio Integration</h3>
+<p class="text-on-surface-variant text-lg max-w-md">Securely link all financial instruments into a single, unified atmospheric dashboard.</p>
+</div>
+<div class="relative mt-20 mb-12 flex justify-center h-72">
+<!-- NAB Card -->
+<div class="w-80 h-48 rounded-xl bg-gradient-to-br from-[#c91d1d] to-[#7a0a0a] p-6 shadow-2xl absolute z-10 transform -rotate-12 -translate-x-24 translate-y-16 border border-white/10">
+<div class="flex justify-between items-start">
+<span class="text-white/80 font-headline font-bold tracking-widest text-[10px]">REWARDS PREMIUM</span>
+<span class="material-symbols-outlined text-white/40">credit_card</span>
+</div>
+<div class="mt-12">
+<div class="text-white font-bold text-2xl tabular-nums">42.1k</div>
+<div class="text-[10px] text-white/60 font-bold mt-1 tracking-widest uppercase">NAB Rewards</div>
+</div>
+</div>
+<!-- CBA Card -->
+<div class="w-80 h-48 rounded-xl bg-gradient-to-br from-[#ffcc00] to-[#e6b800] p-6 shadow-2xl absolute z-20 transform -rotate-3 -translate-x-8 translate-y-8 border border-white/10">
+<div class="flex justify-between items-start">
+<span class="text-black/80 font-headline font-bold tracking-widest text-[10px]">ULTIMATE AWARDS</span>
+<span class="material-symbols-outlined text-black/40">account_balance</span>
+</div>
+<div class="mt-12">
+<div class="text-black font-bold text-2xl tabular-nums">67.8k</div>
+<div class="text-[10px] text-black/60 font-bold mt-1 tracking-widest uppercase">CommBank</div>
+</div>
+</div>
+<!-- ANZ Card -->
+<div class="w-80 h-48 rounded-xl bg-gradient-to-br from-[#004165] to-[#002a42] p-6 shadow-2xl absolute z-30 transform rotate-6 translate-x-12 translate-y-4 border border-blue-400/20">
+<div class="flex justify-between items-start">
+<span class="text-blue-100/80 font-headline font-bold tracking-widest text-[10px]">BLACK QANTAS</span>
+<span class="material-symbols-outlined text-blue-400">diamond</span>
+</div>
+<div class="mt-12">
+<div class="text-on-surface font-bold text-2xl tabular-nums">112.4k</div>
+<div class="text-[10px] text-blue-400 font-bold mt-1 tracking-widest uppercase">ANZ FF</div>
+</div>
+</div>
+<!-- Amex Card -->
+<div class="w-80 h-48 rounded-xl bg-gradient-to-br from-[#1b1f2c] to-[#0a0e1a] p-6 shadow-2xl absolute z-40 transform rotate-12 translate-x-24 -translate-y-4 border border-white/10 ring-1 ring-primary/20">
+<div class="flex justify-between items-start">
+<span class="text-on-surface/80 font-headline font-bold tracking-widest text-[10px]">PLATINUM COMMAND</span>
+<span class="material-symbols-outlined text-primary">contactless</span>
+</div>
+<div class="mt-12">
+<div class="text-on-surface font-bold text-2xl tabular-nums">245.5k</div>
+<div class="text-[10px] text-primary font-bold mt-1 tracking-widest uppercase">AMEX Active</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-24 px-8 bg-surface-container-low relative">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-4xl md:text-5xl font-headline font-extrabold mb-4">Select Your Plan</h2>
+<p class="text-on-surface-variant">Professional tools for the modern financial luminary.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+<!-- Lite Relay -->
+<div class="p-10 rounded-lg bg-surface-container flex flex-col border border-outline-variant/10 hover:border-primary/20 transition-all">
+<div class="mb-8">
+<h3 class="text-2xl font-headline font-bold mb-2">Lite Relay</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-headline font-extrabold tabular-nums">$0</span>
+<span class="text-on-surface-variant">/month</span>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-outline text-lg">check_circle</span>
+                            Up to 2 Bank Syncs
+                        </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-outline text-lg">check_circle</span>
+                            Basic Point Dashboard
+                        </li>
+<li class="flex items-center gap-3 text-sm text-on-surface/40">
+<span class="material-symbols-outlined text-outline/30 text-lg">cancel</span>
+                            No Churn Strategy
+                        </li>
+</ul>
+<button class="w-full py-4 rounded-full border border-outline text-on-surface font-headline font-bold hover:bg-surface-bright transition-colors">Start Free</button>
+</div>
+<!-- Command Center -->
+<div class="p-10 rounded-lg bg-surface-container-highest flex flex-col border-2 border-primary relative overflow-hidden shadow-2xl shadow-primary/10">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="absolute top-4 right-4 px-3 py-1 bg-primary text-on-primary font-bold text-[10px] tracking-widest rounded-full uppercase">Most Popular</div>
+<div class="mb-8">
+<h3 class="text-2xl font-headline font-bold mb-2">Command Center</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-headline font-extrabold tabular-nums">$29</span>
+<span class="text-on-surface-variant">/month</span>
+</div>
+</div>
+<ul class="space-y-4 mb-10 flex-grow">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Unlimited Bank Sync
+                        </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Sign-up Bonus Tracker
+                        </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Custom Churn Strategy
+                        </li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Priority Concierge Support
+                        </li>
+</ul>
+<button class="w-full py-4 rounded-full bg-primary-gradient text-on-primary font-headline font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform">Upgrade Now</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-24 px-8 max-w-5xl mx-auto">
+<h2 class="text-4xl font-headline font-extrabold mb-16 text-center">Wall of Luminary</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Testimonial 1 -->
+<div class="surface-container-high/30 p-8 rounded-lg italic text-on-surface-variant relative border border-outline-variant/10">
+<span class="material-symbols-outlined absolute -top-4 left-6 text-5xl text-primary/20">format_quote</span>
+<p class="mb-8 text-lg leading-relaxed relative z-10">
+                    "Reward Relay turned my casual spending into first-class tickets around the world. The UI is cleaner than my banking app."
+                </p>
+<div class="flex items-center gap-4 not-italic">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-primary/20">
+<img alt="Portrait of Alex Chen" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzaGRT1jiTcLjHpd1CmSftXD_Z9p_WTytQedj1Jgzm5akhUoT5RhfxKpwQEjadUqQMjweELclBzh6TQ4LIumL6a41_GwRwLUxFWpX_9qcw_VKW4yCupSHvl4JjJknoUau9Psu7ekkJJucJQrGj8bRLSzLUFl3gMp8jiKtdkqdubRXikZbM-YLCAzkC6rod_RchshZNVQMTKbjU-w4iI5y-DhPRhrvHDJQ0GsTtuAhL7dAkmkS1gxqVu4jdDjjLpnCwUHxnLFFJb0Uz"/>
+</div>
+<div>
+<p class="font-headline font-bold">Alex Chen</p>
+<p class="text-xs text-primary font-label font-bold uppercase tracking-wider">Churning since 2019</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="surface-container-high/30 p-8 rounded-lg italic text-on-surface-variant relative border border-outline-variant/10">
+<span class="material-symbols-outlined absolute -top-4 left-6 text-5xl text-primary/20">format_quote</span>
+<p class="mb-8 text-lg leading-relaxed relative z-10">
+                    "The only platform that understands the nuance of the 5/24 rule perfectly. A must-have for serious collectors."
+                </p>
+<div class="flex items-center gap-4 not-italic">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-primary/20">
+<img alt="Portrait of Sarah Jenkins" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2QjSx6rjzRAks10snFtOLiejEGewnYxyK4cqRMLDsd3X3v_OHv6lR-oN4LcSFWjmQZJlQ477GPe8C-CDn24AhHPPYWFuCBdp_uq6szhwyjQDfxaKdZ7C-Cfow2qKRkt533x4Q4i8T_Sz5DSsF87Rdi_bjoJHXejFqMiDs5-fpm6h0O-L2H_DNBKV7aGGcbGXRta9s7B52ClFaV6XRR9uFUtkcEAI8YIRqjYXA-808PgcTWW-ovEco0rBYeKvQsT-Ze8hTNYUl8Q4E"/>
+</div>
+<div>
+<p class="font-headline font-bold">Sarah Jenkins</p>
+<p class="text-xs text-primary font-label font-bold uppercase tracking-wider">Venture Capitalist</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-8 text-center">
+<div class="max-w-4xl mx-auto glass-card p-16 rounded-lg border border-outline-variant/10 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-20 -mt-20"></div>
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold mb-6">Ready to Master the Churn?</h2>
+<p class="text-on-surface-variant text-lg mb-12 max-w-2xl mx-auto">Stop leaving points on the table. Join 5,000+ Aussies who have optimized their credit card game with precision.</p>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<input class="px-8 py-4 rounded-full bg-surface-container border border-outline-variant/30 focus:ring-2 focus:ring-primary/50 w-full md:w-96 text-on-surface" placeholder="Enter your email" type="email"/>
+<button class="px-12 py-4 bg-primary-gradient text-on-primary-container font-headline font-bold rounded-full hover:scale-105 transition-transform shadow-lg shadow-primary/20">Get Early Access</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-800/20 bg-[#0f131f] py-16">
+<div class="max-w-7xl mx-auto px-8 flex flex-col items-center text-center gap-10">
+<div class="flex flex-col items-center gap-2">
+<div class="text-2xl font-bold tracking-tighter text-primary font-headline">Reward Relay</div>
+<p class="text-slate-500 font-body text-sm max-w-md">The Financial Luminary Command Center. Elevating credit reward management to high-stakes precision.</p>
+</div>
+<p class="font-body text-xs text-slate-600 tabular-nums">
+            © 2024 Reward Relay. All rights reserved.
+        </p>
+</div>
+</footer>
+</body></html>

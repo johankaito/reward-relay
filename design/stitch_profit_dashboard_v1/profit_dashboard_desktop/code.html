@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profit Dashboard - Reward Relay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#353946",
+                        "on-primary-container": "#00422b",
+                        "inverse-primary": "#006c49",
+                        "surface-container-high": "#262a37",
+                        "on-primary": "#003824",
+                        "tertiary-fixed": "#e2dfff",
+                        "on-primary-fixed-variant": "#005236",
+                        "surface-container-highest": "#313442",
+                        "primary": "#4edea3",
+                        "error": "#ffb4ab",
+                        "background": "#0f131f",
+                        "on-secondary-fixed": "#23005c",
+                        "surface-container-low": "#171b28",
+                        "tertiary-container": "#9a98ff",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#0f0069",
+                        "tertiary": "#c3c0ff",
+                        "surface-container-lowest": "#0a0e1a",
+                        "outline": "#86948a",
+                        "surface-tint": "#4edea3",
+                        "surface-container": "#1b1f2c",
+                        "secondary": "#d0bcff",
+                        "on-tertiary": "#1d00a5",
+                        "surface": "#0f131f",
+                        "on-error-container": "#ffdad6",
+                        "error-container": "#93000a",
+                        "primary-container": "#10b981",
+                        "inverse-on-surface": "#2c303d",
+                        "secondary-container": "#571bc1",
+                        "on-tertiary-fixed-variant": "#3323cc",
+                        "surface-variant": "#313442",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-secondary": "#3c0091",
+                        "on-surface": "#dfe2f3",
+                        "on-tertiary-container": "#2300bf",
+                        "tertiary-fixed-dim": "#c3c0ff",
+                        "surface-dim": "#0f131f",
+                        "primary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-surface-variant": "#bbcabf",
+                        "on-secondary-container": "#c4abff",
+                        "on-background": "#dfe2f3",
+                        "inverse-surface": "#dfe2f3",
+                        "outline-variant": "#3c4a42",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-primary-fixed": "#002113",
+                        "secondary-fixed": "#e9ddff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0f131f;
+            color: #dfe2f3;
+            -webkit-font-smoothing: antialiased;
+        }
+        .tabular {
+            font-variant-numeric: tabular-nums;
+        }
+        .glass {
+            background: rgba(27, 31, 44, 0.6);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="font-body">
+<!-- SideNavBar (Authority: JSON + Conflict Protocol) -->
+<aside class="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-64 fixed left-0 top-0 overflow-y-auto font-['Plus_Jakarta_Sans'] antialiased tracking-tight shadow-none">
+<div class="p-8">
+<h1 class="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</h1>
+<p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] mt-1">The Financial Luminary</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Home -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#313442] transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-sm font-semibold">Home</span>
+</a>
+<!-- Cards -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#313442] transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+<span class="text-sm font-semibold">Cards</span>
+</a>
+<!-- Track (ACTIVE for Profit Screen) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-[#1b1f2c] text-[#4edea3] rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="text-sm font-semibold">Track</span>
+</a>
+<!-- Redeem -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#313442] transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-sm font-semibold">Redeem</span>
+</a>
+<!-- Account -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-[#313442] transition-all duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-sm font-semibold">Account</span>
+</a>
+</nav>
+<div class="p-6">
+<button class="w-full bg-gradient-to-br from-[#4edea3] to-[#10b981] text-on-primary font-bold py-4 rounded-full text-sm shadow-lg active:scale-95 transition-transform">
+                Add New Card
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen pb-24 md:pb-12">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<h2 class="font-headline font-bold text-lg bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent">Profit Dashboard</h2>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-highest px-4 py-2 rounded-full gap-3">
+<span class="material-symbols-outlined text-outline text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 w-48 text-on-surface" placeholder="Search transactions..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-300 hover:opacity-80 transition-opacity cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-300 hover:opacity-80 transition-opacity cursor-pointer" data-icon="settings">settings</span>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User Profile Portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmVlM8zqAOpKnP549RUmcfiuMFXcrRfAz3ujvUE2iwkEs8fkpW9_H7slrie2u0o7PWVGVHuwiapO8rnkAyvYSI9TIED8XuxVFortGgEunQVW9E2vkB-KX-04r2r_wIy_8NUkWSydu_jEXHTxzQ0N3D18Hs_5Q7EgtilnsnRGw0tbNwzrYtc4XNdnW-MJvC6clwubNaAaWbGa1uXPU5djsWrbYjoKlilXGNdPZFu5PkdQYhreq_MMkUWsy53IuCEnNAqnqR9rCqeZ9H"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<section class="max-w-[1440px] mx-auto p-6 md:p-12 space-y-12">
+<!-- Hero + Chart Section (Side by Side) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+<!-- Hero Metrics Card -->
+<div class="lg:col-span-5 flex flex-col justify-between p-10 bg-surface-container rounded-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+<div class="relative z-10 space-y-8">
+<div>
+<span class="text-xs font-bold tracking-[0.3em] uppercase text-outline opacity-70">FY 2024 Net Profit</span>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-6xl md:text-7xl font-headline font-extrabold text-primary tabular tracking-tighter">$14,842</span>
+<span class="text-2xl font-headline font-bold text-primary/60">.60</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-8 pt-8 border-t border-white/5">
+<div>
+<span class="text-[10px] font-bold tracking-widest uppercase text-outline">Total Bonuses</span>
+<p class="text-2xl font-headline font-bold text-on-surface tabular mt-1">+$18,200</p>
+</div>
+<div>
+<span class="text-[10px] font-bold tracking-widest uppercase text-outline">Gross Fees</span>
+<p class="text-2xl font-headline font-bold text-secondary tabular mt-1">-$3,357</p>
+</div>
+</div>
+</div>
+<div class="relative z-10 mt-12 bg-white/5 p-4 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+<span class="text-sm font-semibold">+22% from last FY</span>
+</div>
+<span class="text-xs text-outline font-medium">Updated 2m ago</span>
+</div>
+</div>
+<!-- Main Waterfall / Bar Chart Canvas -->
+<div class="lg:col-span-7 bg-surface-container rounded-lg p-8 flex flex-col">
+<div class="flex items-center justify-between mb-10">
+<h3 class="font-headline font-bold text-xl">Bonuses vs Fees per Card</h3>
+<div class="flex gap-2">
+<div class="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-primary">Bonus</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-secondary/10 rounded-full">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-secondary">Fee</span>
+</div>
+</div>
+</div>
+<div class="flex-1 flex items-end justify-between gap-4 min-h-[300px] px-2">
+<!-- Bar 1 -->
+<div class="flex-1 flex flex-col items-center gap-3 group">
+<div class="w-full flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full bg-primary/20 rounded-t-sm h-[85%] relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
+</div>
+<div class="w-full bg-secondary rounded-b-sm h-[15%]"></div>
+</div>
+<span class="text-[10px] font-bold text-outline uppercase group-hover:text-on-surface transition-colors">Amex Plat</span>
+</div>
+<!-- Bar 2 -->
+<div class="flex-1 flex flex-col items-center gap-3 group">
+<div class="w-full flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full bg-primary/20 rounded-t-sm h-[95%] relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
+</div>
+<div class="w-full bg-secondary rounded-b-sm h-[5%]"></div>
+</div>
+<span class="text-[10px] font-bold text-outline uppercase group-hover:text-on-surface">Chase SR</span>
+</div>
+<!-- Bar 3 -->
+<div class="flex-1 flex flex-col items-center gap-3 group">
+<div class="w-full flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full bg-primary/20 rounded-t-sm h-[70%] relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
+</div>
+<div class="w-full bg-secondary rounded-b-sm h-[30%]"></div>
+</div>
+<span class="text-[10px] font-bold text-outline uppercase group-hover:text-on-surface">Amex Gold</span>
+</div>
+<!-- Bar 4 -->
+<div class="flex-1 flex flex-col items-center gap-3 group">
+<div class="w-full flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full bg-primary/20 rounded-t-sm h-[90%] relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
+</div>
+<div class="w-full bg-secondary rounded-b-sm h-[10%]"></div>
+</div>
+<span class="text-[10px] font-bold text-outline uppercase group-hover:text-on-surface">Venture X</span>
+</div>
+<!-- Bar 5 -->
+<div class="flex-1 flex flex-col items-center gap-3 group">
+<div class="w-full flex flex-col justify-end items-center gap-1 h-full">
+<div class="w-full bg-primary/20 rounded-t-sm h-[98%] relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
+</div>
+<div class="w-full bg-secondary rounded-b-sm h-[2%]"></div>
+</div>
+<span class="text-[10px] font-bold text-outline uppercase group-hover:text-on-surface">Freedom</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Best/Worst ROI Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Best ROI (Emerald Focus) -->
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="auto_awesome">auto_awesome</span>
+<h3 class="font-headline font-bold text-2xl">High Velocity Assets</h3>
+</div>
+<div class="space-y-4">
+<!-- Card Item 1 -->
+<div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between group hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="w-16 h-10 rounded bg-gradient-to-br from-[#d4af37] to-[#8b6b00] shadow-lg flex items-center justify-center text-[8px] font-bold text-white uppercase tracking-tighter">Gold Card</div>
+<div>
+<h4 class="font-bold text-on-surface">Amex Gold Business</h4>
+<p class="text-xs text-outline font-medium">90k Membership Rewards</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary font-headline font-bold text-lg tabular">12.4x ROI</p>
+<p class="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Efficiency</p>
+</div>
+</div>
+<!-- Card Item 2 -->
+<div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between group hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="w-16 h-10 rounded bg-gradient-to-br from-blue-600 to-blue-900 shadow-lg flex items-center justify-center text-[8px] font-bold text-white uppercase tracking-tighter">Chase SR</div>
+<div>
+<h4 class="font-bold text-on-surface">Sapphire Reserve</h4>
+<p class="text-xs text-outline font-medium">60k Ultimate Rewards</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-primary font-headline font-bold text-lg tabular">8.2x ROI</p>
+<p class="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Efficiency</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Maintenance / Low ROI (Indigo Focus) -->
+<div class="space-y-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="query_stats">query_stats</span>
+<h3 class="font-headline font-bold text-2xl">Holding Strategy</h3>
+</div>
+<div class="space-y-4">
+<!-- Card Item 3 -->
+<div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between group hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="w-16 h-10 rounded bg-gradient-to-br from-slate-400 to-slate-700 shadow-lg flex items-center justify-center text-[8px] font-bold text-white uppercase tracking-tighter">Plat Card</div>
+<div>
+<h4 class="font-bold text-on-surface">Amex Platinum</h4>
+<p class="text-xs text-outline font-medium">Annual Retention Phase</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-secondary font-headline font-bold text-lg tabular">1.8x ROI</p>
+<p class="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Maintenance</p>
+</div>
+</div>
+<!-- Card Item 4 -->
+<div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between group hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-6">
+<div class="w-16 h-10 rounded bg-gradient-to-br from-red-600 to-red-900 shadow-lg flex items-center justify-center text-[8px] font-bold text-white uppercase tracking-tighter">Aviator</div>
+<div>
+<h4 class="font-bold text-on-surface">Barclays Aviator Red</h4>
+<p class="text-xs text-outline font-medium">Renewal pending decision</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-secondary font-headline font-bold text-lg tabular">0.9x ROI</p>
+<p class="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Review Needed</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Style Detail Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
+<span class="material-symbols-outlined text-primary" data-icon="savings">savings</span>
+<h4 class="font-headline font-bold text-lg">Potential Savings</h4>
+<p class="text-sm text-outline leading-relaxed">Cancel 2 underperforming cards to save <span class="text-primary font-bold">$1,240</span> in upcoming annual fees.</p>
+</div>
+<div class="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
+<span class="material-symbols-outlined text-secondary" data-icon="calendar_month">calendar_month</span>
+<h4 class="font-headline font-bold text-lg">Next ROI Peak</h4>
+<p class="text-sm text-outline leading-relaxed">Your Hyatt bonus hits in <span class="text-secondary font-bold">14 days</span>, boosting your total FY profit by 8%.</p>
+</div>
+<div class="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet">account_balance_wallet</span>
+<h4 class="font-headline font-bold text-lg">Wallet Health</h4>
+<p class="text-sm text-outline leading-relaxed">Overall portfolio efficiency is <span class="text-primary font-bold">92.4%</span>. Top 1% of users globally.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 h-20 pb-safe bg-[#0f131f]/80 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-6 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-slate-500 font-['Inter'] text-[10px] uppercase tracking-widest font-semibold active:bg-white/5" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+            Home
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-500 font-['Inter'] text-[10px] uppercase tracking-widest font-semibold active:bg-white/5" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="credit_card">credit_card</span>
+            Cards
+        </a>
+<a class="flex flex-col items-center justify-center text-[#4edea3] scale-110 font-['Inter'] text-[10px] uppercase tracking-widest font-semibold animate-pulse-subtle" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+            Track
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-500 font-['Inter'] text-[10px] uppercase tracking-widest font-semibold active:bg-white/5" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="payments">payments</span>
+            Redeem
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-500 font-['Inter'] text-[10px] uppercase tracking-widest font-semibold active:bg-white/5" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+            Account
+        </a>
+</nav>
+</body></html>

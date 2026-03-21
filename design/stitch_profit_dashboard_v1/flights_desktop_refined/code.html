@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flights | Reward Relay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#353946",
+              "on-primary-container": "#00422b",
+              "inverse-primary": "#006c49",
+              "surface-container-high": "#262a37",
+              "on-primary": "#003824",
+              "tertiary-fixed": "#e2dfff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-container-highest": "#313442",
+              "primary": "#4edea3",
+              "error": "#ffb4ab",
+              "background": "#0f131f",
+              "on-secondary-fixed": "#23005c",
+              "surface-container-low": "#171b28",
+              "tertiary-container": "#9a98ff",
+              "on-error": "#690005",
+              "on-tertiary-fixed": "#0f0069",
+              "tertiary": "#c3c0ff",
+              "surface-container-lowest": "#0a0e1a",
+              "outline": "#86948a",
+              "surface-tint": "#4edea3",
+              "surface-container": "#1b1f2c",
+              "secondary": "#d0bcff",
+              "on-tertiary": "#1d00a5",
+              "surface": "#0f131f",
+              "on-error-container": "#ffdad6",
+              "error-container": "#93000a",
+              "primary-container": "#10b981",
+              "inverse-on-surface": "#2c303d",
+              "secondary-container": "#571bc1",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "surface-variant": "#313442",
+              "on-secondary-fixed-variant": "#5516be",
+              "on-secondary": "#3c0091",
+              "on-surface": "#dfe2f3",
+              "on-tertiary-container": "#2300bf",
+              "tertiary-fixed-dim": "#c3c0ff",
+              "surface-dim": "#0f131f",
+              "primary-fixed": "#6ffbbe",
+              "secondary-fixed-dim": "#d0bcff",
+              "on-surface-variant": "#bbcabf",
+              "on-secondary-container": "#c4abff",
+              "on-background": "#dfe2f3",
+              "inverse-surface": "#dfe2f3",
+              "outline-variant": "#3c4a42",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary-fixed": "#002113",
+              "secondary-fixed": "#e9ddff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        .glass-card {
+            background: rgba(27, 31, 44, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        body { background-color: #0f131f; color: #dfe2f3; }
+    </style>
+</head>
+<body class="font-body selection:bg-primary/30 antialiased">
+<!-- Sidebar Navigation Shell -->
+<aside class="hidden md:flex flex-col border-r border-white/5 h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-[#171b28] font-headline tracking-tight shadow-[1px_0_0_0_rgba(255,255,255,0.05)]">
+<div class="p-8">
+<h1 class="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</h1>
+<p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] mt-1 font-semibold">The Financial Luminary</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-sm font-medium">Home</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-[#1b1f2c] text-[#4edea3] rounded-xl transition-all border border-white/5 inner-glow" href="#">
+<span class="material-symbols-outlined" data-icon="flight">flight</span>
+<span class="text-sm font-bold">Flights</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+<span class="text-sm font-medium">Cards</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-sm font-medium">Track</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-sm font-medium">Redeem</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors hover:bg-[#313442] rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-sm font-medium">Account</span>
+</a>
+</nav>
+<div class="p-6 mt-auto">
+<button class="w-full py-4 px-4 bg-gradient-to-br from-[#4edea3] to-[#10b981] text-[#003824] font-extrabold rounded-2xl text-sm active:scale-95 transition-all shadow-lg shadow-primary/10">
+                Add New Card
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 min-h-screen pb-24 md:pb-12">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-40 bg-[#0f131f]/60 backdrop-blur-xl border-b border-white/5 h-20 flex items-center justify-between px-8">
+<div class="flex items-center gap-4">
+<h2 class="text-xl font-headline font-bold text-on-surface tracking-tight">Reward Flights</h2>
+<div class="h-4 w-[1px] bg-white/10 hidden md:block mx-2"></div>
+<div class="hidden md:flex gap-2">
+<span class="px-3 py-1 bg-surface-container/50 border border-white/5 rounded-full text-[10px] font-bold text-primary uppercase tracking-widest">Global Search</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]" data-icon="search">search</span>
+<input class="bg-surface-container-highest/30 border border-white/5 rounded-full py-2.5 pl-12 pr-6 text-sm w-72 focus:ring-1 focus:ring-primary/40 focus:bg-surface-container-highest/60 transition-all placeholder:text-slate-500 text-on-surface" placeholder="Search routes or airlines..." type="text"/>
+</div>
+<div class="flex items-center gap-5">
+<div class="relative group cursor-pointer">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full ring-2 ring-[#0f131f]"></span>
+</div>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors" data-icon="settings">settings</span>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border-2 border-white/5 p-0.5">
+<img alt="User Profile" class="w-full h-full rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6a2QHSHBztNDr6L-pdaDjYOET81YjS-qmzwy05aEH1nZVGWGCv-SmTjSbMyFy1IodINgbXBMMs5TI_Kx1dYg3B0rrYJ4VJzfv9Ai1TrhHAR5ZTwWfY7qB7OQEZuMpXUuxvqcnPW9zo2Ow-HBKyV83c2Q_COjm0XRDZq2pFAOOMrJS_SHVm8TKrW544OE4rGj2d3FFyw0g9VaDYSAC9CetmN8KhFZK5dkQCrh-wzD-ajrs1VdDrY8LMJJIX4INZBJPHsHfSmZs5i6k"/>
+</div>
+</div>
+</div>
+</header>
+<section class="max-w-[1440px] mx-auto p-8 space-y-10">
+<!-- Hero Search Component -->
+<div class="relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-end p-10 shadow-2xl border border-white/5">
+<div class="absolute inset-0 z-0">
+<img alt="Flight Interior" class="w-full h-full object-cover opacity-50 scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNYL_cE0UqNQqiXikVvjZkCo6KMN9o0GfkUUDQ4DEALjjJ3SPznyMkbKPhZFuS0akquC-bu_f2la5j6mAjAFvrwc3w6AaLznJvN8RZcUgNCn3rfKY6NcgVLr5zUKkR_PzUbLazIceyVKrpqCcoijOxPdjXsPpClvKSbNAi7QFJfwc3Uc52jU6HqwP_IzraG_JxYozMEqha-fN4GzvDvMtNLRb5SYFZhqV224mRB-Zgf_jMy-XslBBTRUUsc2zBFMHlmrY7GTAs9op-"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
+</div>
+<div class="relative z-10 w-full">
+<div class="mb-10 max-w-2xl">
+<h3 class="text-5xl font-headline font-extrabold tracking-tight text-white mb-4 leading-tight">Target Your Next Cabin.</h3>
+<p class="text-slate-300 font-medium text-lg leading-relaxed">Instantly check reward availability across premium partner airlines and bridge the point gap.</p>
+</div>
+<div class="glass-card rounded-2xl p-3 flex flex-col lg:flex-row gap-3 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+<div class="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-primary font-bold mb-1.5 opacity-80">Origin</label>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-primary/70" data-icon="location_on">location_on</span>
+<span class="font-bold text-on-surface text-lg">Sydney (SYD)</span>
+</div>
+</div>
+<div class="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Destination</label>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-slate-500" data-icon="flight_land">flight_land</span>
+<span class="font-bold text-on-surface text-lg">London (LHR)</span>
+</div>
+</div>
+<div class="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Cabin Class</label>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-slate-500" data-icon="airline_seat_recline_extra">airline_seat_recline_extra</span>
+<span class="font-bold text-on-surface text-lg">Business Class</span>
+</div>
+</div>
+<div class="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+<label class="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Departure</label>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-slate-500" data-icon="calendar_today">calendar_today</span>
+<span class="font-bold text-on-surface text-lg">Anytime 2024</span>
+</div>
+</div>
+</div>
+<button class="bg-primary text-on-primary font-black px-12 rounded-xl hover:shadow-[0_0_20px_rgba(78,222,163,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined font-bold" data-icon="search">search</span>
+<span class="tracking-widest text-sm uppercase">Find Rewards</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Focus Status / Progress Bar (Inspired by IMAGE_2 style) -->
+<div class="bg-[#171b28]/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden group shadow-xl">
+<div class="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none"></div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-10 relative z-10">
+<div class="space-y-4">
+<div class="flex items-center gap-3 mb-2">
+<span class="flex h-2.5 w-2.5 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</span>
+<span class="text-[11px] font-extrabold text-primary uppercase tracking-[0.25em]">Active Redemption Goal</span>
+</div>
+<h4 class="text-4xl font-headline font-extrabold tabular-nums tracking-tighter">74% to Business SYD → LHR</h4>
+<p class="text-slate-400 max-w-lg text-lg leading-relaxed font-medium">
+                            You're closing in on your goal. Secure <span class="text-white font-bold underline decoration-primary/40 underline-offset-4">42,500 more points</span> to book via Qatar Airways.
+                        </p>
+</div>
+<div class="w-full lg:w-[420px] bg-background/40 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
+<div class="flex justify-between items-end mb-4">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Current Points Pool</span>
+<span class="text-xl font-bold text-white tracking-tight tabular-nums">121,500 / 164,000</span>
+</div>
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black rounded-full uppercase tracking-widest border border-primary/20">Almost there</span>
+</div>
+<div class="relative h-4 bg-surface-container-highest/50 rounded-full overflow-hidden p-1 shadow-inner">
+<div class="h-full bg-gradient-to-r from-primary via-[#6ffbbe] to-primary-container rounded-full transition-all duration-1000 ease-out" style="width: 74%">
+<div class="absolute top-0 right-0 h-full w-8 bg-gradient-to-r from-transparent to-white/20"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Results Section Title -->
+<div class="flex items-center justify-between pt-4">
+<div>
+<h3 class="text-3xl font-headline font-bold tracking-tight">Top Redemption Matches</h3>
+<p class="text-slate-400 text-base font-medium mt-1">Real-time availability based on your point balance.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-slate-200 border border-white/10 hover:bg-surface-bright transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="swap_vert">swap_vert</span>
+                        Sort by Value
+                    </button>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-slate-200 border border-white/10 hover:bg-surface-bright transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+                        Filter Airlines
+                    </button>
+</div>
+</div>
+<!-- Results Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group bg-surface-container-low/50 rounded-3xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)] flex flex-col relative">
+<div class="h-56 relative overflow-hidden">
+<img alt="Qatar QSuite" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60 mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASSMMRnIkjBDneX6qE7HGmeVN2IimxMB5l6k7ITgOg8JptEUzC9w7eGsPUfZ7NiDshJuzWuPczJdS-h4osYXcjXErr_3BhVzU_h0l3sqJKwKkw9St5qItgC4S9sOAKCEGtrG1IjMGCe-_z6WcS3HX4_DL5Faf_2eNDIImG6FRreRytC_9tc_qG0hG2ns5JVNI6Hy1RPextuyR5d0IMoOwTNgcqkAs6sIvtwNxtNMDiwFkxWxrBOLxgiT-1jUYgV2GDYVAGmRNUyfcT"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+<div class="absolute top-5 left-5 glass-card px-4 py-1.5 rounded-full">
+<span class="text-[10px] font-extrabold text-white uppercase tracking-widest">Qatar Airways</span>
+</div>
+<div class="absolute bottom-5 left-6 right-6 flex justify-between items-end">
+<div>
+<span class="text-4xl font-headline font-extrabold text-white tabular-nums tracking-tighter">164,000</span>
+<span class="text-[11px] font-bold text-primary uppercase ml-2 tracking-widest">Points</span>
+</div>
+<span class="px-3 py-1 bg-white/10 backdrop-blur-md text-white text-[10px] font-black rounded border border-white/20 uppercase tracking-widest">QSuite</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="space-y-5 mb-8">
+<div class="flex justify-between items-center pb-3 border-b border-white/5">
+<span class="text-sm font-semibold text-slate-400">Route Path</span>
+<span class="text-sm font-bold text-on-surface tracking-tight">SYD <span class="text-primary mx-1">→</span> DOH <span class="text-primary mx-1">→</span> LHR</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-white/5">
+<span class="text-sm font-semibold text-slate-400">Cabin Class</span>
+<span class="text-sm font-bold text-on-surface">Business</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-semibold text-slate-400">Total Taxes</span>
+<span class="text-sm font-bold text-on-surface tabular-nums">$584 AUD</span>
+</div>
+</div>
+<div class="mt-auto space-y-4">
+<div class="bg-error/5 p-4 rounded-2xl border border-error/10">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-error uppercase tracking-widest">Gap to target</span>
+<span class="text-lg font-extrabold text-white tabular-nums">-42,500 pts</span>
+</div>
+</div>
+<button class="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-slate-200 hover:text-white transition-all uppercase tracking-widest shadow-lg">View Availability</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-container-low/50 rounded-3xl overflow-hidden border border-primary/40 ring-1 ring-primary/20 transition-all duration-500 hover:shadow-[0_24px_48px_-12px_rgba(78,222,163,0.2)] flex flex-col relative scale-[1.02]">
+<div class="h-56 relative overflow-hidden">
+<img alt="Singapore Airlines" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-70" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCspMajriRJ49OhDFz4TCGCBvkPF0jcqdelCPder1-iEmVE6DfldLopQnWYHS9SO6jkuJRoGf42aIOBHnmZdDYBBb9TsTbJGvnB_UYFp-f5s16bsjlKKo4ZcVl9gHtNd9YC0aM6RkbKRCERb3Ehhbun9nOj2lTZN3DnF-LY-2b-E77o443OaAy383hv_zV5kTP7RUxB7cJHjGOYOjiA_H22krX9Q7tt9ow5FQEVJ8lZP79Dd5xBWlMca6WS37Pgv3N-ZVBb8HAF0Hyu"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+<div class="absolute top-5 left-5 glass-card px-4 py-1.5 rounded-full border-primary/30">
+<span class="text-[10px] font-extrabold text-white uppercase tracking-widest">Singapore Airlines</span>
+</div>
+<div class="absolute bottom-5 left-6 right-6 flex justify-between items-end">
+<div>
+<span class="text-4xl font-headline font-extrabold text-white tabular-nums tracking-tighter">118,500</span>
+<span class="text-[11px] font-bold text-primary uppercase ml-2 tracking-widest">Points</span>
+</div>
+<span class="px-3 py-1 bg-primary text-on-primary text-[10px] font-black rounded uppercase tracking-widest">Ready</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="space-y-5 mb-8">
+<div class="flex justify-between items-center pb-3 border-b border-white/5">
+<span class="text-sm font-semibold text-slate-400">Route Path</span>
+<span class="text-sm font-bold text-on-surface tracking-tight">SYD <span class="text-primary mx-1">→</span> SIN <span class="text-primary mx-1">→</span> LHR</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-white/5">
+<span class="text-sm font-semibold text-slate-400">Cabin Class</span>
+<span class="text-sm font-bold text-on-surface">Business</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-semibold text-slate-400">Total Taxes</span>
+<span class="text-sm font-bold text-on-surface tabular-nums">$120 AUD</span>
+</div>
+</div>
+<div class="mt-auto space-y-4">
+<div class="bg-primary/10 p-4 rounded-2xl border border-primary/20">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Balance Status</span>
+<span class="text-lg font-extrabold text-primary tabular-nums">+3,000 surplus</span>
+</div>
+</div>
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-primary/20">Book Redemption</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface-container-low/50 rounded-3xl overflow-hidden border border-white/5 hover:border-secondary/30 transition-all duration-500 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)] flex flex-col relative">
+<div class="h-56 relative overflow-hidden">
+<img alt="Emirates First Class" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-60 mix-blend-luminosity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRsLsnTwe1WMoeu1pJTCMXqM42XB7GQn1CisMsd5Gs53qsjKG4GiZkc-0pfpSl_-8F15FII9pxTBz-97GObyZL2OtGBGThMua1KCwXHqdhMaP88TwGe8oKImbXeGHZuixhIs1nXIpzpamKf_TktsJgdMxDVbaB-DFNGS6Xbuwsf9nv2Vh5SOoYgwFhuiciwfANV2xOZ0enXH-Gm4V_SYOdSUJacf-sIk-_CBDYZ2aP1eIPRSU-Oa9plOBng2nHeY0Uc2_g4smwHBlv"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+<div class="absolute top-5 left-5 glass-card px-4 py-1.5 rounded-full">
+<span class="text-[10px] font-extrabold text-white uppercase tracking-widest">Emirates</span>
+</div>
+<div class="absolute bottom-5 left-6 right-6 flex justify-between items-end">
+<div>
+<span class="text-4xl font-headline font-extrabold text-white tabular-nums tracking-tighter">242,000</span>
+<span class="text-[11px] font-bold text-secondary uppercase ml-2 tracking-widest">Points</span>
+</div>
+<span class="px-3 py-1 bg-secondary text-on-secondary text-[10px] font-black rounded uppercase tracking-widest">First</span>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<div class="space-y-5 mb-8">
+<div class="flex justify-between items-center pb-3 border-b border-white/5">
+<span class="text-sm font-semibold text-slate-400">Route Path</span>
+<span class="text-sm font-bold text-on-surface tracking-tight">SYD <span class="text-secondary mx-1">→</span> DXB <span class="text-secondary mx-1">→</span> LHR</span>
+</div>
+<div class="flex justify-between items-center pb-3 border-b border-white/5">
+<span class="text-sm font-semibold text-slate-400">Cabin Class</span>
+<span class="text-sm font-bold text-on-surface">First Class</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm font-semibold text-slate-400">Total Taxes</span>
+<span class="text-sm font-bold text-on-surface tabular-nums">$982 AUD</span>
+</div>
+</div>
+<div class="mt-auto space-y-4">
+<div class="bg-surface-container-highest/30 p-4 rounded-2xl border border-white/5">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Gap to target</span>
+<span class="text-lg font-extrabold text-white tabular-nums">-120,500 pts</span>
+</div>
+</div>
+<button class="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-slate-200 hover:text-white transition-all uppercase tracking-widest shadow-lg">Analyze Transfers</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden flex justify-around items-center px-6 fixed bottom-0 w-full z-50 h-20 pb-safe bg-[#0f131f]/90 backdrop-blur-2xl border-t border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center justify-center text-slate-500 tap-highlight-transparent font-headline text-[10px] uppercase tracking-widest font-bold">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span>Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#4edea3] tap-highlight-transparent font-headline text-[10px] uppercase tracking-widest font-black">
+<span class="material-symbols-outlined mb-1 text-[28px]" data-icon="flight">flight</span>
+<span>Flights</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 tap-highlight-transparent font-headline text-[10px] uppercase tracking-widest font-bold">
+<span class="material-symbols-outlined mb-1" data-icon="credit_card">credit_card</span>
+<span>Cards</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 tap-highlight-transparent font-headline text-[10px] uppercase tracking-widest font-bold">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span>Track</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 tap-highlight-transparent font-headline text-[10px] uppercase tracking-widest font-bold">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span>Account</span>
+</div>
+</nav>
+</body></html>
