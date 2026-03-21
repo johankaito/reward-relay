@@ -1157,6 +1157,72 @@ export type Database = {
           },
         ]
       }
+      stripe_customers: {
+        Row: {
+          id: string
+          user_id: string
+          stripe_customer_id: string
+          has_used_trial: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          stripe_customer_id: string
+          has_used_trial?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          stripe_customer_id?: string
+          has_used_trial?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      stripe_subscriptions: {
+        Row: {
+          id: string
+          user_id: string
+          stripe_subscription_id: string
+          stripe_price_id: string
+          status: string
+          current_period_start: string | null
+          current_period_end: string | null
+          cancel_at_period_end: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          stripe_subscription_id: string
+          stripe_price_id: string
+          status: string
+          current_period_start?: string | null
+          current_period_end?: string | null
+          cancel_at_period_end?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          stripe_subscription_id?: string
+          stripe_price_id?: string
+          status?: string
+          current_period_start?: string | null
+          current_period_end?: string | null
+          cancel_at_period_end?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       cdr_products: {
         Row: {
           id: string

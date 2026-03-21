@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "../styles/tokens.css";
@@ -111,12 +112,12 @@
   }
 
   html {
-    /* Smooth color transitions when theme changes */
-    color-scheme: light dark;
+    color-scheme: dark;
   }
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-body, 'Inter', sans-serif);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -191,6 +192,31 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Glassmorphism utilities */
+  .glass {
+    background: rgba(27, 31, 44, 0.6);
+    backdrop-filter: blur(20px);
+  }
+  .glass-card {
+    background: rgba(27, 31, 44, 0.4);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .arc-glow {
+    filter: drop-shadow(0 0 8px rgba(78, 222, 163, 0.4));
+  }
+  .premium-glow {
+    box-shadow: 0 0 20px rgba(78, 222, 163, 0.15), inset 0 0 10px rgba(78, 222, 163, 0.05);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 }
 
