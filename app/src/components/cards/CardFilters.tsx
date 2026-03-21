@@ -19,12 +19,10 @@ export function CardFilters({ cards, onFilter }: CardFilterProps) {
   )
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-4 text-white shadow-md md:flex-row md:items-center md:justify-between">
+    <div className="flex flex-col gap-4 rounded-2xl bg-[#1b1f2c] p-4 text-white shadow-md md:flex-row md:items-center md:justify-between">
       <div className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-300">
-          Filters
-        </p>
-        <p className="text-sm text-slate-200">{cards.length} cards available</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Filters</p>
+        <p className="text-sm text-slate-300">{cards.length} cards available</p>
       </div>
       <div className="flex flex-col gap-3 md:flex-row md:items-center">
         <Input
@@ -35,7 +33,7 @@ export function CardFilters({ cards, onFilter }: CardFilterProps) {
             setSearch(value)
             onFilter({ search: value, bank })
           }}
-          className="md:w-80 border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+          className="rounded-xl border-0 bg-[#313442] text-[#dfe2f3] placeholder:text-slate-500 focus-visible:bg-[#353946] focus-visible:ring-0 md:w-80"
         />
         <Select
           onValueChange={(value) => {
@@ -45,7 +43,7 @@ export function CardFilters({ cards, onFilter }: CardFilterProps) {
           }}
           defaultValue="all"
         >
-          <SelectTrigger className="w-full border-[var(--border-default)] bg-[var(--surface-soft)] text-white md:w-48">
+          <SelectTrigger className="w-full rounded-xl border-0 bg-[#313442] text-[#dfe2f3] focus:ring-0 md:w-48">
             <SelectValue placeholder="Filter by bank" />
           </SelectTrigger>
           <SelectContent>
