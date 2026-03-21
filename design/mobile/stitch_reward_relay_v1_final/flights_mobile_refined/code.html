@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flights - Reward Relay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#353946",
+              "on-primary-container": "#00422b",
+              "inverse-primary": "#006c49",
+              "surface-container-high": "#262a37",
+              "on-primary": "#003824",
+              "tertiary-fixed": "#e2dfff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-container-highest": "#313442",
+              "primary": "#4edea3",
+              "error": "#ffb4ab",
+              "background": "#0f131f",
+              "on-secondary-fixed": "#23005c",
+              "surface-container-low": "#171b28",
+              "tertiary-container": "#9a98ff",
+              "on-error": "#690005",
+              "on-tertiary-fixed": "#0f0069",
+              "tertiary": "#c3c0ff",
+              "surface-container-lowest": "#0a0e1a",
+              "outline": "#86948a",
+              "surface-tint": "#4edea3",
+              "surface-container": "#1b1f2c",
+              "secondary": "#d0bcff",
+              "on-tertiary": "#1d00a5",
+              "surface": "#0f131f",
+              "on-error-container": "#ffdad6",
+              "error-container": "#93000a",
+              "primary-container": "#10b981",
+              "inverse-on-surface": "#2c303d",
+              "secondary-container": "#571bc1",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "surface-variant": "#313442",
+              "on-secondary-fixed-variant": "#5516be",
+              "on-secondary": "#3c0091",
+              "on-surface": "#dfe2f3",
+              "on-tertiary-container": "#2300bf",
+              "tertiary-fixed-dim": "#c3c0ff",
+              "surface-dim": "#0f131f",
+              "primary-fixed": "#6ffbbe",
+              "secondary-fixed-dim": "#d0bcff",
+              "on-surface-variant": "#bbcabf",
+              "on-secondary-container": "#c4abff",
+              "on-background": "#dfe2f3",
+              "inverse-surface": "#dfe2f3",
+              "outline-variant": "#3c4a42",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary-fixed": "#002113",
+              "secondary-fixed": "#e9ddff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            animation: {
+              'pulse-subtle': 'pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              'pulse-subtle': {
+                '0%, 100%': { opacity: 1 },
+                '50%': { opacity: 0.8 },
+              }
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body select-none">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-40 bg-[#0f131f]/60 backdrop-blur-xl border-b border-white/5 font-headline">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-2">
+<span class="text-xl font-black bg-gradient-to-br from-primary to-[#10b981] bg-clip-text text-transparent">Reward Relay</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-300 hover:opacity-80 transition-opacity" data-icon="notifications">notifications</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10 ring-2 ring-primary/20">
+<img alt="User Profile" data-alt="Close up portrait of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS5mJ01hRW_RLTb9z6KR3AFiE7XwrqU8UMnmO6k8DeF4Cn7YmKbfffRZQoSBsDuHNidWuWbQoekOftAKPyUFsrS15YeyAU2O7s8n1ZmPv4KTPHy6TQUbZbNERBd_7-TPzwrdeMUlAe31vIC-2lFYw4a2pCgFF2Xuxi7sodSEBfgFyh8d1Ikh-eyDVEsBFMAz7ILTGnAc28_glBNFkn2w5EwDzrU501tc-5tFsbmXHKNG4vV2YWaH9rci6wpXmwOUHQzdAkWTIEXybc"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pb-28">
+<!-- Search & Quick Filters -->
+<section class="px-6 py-6 space-y-6">
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h1 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface">Find Flights</h1>
+<div class="bg-surface-container-high/50 backdrop-blur px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/5">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="text-sm font-bold tabular-nums text-primary">124,350</span>
+</div>
+</div>
+<!-- Enhanced Search Layout -->
+<div class="bg-surface-container-low/80 p-5 rounded-2xl border border-white/5 shadow-2xl space-y-4">
+<div class="grid grid-cols-2 gap-3 relative">
+<div class="bg-surface-container/50 p-4 rounded-xl border border-white/5 focus-within:border-primary/50 transition-colors">
+<p class="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-bold mb-1">Origin</p>
+<p class="text-xl font-headline font-bold text-on-surface">JFK</p>
+<p class="text-[11px] text-slate-400">New York, US</p>
+</div>
+<div class="bg-surface-container/50 p-4 rounded-xl border border-white/5 focus-within:border-primary/50 transition-colors text-right">
+<p class="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-bold mb-1">Destination</p>
+<p class="text-xl font-headline font-bold text-on-surface">LHR</p>
+<p class="text-[11px] text-slate-400">London, UK</p>
+</div>
+<!-- Swap Button -->
+<button class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center shadow-xl border-2 border-surface-container-low ring-2 ring-white/5 text-primary hover:scale-110 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="sync_alt">sync_alt</span>
+</button>
+</div>
+<div class="grid grid-cols-5 gap-3">
+<div class="col-span-4 bg-surface-container/50 p-4 rounded-xl border border-white/5 flex flex-col justify-center">
+<p class="text-[10px] uppercase tracking-[0.15em] text-slate-500 font-bold mb-1">Travel Dates</p>
+<p class="text-base font-semibold text-on-surface tabular-nums">Oct 24, 2024 — Nov 02, 2024</p>
+</div>
+<button class="bg-surface-container/50 rounded-xl border border-white/5 flex items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-slate-400" data-icon="calendar_month">calendar_month</span>
+</button>
+</div>
+</div>
+<!-- Categories -->
+<div class="flex gap-2 overflow-x-auto hide-scrollbar -mx-6 px-6 py-2">
+<button class="bg-primary text-on-primary px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap flex items-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+                    Filters
+                </button>
+<button class="bg-surface-container-high/60 text-on-surface px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap border border-white/5">Non-stop</button>
+<button class="bg-surface-container-high/60 text-on-surface px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap border border-white/5">Business Class</button>
+<button class="bg-surface-container-high/60 text-on-surface px-5 py-2.5 rounded-full text-xs font-bold whitespace-nowrap border border-white/5">Star Alliance</button>
+</div>
+</div>
+<!-- Results Section -->
+<div class="space-y-4 pt-2">
+<div class="flex items-center justify-between">
+<p class="text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em]">Available Redemptions</p>
+<div class="flex items-center gap-1.5 text-primary">
+<span class="text-[10px] font-bold">Sorted by Best Value</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</div>
+</div>
+<!-- Flight Card 1 - Virgin Atlantic -->
+<div class="glass-card p-6 rounded-2xl border border-white/10 space-y-6 shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -mr-16 -mt-16"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1.5 shadow-inner">
+<img alt="Virgin Atlantic" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXLvOd6LR15GGSsoNgoF6oPo0tTXxwlpGilVRHC-nRj4thw0NvTjgDr852mRBK8IUAHsJuwdSGMsCI83NdXc53lpaSnIFj1WzvdFFCgyM_Ac4rnSpeml0UxP52KTdvJorNWPAuYkUMN1jvdw7hd05rPWm7Gv8bkUisOS8amKwt7obDVwj9wWx72mqBeU_hUSu9Q3uwrsN_K8JDWgqWEUsMAeip0ol8iNGUV1nnHF5WtzZGK_ucM-P-czFSOaFg88oOHbkbbWyZi1Fz"/>
+</div>
+<div>
+<p class="font-headline font-extrabold text-on-surface">Virgin Atlantic</p>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.1em]">VS 104 • Boeing 787</p>
+</div>
+</div>
+<span class="bg-primary/20 text-primary border border-primary/20 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider">Best Value</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex-1">
+<p class="text-2xl font-headline font-black tabular-nums tracking-tight">19:30</p>
+<p class="text-sm font-bold text-slate-400">JFK</p>
+</div>
+<div class="flex-[1.5] flex flex-col items-center px-4">
+<p class="text-[10px] text-slate-500 font-bold mb-1.5 uppercase">7h 15m</p>
+<div class="w-full h-[2px] bg-white/10 relative flex items-center">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+<div class="absolute left-0 w-1.5 h-1.5 rounded-full bg-white/30"></div>
+<div class="absolute right-0 w-1.5 h-1.5 rounded-full bg-white/30"></div>
+<div class="absolute left-1/2 -translate-x-1/2 bg-surface-container rounded-full p-1 border border-white/5">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="flight" style="transform: rotate(90deg);">flight</span>
+</div>
+</div>
+<p class="text-[10px] text-primary font-black mt-2 uppercase tracking-[0.1em]">Non-stop</p>
+</div>
+<div class="flex-1 text-right">
+<p class="text-2xl font-headline font-black tabular-nums tracking-tight">07:45</p>
+<p class="text-sm font-bold text-slate-400">LHR</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-5 border-t border-white/10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="airline_seat_recline_extra">airline_seat_recline_extra</span>
+</div>
+<span class="text-xs font-bold text-slate-200">Upper Class</span>
+</div>
+<div class="text-right">
+<p class="text-2xl font-headline font-black text-primary tabular-nums">57,500 <span class="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">pts</span></p>
+<p class="text-[10px] text-slate-400 font-bold tabular-nums mt-0.5">+ $180.20 fees</p>
+</div>
+</div>
+</div>
+<!-- Flight Card 2 - British Airways -->
+<div class="bg-surface-container/40 p-6 rounded-2xl border border-white/5 space-y-6 shadow-xl opacity-90 transition-opacity hover:opacity-100">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1.5">
+<img alt="British Airways" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrUXs1XU3JAo63xolQp4W24mLa7udX4XEX0kb8CIFVFkw50L5wYCHRuuBwkwArnOIQ2kE45uQVtgPLIF0MpuJNNqqwxKAJ8hD1Zt-xQE4dqsmE_AT9spgYBscWCVDn9FXGDB7dHHfW2uMMrFpWz6MmybqrsEOfeb_M4VqQee8qKL8Kn8e55Spv6J7-sghxQlhxgxF-vOlHAEa0ikArJ7KfkDqxH2tbJ726UZ1XM9RHibu8l2H4HIphB4GTm1twWuCYPIZkUMsqUkKl"/>
+</div>
+<div>
+<p class="font-headline font-extrabold text-on-surface">British Airways</p>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.1em]">BA 116 • Airbus A350</p>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-highest px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="loyalty">loyalty</span>
+<span class="text-[9px] font-bold text-slate-300 uppercase">Oneworld</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex-1">
+<p class="text-2xl font-headline font-black tabular-nums tracking-tight">21:00</p>
+<p class="text-sm font-bold text-slate-400">JFK</p>
+</div>
+<div class="flex-[1.5] flex flex-col items-center px-4">
+<p class="text-[10px] text-slate-500 font-bold mb-1.5 uppercase">6h 55m</p>
+<div class="w-full h-[2px] bg-white/10 relative flex items-center">
+<div class="absolute left-0 w-1.5 h-1.5 rounded-full bg-white/30"></div>
+<div class="absolute right-0 w-1.5 h-1.5 rounded-full bg-white/30"></div>
+<div class="absolute left-1/2 -translate-x-1/2 bg-surface-container rounded-full p-1 border border-white/5">
+<span class="material-symbols-outlined text-[16px] text-slate-400" data-icon="flight" style="transform: rotate(90deg);">flight</span>
+</div>
+</div>
+<p class="text-[10px] text-primary font-black mt-2 uppercase tracking-[0.1em]">Non-stop</p>
+</div>
+<div class="flex-1 text-right">
+<p class="text-2xl font-headline font-black tabular-nums tracking-tight">08:55</p>
+<p class="text-sm font-bold text-slate-400">LHR</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-5 border-t border-white/10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="airline_seat_recline_extra">airline_seat_recline_extra</span>
+</div>
+<span class="text-xs font-bold text-slate-200">Club World</span>
+</div>
+<div class="text-right">
+<p class="text-2xl font-headline font-black text-on-surface tabular-nums">80,000 <span class="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">pts</span></p>
+<p class="text-[10px] text-slate-400 font-bold tabular-nums mt-0.5">+ $450.00 fees</p>
+</div>
+</div>
+</div>
+<!-- Flight Card 3 - Air France -->
+<div class="bg-surface-container/40 p-6 rounded-2xl border border-white/5 space-y-6 shadow-xl opacity-90 transition-opacity hover:opacity-100">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1.5">
+<img alt="Air France" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTtFeSr_4QXnBRVKD84o4_-8iFl-TFHrOlN46MTt_4PcthQasWub_pGC8K3QLjImBYbD8IHynjtk7klW3OgB8phvUd6EIr8wy-Q6edPYupVoa7-ClF9KPJh1KfiaqdP_HjCbszIjsWbEF70-SJRBwHdrA2QwRWZc2kZwhpFWHh9BAxyP1j5EBOPZM7emXft5OgKEPBSLU0AHc4cFjg0WsBvcLoXwAAFIdj0Cn1fMUbCcOCdpnZEaXrg1cAPqyRjezx0iNx5_wJfRYC"/>
+</div>
+<div>
+<p class="font-headline font-extrabold text-on-surface">Air France</p>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.1em]">AF 007 • Boeing 777</p>
+</div>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-highest px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="hub">hub</span>
+<span class="text-[9px] font-bold text-slate-300 uppercase">SkyTeam</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex-1">
+<p class="text-2xl font-headline font-black tabular-nums tracking-tight">16:45</p>
+<p class="text-sm font-bold text-slate-400">JFK</p>
+</div>
+<div class="flex-[1.5] flex flex-col items-center px-4">
+<p class="text-[10px] text-slate-500 font-bold mb-1.5 uppercase">9h 20m</p>
+<div class="w-full h-[2px] bg-white/10 relative flex items-center">
+<div class="absolute left-0 w-1.5 h-1.5 rounded-full bg-white/30"></div>
+<div class="absolute right-0 w-1.5 h-1.5 rounded-full bg-white/30"></div>
+<div class="absolute left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-error ring-4 ring-background shadow-lg shadow-error/40"></div>
+<div class="absolute left-[30%] -translate-x-1/2 bg-surface-container rounded-full p-1 border border-white/5">
+<span class="material-symbols-outlined text-[16px] text-slate-400" data-icon="flight" style="transform: rotate(90deg);">flight</span>
+</div>
+</div>
+<p class="text-[10px] text-error font-black mt-2 uppercase tracking-[0.1em]">1 Stop (CDG)</p>
+</div>
+<div class="flex-1 text-right">
+<p class="text-2xl font-headline font-black tabular-nums tracking-tight">08:05</p>
+<p class="text-sm font-bold text-slate-400">LHR</p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-5 border-t border-white/10">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-lg" data-icon="airline_seat_recline_extra">airline_seat_recline_extra</span>
+</div>
+<span class="text-xs font-bold text-slate-200">Business</span>
+</div>
+<div class="text-right">
+<p class="text-2xl font-headline font-black text-on-surface tabular-nums">48,000 <span class="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">pts</span></p>
+<p class="text-[10px] text-slate-400 font-bold tabular-nums mt-0.5">+ $210.15 fees</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="md:hidden flex justify-around items-center px-6 fixed bottom-0 w-full z-50 h-20 pb-safe bg-[#0f131f]/80 backdrop-blur-2xl border-t border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center justify-center text-slate-500 active:scale-90 transition-transform">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-bold">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary scale-110 relative">
+<div class="absolute -top-1 w-1 h-1 rounded-full bg-primary blur-[2px]"></div>
+<span class="material-symbols-outlined mb-1" data-icon="flight" style="font-variation-settings: 'FILL' 1;">flight</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-bold">Flights</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 active:scale-90 transition-transform">
+<span class="material-symbols-outlined mb-1" data-icon="credit_card">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-bold">Cards</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 active:scale-90 transition-transform">
+<span class="material-symbols-outlined mb-1" data-icon="monitoring">monitoring</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-bold">Track</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 active:scale-90 transition-transform">
+<span class="material-symbols-outlined mb-1" data-icon="account_circle">account_circle</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-bold">Account</span>
+</div>
+</nav>
+<!-- Contextual FAB -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-gradient-to-br from-primary to-[#10b981] text-on-primary-container rounded-2xl shadow-2xl shadow-primary/30 flex items-center justify-center z-40 active:scale-90 hover:rotate-90 transition-all duration-300">
+<span class="material-symbols-outlined text-2xl font-bold" data-icon="add">add</span>
+</button>
+<!-- Improved Filter Drawer (Hidden state mockup) -->
+<div class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[60] flex flex-col justify-end">
+<div class="bg-surface-container-low rounded-t-[3rem] p-8 space-y-8 border-t border-white/10 shadow-[0_-20px_60px_rgba(0,0,0,0.8)]">
+<div class="w-16 h-1.5 bg-white/10 rounded-full mx-auto mb-2"></div>
+<div class="flex justify-between items-center">
+<h2 class="font-headline text-3xl font-extrabold text-on-surface">Filter Results</h2>
+<button class="text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-full">Reset All</button>
+</div>
+<div class="space-y-8 max-h-[60vh] overflow-y-auto hide-scrollbar">
+<!-- Cabin Class -->
+<div class="space-y-4">
+<p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Cabin Class</p>
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-surface-container text-on-surface border border-white/5 px-4 py-4 rounded-2xl text-xs font-bold text-left flex flex-col gap-1">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="airline_seat_recline_normal">airline_seat_recline_normal</span>
+                        Economy
+                    </button>
+<button class="bg-primary/20 text-primary border-2 border-primary/50 px-4 py-4 rounded-2xl text-xs font-bold text-left flex flex-col gap-1">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="airline_seat_recline_extra">airline_seat_recline_extra</span>
+                        Business
+                    </button>
+</div>
+</div>
+<!-- Points Slider -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Points Budget</p>
+<p class="text-xl font-headline font-black text-primary tabular-nums">80,000 <span class="text-xs font-bold text-slate-500 uppercase">pts</span></p>
+</div>
+<div class="relative pt-4 pb-2">
+<div class="h-2 w-full bg-white/5 rounded-full">
+<div class="h-2 w-2/3 bg-gradient-to-r from-primary/50 to-primary rounded-full relative">
+<div class="absolute -right-3 -top-2.5 w-7 h-7 bg-white rounded-full shadow-2xl shadow-primary/40 border-[3px] border-primary flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-between">
+<span class="text-[10px] font-bold text-slate-500 tabular-nums">0 pts</span>
+<span class="text-[10px] font-bold text-slate-500 tabular-nums">250k+ pts</span>
+</div>
+</div>
+<!-- Airlines -->
+<div class="space-y-4">
+<p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Preferred Airlines</p>
+<div class="flex flex-wrap gap-2">
+<button class="bg-primary text-on-primary px-4 py-2.5 rounded-xl text-xs font-bold">All Airlines</button>
+<button class="bg-surface-container/50 text-slate-300 border border-white/5 px-4 py-2.5 rounded-xl text-xs font-bold">SkyTeam</button>
+<button class="bg-surface-container/50 text-slate-300 border border-white/5 px-4 py-2.5 rounded-xl text-xs font-bold">Oneworld</button>
+<button class="bg-surface-container/50 text-slate-300 border border-white/5 px-4 py-2.5 rounded-xl text-xs font-bold">Star Alliance</button>
+</div>
+</div>
+</div>
+<button class="w-full py-5 bg-gradient-to-br from-primary to-[#10b981] text-on-primary rounded-2xl font-headline font-black text-lg shadow-2xl shadow-primary/20 active:scale-95 transition-all">
+            Show 12 Results
+        </button>
+</div>
+</div>
+</body></html>

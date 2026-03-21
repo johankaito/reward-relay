@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Card Portfolio - Reward Relay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#353946",
+              "on-primary-container": "#00422b",
+              "inverse-primary": "#006c49",
+              "surface-container-high": "#262a37",
+              "on-primary": "#003824",
+              "tertiary-fixed": "#e2dfff",
+              "on-primary-fixed-variant": "#005236",
+              "surface-container-highest": "#313442",
+              "primary": "#4edea3",
+              "error": "#ffb4ab",
+              "background": "#0f131f",
+              "on-secondary-fixed": "#23005c",
+              "surface-container-low": "#171b28",
+              "tertiary-container": "#9a98ff",
+              "on-error": "#690005",
+              "on-tertiary-fixed": "#0f0069",
+              "tertiary": "#c3c0ff",
+              "surface-container-lowest": "#0a0e1a",
+              "outline": "#86948a",
+              "surface-tint": "#4edea3",
+              "surface-container": "#1b1f2c",
+              "secondary": "#d0bcff",
+              "on-tertiary": "#1d00a5",
+              "surface": "#0f131f",
+              "on-error-container": "#ffdad6",
+              "error-container": "#93000a",
+              "primary-container": "#10b981",
+              "inverse-on-surface": "#2c303d",
+              "secondary-container": "#571bc1",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "surface-variant": "#313442",
+              "on-secondary-fixed-variant": "#5516be",
+              "on-secondary": "#3c0091",
+              "on-surface": "#dfe2f3",
+              "on-tertiary-container": "#2300bf",
+              "tertiary-fixed-dim": "#c3c0ff",
+              "surface-dim": "#0f131f",
+              "primary-fixed": "#6ffbbe",
+              "secondary-fixed-dim": "#d0bcff",
+              "on-surface-variant": "#bbcabf",
+              "on-secondary-container": "#c4abff",
+              "on-background": "#dfe2f3",
+              "inverse-surface": "#dfe2f3",
+              "outline-variant": "#3c4a42",
+              "primary-fixed-dim": "#4edea3",
+              "on-primary-fixed": "#002113",
+              "secondary-fixed": "#e9ddff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f131f; color: #dfe2f3; }
+        .plus-jakarta { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<h1 class="text-lg font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent plus-jakarta">Reward Relay</h1>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity text-slate-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="hover:opacity-80 transition-opacity text-slate-300">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1 overflow-x-hidden pb-24">
+<!-- Page Header -->
+<div class="px-6 pt-8 pb-4">
+<h2 class="text-3xl font-extrabold tracking-tight plus-jakarta mb-1">Card Portfolio</h2>
+<p class="text-on-surface-variant text-sm font-medium">3 Active Cards • 128k Total Points</p>
+</div>
+<!-- Horizontal Scroll Section (Apple Wallet Style) -->
+<div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-6 px-6 py-4">
+<!-- Card 1: Platinum -->
+<div class="snap-center shrink-0 w-[310px] aspect-[1.58/1] rounded-xl relative overflow-hidden bg-gradient-to-br from-[#2c3e50] to-[#000000] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] p-6 flex flex-col justify-between">
+<div class="absolute inset-0 opacity-20" data-alt="Subtle carbon fiber texture pattern" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB4_K-HD4GaY70VXpgvTo8729wVUcmEGRUWwuwE8SF-fjGtMH6mFy1423_u7FmKG8ZhHsRNampQGpseyQG5zVzQhVke4LAJkgs2i15A8-GUgteT-eM5uRPiUSyBwZ4ynvXFdGdQAp_WYlaF1ujpTRFNqXwWisLk66eTaDIEjnhvMP1a9NxevnzJqpjdwLnvO4D-6WPU0q2_rxKZcG09llf3a4J9W7i02HjBPYMwOvTptxxDtQLmIZ55AB8P533RxLc27raFKMa13-ED');"></div>
+<div class="relative z-10 flex justify-between items-start">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">AMEX PLATINUM</p>
+<p class="text-xs font-medium text-white/70">.... 1007</p>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="contactless">contactless</span>
+</div>
+<div class="relative z-10 flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="text-2xl font-bold plus-jakarta text-white tabular-nums">84,200</span>
+<span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full uppercase tracking-tighter">Active</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-3/4"></div>
+</div>
+<p class="text-[10px] text-white/50">Spend Progress: $4,500 / $6,000</p>
+</div>
+</div>
+<!-- Card 2: Sapphire -->
+<div class="snap-center shrink-0 w-[310px] aspect-[1.58/1] rounded-xl relative overflow-hidden bg-gradient-to-br from-[#1a2a6c] via-[#b21f1f] to-[#fdbb2d] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] p-6 flex flex-col justify-between">
+<div class="absolute inset-0 opacity-10 bg-white/5" data-alt="Glassy overlay for visual depth"></div>
+<div class="relative z-10 flex justify-between items-start">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-white/80">CHASE SAPPHIRE</p>
+<p class="text-xs font-medium text-white/70">.... 4492</p>
+</div>
+<span class="material-symbols-outlined text-white" data-icon="credit_card">credit_card</span>
+</div>
+<div class="relative z-10 flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="text-2xl font-bold plus-jakarta text-white tabular-nums">42,000</span>
+<span class="text-[10px] font-bold text-white bg-white/10 px-2 py-0.5 rounded-full uppercase tracking-tighter">Milestone Near</span>
+</div>
+<div class="w-full bg-white/20 h-1.5 rounded-full overflow-hidden">
+<div class="bg-white h-full w-11/12"></div>
+</div>
+<p class="text-[10px] text-white/70">Spend Progress: $3,800 / $4,000</p>
+</div>
+</div>
+<!-- Card 3: Venture -->
+<div class="snap-center shrink-0 w-[310px] aspect-[1.58/1] rounded-xl relative overflow-hidden bg-gradient-to-br from-[#1e1e1e] to-[#434343] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] p-6 flex flex-col justify-between">
+<div class="relative z-10 flex justify-between items-start">
+<div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">CAPITAL ONE VENTURE</p>
+<p class="text-xs font-medium text-white/70">.... 8831</p>
+</div>
+<span class="material-symbols-outlined text-slate-300" data-icon="token">token</span>
+</div>
+<div class="relative z-10 flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<span class="text-2xl font-bold plus-jakarta text-white tabular-nums">2,150</span>
+<span class="text-[10px] font-bold text-slate-400 bg-white/5 px-2 py-0.5 rounded-full uppercase tracking-tighter">In Progress</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-slate-400 h-full w-1/5"></div>
+</div>
+<p class="text-[10px] text-white/50">Spend Progress: $200 / $3,000</p>
+</div>
+</div>
+</div>
+<!-- Section: Upcoming Benefits -->
+<section class="mt-8 px-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-sm font-bold uppercase tracking-widest text-primary plus-jakarta">Next Rewards</h3>
+<span class="text-[10px] font-semibold text-on-surface-variant">View All</span>
+</div>
+<div class="space-y-3">
+<!-- Reward Item 1 -->
+<div class="bg-surface-container rounded-lg p-4 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Companion Pass</p>
+<p class="text-xs text-on-surface-variant">Chase Sapphire Preferred</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-primary">$200 left</p>
+<p class="text-[10px] text-on-surface-variant">Est. 4 days</p>
+</div>
+</div>
+<!-- Reward Item 2 -->
+<div class="bg-surface-container rounded-lg p-4 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="hotel">hotel</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Hilton Gold Status</p>
+<p class="text-xs text-on-surface-variant">Amex Platinum</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-secondary">Unlocked</p>
+<p class="text-[10px] text-on-surface-variant">Manual Claim</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Insights Bento Grid -->
+<section class="mt-10 px-6">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant plus-jakarta mb-4">Spending Insights</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low p-4 rounded-lg flex flex-col gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+<div>
+<p class="text-[10px] uppercase font-bold text-slate-500">Highest Multiplier</p>
+<p class="text-lg font-bold text-on-surface">4x Dining</p>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-lg flex flex-col gap-3">
+<span class="material-symbols-outlined text-secondary" data-icon="schedule">schedule</span>
+<div>
+<p class="text-[10px] uppercase font-bold text-slate-500">Upcoming Fee</p>
+<p class="text-lg font-bold text-on-surface">$550</p>
+<p class="text-[10px] text-error font-semibold">Oct 12</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 h-20 pb-safe bg-[#0f131f]/80 backdrop-blur-xl border-t border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.5)] md:hidden flex justify-around items-center px-6">
+<a class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4edea3] scale-110 active:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="credit_card" style="font-variation-settings: 'FILL' 1;">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Cards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Track</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Redeem</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Account</span>
+</a>
+</nav>
+<!-- Floating Action Button - Mobile Contextual -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-gradient-to-br from-[#4edea3] to-[#10b981] text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</body></html>

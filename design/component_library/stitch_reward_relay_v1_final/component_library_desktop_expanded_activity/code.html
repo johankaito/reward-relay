@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reward Relay | The Financial Luminary Design System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "background": "#0f131f",
+                "tertiary-container": "#9a98ff",
+                "secondary-container": "#571bc1",
+                "on-tertiary-fixed-variant": "#3323cc",
+                "on-primary-fixed": "#002113",
+                "tertiary": "#c3c0ff",
+                "surface-container-high": "#262a37",
+                "on-primary-container": "#00422b",
+                "on-error-container": "#ffdad6",
+                "on-tertiary": "#1d00a5",
+                "error": "#ffb4ab",
+                "on-background": "#dfe2f3",
+                "inverse-surface": "#dfe2f3",
+                "error-container": "#93000a",
+                "on-primary": "#003824",
+                "surface-container": "#1b1f2c",
+                "on-secondary-container": "#c4abff",
+                "tertiary-fixed-dim": "#c3c0ff",
+                "surface-container-highest": "#313442",
+                "on-error": "#690005",
+                "surface-container-low": "#171b28",
+                "surface": "#0f131f",
+                "on-tertiary-container": "#2300bf",
+                "surface-container-lowest": "#0a0e1a",
+                "primary-fixed": "#6ffbbe",
+                "primary-container": "#10b981",
+                "on-secondary-fixed": "#23005c",
+                "tertiary-fixed": "#e2dfff",
+                "on-surface-variant": "#bbcabf",
+                "on-surface": "#dfe2f3",
+                "surface-variant": "#313442",
+                "on-secondary": "#3c0091",
+                "surface-dim": "#0f131f",
+                "primary-fixed-dim": "#4edea3",
+                "on-tertiary-fixed": "#0f0069",
+                "surface-bright": "#353946",
+                "outline-variant": "#3c4a42",
+                "on-secondary-fixed-variant": "#5516be",
+                "inverse-on-surface": "#2c303d",
+                "on-primary-fixed-variant": "#005236",
+                "secondary-fixed": "#e9ddff",
+                "outline": "#86948a",
+                "surface-tint": "#4edea3",
+                "secondary-fixed-dim": "#d0bcff",
+                "inverse-primary": "#006c49",
+                "secondary": "#d0bcff",
+                "primary": "#4edea3"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(27, 31, 44, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .card-stack-item:nth-child(2) { transform: translateY(-12px) scale(0.95); opacity: 0.7; z-index: -1; }
+        .card-stack-item:nth-child(3) { transform: translateY(-24px) scale(0.9); opacity: 0.4; z-index: -2; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Design System Header (Not App Nav) -->
+<header class="fixed top-0 w-full bg-surface/80 backdrop-blur-xl z-[100] px-8 h-20 flex items-center justify-between border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<span class="text-primary font-headline font-black text-2xl tracking-tighter">Reward Relay</span>
+<div class="h-6 w-px bg-outline-variant/30"></div>
+<span class="text-on-surface-variant font-medium text-sm tracking-widest uppercase">Design System v1.0</span>
+</div>
+<div class="flex gap-2">
+<div class="px-4 py-1.5 rounded-full bg-surface-container-highest text-xs font-bold text-primary border border-primary/20">The Financial Luminary</div>
+</div>
+</header>
+<main class="pt-32 pb-40 px-8 max-w-7xl mx-auto space-y-32">
+<!-- 01. Brand Identity -->
+<section>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">01.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Brand Identity</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Logos -->
+<div class="col-span-1 lg:col-span-2 space-y-6">
+<p class="text-on-surface-variant text-sm font-semibold tracking-wide uppercase">Logo Variations</p>
+<div class="p-12 rounded-lg bg-surface-container-low flex flex-col items-center justify-center gap-12">
+<span class="text-primary font-headline font-black text-5xl tracking-tighter">Reward Relay</span>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-container rounded-lg"></div>
+<span class="text-on-surface font-headline font-bold text-2xl tracking-tight">Reward Relay</span>
+</div>
+</div>
+</div>
+<!-- Color Swatches -->
+<div class="col-span-1 lg:col-span-2 space-y-6">
+<p class="text-on-surface-variant text-sm font-semibold tracking-wide uppercase">Core Palette</p>
+<div class="grid grid-cols-3 h-64 rounded-lg overflow-hidden">
+<div class="bg-primary p-6 flex flex-col justify-end">
+<span class="text-on-primary font-bold">Emerald</span>
+<span class="text-on-primary/60 text-xs tabular-nums">#4edea3</span>
+</div>
+<div class="bg-secondary p-6 flex flex-col justify-end">
+<span class="text-on-secondary font-bold">Indigo</span>
+<span class="text-on-secondary/60 text-xs tabular-nums">#d0bcff</span>
+</div>
+<div class="bg-surface-container-low p-6 flex flex-col justify-end">
+<span class="text-on-surface font-bold">Charcoal</span>
+<span class="text-on-surface/60 text-xs tabular-nums">#171b28</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 02. Typography -->
+<section>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">02.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Typography</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-16">
+<div class="lg:col-span-2 space-y-12">
+<div class="space-y-2">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-4">Display Large (Plus Jakarta Sans)</p>
+<h1 class="font-headline font-extrabold text-6xl lg:text-8xl tracking-tighter tabular-nums text-transparent bg-clip-text bg-gradient-to-b from-on-surface to-on-surface/40">
+                        1,248,500
+                    </h1>
+</div>
+<div class="space-y-4">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-4">Headlines &amp; Sub-headers</p>
+<h3 class="font-headline font-bold text-4xl tracking-tight text-on-surface">Premium Wealth Management</h3>
+<h4 class="font-headline font-semibold text-2xl text-on-surface-variant">Strategic Credit Portfolio</h4>
+</div>
+</div>
+<div class="space-y-8 p-8 rounded-lg bg-surface-container-low">
+<div class="space-y-2">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Labels &amp; Metadata (Inter)</p>
+<p class="font-label font-semibold text-sm text-primary uppercase tracking-widest">Available Points</p>
+<p class="font-label font-medium text-xs text-on-surface-variant leading-relaxed">
+                        Inter is reserved for technical data and long-form text, ensuring maximum readability in complex tables.
+                    </p>
+</div>
+<div class="space-y-2 pt-4 border-t border-outline-variant/20">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-2">Tabular Figures (CRITICAL)</p>
+<div class="flex flex-col gap-1 tabular-nums font-mono text-xl">
+<div class="flex justify-between"><span>Points:</span> <span class="text-primary">850,000</span></div>
+<div class="flex justify-between"><span>APR:</span> <span class="text-primary">24.99%</span></div>
+<div class="flex justify-between"><span>Bonus:</span> <span class="text-primary">$2,500</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 03. Buttons & 07. Status -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-32">
+<div>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">03.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Buttons</h2>
+</div>
+<div class="flex flex-wrap gap-6 items-center">
+<!-- Primary Gradient -->
+<button class="px-8 py-4 rounded-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-sm tracking-tight shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform active:scale-95">
+                    Primary Action
+                </button>
+<!-- Secondary Outline -->
+<button class="px-8 py-4 rounded-full border border-secondary text-secondary font-headline font-bold text-sm tracking-tight hover:bg-secondary/10 transition-colors">
+                    Secondary Action
+                </button>
+<!-- Ghost -->
+<button class="px-6 py-4 rounded-full text-on-surface-variant font-headline font-semibold text-sm hover:text-on-surface transition-colors">
+                    Ghost Button
+                </button>
+<!-- Loading -->
+<button class="px-8 py-4 rounded-full bg-surface-container-highest text-on-surface/50 font-headline font-bold text-sm tracking-tight flex items-center gap-3 cursor-not-allowed">
+<div class="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+                    Processing...
+                </button>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">07.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Status Indicators</h2>
+</div>
+<div class="flex flex-wrap gap-4">
+<span class="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest border border-primary/20 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Success
+                </span>
+<span class="px-4 py-1.5 rounded-full bg-tertiary-container/10 text-tertiary text-xs font-bold uppercase tracking-widest border border-tertiary/20 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Information
+                </span>
+<span class="px-4 py-1.5 rounded-full bg-orange-500/10 text-orange-400 text-xs font-bold uppercase tracking-widest border border-orange-500/20 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Warning
+                </span>
+<span class="px-4 py-1.5 rounded-full bg-error/10 text-error text-xs font-bold uppercase tracking-widest border border-error/20 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Critical
+                </span>
+</div>
+</div>
+</section>
+<!-- 04. Cards & Containers -->
+<section>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">04.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Cards &amp; Containers</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<!-- Stacked Cards -->
+<div class="space-y-6">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Portfolio Integration</p>
+<div class="relative h-64 mt-8">
+<div class="card-stack-item absolute inset-0 rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 border border-white/10 p-6 shadow-2xl"></div>
+<div class="card-stack-item absolute inset-0 rounded-xl bg-gradient-to-br from-indigo-900 to-slate-900 border border-white/10 p-6 shadow-2xl"></div>
+<div class="absolute inset-0 rounded-xl bg-gradient-to-br from-[#1d1d1b] to-[#3d3d3b] border border-white/20 p-8 shadow-2xl flex flex-col justify-between group cursor-pointer transition-transform hover:-translate-y-2">
+<div class="flex justify-between items-start">
+<span class="text-yellow-500 font-bold italic text-xl">AMEX</span>
+<span class="material-symbols-outlined text-white/40">contactless</span>
+</div>
+<div class="space-y-1">
+<p class="text-white/40 text-[10px] uppercase tracking-[0.2em]">Platinum Reserve</p>
+<p class="text-white font-mono tracking-widest">•••• 1004</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Active Card Progress -->
+<div class="space-y-6">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Active Progress Card</p>
+<div class="p-8 rounded-lg bg-surface-container border border-outline-variant/10 flex flex-col gap-6">
+<div class="flex justify-between items-end">
+<div>
+<h5 class="text-on-surface font-headline font-bold text-lg">Chase Sapphire</h5>
+<p class="text-on-surface-variant text-xs">Sign-up Bonus Goal</p>
+</div>
+<p class="text-primary font-headline font-extrabold text-2xl tabular-nums">$4,250<span class="text-on-surface-variant text-sm font-medium">/ $6k</span></p>
+</div>
+<div class="w-full h-3 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full w-[70%] bg-gradient-to-r from-primary-container to-primary rounded-full shadow-[0_0_12px_rgba(78,222,163,0.3)]"></div>
+</div>
+<div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/60">
+<span>Started Oct 12</span>
+<span>24 Days Remaining</span>
+</div>
+</div>
+</div>
+<!-- Glass Container -->
+<div class="space-y-6">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Glassmorphic Container</p>
+<div class="glass-panel p-8 rounded-xl border border-white/5 relative overflow-hidden group">
+<div class="absolute -top-12 -right-12 w-32 h-32 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-colors"></div>
+<div class="relative z-10 space-y-4">
+<div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+</div>
+<h5 class="text-on-surface font-headline font-bold">Luminous Insights</h5>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                            Atmospheric surfaces use background-blur and low-opacity fills to create depth without borders.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 08. Recent Activity (Expanded Component) -->
+<section>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">08.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Recent Activity</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+<div class="space-y-6">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Transaction Variants</p>
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/10 overflow-hidden">
+<!-- Shopping + Qualified -->
+<div class="flex items-center justify-between p-4 border-b border-outline-variant/5 hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<div>
+<h6 class="text-on-surface font-semibold text-sm">Apple Store Online</h6>
+<p class="text-on-surface-variant text-xs">Today • Electronics</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-on-surface font-bold tabular-nums">-$1,299.00</span>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-tighter">Qualified</span>
+<span class="text-primary text-[10px] font-bold tabular-nums">+5,196 pts</span>
+</div>
+</div>
+</div>
+<!-- Dining + Multiplier -->
+<div class="flex items-center justify-between p-4 border-b border-outline-variant/5 hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-orange-400/10 flex items-center justify-center text-orange-400">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h6 class="text-on-surface font-semibold text-sm">Nobu Downtown</h6>
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary text-[9px] font-bold">4x Points</span>
+</div>
+<p class="text-on-surface-variant text-xs">Yesterday • Dining</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-on-surface font-bold tabular-nums">-$342.50</span>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-tighter">Qualified</span>
+<span class="text-primary text-[10px] font-bold tabular-nums">+1,370 pts</span>
+</div>
+</div>
+</div>
+<!-- Travel + Pending -->
+<div class="flex items-center justify-between p-4 border-b border-outline-variant/5 hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</div>
+<div>
+<h6 class="text-on-surface font-semibold text-sm">Delta Air Lines</h6>
+<p class="text-on-surface-variant text-xs">Oct 24 • Travel</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-on-surface font-bold tabular-nums">-$840.00</span>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container/20 text-tertiary text-[10px] font-black uppercase tracking-tighter">Pending</span>
+<span class="text-on-surface-variant/40 text-[10px] font-bold italic">Calculating...</span>
+</div>
+</div>
+</div>
+<!-- Groceries + Non-Qualified -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center text-green-400">
+<span class="material-symbols-outlined">local_grocery_store</span>
+</div>
+<div>
+<h6 class="text-on-surface font-semibold text-sm">Whole Foods Market</h6>
+<p class="text-on-surface-variant text-xs">Oct 22 • Groceries</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-on-surface font-bold tabular-nums">-$156.22</span>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-error/20 text-error text-[10px] font-black uppercase tracking-tighter">Non-Qualified</span>
+<span class="text-on-surface-variant/40 text-[10px] font-bold tabular-nums">+156 pts</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Detail View (Mobile Profile)</p>
+<div class="glass-panel p-6 rounded-2xl border border-outline-variant/10 space-y-8 max-w-sm mx-auto lg:mx-0">
+<div class="flex justify-between items-start">
+<div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-3xl">restaurant</span>
+</div>
+<span class="px-3 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest">Qualified</span>
+</div>
+<div class="space-y-1">
+<h4 class="text-2xl font-headline font-extrabold text-on-surface tracking-tight">Nobu Downtown</h4>
+<p class="text-on-surface-variant text-sm font-medium">October 25, 2024 at 8:42 PM</p>
+</div>
+<div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/10">
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold text-on-surface-variant/60 tracking-widest">Amount</p>
+<p class="text-xl font-headline font-bold tabular-nums">$342.50</p>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] uppercase font-bold text-primary tracking-widest">Reward Earnt</p>
+<p class="text-xl font-headline font-bold text-primary tabular-nums">1,370 pts</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-highest border border-primary/20 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">stars</span>
+<p class="text-xs font-medium text-on-surface">This transaction earned a <span class="text-primary font-bold">4x multiplier</span> based on your current strategy.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 05. Data Viz -->
+<section>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">05.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Data Visualization</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<!-- Progress Arc -->
+<div class="flex flex-col items-center justify-center p-12 rounded-lg bg-surface-container-low">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-12">Reward Utilization Arc</p>
+<div class="relative w-64 h-32 overflow-hidden">
+<svg class="w-64 h-64 transform rotate-180" viewbox="0 0 100 100">
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-dasharray="141.37" stroke-dashoffset="0" stroke-width="8"></circle>
+<circle cx="50" cy="50" fill="none" r="45" stroke="url(#arc-gradient)" stroke-dasharray="141.37" stroke-dashoffset="40" stroke-linecap="round" stroke-width="8"></circle>
+<defs>
+<lineargradient id="arc-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#10b981"></stop>
+<stop offset="100%" stop-color="#4edea3"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 text-center pb-2">
+<span class="block text-4xl font-headline font-black text-on-surface tracking-tighter tabular-nums">72%</span>
+<span class="text-[10px] uppercase font-bold text-primary tracking-widest">Optimal</span>
+</div>
+</div>
+</div>
+<!-- Bar Chart Variant -->
+<div class="space-y-8">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Monthly Spend Efficiency</p>
+<div class="flex items-end justify-between h-48 gap-4 px-4">
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[40%] transition-all hover:bg-primary/20">
+<div class="absolute bottom-0 w-full bg-primary/40 rounded-t-lg h-[60%] group-hover:h-full transition-all"></div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[65%] transition-all hover:bg-primary/20">
+<div class="absolute bottom-0 w-full bg-primary/40 rounded-t-lg h-[75%] group-hover:h-full transition-all"></div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[90%] transition-all hover:bg-primary/20 border-x border-primary/20">
+<div class="absolute bottom-0 w-full bg-gradient-to-t from-primary-container to-primary rounded-t-lg h-[85%]"></div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[55%] transition-all hover:bg-primary/20">
+<div class="absolute bottom-0 w-full bg-primary/40 rounded-t-lg h-[40%] group-hover:h-full transition-all"></div>
+</div>
+<div class="w-full bg-surface-container-highest rounded-t-lg relative group h-[70%] transition-all hover:bg-primary/20">
+<div class="absolute bottom-0 w-full bg-primary/40 rounded-t-lg h-[65%] group-hover:h-full transition-all"></div>
+</div>
+</div>
+<div class="flex justify-between text-[10px] font-bold text-on-surface-variant uppercase px-4">
+<span>Jan</span><span>Feb</span><span class="text-primary">Mar</span><span>Apr</span><span>May</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 06. Form Elements -->
+<section>
+<div class="flex items-baseline gap-4 mb-12">
+<span class="font-headline font-bold text-primary/40 text-sm tracking-widest">06.</span>
+<h2 class="font-headline font-extrabold text-4xl tracking-tight">Form Elements</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24">
+<div class="space-y-8">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Input States</p>
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Card Nickname</label>
+<input class="w-full h-14 bg-surface-container-highest border-none rounded-lg px-6 text-on-surface placeholder:text-on-surface-variant/40 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="e.g. Daily Driver" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-primary uppercase tracking-wider ml-1">Focused State</label>
+<div class="relative">
+<input class="w-full h-14 bg-surface-bright border border-primary/20 rounded-lg px-6 text-on-surface focus:ring-0" type="text" value="Premium Platinum"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-primary">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-8">
+<p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Selection Chips</p>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-2.5 rounded-full bg-primary text-on-primary text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span> All Rewards
+                    </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant text-sm font-bold border border-outline-variant/30 hover:bg-surface-bright transition-colors">
+                        Dining
+                    </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant text-sm font-bold border border-outline-variant/30 hover:bg-surface-bright transition-colors">
+                        Travel
+                    </button>
+<button class="px-5 py-2.5 rounded-full bg-surface-container-highest text-on-surface-variant text-sm font-bold border border-outline-variant/30 hover:bg-surface-bright transition-colors">
+                        Grocery
+                    </button>
+</div>
+<div class="p-6 rounded-lg bg-surface-container-low space-y-4">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em]">Filter Strategy</p>
+<div class="flex items-center gap-3">
+<div class="w-12 h-6 bg-primary rounded-full relative p-1 cursor-pointer">
+<div class="w-4 h-4 bg-on-primary rounded-full absolute right-1"></div>
+</div>
+<span class="text-sm font-semibold text-on-surface">Auto-Optimize Spending</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-surface-container-lowest py-20 px-8 text-center border-t border-outline-variant/10">
+<p class="text-on-surface-variant text-sm font-medium">Built with The Financial Luminary Framework © 2024 Reward Relay</p>
+</footer>
+</body></html>

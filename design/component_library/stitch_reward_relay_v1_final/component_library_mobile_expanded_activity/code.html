@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reward Relay - Component Library (Mobile)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#0f131f",
+                        "tertiary-container": "#9a98ff",
+                        "secondary-container": "#571bc1",
+                        "on-tertiary-fixed-variant": "#3323cc",
+                        "on-primary-fixed": "#002113",
+                        "tertiary": "#c3c0ff",
+                        "surface-container-high": "#262a37",
+                        "on-primary-container": "#00422b",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#1d00a5",
+                        "error": "#ffb4ab",
+                        "on-background": "#dfe2f3",
+                        "inverse-surface": "#dfe2f3",
+                        "error-container": "#93000a",
+                        "on-primary": "#003824",
+                        "surface-container": "#1b1f2c",
+                        "on-secondary-container": "#c4abff",
+                        "tertiary-fixed-dim": "#c3c0ff",
+                        "surface-container-highest": "#313442",
+                        "on-error": "#690005",
+                        "surface-container-low": "#171b28",
+                        "surface": "#0f131f",
+                        "on-tertiary-container": "#2300bf",
+                        "surface-container-lowest": "#0a0e1a",
+                        "primary-fixed": "#6ffbbe",
+                        "primary-container": "#10b981",
+                        "on-secondary-fixed": "#23005c",
+                        "tertiary-fixed": "#e2dfff",
+                        "on-surface-variant": "#bbcabf",
+                        "on-surface": "#dfe2f3",
+                        "surface-variant": "#313442",
+                        "on-secondary": "#3c0091",
+                        "surface-dim": "#0f131f",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-tertiary-fixed": "#0f0069",
+                        "surface-bright": "#353946",
+                        "outline-variant": "#3c4a42",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "inverse-on-surface": "#2c303d",
+                        "on-primary-fixed-variant": "#005236",
+                        "secondary-fixed": "#e9ddff",
+                        "outline": "#86948a",
+                        "surface-tint": "#4edea3",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "inverse-primary": "#006c49",
+                        "secondary": "#d0bcff",
+                        "primary": "#4edea3"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0f131f;
+            color: #dfe2f3;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .glass-panel {
+            background: rgba(27, 31, 44, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary/30">
+<!-- TopAppBar Execution -->
+<header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 bg-[#0f131f]/80 backdrop-blur-xl z-50">
+<div class="flex items-center gap-2">
+<span class="text-2xl font-black text-emerald-400 tracking-tighter font-headline">Reward Relay</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:bg-emerald-500/10 transition-colors rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-emerald-500/10 transition-colors rounded-full">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<main class="pt-20 pb-32 px-4 max-w-md mx-auto space-y-12">
+<!-- Section Label: Atoms -->
+<section class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+<h2 class="font-headline font-extrabold text-xs tracking-widest uppercase text-outline">Atoms</h2>
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+</div>
+<!-- Buttons -->
+<div class="space-y-4">
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline">Touch Targets (Min 44px)</p>
+<div class="grid grid-cols-2 gap-3">
+<button class="h-12 w-full flex items-center justify-center bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold rounded-full shadow-lg shadow-primary/10 active:scale-95 transition-transform">
+                        Primary CTA
+                    </button>
+<button class="h-12 w-full flex items-center justify-center bg-surface-container-highest text-on-surface font-headline font-bold rounded-full active:scale-95 transition-transform">
+                        Secondary
+                    </button>
+</div>
+</div>
+<!-- Status Badges -->
+<div class="space-y-4">
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline">Status Indicators</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black tracking-widest uppercase rounded-full border border-primary/20">QUALIFIED</span>
+<span class="px-3 py-1 bg-tertiary/10 text-tertiary text-[10px] font-black tracking-widest uppercase rounded-full border border-tertiary/20">PENDING</span>
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant text-[10px] font-black tracking-widest uppercase rounded-full">EXPIRED</span>
+</div>
+</div>
+</section>
+<!-- Section Label: Molecules -->
+<section class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+<h2 class="font-headline font-extrabold text-xs tracking-widest uppercase text-outline">Molecules</h2>
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+</div>
+<!-- Alerts & Banners -->
+<div class="space-y-3">
+<div class="p-4 bg-primary/5 border-l-4 border-primary rounded-r-xl flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm">info</span>
+<div>
+<p class="text-xs font-bold text-on-surface">New Bonus Detected</p>
+<p class="text-[10px] text-on-surface-variant">Amex Gold 90k offer is currently live for your profile.</p>
+</div>
+</div>
+<div class="p-4 bg-error/5 border-l-4 border-error rounded-r-xl flex items-start gap-3">
+<span class="material-symbols-outlined text-error text-sm">warning</span>
+<div>
+<p class="text-xs font-bold text-on-surface">Rule 5/24 Warning</p>
+<p class="text-[10px] text-on-surface-variant">Applying now will put you at 6/24 limit.</p>
+</div>
+</div>
+</div>
+<!-- Hero Stats Progress Arc -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 text-center relative overflow-hidden">
+<p class="text-[10px] font-bold text-outline uppercase tracking-tighter mb-1">Annual Goal Progress</p>
+<div class="relative w-48 h-24 mx-auto mb-2">
+<!-- Progress Arc Mockup -->
+<svg class="w-full h-full" viewbox="0 0 100 50">
+<path class="text-surface-container-highest" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="8"></path>
+<path class="text-primary" d="M 10 50 A 40 40 0 0 1 70 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="8"></path>
+</svg>
+<div class="absolute inset-x-0 bottom-0">
+<span class="text-3xl font-black font-headline tabular-nums tracking-tighter">72%</span>
+</div>
+</div>
+<p class="text-xs font-medium text-on-surface-variant italic">“You’re $1.2k away from the next tier”</p>
+</div>
+</section>
+<!-- Section Label: Organisms -->
+<section class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+<h2 class="font-headline font-extrabold text-xs tracking-widest uppercase text-outline">Organisms</h2>
+<div class="h-px flex-1 bg-outline-variant/30"></div>
+</div>
+<!-- Wallet Stacked Cards -->
+<div class="space-y-4">
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline">Active Card Stack</p>
+<div class="relative h-[220px]">
+<!-- Card 1 (Bottom) -->
+<div class="absolute top-8 left-0 w-full h-44 bg-gradient-to-br from-[#1c1c1c] to-[#4a4a4a] rounded-xl p-5 shadow-2xl border border-white/5 transition-transform active:scale-95">
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-bold tracking-widest text-white/40 uppercase">Platinum</span>
+<span class="text-xs font-bold text-white/80">AMEX</span>
+</div>
+<div class="mt-auto h-full flex flex-col justify-end">
+<p class="text-xs font-medium text-white/60 mb-2">Spend Progress</p>
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="w-4/5 h-full bg-primary"></div>
+</div>
+</div>
+</div>
+<!-- Card 2 (Middle) -->
+<div class="absolute top-4 left-0 w-full h-44 bg-gradient-to-br from-[#1c2e5a] to-[#0a122a] rounded-xl p-5 shadow-2xl border border-white/5 transition-transform active:scale-95">
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-bold tracking-widest text-white/40 uppercase">Sapphire Reserved</span>
+<span class="text-xs font-bold text-white/80">CHASE</span>
+</div>
+<div class="mt-auto h-full flex flex-col justify-end">
+<p class="text-xs font-medium text-white/60 mb-2">Spend Progress</p>
+<div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+<div class="w-1/3 h-full bg-primary"></div>
+</div>
+</div>
+</div>
+<!-- Card 3 (Top) -->
+<div class="absolute top-0 left-0 w-full h-44 bg-gradient-to-br from-[#f5d061] to-[#b38b1f] rounded-xl p-5 shadow-2xl border border-white/10 transition-transform active:scale-95">
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-bold tracking-widest text-on-secondary-fixed/40 uppercase">Gold Preferred</span>
+<span class="text-xs font-bold text-on-secondary-fixed">AMEX</span>
+</div>
+<div class="mt-auto h-full flex flex-col justify-end">
+<div class="flex justify-between mb-2">
+<p class="text-xs font-bold text-on-secondary-fixed">Spend Progress</p>
+<p class="text-xs font-black text-on-secondary-fixed">$2,400 / $4k</p>
+</div>
+<div class="w-full h-1.5 bg-black/10 rounded-full overflow-hidden">
+<div class="w-2/3 h-full bg-on-secondary-fixed"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Transaction List (Expanded) -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<p class="text-[10px] font-bold uppercase tracking-widest text-outline">Recent Churning Activity</p>
+<button class="text-[10px] font-bold text-primary active:opacity-50 transition-opacity">VIEW ALL</button>
+</div>
+<div class="bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/10">
+<!-- Transaction Row 1: Sign up Bonus -->
+<div class="p-4 flex items-center gap-4 hover:bg-white/5 active:bg-white/10 transition-colors border-b border-outline-variant/10">
+<div class="relative">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-2xl">card_membership</span>
+</div>
+<div class="absolute -top-1 -right-1 w-5 h-5 bg-background rounded-full flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-[10px] text-primary fill-1">verified</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<p class="text-sm font-bold text-on-surface truncate">Chase Freedom Flex</p>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] text-on-surface-variant font-medium">Oct 24 • Bonus Tier 1</span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-sm font-black text-primary font-headline tracking-tight">+20,000</p>
+<span class="inline-block px-2 py-0.5 bg-primary/10 text-primary text-[8px] font-black uppercase rounded-full">QUALIFIED</span>
+</div>
+</div>
+<!-- Transaction Row 2: Category Spending -->
+<div class="p-4 flex items-center gap-4 hover:bg-white/5 active:bg-white/10 transition-colors border-b border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary text-2xl">restaurant</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<p class="text-sm font-bold text-on-surface truncate">Uber Eats</p>
+<span class="px-1.5 py-0.5 bg-tertiary-container/20 text-tertiary text-[8px] font-bold rounded">4x</span>
+</div>
+<p class="text-[10px] text-on-surface-variant font-medium">Oct 23 • Dining Multiplier</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-black text-on-surface font-headline tracking-tight">+142</p>
+<span class="inline-block px-2 py-0.5 bg-tertiary/10 text-tertiary text-[8px] font-black uppercase rounded-full">PENDING</span>
+</div>
+</div>
+<!-- Transaction Row 3: Credit Redemption -->
+<div class="p-4 flex items-center gap-4 hover:bg-white/5 active:bg-white/10 transition-colors border-b border-outline-variant/10">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center border border-outline-variant/20">
+<span class="material-symbols-outlined text-slate-400 text-2xl">flight_takeoff</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<p class="text-sm font-bold text-on-surface truncate">Delta Airlines</p>
+</div>
+<p class="text-[10px] text-on-surface-variant font-medium">Oct 21 • Travel Credit</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-black text-on-surface font-headline tracking-tight">$200.00</p>
+<span class="inline-block px-2 py-0.5 bg-surface-container-highest text-on-surface-variant text-[8px] font-black uppercase rounded-full">REDEEMED</span>
+</div>
+</div>
+<!-- Transaction Row 4: Referral -->
+<div class="p-4 flex items-center gap-4 hover:bg-white/5 active:bg-white/10 transition-colors">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/20 flex items-center justify-center border border-secondary/20">
+<span class="material-symbols-outlined text-secondary text-2xl">group</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2 mb-0.5">
+<p class="text-sm font-bold text-on-surface truncate">Amex Gold Referral</p>
+</div>
+<p class="text-[10px] text-on-surface-variant font-medium">Oct 20 • User: Alex R.</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-black text-primary font-headline tracking-tight">+30,000</p>
+<span class="inline-block px-2 py-0.5 bg-primary/10 text-primary text-[8px] font-black uppercase rounded-full">QUALIFIED</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar Execution -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-8 pt-4 bg-[#171b28]/80 backdrop-blur-xl shadow-[0_-24px_48px_-12px_rgba(0,0,0,0.4)] border-t border-white/5">
+<div class="flex flex-col items-center justify-center text-emerald-400 bg-emerald-500/10 rounded-full p-3 transition-transform active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold tabular-nums">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 p-3 transition-transform active:scale-90">
+<span class="material-symbols-outlined">credit_card</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold tabular-nums">Cards</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 p-3 transition-transform active:scale-90">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold tabular-nums">Earn</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 p-3 transition-transform active:scale-90">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold tabular-nums">Vault</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 p-3 transition-transform active:scale-90">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold tabular-nums">Profile</span>
+</div>
+</nav>
+</body></html>

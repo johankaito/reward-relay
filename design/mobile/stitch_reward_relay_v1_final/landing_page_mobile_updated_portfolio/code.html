@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reward Relay - Master the Churn</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed-dim": "#c3c0ff",
+              "surface-container-low": "#171b28",
+              "on-secondary-fixed": "#23005c",
+              "error": "#ffb4ab",
+              "primary-fixed-dim": "#4edea3",
+              "on-tertiary-container": "#2300bf",
+              "on-tertiary": "#1d00a5",
+              "on-secondary-container": "#c4abff",
+              "inverse-on-surface": "#2c303d",
+              "on-error-container": "#ffdad6",
+              "surface-tint": "#4edea3",
+              "secondary": "#d0bcff",
+              "on-primary-container": "#00422b",
+              "inverse-primary": "#006c49",
+              "secondary-fixed-dim": "#d0bcff",
+              "tertiary-fixed": "#e2dfff",
+              "outline-variant": "#3c4a42",
+              "on-primary": "#003824",
+              "on-background": "#dfe2f3",
+              "background": "#0f131f",
+              "surface": "#0f131f",
+              "secondary-fixed": "#e9ddff",
+              "primary-fixed": "#6ffbbe",
+              "tertiary": "#c3c0ff",
+              "secondary-container": "#571bc1",
+              "error-container": "#93000a",
+              "surface-dim": "#0f131f",
+              "surface-container-high": "#262a37",
+              "surface-container": "#1b1f2c",
+              "outline": "#86948a",
+              "surface-container-lowest": "#0a0e1a",
+              "tertiary-container": "#9a98ff",
+              "on-error": "#690005",
+              "on-surface": "#dfe2f3",
+              "surface-variant": "#313442",
+              "on-primary-fixed": "#002113",
+              "surface-container-highest": "#313442",
+              "on-tertiary-fixed-variant": "#3323cc",
+              "on-secondary": "#3c0091",
+              "inverse-surface": "#dfe2f3",
+              "on-secondary-fixed-variant": "#5516be",
+              "primary": "#4edea3",
+              "surface-bright": "#353946",
+              "primary-container": "#10b981",
+              "on-surface-variant": "#bbcabf",
+              "on-tertiary-fixed": "#0f0069",
+              "on-primary-fixed-variant": "#005236"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .glass-card {
+        background: rgba(27, 31, 44, 0.4);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .emerald-glow {
+        box-shadow: 0 0 20px rgba(78, 222, 163, 0.15);
+      }
+    </style>
+<style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30 selection:text-primary overflow-x-hidden">
+<!-- Top Navigation Anchor - Hidden as requested -->
+<nav class="fixed top-0 w-full z-50 bg-[#0f131f]/80 backdrop-blur-xl h-20 px-6 flex justify-between items-center no-border hidden">
+<div class="text-xl font-bold tracking-tighter text-primary font-headline">Reward Relay</div>
+</nav>
+<main class="pt-12 pb-32">
+<!-- Hero Section -->
+<section class="px-6 py-12 text-center relative overflow-hidden">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-80 bg-primary/20 rounded-full blur-[120px]"></div>
+<h1 class="font-headline text-5xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+            Master the <span class="text-primary">Churn</span>
+</h1>
+<p class="text-on-surface-variant text-lg mb-10 max-w-[280px] mx-auto leading-relaxed">
+            The high-stakes command center for credit card optimization and point maximization.
+        </p>
+<div class="flex flex-col gap-4 max-w-xs mx-auto">
+<button class="bg-primary text-on-primary py-4 rounded-full font-headline font-bold text-lg shadow-lg emerald-glow">
+                Join the Elite
+            </button>
+<button class="text-primary font-headline font-semibold py-2">
+                View Live Dashboard
+            </button>
+</div>
+</section>
+<!-- Active Portfolio Cards (Horizontal Swipe) - Updated with 4+ overlapping card visuals -->
+<section class="py-12">
+<div class="px-6 mb-6 flex justify-between items-end">
+<div>
+<span class="text-primary font-headline font-bold text-xs tracking-[0.2em] uppercase">Portfolio</span>
+<h2 class="text-2xl font-headline font-bold mt-1">Active Cards</h2>
+</div>
+<span class="text-on-surface-variant text-sm font-label">See All</span>
+</div>
+<div class="flex overflow-x-auto no-scrollbar gap-5 px-6 snap-x">
+<!-- Card 1: Platinum -->
+<div class="snap-center shrink-0 w-[85vw] max-w-[340px] h-52 rounded-2xl relative p-7 overflow-hidden flex flex-col justify-between bg-gradient-to-br from-[#1b1f2c] to-[#0a0e1a] border border-white/5 shadow-2xl">
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="flex justify-between items-start">
+<span class="text-on-surface/80 font-headline font-bold tracking-[0.2em] text-xs uppercase">Platinum</span>
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">contactless</span>
+</div>
+<div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase font-label tracking-wider mb-1">Sign-up Bonus Progress</p>
+<p class="text-xl font-headline font-bold tabular-nums">$3,420 <span class="text-on-surface-variant font-medium">/ $4,000</span></p>
+</div>
+<p class="text-xs font-bold text-primary font-headline bg-primary/10 px-2 py-1 rounded-md">85%</p>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[85%]"></div>
+</div>
+</div>
+</div>
+<!-- Card 2: Sapphire -->
+<div class="snap-center shrink-0 w-[85vw] max-w-[340px] h-52 rounded-2xl relative p-7 overflow-hidden flex flex-col justify-between bg-gradient-to-br from-[#051937] to-[#000000] border border-white/5 shadow-2xl">
+<div class="flex justify-between items-start">
+<span class="text-blue-200/80 font-headline font-bold tracking-[0.2em] text-xs uppercase">Sapphire Reserve</span>
+<span class="material-symbols-outlined text-blue-400 text-3xl">diamond</span>
+</div>
+<div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-[10px] text-blue-200/60 uppercase font-label tracking-wider mb-1">Current Points</p>
+<p class="text-xl font-headline font-bold tabular-nums">124,500 <span class="text-blue-200/40 font-medium">PTS</span></p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Venture -->
+<div class="snap-center shrink-0 w-[85vw] max-w-[340px] h-52 rounded-2xl relative p-7 overflow-hidden flex flex-col justify-between bg-gradient-to-br from-[#800000] to-[#200000] border border-white/5 shadow-2xl">
+<div class="flex justify-between items-start">
+<span class="text-red-200/80 font-headline font-bold tracking-[0.2em] text-xs uppercase">Venture X</span>
+<span class="material-symbols-outlined text-red-400 text-3xl">flight</span>
+</div>
+<div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-[10px] text-red-200/60 uppercase font-label tracking-wider mb-1">Next Statement</p>
+<p class="text-xl font-headline font-bold tabular-nums">Oct 24</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Ink Business -->
+<div class="snap-center shrink-0 w-[85vw] max-w-[340px] h-52 rounded-2xl relative p-7 overflow-hidden flex flex-col justify-between bg-gradient-to-br from-[#134e4a] to-[#042f2e] border border-white/5 shadow-2xl">
+<div class="flex justify-between items-start">
+<span class="text-teal-200/80 font-headline font-bold tracking-[0.2em] text-xs uppercase">Ink Business</span>
+<span class="material-symbols-outlined text-teal-400 text-3xl">business_center</span>
+</div>
+<div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-[10px] text-teal-200/60 uppercase font-label tracking-wider mb-1">Annual Fee Due</p>
+<p class="text-xl font-headline font-bold tabular-nums">In 45 Days</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How it Works (Vertical Stack) - Re-added as requested -->
+<section class="px-6 py-16">
+<div class="mb-14 text-center">
+<h2 class="text-3xl font-headline font-extrabold mb-4">How it Works</h2>
+<div class="h-1.5 w-12 bg-primary mx-auto rounded-full"></div>
+</div>
+<div class="space-y-12">
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shrink-0">
+<span class="text-primary font-headline font-bold text-lg">1</span>
+</div>
+<div>
+<h3 class="text-xl font-headline font-bold mb-2">Connect Your Vault</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                        Securely link your bank accounts using military-grade encryption to aggregate your entire financial footprint.
+                    </p>
+</div>
+</div>
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shrink-0">
+<span class="text-primary font-headline font-bold text-lg">2</span>
+</div>
+<div>
+<h3 class="text-xl font-headline font-bold mb-2">Algorithm Audit</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                        Our proprietary engine analyzes your spending patterns against 500+ credit card offers to find your optimal path.
+                    </p>
+</div>
+</div>
+<div class="flex gap-6 items-start">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shrink-0">
+<span class="text-primary font-headline font-bold text-lg">3</span>
+</div>
+<div>
+<h3 class="text-xl font-headline font-bold mb-2">Execute &amp; Conquer</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                        Receive real-time notifications on when to spend, when to apply, and when to close to keep your credit score pristine.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Select Your Plan -->
+<section class="px-6 py-16 bg-surface-container-lowest/50">
+<h2 class="text-3xl font-headline font-extrabold mb-12 text-center">Select Your Plan</h2>
+<div class="space-y-8">
+<!-- Pro Plan -->
+<div class="glass-card p-8 rounded-2xl border border-primary/30 relative overflow-hidden emerald-glow">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/15 rounded-full blur-2xl"></div>
+<div class="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest mb-6">Most Popular</div>
+<h3 class="text-2xl font-headline font-bold mb-1">Command Center</h3>
+<div class="flex items-baseline gap-1 mb-8">
+<span class="text-4xl font-headline font-extrabold tabular-nums">$29</span>
+<span class="text-on-surface-variant text-sm font-medium">/month</span>
+</div>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-medium">Unlimited Bank Sync</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-medium">Sign-up Bonus Tracker</span>
+</li>
+<li class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-medium">Custom Churn Strategy</span>
+</li>
+</ul>
+<button class="w-full bg-primary text-on-primary py-4 rounded-full font-headline font-bold text-lg">Upgrade Now</button>
+</div>
+<!-- Basic Plan -->
+<div class="bg-surface-container-high/40 p-8 rounded-2xl border border-white/5">
+<h3 class="text-xl font-headline font-bold mb-1">Lite Relay</h3>
+<div class="flex items-baseline gap-1 mb-8">
+<span class="text-4xl font-headline font-extrabold tabular-nums">$0</span>
+<span class="text-on-surface-variant text-sm font-medium">/month</span>
+</div>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center gap-3 text-sm opacity-60">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">check_circle</span>
+<span class="font-medium">Up to 2 Bank Syncs</span>
+</li>
+<li class="flex items-center gap-3 text-sm opacity-60">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">check_circle</span>
+<span class="font-medium">Basic Point Dashboard</span>
+</li>
+</ul>
+<button class="w-full border border-outline/30 text-on-surface py-4 rounded-full font-headline font-bold text-lg hover:bg-white/5 transition-colors">Start Free</button>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="px-6 py-20">
+<h2 class="text-3xl font-headline font-extrabold mb-12 text-center">Wall of Luminary</h2>
+<div class="space-y-10">
+<div class="relative">
+<span class="material-symbols-outlined absolute -top-4 -left-2 text-6xl text-primary/10 select-none" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<div class="relative z-10">
+<p class="mb-6 text-on-surface/90 text-lg italic leading-relaxed font-medium">
+                        "Reward Relay turned my casual spending into first-class tickets around the world. The UI is cleaner than my banking app."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-primary/30 overflow-hidden shrink-0">
+<img alt="Portrait of Alex Chen" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzaGRT1jiTcLjHpd1CmSftXD_Z9p_WTytQedj1Jgzm5akhUoT5RhfxKpwQEjadUqQMjweELclBzh6TQ4LIumL6a41_GwRwLUxFWpX_9qcw_VKW4yCupSHvl4JjJknoUau9Psu7ekkJJucJQrGj8bRLSzLUFl3gMp8jiKtdkqdubRXikZbM-YLCAzkC6rod_RchshZNVQMTKbjU-w4iI5y-DhPRhrvHDJQ0GsTtuAhL7dAkmkS1gxqVu4jdDjjLpnCwUHxnLFFJb0Uz"/>
+</div>
+<div>
+<p class="font-headline font-bold">Alex Chen</p>
+<p class="text-xs text-primary font-semibold tracking-wider uppercase">Churning since 2019</p>
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute -top-4 -left-2 text-6xl text-primary/10 select-none" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+<div class="relative z-10">
+<p class="mb-6 text-on-surface/90 text-lg italic leading-relaxed font-medium">
+                        "The only platform that understands the nuance of the 5/24 rule perfectly. A must-have for serious collectors."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-primary/30 overflow-hidden shrink-0">
+<img alt="Portrait of Sarah Jenkins" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2QjSx6rjzRAks10snFtOLiejEGewnYxyK4cqRMLDsd3X3v_OHv6lR-oN4LcSFWjmQZJlQ477GPe8C-CDn24AhHPPYWFuCBdp_uq6szhwyjQDfxaKdZ7C-Cfow2qKRkt533x4Q4i8T_Sz5DSsF87Rdi_bjoJHXejFqMiDs5-fpm6h0O-L2H_DNBKV7aGGcbGXRta9s7B52ClFaV6XRR9uFUtkcEAI8YIRqjYXA-808PgcTWW-ovEco0rBYeKvQsT-Ze8hTNYUl8Q4E"/>
+</div>
+<div>
+<p class="font-headline font-bold">Sarah Jenkins</p>
+<p class="text-xs text-primary font-semibold tracking-wider uppercase">Venture Capitalist</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-surface-container-lowest/80 border-t border-white/5 py-16 px-8 flex flex-col gap-8 items-center text-center">
+<div class="text-2xl font-bold tracking-tighter text-primary font-headline">Reward Relay</div>
+<div class="flex flex-wrap justify-center gap-x-8 gap-y-4">
+<a class="text-on-surface-variant font-body text-xs font-medium hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body text-xs font-medium hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body text-xs font-medium hover:text-primary transition-colors" href="#">Support</a>
+</div>
+<div class="h-px w-12 bg-white/10"></div>
+<p class="font-body text-[10px] text-on-surface-variant/60 tracking-widest uppercase">
+        © 2024 Reward Relay. The Financial Luminary Command Center.
+    </p>
+</footer>
+</body></html>

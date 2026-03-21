@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Reward Relay - Spend Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-bright": "#353946",
+                        "on-primary-container": "#00422b",
+                        "inverse-primary": "#006c49",
+                        "surface-container-high": "#262a37",
+                        "on-primary": "#003824",
+                        "tertiary-fixed": "#e2dfff",
+                        "on-primary-fixed-variant": "#005236",
+                        "surface-container-highest": "#313442",
+                        "primary": "#4edea3",
+                        "error": "#ffb4ab",
+                        "background": "#0f131f",
+                        "on-secondary-fixed": "#23005c",
+                        "surface-container-low": "#171b28",
+                        "tertiary-container": "#9a98ff",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#0f0069",
+                        "tertiary": "#c3c0ff",
+                        "surface-container-lowest": "#0a0e1a",
+                        "outline": "#86948a",
+                        "surface-tint": "#4edea3",
+                        "surface-container": "#1b1f2c",
+                        "secondary": "#d0bcff",
+                        "on-tertiary": "#1d00a5",
+                        "surface": "#0f131f",
+                        "on-error-container": "#ffdad6",
+                        "error-container": "#93000a",
+                        "primary-container": "#10b981",
+                        "inverse-on-surface": "#2c303d",
+                        "secondary-container": "#571bc1",
+                        "on-tertiary-fixed-variant": "#3323cc",
+                        "surface-variant": "#313442",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "on-secondary": "#3c0091",
+                        "on-surface": "#dfe2f3",
+                        "on-tertiary-container": "#2300bf",
+                        "tertiary-fixed-dim": "#c3c0ff",
+                        "surface-dim": "#0f131f",
+                        "primary-fixed": "#6ffbbe",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-surface-variant": "#bbcabf",
+                        "on-secondary-container": "#c4abff",
+                        "on-background": "#dfe2f3",
+                        "inverse-surface": "#dfe2f3",
+                        "outline-variant": "#3c4a42",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-primary-fixed": "#002113",
+                        "secondary-fixed": "#e9ddff"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0f131f;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .arc-hero-bg {
+            background: radial-gradient(150% 100% at 50% 0%, #1b1f2c 0%, #0f131f 100%);
+            border-bottom-left-radius: 4rem;
+            border-bottom-right-radius: 4rem;
+        }
+        .glass-card {
+            background: rgba(27, 31, 44, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body text-on-surface selection:bg-primary/30">
+<!-- Top AppBar -->
+<nav class="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<span class="text-lg font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent font-headline">Reward Relay</span>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity text-slate-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high border border-white/10">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="User profile portrait male headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkbn9BwtVOmPYK98_F8g3CXG8R6OuosUmycL9_SyKlcjHOQZ2Yj0L33V2fJAtvIJcJIOoqiTIM-Vk9-70RakzZag1sK0sXK-VsNB0W7nQT8YsYM9zHZduRzJh8uLh1s95kLj2q1IzzjRrvWtmSFR206fBAKIsu2zD9iQScNHfBe1qOCUWhmj9I4JgSZW-qdLUleByIoqZ-XKBvRKc6PjXi8ccxICwklt3Ki1aTk0a93BY08xBvGoMO6-mceiatJoiemfwTjYqAItbr"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="pb-32">
+<!-- Arc Hero Section -->
+<section class="arc-hero-bg pt-8 pb-16 px-6 text-center">
+<header class="mb-8">
+<p class="text-primary font-label text-[10px] uppercase tracking-widest font-semibold mb-2">Current Statement</p>
+<h1 class="text-5xl font-extrabold font-headline tracking-tighter tabular-nums text-on-surface">$4,821<span class="text-surface-bright">.42</span></h1>
+</header>
+<div class="grid grid-cols-2 gap-4">
+<!-- Mini Stat -->
+<div class="glass-card p-4 rounded-lg text-left">
+<p class="text-slate-400 text-xs font-medium mb-1">Projected Points</p>
+<div class="flex items-baseline gap-1">
+<span class="text-primary font-bold text-xl tabular-nums">12,402</span>
+<span class="material-symbols-outlined text-primary text-sm" data-icon="stars" data-weight="fill" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+<!-- Mini Stat -->
+<div class="glass-card p-4 rounded-lg text-left">
+<p class="text-slate-400 text-xs font-medium mb-1">Burn Rate</p>
+<div class="flex items-baseline gap-1">
+<span class="text-error font-bold text-xl tabular-nums">+14%</span>
+<span class="material-symbols-outlined text-error text-sm" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+</div>
+<!-- Spend Chart (Minimalist Linear Style) -->
+<div class="mt-10 h-24 w-full relative">
+<svg class="w-full h-full" viewbox="0 0 400 100">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4edea3" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#4edea3" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,80 Q50,90 100,50 T200,60 T300,20 T400,40 V100 H0 Z" fill="url(#chartGradient)"></path>
+<path d="M0,80 Q50,90 100,50 T200,60 T300,20 T400,40" fill="none" stroke="#4edea3" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-between px-2 pointer-events-none opacity-20">
+<div class="h-full border-l border-white/20"></div>
+<div class="h-full border-l border-white/20"></div>
+<div class="h-full border-l border-white/20"></div>
+<div class="h-full border-l border-white/20"></div>
+</div>
+</div>
+</section>
+<!-- Category Bento -->
+<section class="px-6 -mt-8 grid grid-cols-2 gap-4">
+<div class="bg-surface-container p-5 rounded-lg">
+<span class="material-symbols-outlined text-secondary mb-3" data-icon="restaurant">restaurant</span>
+<p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Dining</p>
+<p class="text-xl font-bold font-headline mt-1 tabular-nums">$842.00</p>
+</div>
+<div class="bg-surface-container p-5 rounded-lg">
+<span class="material-symbols-outlined text-primary mb-3" data-icon="flight_takeoff">flight_takeoff</span>
+<p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Travel</p>
+<p class="text-xl font-bold font-headline mt-1 tabular-nums">$2,104.50</p>
+</div>
+</section>
+<!-- Transaction List -->
+<section class="mt-12 px-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold font-headline tracking-tight">Recent Activity</h3>
+<button class="text-primary text-sm font-semibold">See All</button>
+</div>
+<div class="space-y-4">
+<!-- Transaction Item -->
+<div class="group active:bg-white/5 transition-all p-2 -mx-2 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div>
+<p class="font-bold text-on-surface leading-tight">Apple Store</p>
+<p class="text-slate-500 text-xs">Electronics • Today</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold font-headline tabular-nums">-$1,299.00</p>
+<p class="text-primary text-[10px] font-bold uppercase tracking-tighter">+3,897 pts</p>
+</div>
+</div>
+<!-- Transaction Item -->
+<div class="group active:bg-white/5 transition-all p-2 -mx-2 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="local_cafe">local_cafe</span>
+</div>
+<div>
+<p class="font-bold text-on-surface leading-tight">Blue Bottle Coffee</p>
+<p class="text-slate-500 text-xs">Dining • Yesterday</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold font-headline tabular-nums">-$6.50</p>
+<p class="text-primary text-[10px] font-bold uppercase tracking-tighter">+26 pts</p>
+</div>
+</div>
+<!-- Transaction Item -->
+<div class="group active:bg-white/5 transition-all p-2 -mx-2 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="directions_car">directions_car</span>
+</div>
+<div>
+<p class="font-bold text-on-surface leading-tight">Uber Trip</p>
+<p class="text-slate-500 text-xs">Transport • Aug 22</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold font-headline tabular-nums">-$24.12</p>
+<p class="text-primary text-[10px] font-bold uppercase tracking-tighter">+72 pts</p>
+</div>
+</div>
+<!-- Transaction Item -->
+<div class="group active:bg-white/5 transition-all p-2 -mx-2 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="hotel">hotel</span>
+</div>
+<div>
+<p class="font-bold text-on-surface leading-tight">The Ritz-Carlton</p>
+<p class="text-slate-500 text-xs">Travel • Aug 20</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-bold font-headline tabular-nums">-$450.00</p>
+<p class="text-primary text-[10px] font-bold uppercase tracking-tighter">+2,250 pts</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB for Tracking -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-gradient-to-br from-[#4edea3] to-[#10b981] rounded-full shadow-[0_8px_32px_rgba(78,222,163,0.3)] flex items-center justify-center text-on-primary-container z-50 active:scale-90 transition-transform">
+<span class="material-symbols-outlined font-bold" data-icon="add" style="font-size: 28px;">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 h-20 pb-safe bg-[#0f131f]/80 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-6 shadow-[0_-8px_32px_rgba(0,0,0,0.5)] md:hidden">
+<button class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 tap-highlight-transparent">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 tap-highlight-transparent">
+<span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Cards</span>
+</button>
+<!-- Active Tab: Track -->
+<button class="flex flex-col items-center justify-center text-[#4edea3] scale-110 active:bg-white/5 tap-highlight-transparent">
+<span class="material-symbols-outlined" data-icon="analytics" data-weight="fill" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Track</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 tap-highlight-transparent">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Redeem</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 active:bg-white/5 tap-highlight-transparent">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest font-semibold mt-1">Account</span>
+</button>
+</nav>
+</body></html>
