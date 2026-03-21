@@ -11,7 +11,6 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Capture error in PostHog
     if (posthog.__loaded) {
       posthog.captureException(error)
     }
@@ -19,22 +18,23 @@ export default function Error({
   }, [error])
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "#0f131f" }}>
+      <div className="max-w-md w-full rounded-2xl border border-white/5 p-6" style={{ background: "#1b1f2c" }}>
+        <h2 className="text-2xl font-bold mb-4" style={{ color: "#ffb4ab" }}>
           Something went wrong!
         </h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
+        <p className="mb-6" style={{ color: "#bbcabf" }}>
           We&apos;ve been notified and will look into it. Please try again.
         </p>
         {process.env.NODE_ENV === "development" && (
-          <pre className="text-sm bg-gray-100 dark:bg-gray-900 p-4 rounded mb-4 overflow-auto">
+          <pre className="text-sm p-4 rounded-lg mb-4 overflow-auto font-mono text-xs" style={{ background: "#0a0e1a", color: "#bbcabf" }}>
             {error.message}
           </pre>
         )}
         <button
           onClick={reset}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+          className="w-full rounded-full py-2 px-4 font-medium text-[#003824] transition-opacity hover:opacity-90"
+          style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
         >
           Try again
         </button>
