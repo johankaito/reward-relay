@@ -1013,6 +1013,32 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* Footer */}
+      <footer
+        className="w-full py-16"
+        style={{
+          backgroundColor: "#0f131f",
+          borderTop: "1px solid rgba(30, 41, 59, 0.2)",
+        }}
+      >
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-8 text-center">
+          <div className="flex flex-col items-center gap-2">
+            <div
+              className="text-2xl font-bold tracking-tighter"
+              style={{ color: "#4edea3", fontFamily: "var(--font-grotesk)" }}
+            >
+              Reward Relay
+            </div>
+            <p className="max-w-md text-sm" style={{ color: "#64748b" }}>
+              The Financial Luminary Command Center. Elevating credit reward management to high-stakes precision.
+            </p>
+          </div>
+          <p className="tabular-nums text-xs" style={{ color: "#475569" }}>
+            © 2024 Reward Relay. All rights reserved.
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }
