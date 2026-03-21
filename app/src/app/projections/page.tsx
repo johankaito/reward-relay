@@ -3,105 +3,132 @@
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Target, TrendingUp } from "lucide-react"
+import {
+  Plane,
+  MapPin,
+  TrendingUp,
+  Clock,
+  CreditCard,
+  ChevronRight,
+} from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { GoalTimelineComparison } from "@/components/projections/GoalTimelineComparison"
-import { PointsBalanceWidget } from "@/components/profile/PointsBalanceWidget"
-import { UnavailableCardAlert } from "@/components/projections/UnavailableCardAlert"
 import { supabase } from "@/lib/supabase/client"
-import { GOALS, calculateMultiCardPaths, type RedemptionGoal } from "@/lib/projections"
-import { checkForUnavailableCards } from "@/lib/unavailable-cards"
-import { useCatalog } from "@/contexts/CatalogContext"
+import { GOALS } from "@/lib/projections"
 import type { Database } from "@/types/database.types"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 type UserPoints = Database["public"]["Tables"]["user_points"]["Row"]
+type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
+
+const CABIN_CLASSES = [
+  { id: "economy", label: "Economy", pointsRequired: 63500 },
+  { id: "business", label: "Business", pointsRequired: 130000 },
+  { id: "first", label: "First", pointsRequired: 200000 },
+] as const
+
+type CabinClassId = (typeof CABIN_CLASSES)[number]["id"]
+
+const POPULAR_ROUTES = [
+  { origin: "SYD", destination: "LHR", label: "London" },
+  { origin: "SYD", destination: "NRT", label: "Tokyo" },
+  { origin: "SYD", destination: "LAX", label: "Los Angeles" },
+  { origin: "MEL", destination: "SIN", label: "Singapore" },
+]
 
 export default function ProjectionsPage() {
   const router = useRouter()
-  const { catalogCards } = useCatalog() // Active cards only
-  const [allCatalogCards, setAllCatalogCards] = useState<Database["public"]["Tables"]["cards"]["Row"][]>([])
   const [userCards, setUserCards] = useState<UserCard[]>([])
   const [userPoints, setUserPoints] = useState<UserPoints | null>(null)
+  const [catalogCards, setCatalogCards] = useState<CatalogCard[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedGoalId, setSelectedGoalId] = useState<string>("domesticFlight")
-
-  const loadData = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-
-    if (!session) {
-      router.replace("/")
-      return
-    }
-
-    // Load user cards, points, and ALL catalog cards (including inactive) in parallel
-    const [userCardsResult, pointsResult, allCardsResult] = await Promise.all([
-      supabase
-        .from("user_cards")
-        .select("*")
-        .order("created_at", { ascending: false }),
-      supabase
-        .from("user_points")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .maybeSingle(),
-      supabase
-        .from("cards")
-        .select("*")
-        .order("bank", { ascending: true })
-    ])
-
-    if (userCardsResult.error) {
-      toast.error(userCardsResult.error.message || "Unable to load your cards")
-      setLoading(false)
-      return
-    }
-
-    setUserCards(userCardsResult.data || [])
-    setUserPoints(pointsResult.data)
-    setAllCatalogCards(allCardsResult.data || [])
-    setLoading(false)
-  }
+  const [origin, setOrigin] = useState("SYD")
+  const [destination, setDestination] = useState("LHR")
+  const [cabinClass, setCabinClass] = useState<CabinClassId>("business")
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    const loadData = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+
+      if (!session) {
+        router.replace("/")
+        return
+      }
+
+      const [userCardsResult, pointsResult, catalogResult] = await Promise.all([
+        supabase.from("user_cards").select("*"),
+        supabase
+          .from("user_points")
+          .select("*")
+          .eq("user_id", session.user.id)
+          .maybeSingle(),
+        supabase
+          .from("cards")
+          .select("*")
+          .eq("is_active", true)
+          .order("welcome_bonus_points", { ascending: false }),
+      ])
+
+      if (userCardsResult.error) {
+        toast.error("Unable to load your cards")
+        setLoading(false)
+        return
+      }
+
+      setUserCards(userCardsResult.data || [])
+      setUserPoints(pointsResult.data)
+      setCatalogCards(catalogResult.data || [])
+      setLoading(false)
+    }
+
     loadData()
   }, [router])
 
-  const selectedGoal = GOALS[selectedGoalId]
-  const currentPoints = userPoints?.qantas_ff_balance || 0
+  const selectedCabin = CABIN_CLASSES.find((c) => c.id === cabinClass)!
+  const pointsRequired = selectedCabin.pointsRequired
+  const currentPoints = userPoints?.qantas_ff_balance ?? 0
+  const gap = pointsRequired - currentPoints
+  const percentage = Math.min(100, Math.floor((currentPoints / pointsRequired) * 100))
+  const isSufficient = gap <= 0
 
-  // Calculate paths using ALL cards (including inactive) to detect unavailable cards
-  const paths = useMemo(() => {
-    if (!selectedGoal || allCatalogCards.length === 0) return []
-    return calculateMultiCardPaths(selectedGoal, userCards, allCatalogCards, currentPoints)
-  }, [selectedGoal, userCards, allCatalogCards, currentPoints])
+  // Monthly earning rate estimate: avg earn_rate across user cards × $3,000/month spend
+  const monthlyEarning = useMemo(() => {
+    if (userCards.length === 0) return 0
+    const owned = userCards
+      .map((uc) => uc.card_id)
+      .filter(Boolean)
+    const ownedCatalogCards = catalogCards.filter((c) => owned.includes(c.id))
+    if (ownedCatalogCards.length === 0) return 0
+    const avgEarnRate =
+      ownedCatalogCards.reduce((sum, c) => sum + (c.earn_rate_primary ?? 1), 0) /
+      ownedCatalogCards.length
+    return Math.round(avgEarnRate * 3000)
+  }, [userCards, catalogCards])
 
-  const recommendedPath = paths[0]
-  const alternativePaths = paths.slice(1, 4) // Show top 3 alternatives
+  const monthsToClose = useMemo(() => {
+    if (isSufficient || monthlyEarning <= 0) return null
+    return Math.ceil(gap / monthlyEarning)
+  }, [gap, monthlyEarning, isSufficient])
 
-  // Check for unavailable cards in recommended path
-  const unavailableCard = useMemo(() => {
-    return checkForUnavailableCards(paths)
-  }, [paths])
-
-  const domesticGoals = Object.values(GOALS).filter(g => g.category === "domestic")
-  const internationalGoals = Object.values(GOALS).filter(g => g.category === "international")
+  // Top 3 card recommendations not in user's current portfolio
+  const ownedCardIds = new Set(userCards.map((uc) => uc.card_id).filter(Boolean))
+  const topRecommendations = catalogCards
+    .filter((c) => !ownedCardIds.has(c.id) && (c.welcome_bonus_points ?? 0) > 0)
+    .slice(0, 3)
 
   if (loading) {
     return (
       <AppShell>
         <div className="space-y-5">
-          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
-          <div className="h-24 animate-pulse rounded-xl bg-[var(--surface)]" />
-          <div className="h-48 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="h-64 animate-pulse rounded-3xl bg-[#1b1f2c]" />
+          <div className="h-40 animate-pulse rounded-3xl bg-[#1b1f2c]" />
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-56 animate-pulse rounded-3xl bg-[#1b1f2c]" />
+            ))}
+          </div>
         </div>
       </AppShell>
     )
@@ -109,172 +136,395 @@ export default function ProjectionsPage() {
 
   return (
     <AppShell>
-      <div className="space-y-5">
-        {/* Header */}
-        <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
-            Discover
-          </p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-            Projections
-          </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            How many cards and months to reach your travel goals
-          </p>
+      <div className="space-y-6">
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#4edea3]">
+              Plan
+            </p>
+            <h1 className="mt-1 font-[var(--font-grotesk)] text-2xl font-bold tracking-tight text-white">
+              Reward Flights
+            </h1>
+          </div>
+          <span className="rounded-full border border-white/10 bg-[#1b1f2c] px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#4edea3]">
+            Gap Analysis
+          </span>
         </div>
 
-        {/* Points Balance Widget */}
-        <PointsBalanceWidget
-          currentBalance={currentPoints}
-          lastUpdated={userPoints?.last_updated_at ? new Date(userPoints.last_updated_at) : null}
-          onBalanceUpdate={loadData}
-        />
+        {/* Route selector — glass card */}
+        <div
+          className="rounded-3xl border border-white/5 p-4 shadow-2xl"
+          style={{
+            background: "rgba(27, 31, 44, 0.6)",
+            backdropFilter: "blur(24px)",
+            WebkitBackdropFilter: "blur(24px)",
+          }}
+        >
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Origin */}
+            <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4 transition-colors hover:bg-[#262a37]">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#4edea3]">
+                Origin
+              </label>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-[#4edea3]/70" />
+                <input
+                  className="w-full bg-transparent text-lg font-bold text-white outline-none placeholder:text-white/40"
+                  value={origin}
+                  onChange={(e) => setOrigin(e.target.value.toUpperCase().slice(0, 3))}
+                  placeholder="SYD"
+                  maxLength={3}
+                />
+              </div>
+            </div>
 
-        {/* Unavailable Card Alert */}
-        {unavailableCard && selectedGoal && (
-          <UnavailableCardAlert
-            cardName={unavailableCard.cardName}
-            cardBank={unavailableCard.cardBank}
-            goalLabel={selectedGoal.label}
-            onUpdateGoal={() => {
-              // Scroll to alternative paths
-              const alternativesSection = document.getElementById('alternative-paths')
-              if (alternativesSection) {
-                alternativesSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
-              }
-            }}
-          />
-        )}
+            {/* Destination */}
+            <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4 transition-colors hover:bg-[#262a37]">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                Destination
+              </label>
+              <div className="flex items-center gap-2">
+                <Plane className="h-5 w-5 text-slate-500" />
+                <input
+                  className="w-full bg-transparent text-lg font-bold text-white outline-none placeholder:text-white/40"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value.toUpperCase().slice(0, 3))}
+                  placeholder="LHR"
+                  maxLength={3}
+                />
+              </div>
+            </div>
 
-        {/* Goal Selector */}
-        <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--text-primary)]">
-              <Target className="h-5 w-5 text-[var(--accent)]" />
-              Choose your goal
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="domestic" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="domestic">Domestic</TabsTrigger>
-                <TabsTrigger value="international">International</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="domestic" className="mt-6 space-y-3">
-                {domesticGoals.map((goal) => (
-                  <Button
-                    key={goal.id}
-                    variant={selectedGoalId === goal.id ? "default" : "outline"}
-                    className="w-full justify-start gap-3"
-                    onClick={() => setSelectedGoalId(goal.id)}
+            {/* Cabin Class */}
+            <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                Cabin Class
+              </label>
+              <div className="flex gap-1.5">
+                {CABIN_CLASSES.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setCabinClass(c.id)}
+                    className={`flex-1 rounded-lg py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
+                      cabinClass === c.id
+                        ? "bg-[#4edea3] text-[#003824]"
+                        : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
+                    }`}
                   >
-                    <span className="text-2xl">{goal.icon}</span>
-                    <div className="flex-1 text-left">
-                      <p className="font-semibold">{goal.label}</p>
-                      <p className="text-xs text-[var(--text-secondary)]">{goal.description}</p>
-                    </div>
-                    <Badge variant="secondary">
-                      {goal.pointsRequired.toLocaleString()} pts
-                    </Badge>
-                  </Button>
+                    {c.label}
+                  </button>
                 ))}
-              </TabsContent>
+              </div>
+            </div>
 
-              <TabsContent value="international" className="mt-6 space-y-3">
-                {internationalGoals.map((goal) => (
-                  <Button
-                    key={goal.id}
-                    variant={selectedGoalId === goal.id ? "default" : "outline"}
-                    className="w-full justify-start gap-3"
-                    onClick={() => setSelectedGoalId(goal.id)}
+            {/* Quick routes */}
+            <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                Quick Routes
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {POPULAR_ROUTES.map((r) => (
+                  <button
+                    key={r.destination}
+                    onClick={() => {
+                      setOrigin(r.origin)
+                      setDestination(r.destination)
+                    }}
+                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-slate-300 transition-all hover:border-[#4edea3]/30 hover:text-[#4edea3]"
                   >
-                    <span className="text-2xl">{goal.icon}</span>
-                    <div className="flex-1 text-left">
-                      <p className="font-semibold">{goal.label}</p>
-                      <p className="text-xs text-[var(--text-secondary)]">{goal.description}</p>
-                    </div>
-                    <Badge variant="secondary">
-                      {goal.pointsRequired.toLocaleString()} pts
-                    </Badge>
-                  </Button>
+                    {r.label}
+                  </button>
                 ))}
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* Current Goal Summary */}
-        {selectedGoal && (
-          <Card className="border border-[var(--accent)]/30 bg-gradient-to-br from-[var(--surface)] to-[color-mix(in_srgb,var(--accent)_5%,transparent)]">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
+        {/* Gap analysis progress bar */}
+        <div
+          className="relative overflow-hidden rounded-3xl border border-white/5 p-8"
+          style={{ background: "rgba(23, 27, 40, 0.8)" }}
+        >
+          {/* Emerald glow on right */}
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-[#4edea3]/8 to-transparent" />
+
+          <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+            {/* Left: label + headline */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#4edea3] opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#4edea3]" />
+                </span>
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#4edea3]">
+                  Active Redemption Goal
+                </span>
+              </div>
+              <h2 className="font-[var(--font-grotesk)] text-3xl font-extrabold tracking-tight text-white">
+                {percentage}% to {selectedCabin.label}{" "}
+                <span className="text-[#4edea3]">
+                  {origin} → {destination}
+                </span>
+              </h2>
+              <p className="max-w-lg text-base leading-relaxed text-slate-400">
+                {isSufficient ? (
+                  <>
+                    You have enough points for a{" "}
+                    <span className="font-bold text-white">{selectedCabin.label}</span> redemption.
+                    You have a surplus of{" "}
+                    <span className="font-bold text-[#4edea3]">
+                      {Math.abs(gap).toLocaleString()} pts
+                    </span>
+                    .
+                  </>
+                ) : (
+                  <>
+                    You need{" "}
+                    <span className="font-bold text-white underline decoration-[#4edea3]/40 underline-offset-4">
+                      {gap.toLocaleString()} more points
+                    </span>{" "}
+                    to book a{" "}
+                    <span className="font-bold text-white">{selectedCabin.label}</span> to{" "}
+                    {destination}.
+                  </>
+                )}
+              </p>
+              {monthsToClose && !isSufficient && (
+                <div className="flex items-center gap-2 text-sm text-slate-400">
+                  <Clock className="h-4 w-4 text-slate-500" />
+                  <span>
+                    Est.{" "}
+                    <span className="font-semibold text-white">{monthsToClose} months</span> to
+                    close at current earning rate
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Right: points card + bar */}
+            <div className="w-full rounded-2xl border border-white/5 bg-[#0f131f]/40 p-6 backdrop-blur-md lg:w-[400px]">
+              <div className="mb-4 flex items-end justify-between">
                 <div>
-                  <p className="text-sm text-[var(--text-secondary)]">Selected goal</p>
-                  <p className="text-2xl font-bold text-[var(--text-primary)]">
-                    {selectedGoal.label}
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    Current Points Pool
                   </p>
-                  <p className="text-sm text-[var(--text-secondary)]">{selectedGoal.description}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-[var(--text-secondary)]">Points Needed</p>
-                  <p className="text-2xl font-bold text-[var(--accent)]">
-                    {Math.max(0, selectedGoal.pointsRequired - currentPoints).toLocaleString()}
-                  </p>
-                  <p className="text-xs text-[var(--text-secondary)]">
-                    of {selectedGoal.pointsRequired.toLocaleString()} required
+                  <p className="font-[var(--font-grotesk)] text-xl font-bold tabular-nums tracking-tight text-white">
+                    {currentPoints.toLocaleString()}{" "}
+                    <span className="text-slate-500">/ {pointsRequired.toLocaleString()}</span>
                   </p>
                 </div>
+                <span
+                  className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
+                    isSufficient
+                      ? "border-[#4edea3]/20 bg-[#4edea3]/10 text-[#4edea3]"
+                      : "border-white/10 bg-white/5 text-slate-300"
+                  }`}
+                >
+                  {isSufficient ? "Ready" : `${percentage}%`}
+                </span>
               </div>
 
               {/* Progress bar */}
-              <div className="mt-4">
-                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--surface-muted)]">
-                  <div
-                    className="h-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-strong)] transition-all"
-                    style={{
-                      width: `${Math.min(100, (currentPoints / selectedGoal.pointsRequired) * 100)}%`,
-                    }}
-                  />
+              <div className="relative h-4 overflow-hidden rounded-full bg-[#313442]/50 p-0.5 shadow-inner">
+                <div
+                  className="h-full rounded-full transition-all duration-1000 ease-out"
+                  style={{
+                    width: `${percentage}%`,
+                    background:
+                      "linear-gradient(to right, #4edea3, #6ffbbe, #10b981)",
+                  }}
+                >
+                  <div className="absolute right-0 top-0 h-full w-8 bg-gradient-to-r from-transparent to-white/20" />
                 </div>
-                <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                  {currentPoints > 0
-                    ? `${Math.floor((currentPoints / selectedGoal.pointsRequired) * 100)}% complete`
-                    : "Start earning points to track progress"}
-                </p>
               </div>
-            </CardContent>
-          </Card>
-        )}
 
-        {/* Paths */}
-        {paths.length > 0 ? (
-          <div id="alternative-paths">
-            <GoalTimelineComparison
-              recommendedPath={recommendedPath}
-              alternativePaths={alternativePaths}
-              currentPoints={currentPoints}
-            />
-          </div>
-        ) : (
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)]">
-            <CardContent className="py-12 text-center">
-              <TrendingUp className="mx-auto h-12 w-12 text-[var(--text-secondary)]/40" />
-              <p className="mt-4 text-lg font-semibold text-[var(--text-primary)]">
-                No paths available
-              </p>
-              <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                Add some cards to your portfolio to see personalized churning paths
-              </p>
-              <Button
-                className="mt-6"
-                onClick={() => router.push("/cards")}
+              {/* Gap indicator */}
+              <div
+                className={`mt-4 flex items-center justify-between rounded-2xl border p-3 ${
+                  isSufficient
+                    ? "border-[#4edea3]/20 bg-[#4edea3]/10"
+                    : "border-red-500/10 bg-red-500/5"
+                }`}
               >
-                Browse Cards
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+                <span
+                  className={`text-xs font-bold uppercase tracking-widest ${
+                    isSufficient ? "text-[#4edea3]" : "text-red-400"
+                  }`}
+                >
+                  {isSufficient ? "Balance Status" : "Gap to target"}
+                </span>
+                <span
+                  className={`font-[var(--font-grotesk)] text-lg font-extrabold tabular-nums ${
+                    isSufficient ? "text-[#4edea3]" : "text-white"
+                  }`}
+                >
+                  {isSufficient
+                    ? `+${Math.abs(gap).toLocaleString()} surplus`
+                    : `-${gap.toLocaleString()} pts`}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Top card recommendations */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-[var(--font-grotesk)] text-2xl font-bold tracking-tight text-white">
+                Top Cards to Close the Gap
+              </h3>
+              <p className="mt-1 text-sm text-slate-400">
+                Ranked by welcome bonus — highest points first
+              </p>
+            </div>
+          </div>
+
+          {topRecommendations.length === 0 ? (
+            <div className="rounded-3xl border border-white/5 bg-[#1b1f2c] p-12 text-center">
+              <TrendingUp className="mx-auto h-12 w-12 text-slate-600" />
+              <p className="mt-4 text-lg font-semibold text-white">No recommendations available</p>
+              <p className="mt-2 text-sm text-slate-400">
+                All active cards are already in your portfolio
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {topRecommendations.map((card, idx) => {
+                const bonusPoints = card.welcome_bonus_points ?? 0
+                const newTotal = currentPoints + bonusPoints
+                const newGap = pointsRequired - newTotal
+                const wouldSuffice = newGap <= 0
+                const isHighlighted = idx === 0
+
+                return (
+                  <div
+                    key={card.id}
+                    className={`flex flex-col overflow-hidden rounded-3xl border transition-all duration-500 ${
+                      isHighlighted
+                        ? "border-[#4edea3]/40 ring-1 ring-[#4edea3]/20 scale-[1.02] shadow-[0_24px_48px_-12px_rgba(78,222,163,0.15)]"
+                        : "border-white/5 hover:border-[#4edea3]/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]"
+                    }`}
+                    style={{ background: "rgba(23, 27, 40, 0.5)" }}
+                  >
+                    {/* Card banner */}
+                    <div className="relative flex h-32 items-end overflow-hidden p-5">
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(135deg, ${
+                            idx === 0
+                              ? "#003824, #005236"
+                              : idx === 1
+                              ? "#1b1f2c, #262a37"
+                              : "#171b28, #1b1f2c"
+                          })`,
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#171b28] to-transparent" />
+
+                      {/* Airline label pill */}
+                      <div
+                        className="absolute left-5 top-4 rounded-full border border-white/10 px-3 py-1"
+                        style={{
+                          background: "rgba(27, 31, 44, 0.4)",
+                          backdropFilter: "blur(24px)",
+                        }}
+                      >
+                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-white">
+                          {card.bank}
+                        </span>
+                      </div>
+
+                      {/* Points badge */}
+                      <div className="relative z-10 flex w-full items-end justify-between">
+                        <div>
+                          <span className="font-[var(--font-grotesk)] text-4xl font-extrabold tabular-nums tracking-tighter text-white">
+                            {bonusPoints.toLocaleString()}
+                          </span>
+                          <span className="ml-2 text-[11px] font-bold uppercase tracking-widest text-[#4edea3]">
+                            Bonus pts
+                          </span>
+                        </div>
+                        {isHighlighted && (
+                          <span className="rounded bg-[#4edea3] px-2 py-1 text-[10px] font-black uppercase tracking-widest text-[#003824]">
+                            Best
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Card details */}
+                    <div className="flex flex-1 flex-col p-6">
+                      <div className="mb-6 space-y-4">
+                        <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                          <span className="text-sm font-semibold text-slate-400">Card</span>
+                          <span className="text-sm font-bold text-white">{card.name}</span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                          <span className="text-sm font-semibold text-slate-400">Annual Fee</span>
+                          <span className="text-sm font-bold text-white tabular-nums">
+                            ${(card.annual_fee ?? 0).toLocaleString()} AUD
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-slate-400">Earn Rate</span>
+                          <span className="text-sm font-bold text-white tabular-nums">
+                            {card.earn_rate_primary ?? 1} pt / $1
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-auto space-y-3">
+                        {/* Gap status after this card */}
+                        <div
+                          className={`rounded-2xl border p-3 ${
+                            wouldSuffice
+                              ? "border-[#4edea3]/20 bg-[#4edea3]/10"
+                              : "border-white/5 bg-[#1b1f2c]/30"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={`text-xs font-bold uppercase tracking-widest ${
+                                wouldSuffice ? "text-[#4edea3]" : "text-slate-500"
+                              }`}
+                            >
+                              {wouldSuffice ? "Would cover goal" : "Remaining gap"}
+                            </span>
+                            <span
+                              className={`font-[var(--font-grotesk)] text-base font-extrabold tabular-nums ${
+                                wouldSuffice ? "text-[#4edea3]" : "text-white"
+                              }`}
+                            >
+                              {wouldSuffice
+                                ? `+${Math.abs(newGap).toLocaleString()} surplus`
+                                : `-${newGap.toLocaleString()} pts`}
+                            </span>
+                          </div>
+                        </div>
+
+                        <a
+                          href="/cards"
+                          className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold uppercase tracking-widest transition-all ${
+                            isHighlighted
+                              ? "bg-gradient-to-br from-[#4edea3] to-[#10b981] text-[#003824] shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]"
+                              : "border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10 hover:text-white"
+                          }`}
+                        >
+                          <CreditCard className="h-4 w-4" />
+                          View Card Details
+                          <ChevronRight className="h-4 w-4" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </AppShell>
   )
