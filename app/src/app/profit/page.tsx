@@ -3,6 +3,14 @@
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { TrendingUp, Download, AlertTriangle, CheckCircle } from "lucide-react"
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts"
 import { AppShell } from "@/components/layout/AppShell"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ProGate } from "@/components/ui/ProGate"
@@ -27,6 +35,10 @@ function fmtAud(n: number) {
   return n.toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 })
 }
 
+function currentFY(): string {
+  return getFinancialYear(new Date().toISOString())
+}
+
 function computeSummary(cards: ProfitCard[]) {
   const totalBonusAud = cards.reduce((s, c) => s + c.bonusAud, 0)
   const totalFees = cards.reduce((s, c) => s + c.fee, 0)
@@ -43,6 +55,38 @@ function computeSummary(cards: ProfitCard[]) {
     netProfit: totalBonusAud - totalFees,
     fyRows: Object.values(byFy).sort((a, b) => b.fy.localeCompare(a.fy)),
   }
+}
+
+function buildChartData(cards: ProfitCard[], fy: string) {
+  const fyCards = cards.filter((c) => c.fy === fy && c.bonusEarnedAt)
+  if (fyCards.length === 0) return []
+  const byMonth: Record<string, { bonuses: number; fees: number }> = {}
+  for (const c of fyCards) {
+    const d = new Date(c.bonusEarnedAt)
+    const key = d.toLocaleDateString("en-AU", { month: "short", year: "2-digit" })
+    if (!byMonth[key]) byMonth[key] = { bonuses: 0, fees: 0 }
+    byMonth[key].bonuses += c.bonusAud
+    byMonth[key].fees += c.fee
+  }
+  const sorted = Object.entries(byMonth).sort(([a], [b]) => {
+    const parse = (k: string) => { const [m, y] = k.split(" "); return new Date(`${m} 20${y}`) }
+    return parse(a).getTime() - parse(b).getTime()
+  })
+  let cumNet = 0
+  return sorted.map(([month, { bonuses, fees }]) => {
+    cumNet += bonuses - fees
+    return { month, net: Math.round(cumNet) }
+  })
+}
+
+function GlassTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
+  if (!active || !payload?.length) return null
+  return (
+    <div className="glass-panel rounded-xl px-4 py-3 text-sm" style={{ minWidth: 120 }}>
+      <p className="text-[10px] font-bold uppercase tracking-widest text-[#bbcabf]">{label}</p>
+      <p className="mt-1 font-bold tabular-nums text-[#4edea3]">{fmtAud(payload[0].value)}</p>
+    </div>
+  )
 }
 
 export default function ProfitPage() {
@@ -128,6 +172,9 @@ export default function ProfitPage() {
     () => computeSummary(visibleCards),
     [visibleCards],
   )
+
+  const fy = currentFY()
+  const chartData = useMemo(() => buildChartData(visibleCards, fy), [visibleCards, fy])
 
   const fbtResults = useMemo((): FbtResult[] => {
     const businessCards = allCards.filter((c) => c.is_business)
@@ -258,6 +305,50 @@ export default function ProfitPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Area chart — cumulative net profit this FY */}
+            {chartData.length > 1 && (
+              <div className="glass-panel rounded-2xl p-6">
+                <p className="mb-4 text-sm font-bold text-[#dfe2f3]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  Cumulative Profit — {fy}
+                </p>
+                <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#4edea3" stopOpacity={0.2} />
+                          <stop offset="100%" stopColor="#4edea3" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis
+                        dataKey="month"
+                        tick={{ fill: "#86948a", fontSize: 10, fontFamily: "Inter" }}
+                        axisLine={false}
+                        tickLine={false}
+                      />
+                      <YAxis
+                        tick={{ fill: "#86948a", fontSize: 10, fontFamily: "Inter" }}
+                        axisLine={false}
+                        tickLine={false}
+                        tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}k`}
+                        width={40}
+                      />
+                      <Tooltip content={<GlassTooltip />} />
+                      <Area
+                        type="monotone"
+                        dataKey="net"
+                        stroke="#4edea3"
+                        strokeWidth={2}
+                        fill="url(#profitGradient)"
+                        dot={false}
+                        activeDot={{ r: 4, fill: "#4edea3", strokeWidth: 0 }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
 
             {/* FBT exposure section — Business tier only */}
             {fbtResults.length > 0 && (
