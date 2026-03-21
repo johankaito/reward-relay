@@ -251,6 +251,19 @@
   }
 }
 
+/* ─── Glassmorphism utilities ─── */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.arc-glow {
+  filter: drop-shadow(0 0 8px rgba(78, 222, 163, 0.4));
+}
+.premium-glow {
+  box-shadow: 0 0 20px rgba(78, 222, 163, 0.15), inset 0 0 10px rgba(78, 222, 163, 0.05);
+}
+
 /* ─── Page view transitions (progressive enhancement) ─── */
 @supports (view-transition-name: none) {
   @view-transition {

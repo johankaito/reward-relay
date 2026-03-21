@@ -64,6 +64,7 @@ const navItems: NavItem[] = [
     icon: Wallet,
     children: [
       { href: "/spending", label: "Tracker", icon: Wallet },
+      { href: "/profit", label: "Profit Dashboard", icon: TrendingUp },
       { href: "/statements", label: "Import Statements", icon: Upload },
     ],
   },
