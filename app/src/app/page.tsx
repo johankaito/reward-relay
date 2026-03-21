@@ -111,7 +111,7 @@ export default function Home() {
 
             {/* Trust signals */}
             <div className="mt-20 border-t pt-10" style={{ borderColor: "rgba(60, 74, 66, 0.15)" }}>
-              <p className="mb-6 text-sm font-medium uppercase tracking-widest text-slate-500">
+              <p className="mb-6 text-sm font-medium uppercase tracking-widest" style={{ color: "#bbcabf" }}>
                 Trusted by 5,000+ Aussie Points Hackers
               </p>
               <div className="flex flex-wrap items-center justify-center gap-12 opacity-30 transition-all duration-500 hover:opacity-60">
@@ -360,25 +360,25 @@ export default function Home() {
                 <div className="space-y-3">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold" style={{ color: "#4edea3" }}>4</span>
-                    <span className="text-xl font-semibold text-slate-300">months</span>
+                    <span className="text-xl font-semibold" style={{ color: "#bbcabf" }}>months</span>
                   </div>
                   <div
                     className="rounded-2xl border p-4"
                     style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
                   >
-                    <p className="text-xs font-semibold text-slate-400">With 1 card:</p>
+                    <p className="text-xs font-semibold" style={{ color: "#bbcabf" }}>With 1 card:</p>
                     <p className="mt-1 text-base font-semibold text-white">ANZ Rewards Black</p>
-                    <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm text-slate-300"
-                      style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+                    <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm"
+                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "#bbcabf" }}>
                       <span>15k pts</span>
-                      <span className="text-slate-600">•</span>
+                      <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span>$375 fee</span>
-                      <span className="text-slate-600">•</span>
+                      <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span className="font-semibold" style={{ color: "#4edea3" }}>$75 net</span>
                     </div>
                   </div>
-                  <div className="rounded-xl px-4 py-2 text-sm text-slate-300"
-                    style={{ background: "rgba(59,130,246,0.1)" }}>
+                  <div className="rounded-xl px-4 py-2 text-sm"
+                    style={{ background: "rgba(59,130,246,0.1)", color: "#dfe2f3" }}>
                     Sydney → Melbourne return • Worth: $150
                   </div>
                 </div>
@@ -416,25 +416,25 @@ export default function Home() {
                 <div className="space-y-3">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold" style={{ color: "#4edea3" }}>10</span>
-                    <span className="text-xl font-semibold text-slate-300">months</span>
+                    <span className="text-xl font-semibold" style={{ color: "#bbcabf" }}>months</span>
                   </div>
                   <div
                     className="rounded-2xl border p-4"
                     style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
                   >
-                    <p className="text-xs font-semibold text-slate-400">With 2 cards:</p>
+                    <p className="text-xs font-semibold" style={{ color: "#bbcabf" }}>With 2 cards:</p>
                     <p className="mt-1 text-base font-semibold text-white">ANZ + Westpac Altitude Black</p>
-                    <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm text-slate-300"
-                      style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+                    <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm"
+                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "#bbcabf" }}>
                       <span>80k pts</span>
-                      <span className="text-slate-600">•</span>
+                      <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span>$670 fees</span>
-                      <span className="text-slate-600">•</span>
+                      <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span className="font-semibold" style={{ color: "#4edea3" }}>$130 net</span>
                     </div>
                   </div>
-                  <div className="rounded-xl px-4 py-2 text-sm text-slate-300"
-                    style={{ background: "rgba(59,130,246,0.1)" }}>
+                  <div className="rounded-xl px-4 py-2 text-sm"
+                    style={{ background: "rgba(59,130,246,0.1)", color: "#dfe2f3" }}>
                     Sydney → Tokyo return • Worth: $800
                   </div>
                 </div>
@@ -475,25 +475,25 @@ export default function Home() {
                 <div className="space-y-3">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold text-purple-400">18</span>
-                    <span className="text-xl font-semibold text-slate-300">months</span>
+                    <span className="text-xl font-semibold" style={{ color: "#bbcabf" }}>months</span>
                   </div>
                   <div
                     className="rounded-2xl border p-4"
                     style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
                   >
-                    <p className="text-xs font-semibold text-slate-400">With 3 cards:</p>
+                    <p className="text-xs font-semibold" style={{ color: "#bbcabf" }}>With 3 cards:</p>
                     <p className="mt-1 text-base font-semibold text-white">ANZ + Westpac + AMEX</p>
-                    <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm text-slate-300"
-                      style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+                    <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm"
+                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "#bbcabf" }}>
                       <span>200k pts</span>
-                      <span className="text-slate-600">•</span>
+                      <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span>$1,145 fees</span>
-                      <span className="text-slate-600">•</span>
+                      <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span className="font-semibold text-purple-400">$855 net</span>
                     </div>
                   </div>
-                  <div className="rounded-xl px-4 py-2 text-sm text-slate-300"
-                    style={{ background: "rgba(139,92,246,0.1)" }}>
+                  <div className="rounded-xl px-4 py-2 text-sm"
+                    style={{ background: "rgba(139,92,246,0.1)", color: "#dfe2f3" }}>
                     Sydney → Singapore return • Worth: $2,000
                   </div>
                   <BetaGate>
@@ -521,7 +521,7 @@ export default function Home() {
               >
                 Start Tracking Your Cards
               </a>
-              <p className="mt-3 text-sm text-slate-400">Start with free tier • Upgrade anytime</p>
+              <p className="mt-3 text-sm" style={{ color: "#bbcabf" }}>Start with free tier • Upgrade anytime</p>
             </BetaGate>
             <BetaOnly>
               <BetaRequestForm
@@ -640,7 +640,7 @@ export default function Home() {
                     {t.icon}
                   </div>
                   <p className="text-sm font-semibold text-white">{t.title}</p>
-                  <p className="text-xs text-slate-400">{t.body}</p>
+                  <p className="text-xs" style={{ color: "#bbcabf" }}>{t.body}</p>
                 </div>
               ))}
             </div>
@@ -750,14 +750,14 @@ export default function Home() {
                   >
                     Start 7-Day Trial
                   </a>
-                  <p className="mt-3 text-center text-xs text-slate-400">
+                  <p className="mt-3 text-center text-xs" style={{ color: "#bbcabf" }}>
                     Then $9.99/month • Cancel anytime
                   </p>
                 </div>
               </div>
 
               <div className="text-center">
-                <p className="flex items-center justify-center gap-2 text-sm text-slate-300">
+                <p className="flex items-center justify-center gap-2 text-sm" style={{ color: "#dfe2f3" }}>
                   <Lightbulb className="h-5 w-5" style={{ color: "#4edea3" }} />
                   <span>
                     <strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)
@@ -791,7 +791,7 @@ export default function Home() {
               >
                 Join the Private Beta
               </h2>
-              <p className="text-lg text-slate-300">
+              <p className="text-lg" style={{ color: "#dfe2f3" }}>
                 We&apos;re testing Reward Relay with a small group of Australian churners. During the
                 private beta, all features are{" "}
                 <strong style={{ color: "#4edea3" }}>completely free</strong>.
@@ -815,7 +815,7 @@ export default function Home() {
                       <Check className="mt-1 h-5 w-5 shrink-0" style={{ color: "#4edea3" }} />
                       <div>
                         <p className="font-semibold text-white">{b.title}</p>
-                        <p className="mt-1 text-sm text-slate-400">{b.body}</p>
+                        <p className="mt-1 text-sm" style={{ color: "#bbcabf" }}>{b.body}</p>
                       </div>
                     </div>
                   </div>
@@ -985,7 +985,7 @@ export default function Home() {
                       ▼
                     </span>
                   </summary>
-                  <p className="px-6 pb-6 text-sm text-slate-300">{faq.a}</p>
+                  <p className="px-6 pb-6 text-sm" style={{ color: "#bbcabf" }}>{faq.a}</p>
                 </details>
               ))}
 
@@ -1003,7 +1003,7 @@ export default function Home() {
                       ▼
                     </span>
                   </summary>
-                  <p className="px-6 pb-6 text-sm text-slate-300">
+                  <p className="px-6 pb-6 text-sm" style={{ color: "#bbcabf" }}>
                     After 7 days, you&apos;ll be charged $9.99/month. You can cancel anytime before the
                     trial ends with no charge. No credit card tricks — just honest billing.
                   </p>
