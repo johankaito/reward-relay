@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recommendations - Reward Relay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-dim": "#55e4a9",
+              "surface-container-low": "#0e1320",
+              "tertiary-fixed": "#00dcfd",
+              "on-secondary-fixed": "#3a2a62",
+              "on-surface-variant": "#a7aabb",
+              "secondary-container": "#4d3d76",
+              "error-dim": "#d7383b",
+              "surface-container-high": "#1a1f2f",
+              "surface-container-lowest": "#000000",
+              "on-tertiary": "#005360",
+              "primary-fixed-dim": "#55e4a9",
+              "on-primary-fixed-variant": "#006343",
+              "surface-dim": "#0a0e1a",
+              "error": "#ff716c",
+              "on-surface": "#e8eafc",
+              "surface-tint": "#65f3b6",
+              "surface-variant": "#202537",
+              "on-error-container": "#ffa8a3",
+              "on-secondary": "#47366f",
+              "secondary": "#d0bcff",
+              "inverse-surface": "#faf8ff",
+              "primary-container": "#07b77f",
+              "surface-bright": "#252c3e",
+              "background": "#0a0e1a",
+              "tertiary-dim": "#00cdec",
+              "surface": "#0a0e1a",
+              "on-tertiary-fixed-variant": "#005360",
+              "surface-container": "#141928",
+              "on-tertiary-fixed": "#00343d",
+              "on-error": "#490006",
+              "tertiary-fixed-dim": "#00cdec",
+              "error-container": "#9f0519",
+              "tertiary": "#78e6ff",
+              "on-primary": "#00583b",
+              "primary-fixed": "#65f3b6",
+              "secondary-fixed-dim": "#cdb9fc",
+              "on-secondary-fixed-variant": "#584781",
+              "on-tertiary-container": "#004955",
+              "on-primary-container": "#002919",
+              "secondary-fixed": "#dac9ff",
+              "primary": "#65f3b6",
+              "outline": "#717584",
+              "on-primary-fixed": "#00432c",
+              "on-secondary-container": "#d9c8ff",
+              "tertiary-container": "#00dcfd",
+              "on-background": "#e8eafc",
+              "secondary-dim": "#c2aff1",
+              "inverse-on-surface": "#515563",
+              "outline-variant": "#444755",
+              "inverse-primary": "#006d4a",
+              "surface-container-highest": "#202537"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- Sidebar Navigation (Desktop) -->
+<aside class="hidden lg:flex flex-col py-8 fixed left-0 top-0 h-full w-[256px] bg-[#171B28] dark:bg-[#171B28] font-['Plus_Jakarta_Sans'] text-sm tracking-wide z-50">
+<div class="px-8 mb-12">
+<h1 class="text-2xl font-extrabold text-[#4edea3] dark:text-[#4edea3] tracking-tighter">Reward Relay</h1>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Velocity 'R' Monogram</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center text-slate-400 dark:text-slate-500 pl-5 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4">home</span>
+                Home
+            </a>
+<a class="flex items-center text-[#4edea3] dark:text-[#4edea3] font-bold border-l-4 border-[#4edea3] pl-4 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4">credit_card</span>
+                Cards
+            </a>
+<a class="flex items-center text-slate-400 dark:text-slate-500 pl-5 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4">monitoring</span>
+                Track
+            </a>
+<a class="flex items-center text-slate-400 dark:text-slate-500 pl-5 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4">redeem</span>
+                Redeem
+            </a>
+<a class="flex items-center text-slate-400 dark:text-slate-500 pl-5 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4">person</span>
+                Account
+            </a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="bg-surface-container rounded-lg p-4 flex items-center space-x-3">
+<img alt="User Profile Avatar" class="w-10 h-10 rounded-full border border-primary/20" data-alt="User profile avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWYji98V9W1_or2x8PG6c5gPve9Nt5FF9OHhHahfR-ITUNXx1uO4PbhN5vD2e5wwl-zlVoIHwJDiRh0eQExQDxr4HMWWPRB-lK71SQUb7wT_vT3OeD4qgmA0seoTUrn-p8veph8-qkOmFNiThlTwqeWmjTGZE-SPUZjf1iTzNmjZhsV9nj65JpUiuSOtaMo1oAKtmBEfqDxXcXN0sQNg0EB7qGve_G9q9IMULnLKqg0ednDbMvd5uX_ypb7yxpfRDGdnMD4eA30r08"/>
+<div>
+<p class="font-bold text-on-surface text-xs">Alex Chen</p>
+<p class="text-[10px] text-primary">Pro Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top App Bar (Mobile) -->
+<header class="fixed top-0 w-full z-40 lg:hidden bg-[#171B28] dark:bg-[#171B28] flex justify-between items-center h-16 px-6">
+<h1 class="text-xl font-black text-[#4edea3] dark:text-[#4edea3] font-['Plus_Jakarta_Sans'] font-extrabold">Reward Relay</h1>
+<div class="flex items-center space-x-4">
+<button class="text-slate-400 hover:opacity-80 transition-transform scale-98">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-slate-400 hover:opacity-80 transition-transform scale-98">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="lg:ml-[256px] pt-20 lg:pt-12 pb-32 px-6 lg:px-12 max-w-7xl mx-auto">
+<!-- Hero Section -->
+<section class="mb-12">
+<h1 class="font-headline text-3xl lg:text-5xl font-extrabold text-on-surface tracking-tight mb-3">Cards Matched for You</h1>
+<p class="font-body text-on-surface-variant text-lg lg:text-xl max-w-2xl">Based on your spending profile and churning history</p>
+</section>
+<!-- Filter Chips -->
+<section class="mb-10 overflow-x-auto no-scrollbar">
+<div class="flex space-x-3 pb-2 min-w-max">
+<button class="px-6 py-2.5 rounded-full bg-primary-container text-on-primary-container font-semibold text-sm transition-all hover:scale-105">All</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container text-on-surface-variant border border-outline-variant/15 font-medium text-sm transition-all hover:bg-surface-container-high hover:scale-105">Travel</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container text-on-surface-variant border border-outline-variant/15 font-medium text-sm transition-all hover:bg-surface-container-high hover:scale-105">Cashback</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container text-on-surface-variant border border-outline-variant/15 font-medium text-sm transition-all hover:bg-surface-container-high hover:scale-105">Dining</button>
+<button class="px-6 py-2.5 rounded-full bg-surface-container text-on-surface-variant border border-outline-variant/15 font-medium text-sm transition-all hover:bg-surface-container-high hover:scale-105">No Annual Fee</button>
+</div>
+</section>
+<!-- Card Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Best Match Card (#1 Pick) -->
+<div class="relative group bg-surface-container rounded-lg p-1 transition-all duration-300 hover:scale-[1.01]">
+<!-- Glow Effect -->
+<div class="absolute -inset-0.5 bg-gradient-to-br from-primary to-tertiary rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+<div class="relative bg-surface-container rounded-lg p-6 h-full flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-primary/20 text-primary-dim text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-primary/30">Best Match</span>
+<span class="text-on-surface-variant text-xs font-medium uppercase tracking-tighter">Gold Tier</span>
+</div>
+<div class="aspect-[1.58/1] w-full mb-6 rounded-xl overflow-hidden shadow-2xl bg-[#2D3448] p-4 flex flex-col justify-between relative">
+<div class="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent"></div>
+<div class="relative z-10 flex justify-between items-start">
+<span class="material-symbols-outlined text-primary text-3xl">contactless</span>
+<div class="w-10 h-10 bg-white/10 rounded-full backdrop-blur-md border border-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl">token</span>
+</div>
+</div>
+<div class="relative z-10">
+<p class="text-[10px] text-white/60 tracking-widest uppercase mb-1">Premier Reserve</p>
+<div class="flex items-center space-x-2">
+<div class="w-8 h-1 bg-primary rounded-full"></div>
+<div class="w-4 h-1 bg-white/20 rounded-full"></div>
+</div>
+</div>
+<!-- Abstract pattern overlay -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl rounded-full -mr-10 -mt-10"></div>
+</div>
+<div class="flex-1">
+<h3 class="text-xl font-bold font-headline text-on-surface mb-1">Sapphire Elite</h3>
+<p class="text-on-surface-variant text-sm mb-4">Chase Bank</p>
+<div class="bg-surface-container-low rounded-lg p-4 mb-6">
+<p class="text-primary-dim font-black text-lg tabular-nums">75,000 pts</p>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-wider">after $4k spend in 3 mos</p>
+</div>
+<div class="flex justify-between items-center mb-6 px-1">
+<div>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Annual Fee</p>
+<p class="text-sm font-bold tabular-nums">$550</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Status</p>
+<div class="flex items-center text-primary-dim space-x-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs font-bold">Likely</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-gradient-to-br from-primary to-[#10B981] text-on-primary-fixed font-bold rounded-full transition-all hover:scale-[1.02] shadow-lg shadow-primary/20">
+                        View Details
+                    </button>
+</div>
+</div>
+<!-- Recommendation 2 -->
+<div class="bg-surface-container rounded-lg p-6 border border-outline-variant/15 flex flex-col hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-outline-variant/20">Top Value</span>
+</div>
+<div class="aspect-[1.58/1] w-full mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-[#1A1F2C] to-[#252C3E] p-4 flex flex-col justify-between relative">
+<div class="relative z-10 flex justify-between items-start">
+<span class="material-symbols-outlined text-secondary text-3xl">credit_card</span>
+</div>
+<div class="relative z-10">
+<p class="text-[10px] text-white/40 tracking-widest uppercase mb-1">Amex Platinum</p>
+<p class="text-white/80 font-bold tracking-tighter">MEMBER SINCE 2024</p>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="text-xl font-bold font-headline text-on-surface mb-1">Venture X</h3>
+<p class="text-on-surface-variant text-sm mb-4">Capital One</p>
+<div class="bg-surface-container-low rounded-lg p-4 mb-6">
+<p class="text-secondary font-black text-lg tabular-nums">100,000 miles</p>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-wider">after $10k spend in 6 mos</p>
+</div>
+<div class="flex justify-between items-center mb-6 px-1">
+<div>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Annual Fee</p>
+<p class="text-sm font-bold tabular-nums">$395</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Status</p>
+<div class="flex items-center text-primary-dim space-x-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs font-bold">Excellent</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-transparent border border-outline-variant/30 text-on-surface font-bold rounded-full transition-all hover:bg-white/5">
+                    View Details
+                </button>
+</div>
+<!-- Recommendation 3 -->
+<div class="bg-surface-container rounded-lg p-6 border border-outline-variant/15 flex flex-col hover:bg-surface-container-high transition-all">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-outline-variant/20">New Offer</span>
+</div>
+<div class="aspect-[1.58/1] w-full mb-6 rounded-xl overflow-hidden bg-gradient-to-br from-[#0F131F] to-[#171B28] p-4 flex flex-col justify-between relative border border-white/5">
+<div class="relative z-10 flex justify-between items-start">
+<span class="material-symbols-outlined text-tertiary text-3xl">account_balance</span>
+</div>
+<div class="relative z-10">
+<p class="text-[10px] text-white/40 tracking-widest uppercase mb-1">Amex Gold</p>
+<p class="text-white/80 font-bold tracking-tighter">PREFERRED ACCESS</p>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="text-xl font-bold font-headline text-on-surface mb-1">Preferred Cash</h3>
+<p class="text-on-surface-variant text-sm mb-4">Wells Fargo</p>
+<div class="bg-surface-container-low rounded-lg p-4 mb-6">
+<p class="text-tertiary font-black text-lg tabular-nums">$200 Bonus</p>
+<p class="text-on-surface-variant text-[11px] uppercase tracking-wider">after $500 spend in 3 mos</p>
+</div>
+<div class="flex justify-between items-center mb-6 px-1">
+<div>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Annual Fee</p>
+<p class="text-sm font-bold tabular-nums">$0</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Status</p>
+<div class="flex items-center text-secondary space-x-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">info</span>
+<span class="text-xs font-bold">Moderate</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-transparent border border-outline-variant/30 text-on-surface font-bold rounded-full transition-all hover:bg-white/5">
+                    View Details
+                </button>
+</div>
+</section>
+<!-- Insights Banner -->
+<section class="mt-16 bg-gradient-to-r from-surface-container to-surface-container-high rounded-lg p-8 border-l-4 border-primary">
+<div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+<div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl">insights</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-on-surface mb-1">Churning Strategy Analysis</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed max-w-3xl">
+                        Your 5/24 status is currently <span class="text-primary font-bold">2/24</span>. You have high availability for new credit inquiries. We recommend the Sapphire Elite as it currently features its highest historical bonus offer and fits your dining-heavy spend profile perfectly.
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 w-full h-20 pb-safe z-50 bg-[#0F131F]/80 dark:bg-[#0F131F]/80 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-4 shadow-[0px_-24px_48px_-12px_rgba(0,0,0,0.4)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4edea3] dark:text-[#4edea3] active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em]">Cards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">monitoring</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em]">Track</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">redeem</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em]">Redeem</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em]">Account</span>
+</a>
+</nav>
+</body></html>

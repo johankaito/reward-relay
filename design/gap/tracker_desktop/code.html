@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-dim": "#55e4a9",
+              "surface-container-low": "#0e1320",
+              "tertiary-fixed": "#00dcfd",
+              "on-secondary-fixed": "#3a2a62",
+              "on-surface-variant": "#a7aabb",
+              "secondary-container": "#4d3d76",
+              "error-dim": "#d7383b",
+              "surface-container-high": "#1a1f2f",
+              "surface-container-lowest": "#000000",
+              "on-tertiary": "#005360",
+              "primary-fixed-dim": "#55e4a9",
+              "on-primary-fixed-variant": "#006343",
+              "surface-dim": "#0a0e1a",
+              "error": "#ff716c",
+              "on-surface": "#e8eafc",
+              "surface-tint": "#65f3b6",
+              "surface-variant": "#202537",
+              "on-error-container": "#ffa8a3",
+              "on-secondary": "#47366f",
+              "secondary": "#d0bcff",
+              "inverse-surface": "#faf8ff",
+              "primary-container": "#07b77f",
+              "surface-bright": "#252c3e",
+              "background": "#0a0e1a",
+              "tertiary-dim": "#00cdec",
+              "surface": "#0a0e1a",
+              "on-tertiary-fixed-variant": "#005360",
+              "surface-container": "#141928",
+              "on-tertiary-fixed": "#00343d",
+              "on-error": "#490006",
+              "tertiary-fixed-dim": "#00cdec",
+              "error-container": "#9f0519",
+              "tertiary": "#78e6ff",
+              "on-primary": "#00583b",
+              "primary-fixed": "#65f3b6",
+              "secondary-fixed-dim": "#cdb9fc",
+              "on-secondary-fixed-variant": "#584781",
+              "on-tertiary-container": "#004955",
+              "on-primary-container": "#002919",
+              "secondary-fixed": "#dac9ff",
+              "primary": "#65f3b6",
+              "outline": "#717584",
+              "on-primary-fixed": "#00432c",
+              "on-secondary-container": "#d9c8ff",
+              "tertiary-container": "#00dcfd",
+              "on-background": "#e8eafc",
+              "secondary-dim": "#c2aff1",
+              "inverse-on-surface": "#515563",
+              "outline-variant": "#444755",
+              "inverse-primary": "#006d4a",
+              "surface-container-highest": "#202537"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        .bg-gradient-primary { background: linear-gradient(135deg, #4EDEA3 0%, #10B981 100%); }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Desktop) -->
+<aside class="fixed left-0 top-0 h-full w-[256px] bg-[#171B28] dark:bg-[#171B28] hidden lg:flex flex-col py-8 z-50">
+<div class="px-8 mb-12">
+<div class="text-2xl font-extrabold text-[#4edea3] dark:text-[#4edea3] tracking-tighter">Reward Relay</div>
+<div class="font-['Plus_Jakarta_Sans'] text-sm tracking-wide text-slate-500 mt-1">Velocity 'R' Monogram</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 font-['Plus_Jakarta_Sans'] text-sm tracking-wide" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="home">home</span>
+                Home
+            </a>
+<a class="flex items-center py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 font-['Plus_Jakarta_Sans'] text-sm tracking-wide" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="credit_card">credit_card</span>
+                Cards
+            </a>
+<a class="flex items-center py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-[#4edea3] dark:text-[#4edea3] font-bold border-l-4 border-[#4edea3] pl-4 font-['Plus_Jakarta_Sans'] text-sm tracking-wide" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="monitoring">monitoring</span>
+                Track
+            </a>
+<a class="flex items-center py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 font-['Plus_Jakarta_Sans'] text-sm tracking-wide" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="redeem">redeem</span>
+                Redeem
+            </a>
+<a class="flex items-center py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 font-['Plus_Jakarta_Sans'] text-sm tracking-wide" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="person">person</span>
+                Account
+            </a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="bg-surface-container rounded-xl p-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant/20">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="Close up of a professional male user portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkMVpPuJI6awhxz_wpQdjLYUL9LlHc0TQnhScipKHCqg374kt2ay2V9Xd85VKQr5zGuOFRqx3OaBlyPZNCuatGBmsrELKCEaX1vozS_bFEudJYU-98vOcxdUwUxqTsrvtoUjWgTGqav4WioqexrH9D5ZYW5Dir4qEONkgjIwcN1MiSFuVwvNtf_DQ5uF6JQGc1rkqhMuWE_XTp9jUa6_OhhmPooRPHP7QavNGojIuwF2JD6XYGZTFO2V1kN8lpvqhPeufON_iqa2lT"/>
+</div>
+<div>
+<div class="text-sm font-bold text-on-surface">Alex Rivera</div>
+<div class="text-[10px] text-primary uppercase tracking-widest">Platinum Tier</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Mobile Only) -->
+<header class="fixed top-0 w-full z-40 lg:hidden bg-[#171B28] dark:bg-[#171B28] flex justify-between items-center h-16 px-6">
+<div class="text-xl font-black text-[#4edea3] dark:text-[#4edea3] font-['Plus_Jakarta_Sans']">Reward Relay</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-400" data-icon="settings">settings</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="lg:ml-[256px] min-h-screen pt-20 lg:pt-0 pb-24 lg:pb-12 px-6 lg:px-12 max-w-7xl mx-auto">
+<!-- Hero Section -->
+<section class="mt-12 mb-16">
+<h1 class="font-headline text-5xl lg:text-6xl font-extrabold tracking-tight text-on-surface mb-4">
+                Your Churn <span class="text-primary">Command Centre</span>
+</h1>
+<p class="font-body text-on-surface-variant text-lg max-w-2xl">
+                Currently managing <span class="text-on-surface font-bold tabular-nums">8 active cards</span>. Your next eligibility window opens in <span class="text-secondary font-bold tabular-nums">14 days</span>.
+            </p>
+</section>
+<!-- Tracker Timeline Section -->
+<div class="space-y-8">
+<!-- Header for Timeline -->
+<div class="hidden lg:grid grid-cols-12 gap-8 px-8 text-label-sm font-bold text-outline tracking-[0.1em] uppercase">
+<div class="col-span-3">Card Identity</div>
+<div class="col-span-6">Application → Eligibility → Cancellation Timeline</div>
+<div class="col-span-3 text-right">Lifecycle Status</div>
+</div>
+<!-- Timeline Rows -->
+<div class="space-y-4">
+<!-- Row 1: Cancel Soon -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-colors rounded-lg lg:rounded-xl p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-8">
+<div class="lg:col-span-3 flex items-center gap-4">
+<div class="w-16 h-10 rounded-md bg-surface-container-highest overflow-hidden shrink-0 border border-outline-variant/10">
+<img alt="Card Thumbnail" class="w-full h-full object-cover" data-alt="Sapphire blue premium credit card abstract" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRa-xzbW5VzoV2YtZWp0pXKAY4OehlygOm1aRr8U5RgIduoaxG11oZtYzycqjw53EjC6WYXfXqyln3nHhel06DT5Mle8TkCa5_KJl1qF2pIaiJGD5j4TfOZo3EdC86dSyCz6Hy6yxyWvlxC6Z4wNoqJi_V6vCaBFeS93pDqtnJ4vaXqZ4DLf_d4jU2FoeZYhhZ-9G5NuDANEGgjZZrmBdilYwfv6SZZXXBymtabTkvBcyalgU9CYZ5R2xS0Jj6Y6_vsATDTRr5bZUi"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Sapphire Reserve</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-wider font-medium">Chase</div>
+</div>
+</div>
+<div class="lg:col-span-6 relative pt-6 pb-2">
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden relative">
+<!-- Progress fill -->
+<div class="absolute left-0 top-0 h-full w-[92%] bg-error/40"></div>
+<!-- Milestones -->
+<div class="absolute left-0 top-0 h-full w-2 bg-primary"></div>
+<div class="absolute left-[70%] top-0 h-full w-2 bg-secondary"></div>
+<div class="absolute right-0 top-0 h-full w-2 bg-error"></div>
+</div>
+<div class="flex justify-between mt-3 text-[10px] font-bold text-outline tracking-wider uppercase">
+<div class="flex flex-col">
+<span>Applied</span>
+<span class="text-on-surface tabular-nums mt-1">OCT '23</span>
+</div>
+<div class="flex flex-col items-center">
+<span>Eligible</span>
+<span class="text-secondary tabular-nums mt-1">OCT '24</span>
+</div>
+<div class="flex flex-col items-end">
+<span>Deadline</span>
+<span class="text-error tabular-nums mt-1">SEP '24</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-3 flex justify-end">
+<span class="px-4 py-2 rounded-full bg-error/10 text-error text-[10px] font-bold tracking-[0.08em] uppercase border border-error/20">
+                            Cancel Soon
+                        </span>
+</div>
+</div>
+<!-- Row 2: Active -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-colors rounded-lg lg:rounded-xl p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-8">
+<div class="lg:col-span-3 flex items-center gap-4">
+<div class="w-16 h-10 rounded-md bg-surface-container-highest overflow-hidden shrink-0 border border-outline-variant/10">
+<img alt="Card Thumbnail" class="w-full h-full object-cover" data-alt="Gold reflective metallic credit card design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbDP3sSGScowxjKXWJgdd4trpXaAAfK0HQSodWHWeZVL2c3hxyYJbFsyphiXV1I9voTB0BII8YMMwV_PRYvUNymBt1t5lB0FTsjwIG4zNwYP6EZkFLP0u5AoE_YQtN-Wndeaubqb40Jn8cRSLfJ2P19f5ut46EKwXzPS4Ckj1_oz4HB_mgq7rQmiF-Y8bulHu5hTFWIP8xvS2vd97qWGdn3VDuh4pjaVOnfcp7EpNOvPmFBIqwRt31of9PuRnND0TNoi1t_h6cXfix"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Amex Gold</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-wider font-medium">American Express</div>
+</div>
+</div>
+<div class="lg:col-span-6 relative pt-6 pb-2">
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden relative">
+<div class="absolute left-0 top-0 h-full w-[45%] bg-primary/40"></div>
+<div class="absolute left-0 top-0 h-full w-2 bg-primary"></div>
+<div class="absolute left-[80%] top-0 h-full w-2 bg-secondary"></div>
+<div class="absolute right-0 top-0 h-full w-2 bg-error"></div>
+</div>
+<div class="flex justify-between mt-3 text-[10px] font-bold text-outline tracking-wider uppercase">
+<div class="flex flex-col">
+<span>Applied</span>
+<span class="text-on-surface tabular-nums mt-1">MAR '24</span>
+</div>
+<div class="flex flex-col items-center">
+<span>Eligible</span>
+<span class="text-outline tabular-nums mt-1">MAR '25</span>
+</div>
+<div class="flex flex-col items-end">
+<span>Deadline</span>
+<span class="text-outline tabular-nums mt-1">FEB '25</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-3 flex justify-end">
+<span class="px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-[0.08em] uppercase border border-primary/20">
+                            Active
+                        </span>
+</div>
+</div>
+<!-- Row 3: Eligible -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-colors rounded-lg lg:rounded-xl p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-8">
+<div class="lg:col-span-3 flex items-center gap-4">
+<div class="w-16 h-10 rounded-md bg-surface-container-highest overflow-hidden shrink-0 border border-outline-variant/10">
+<img alt="Card Thumbnail" class="w-full h-full object-cover" data-alt="Black sleek premium credit card design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwOrqSj7DbFvTex3IlaLEOvpgNNxpMFdmRBi_urqpFZ49hIn18FAeoGKMJ9PlVqmsBEHY8TINqYZwEfHarJS6V7fM7V1f-QuU323fLCV9opDOSVMdG03sFZv4setTA7KuJSnNK0ynsXBU4ulyPKdM88PNFt0wfFJe0Ptu4pdPJhLpZUkglgXgn7t8noIH2juloDlou6aipBbxV6NPpcf_sRjc4BT4wyD3mvyZ-Hx2_UPoaUJPxR4HWPHQ0AtOxO3PV1XYWaov_piBU"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Venture X</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-wider font-medium">Capital One</div>
+</div>
+</div>
+<div class="lg:col-span-6 relative pt-6 pb-2">
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden relative">
+<div class="absolute left-0 top-0 h-full w-[75%] bg-secondary/40"></div>
+<div class="absolute left-0 top-0 h-full w-2 bg-primary"></div>
+<div class="absolute left-[70%] top-0 h-full w-2 bg-secondary"></div>
+<div class="absolute right-0 top-0 h-full w-2 bg-error"></div>
+</div>
+<div class="flex justify-between mt-3 text-[10px] font-bold text-outline tracking-wider uppercase">
+<div class="flex flex-col">
+<span>Applied</span>
+<span class="text-on-surface tabular-nums mt-1">JAN '22</span>
+</div>
+<div class="flex flex-col items-center">
+<span>Eligible</span>
+<span class="text-secondary tabular-nums mt-1">AVAILABLE NOW</span>
+</div>
+<div class="flex flex-col items-end">
+<span>Deadline</span>
+<span class="text-outline tabular-nums mt-1">JAN '23</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-3 flex justify-end">
+<span class="px-4 py-2 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold tracking-[0.08em] uppercase border border-secondary/20">
+                            Eligible
+                        </span>
+</div>
+</div>
+<!-- Row 4: Active -->
+<div class="bg-surface-container hover:bg-surface-container-high transition-colors rounded-lg lg:rounded-xl p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-8">
+<div class="lg:col-span-3 flex items-center gap-4">
+<div class="w-16 h-10 rounded-md bg-surface-container-highest overflow-hidden shrink-0 border border-outline-variant/10">
+<img alt="Card Thumbnail" class="w-full h-full object-cover" data-alt="Dark gray business credit card" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpcFyRmlnfB3FZFUgrSgplxL5pmJgKgnvN1PllUg9nypmZzkiqcp1xh_9l9s1mgIJTZYkGJYJzhwzj_wkpXNxTAr-7GbISM-BBhVTNLBpw2f0OdR47UCkos_ms9ht3d4TYHvO7t2Vcggou95j5gZTYYM1XI_c45VHNchQc07gmzDIrryyKisqi3AOyT3qjxPQLB6pWbU3iTOVpKv-QWLA4_SbQYJDDCdmX2xFmuOP3IzLhmWViMYeQCYBXbDv8smgQN7ol84gcI1oL"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Ink Business Cash</div>
+<div class="text-xs text-on-surface-variant uppercase tracking-wider font-medium">Chase</div>
+</div>
+</div>
+<div class="lg:col-span-6 relative pt-6 pb-2">
+<div class="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden relative">
+<div class="absolute left-0 top-0 h-full w-[15%] bg-primary/40"></div>
+<div class="absolute left-0 top-0 h-full w-2 bg-primary"></div>
+<div class="absolute left-[85%] top-0 h-full w-2 bg-secondary"></div>
+<div class="absolute right-0 top-0 h-full w-2 bg-error"></div>
+</div>
+<div class="flex justify-between mt-3 text-[10px] font-bold text-outline tracking-wider uppercase">
+<div class="flex flex-col">
+<span>Applied</span>
+<span class="text-on-surface tabular-nums mt-1">AUG '24</span>
+</div>
+<div class="flex flex-col items-center">
+<span>Eligible</span>
+<span class="text-outline tabular-nums mt-1">AUG '26</span>
+</div>
+<div class="flex flex-col items-end">
+<span>Deadline</span>
+<span class="text-outline tabular-nums mt-1">JUL '25</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-3 flex justify-end">
+<span class="px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-[0.08em] uppercase border border-primary/20">
+                            Active
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB: Add New Card -->
+<button class="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 w-14 lg:w-16 h-14 lg:h-16 rounded-full bg-gradient-primary shadow-[0px_24px_48px_-12px_rgba(78,222,163,0.4)] flex items-center justify-center text-on-primary-container z-[60] hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full h-20 pb-safe z-50 bg-[#0F131F]/80 dark:bg-[#0F131F]/80 backdrop-blur-xl border-t border-white/10 lg:hidden flex justify-around items-center px-4">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Cards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4edea3] dark:text-[#4edea3] active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Track</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Redeem</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Account</span>
+</a>
+</nav>
+</body></html>

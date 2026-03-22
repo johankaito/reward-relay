@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings - Reward Relay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-dim": "#55e4a9",
+              "surface-container-low": "#0e1320",
+              "tertiary-fixed": "#00dcfd",
+              "on-secondary-fixed": "#3a2a62",
+              "on-surface-variant": "#a7aabb",
+              "secondary-container": "#4d3d76",
+              "error-dim": "#d7383b",
+              "surface-container-high": "#1a1f2f",
+              "surface-container-lowest": "#000000",
+              "on-tertiary": "#005360",
+              "primary-fixed-dim": "#55e4a9",
+              "on-primary-fixed-variant": "#006343",
+              "surface-dim": "#0a0e1a",
+              "error": "#ff716c",
+              "on-surface": "#e8eafc",
+              "surface-tint": "#65f3b6",
+              "surface-variant": "#202537",
+              "on-error-container": "#ffa8a3",
+              "on-secondary": "#47366f",
+              "secondary": "#d0bcff",
+              "inverse-surface": "#faf8ff",
+              "primary-container": "#07b77f",
+              "surface-bright": "#252c3e",
+              "background": "#0a0e1a",
+              "tertiary-dim": "#00cdec",
+              "surface": "#0a0e1a",
+              "on-tertiary-fixed-variant": "#005360",
+              "surface-container": "#141928",
+              "on-tertiary-fixed": "#00343d",
+              "on-error": "#490006",
+              "tertiary-fixed-dim": "#00cdec",
+              "error-container": "#9f0519",
+              "tertiary": "#78e6ff",
+              "on-primary": "#00583b",
+              "primary-fixed": "#65f3b6",
+              "secondary-fixed-dim": "#cdb9fc",
+              "on-secondary-fixed-variant": "#584781",
+              "on-tertiary-container": "#004955",
+              "on-primary-container": "#002919",
+              "secondary-fixed": "#dac9ff",
+              "primary": "#65f3b6",
+              "outline": "#717584",
+              "on-primary-fixed": "#00432c",
+              "on-secondary-container": "#d9c8ff",
+              "tertiary-container": "#00dcfd",
+              "on-background": "#e8eafc",
+              "secondary-dim": "#c2aff1",
+              "inverse-on-surface": "#515563",
+              "outline-variant": "#444755",
+              "inverse-primary": "#006d4a",
+              "surface-container-highest": "#202537"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        body { background-color: #0a0e1a; }
+    </style>
+</head>
+<body class="font-body text-on-surface selection:bg-primary/30">
+<!-- SideNavBar (Desktop) -->
+<aside class="fixed left-0 top-0 h-full w-[256px] bg-[#171B28] hidden lg:flex flex-col py-8 z-50">
+<div class="px-6 mb-12">
+<div class="text-2xl font-extrabold text-[#4edea3] tracking-tighter font-headline">Reward Relay</div>
+<div class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Velocity 'R' Monogram</div>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center py-3 text-slate-400 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="home">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm tracking-wide">Home</span>
+</a>
+<a class="flex items-center py-3 text-slate-400 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="credit_card">credit_card</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm tracking-wide">Cards</span>
+</a>
+<a class="flex items-center py-3 text-slate-400 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="monitoring">monitoring</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm tracking-wide">Track</span>
+</a>
+<a class="flex items-center py-3 text-slate-400 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="redeem">redeem</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm tracking-wide">Redeem</span>
+</a>
+<a class="flex items-center py-3 text-[#4edea3] font-bold border-l-4 border-[#4edea3] pl-4 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-4" data-icon="person">person</span>
+<span class="font-['Plus_Jakarta_Sans'] text-sm tracking-wide">Account</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/50">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary font-bold">JD</div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate">Julian Dash</p>
+<p class="text-[10px] text-slate-500 truncate">Premium Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Mobile) -->
+<header class="fixed top-0 w-full z-40 lg:hidden bg-[#171B28] flex justify-between items-center h-16 px-6">
+<div class="text-xl font-black text-[#4edea3] font-headline">Reward Relay</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:opacity-80 transition-transform scale-98">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-400 hover:opacity-80 transition-transform scale-98">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="lg:ml-[256px] min-h-screen pt-24 lg:pt-16 pb-32 px-6 md:px-12 lg:px-20 max-w-7xl">
+<header class="mb-12">
+<h1 class="text-[3.5rem] font-extrabold font-headline leading-tight tracking-tight text-on-surface">Account Settings</h1>
+<p class="text-on-surface-variant mt-2 text-lg">Manage your sovereign profile and ledger preferences.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Center Content (Settings Sections) -->
+<div class="lg:col-span-8 space-y-12">
+<!-- Profile Section -->
+<section class="bg-surface-container p-6 rounded-lg shadow-sm">
+<div class="flex items-center gap-6 mb-10">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest border-2 border-primary/20 flex items-center justify-center text-primary text-3xl font-extrabold font-headline">JD</div>
+<div>
+<h2 class="text-2xl font-extrabold font-headline mb-1">Personal Identity</h2>
+<p class="text-sm text-on-surface-variant">The core details associated with your ledger account.</p>
+</div>
+</div>
+<div class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium mb-2">Display Name</label>
+<div class="w-full bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium">Julian Dash</div>
+</div>
+<div>
+<label class="block text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium mb-2">Primary Email</label>
+<div class="w-full bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium">j.dash@sovereign.ledger</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section class="bg-surface-container p-6 rounded-lg shadow-sm">
+<div class="mb-10">
+<h2 class="text-2xl font-extrabold font-headline mb-1">Notification Protocol</h2>
+<p class="text-sm text-on-surface-variant">Configure how you receive alert transmissions.</p>
+</div>
+<div class="space-y-8">
+<div class="flex items-center justify-between group">
+<div>
+<p class="font-medium text-on-surface">30-Day Outlook</p>
+<p class="text-xs text-on-surface-variant">Receive an email summary of upcoming points expirations.</p>
+</div>
+<button class="w-12 h-6 rounded-full bg-primary-container relative transition-colors duration-200">
+<span class="absolute right-1 top-1 w-4 h-4 bg-on-primary-container rounded-full"></span>
+</button>
+</div>
+<div class="flex items-center justify-between group">
+<div>
+<p class="font-medium text-on-surface">14-Day Critical Alert</p>
+<p class="text-xs text-on-surface-variant">High-priority reminder for urgent reward redemptions.</p>
+</div>
+<button class="w-12 h-6 rounded-full bg-primary-container relative transition-colors duration-200">
+<span class="absolute right-1 top-1 w-4 h-4 bg-on-primary-container rounded-full"></span>
+</button>
+</div>
+<div class="flex items-center justify-between group">
+<div>
+<p class="font-medium text-on-surface">7-Day Final Call</p>
+<p class="text-xs text-on-surface-variant">Daily countdown for assets approaching final settlement.</p>
+</div>
+<button class="w-12 h-6 rounded-full bg-surface-container-highest relative transition-colors duration-200">
+<span class="absolute left-1 top-1 w-4 h-4 bg-outline rounded-full"></span>
+</button>
+</div>
+</div>
+</section>
+<!-- Billing Section -->
+<section class="bg-surface-container p-6 rounded-lg shadow-sm">
+<div class="mb-10">
+<h2 class="text-2xl font-extrabold font-headline mb-1">Billing &amp; Tier Status</h2>
+<p class="text-sm text-on-surface-variant">Manage your subscription level and payment methods.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-lg mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border border-white/5">
+<div class="flex items-center gap-6">
+<div class="w-16 h-16 rounded-xl bg-gradient-to-br from-secondary-container to-secondary flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-3xl" data-icon="diamond" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<div>
+<p class="text-[0.6875rem] uppercase tracking-[0.05em] text-secondary font-bold">Current Tier</p>
+<p class="text-xl font-extrabold font-headline">Velocity Elite</p>
+<p class="text-xs text-on-surface-variant tabular-nums">Next billing cycle: Oct 24, 2024</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-gradient-to-br from-[#4EDEA3] to-[#10B981] text-[#003824] px-6 py-3 rounded-full font-bold text-sm hover:scale-[1.02] transition-all duration-200">Upgrade Plan</button>
+<button class="border border-outline-variant/30 text-primary px-6 py-3 rounded-full font-bold text-sm hover:bg-surface-container-highest/50 transition-all duration-200">Cancel Plan</button>
+</div>
+</div>
+</section>
+<!-- Danger Zone -->
+<section class="bg-surface-container/30 p-6 rounded-lg border border-error/20">
+<div class="mb-6">
+<h2 class="text-2xl font-extrabold font-headline text-error-dim mb-1">Danger Zone</h2>
+<p class="text-sm text-on-surface-variant">Irreversible actions regarding your digital footprint.</p>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-medium text-on-surface">Delete Account</p>
+<p class="text-xs text-on-surface-variant">Permanently remove all data and forfeit earned rewards.</p>
+</div>
+<button class="text-error font-bold text-sm px-4 py-2 rounded-lg hover:bg-error/10 transition-colors">Delete Account</button>
+</div>
+</section>
+</div>
+<!-- Optional Side Content (Hidden or Empty for 3-column feel) -->
+<div class="lg:col-span-4 hidden lg:block">
+<div class="sticky top-24 space-y-6">
+<div class="bg-gradient-to-br from-surface-container to-surface-container-low p-6 rounded-lg border border-white/5">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="security">security</span>
+<h3 class="font-bold text-lg mb-2">Data Protection</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">Your sovereign ledger is protected by AES-256 encryption. We never share your transactional data with third-party aggregators.</p>
+<a class="inline-block mt-4 text-primary text-xs font-bold hover:underline" href="#">View Privacy Policy</a>
+</div>
+<div class="p-6">
+<p class="text-[0.6875rem] uppercase tracking-widest text-outline mb-4">Account Metadata</p>
+<div class="space-y-3">
+<div class="flex justify-between text-xs">
+<span class="text-on-surface-variant">Member Since</span>
+<span class="text-on-surface tabular-nums">Jan 2022</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-on-surface-variant">Last Security Audit</span>
+<span class="text-on-surface tabular-nums">2 days ago</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-on-surface-variant">Device Authorization</span>
+<span class="text-on-surface">3 Active</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="lg:hidden fixed bottom-0 w-full h-20 pb-safe z-50 bg-[#0F131F]/80 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-4">
+<button class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-all scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-all scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Cards</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-all scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Track</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-all scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Redeem</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#4edea3] active:opacity-80 transition-all scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Account</span>
+</button>
+</nav>
+</body></html>

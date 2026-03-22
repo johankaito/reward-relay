@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-dim": "#55e4a9",
+              "surface-container-low": "#0e1320",
+              "tertiary-fixed": "#00dcfd",
+              "on-secondary-fixed": "#3a2a62",
+              "on-surface-variant": "#a7aabb",
+              "secondary-container": "#4d3d76",
+              "error-dim": "#d7383b",
+              "surface-container-high": "#1a1f2f",
+              "surface-container-lowest": "#000000",
+              "on-tertiary": "#005360",
+              "primary-fixed-dim": "#55e4a9",
+              "on-primary-fixed-variant": "#006343",
+              "surface-dim": "#0a0e1a",
+              "error": "#ff716c",
+              "on-surface": "#e8eafc",
+              "surface-tint": "#65f3b6",
+              "surface-variant": "#202537",
+              "on-error-container": "#ffa8a3",
+              "on-secondary": "#47366f",
+              "secondary": "#d0bcff",
+              "inverse-surface": "#faf8ff",
+              "primary-container": "#07b77f",
+              "surface-bright": "#252c3e",
+              "background": "#0a0e1a",
+              "tertiary-dim": "#00cdec",
+              "surface": "#0a0e1a",
+              "on-tertiary-fixed-variant": "#005360",
+              "surface-container": "#141928",
+              "on-tertiary-fixed": "#00343d",
+              "on-error": "#490006",
+              "tertiary-fixed-dim": "#00cdec",
+              "error-container": "#9f0519",
+              "tertiary": "#78e6ff",
+              "on-primary": "#00583b",
+              "primary-fixed": "#65f3b6",
+              "secondary-fixed-dim": "#cdb9fc",
+              "on-secondary-fixed-variant": "#584781",
+              "on-tertiary-container": "#004955",
+              "on-primary-container": "#002919",
+              "secondary-fixed": "#dac9ff",
+              "primary": "#65f3b6",
+              "outline": "#717584",
+              "on-primary-fixed": "#00432c",
+              "on-secondary-container": "#d9c8ff",
+              "tertiary-container": "#00dcfd",
+              "on-background": "#e8eafc",
+              "secondary-dim": "#c2aff1",
+              "inverse-on-surface": "#515563",
+              "outline-variant": "#444755",
+              "inverse-primary": "#006d4a",
+              "surface-container-highest": "#202537"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        body { background-color: #0a0e1a; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body text-on-surface">
+<!-- TopAppBar (Mobile Only Shell) -->
+<header class="fixed top-0 w-full z-40 lg:hidden bg-[#171B28] flex justify-between items-center h-16 px-6">
+<div class="text-xl font-black text-[#4edea3] font-headline tracking-tighter">Reward Relay</div>
+<div class="flex gap-4 items-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-[#4edea3]" data-icon="settings">settings</span>
+</div>
+</header>
+<!-- SideNavBar (Desktop Shell) -->
+<aside class="hidden lg:flex flex-col py-8 fixed left-0 top-0 h-full w-[256px] bg-[#171B28] font-headline text-sm tracking-wide">
+<div class="px-8 mb-12">
+<h1 class="text-2xl font-extrabold text-[#4edea3] tracking-tighter">Reward Relay</h1>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Velocity 'R' Monogram</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 py-3 text-slate-400 dark:text-slate-500 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-4 py-3 text-slate-400 dark:text-slate-500 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+<span>Cards</span>
+</a>
+<a class="flex items-center gap-4 py-3 text-slate-400 dark:text-slate-500 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span>Track</span>
+</a>
+<a class="flex items-center gap-4 py-3 text-slate-400 dark:text-slate-500 pl-5 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+<span>Redeem</span>
+</a>
+<a class="flex items-center gap-4 py-3 text-[#4edea3] font-bold border-l-4 border-[#4edea3] pl-4 hover:bg-[#313442] hover:scale-[1.02] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Account</span>
+</a>
+</nav>
+<div class="px-5 mt-auto">
+<div class="bg-surface-container-high p-4 rounded-xl flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary-container font-bold">JD</div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate">John Doe</p>
+<p class="text-[10px] text-slate-500 truncate">Premium Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="lg:ml-[256px] min-h-screen pt-24 pb-32 lg:pt-12 px-6 lg:px-12 max-w-5xl mx-auto">
+<header class="mb-12">
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Account Settings</h2>
+<p class="text-on-surface-variant mt-2">Manage your profile, preferences and subscription.</p>
+</header>
+<div class="space-y-8">
+<!-- Profile Section -->
+<section class="bg-surface-container rounded-lg p-6 lg:p-8">
+<div class="flex items-center gap-4 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="person_outline">person_outline</span>
+<h3 class="text-xl font-bold font-headline">Profile</h3>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-8">
+<div class="relative">
+<div class="w-24 h-24 rounded-full bg-surface-container-highest flex items-center justify-center text-3xl font-extrabold text-primary border-4 border-surface-container-low">
+                            JD
+                        </div>
+<div class="absolute bottom-0 right-0 p-1.5 bg-primary-container rounded-full text-on-primary-container text-xs">
+<span class="material-symbols-outlined !text-sm" data-icon="edit">edit</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 w-full">
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">Display Name</label>
+<div class="bg-surface-container-low px-4 py-3 rounded-DEFAULT text-on-surface font-medium border border-outline-variant/10">
+                                Johnathan Doe
+                            </div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">Email Address</label>
+<div class="bg-surface-container-low px-4 py-3 rounded-DEFAULT text-on-surface font-medium border border-outline-variant/10">
+                                john.doe@sovereign.ledger
+                            </div>
+</div>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section class="bg-surface-container rounded-lg p-6 lg:p-8">
+<div class="flex items-center gap-4 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="notifications_active">notifications_active</span>
+<h3 class="text-xl font-bold font-headline">Notifications</h3>
+</div>
+<div class="space-y-8">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-medium text-on-surface">30-Day Reminder</p>
+<p class="text-xs text-on-surface-variant mt-1">Get notified a month before points expire.</p>
+</div>
+<button class="w-12 h-6 bg-primary-container rounded-full relative transition-colors">
+<span class="absolute right-1 top-1 w-4 h-4 bg-on-primary-container rounded-full shadow-sm"></span>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-medium text-on-surface">14-Day Reminder</p>
+<p class="text-xs text-on-surface-variant mt-1">Critical alert two weeks prior to expiry.</p>
+</div>
+<button class="w-12 h-6 bg-primary-container rounded-full relative transition-colors">
+<span class="absolute right-1 top-1 w-4 h-4 bg-on-primary-container rounded-full shadow-sm"></span>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-medium text-on-surface">7-Day Final Alert</p>
+<p class="text-xs text-on-surface-variant mt-1">Last call notifications for all active rewards.</p>
+</div>
+<button class="w-12 h-6 bg-surface-container-highest rounded-full relative transition-colors">
+<span class="absolute left-1 top-1 w-4 h-4 bg-outline-variant rounded-full shadow-sm"></span>
+</button>
+</div>
+</div>
+</section>
+<!-- Billing Section -->
+<section class="bg-surface-container rounded-lg p-6 lg:p-8">
+<div class="flex items-center gap-4 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet">account_balance_wallet</span>
+<h3 class="text-xl font-bold font-headline">Billing</h3>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="flex items-center gap-6">
+<div class="bg-surface-container-low p-6 rounded-lg border border-outline-variant/10 text-center min-w-[140px]">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Current Plan</p>
+<span class="px-3 py-1 bg-primary/20 text-primary-dim rounded-full text-xs font-bold uppercase tracking-tighter">Elite Plus</span>
+</div>
+<div class="hidden sm:block">
+<p class="text-on-surface font-medium">$49.00 <span class="text-on-surface-variant font-normal">/ month</span></p>
+<p class="text-xs text-on-surface-variant mt-1 tabular-nums">Next billing date: Oct 24, 2024</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+<button class="px-8 py-3 bg-gradient-to-br from-[#4EDEA3] to-[#10B981] text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg shadow-primary/10 text-sm">
+                            Upgrade Plan
+                        </button>
+<button class="px-8 py-3 border border-outline-variant/20 text-on-surface font-medium rounded-full hover:bg-surface-variant transition-colors duration-200 text-sm">
+                            Cancel Subscription
+                        </button>
+</div>
+</div>
+</section>
+<!-- Danger Zone -->
+<section class="bg-surface-container-low rounded-lg p-6 lg:p-8 border border-error/10">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<h3 class="text-xl font-bold font-headline text-error">Danger Zone</h3>
+</div>
+<p class="text-on-surface-variant text-sm mb-8">Once you delete your account, there is no going back. Please be certain.</p>
+<button class="flex items-center gap-2 text-error font-bold hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="delete_forever">delete_forever</span>
+<span>Delete account and all associated data</span>
+</button>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only Shell) -->
+<nav class="lg:hidden fixed bottom-0 w-full h-20 pb-safe z-50 bg-[#0F131F]/80 backdrop-blur-xl flex justify-around items-center px-4 border-t border-white/10 shadow-[0px_-24px_48px_-12px_rgba(0,0,0,0.4)]">
+<a class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-transform duration-150 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-transform duration-150 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="credit_card">credit_card</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Cards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-transform duration-150 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Track</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 active:opacity-80 transition-transform duration-150 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1">Redeem</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4edea3] active:opacity-80 transition-transform duration-150 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-[0.05em] mt-1 font-bold">Account</span>
+</a>
+</nav>
+</body></html>
