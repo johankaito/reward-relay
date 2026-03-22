@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
+import { Wifi } from "lucide-react"
 import { toast } from "sonner"
 
 import { AddCardForm } from "@/components/cards/AddCardForm"
@@ -9,7 +10,45 @@ import { CardGrid, type CardRecord } from "@/components/cards/CardGrid"
 import { CardsEmptyState } from "@/components/cards/CardsEmptyState"
 import { AppShell } from "@/components/layout/AppShell"
 import { useCatalog } from "@/contexts/CatalogContext"
+import { getBankGradient } from "@/lib/bank-gradients"
 import { supabase } from "@/lib/supabase/client"
+
+function CatalogCardThumb({ card }: { card: CardRecord }) {
+  const gradient = getBankGradient(card.bank)
+  const isLight = card.bank === "CommBank"
+  const textColor = isLight ? "text-black/80" : "text-white"
+  const textMuted = isLight ? "text-black/50" : "text-white/60"
+
+  return (
+    <div
+      className="relative flex aspect-[1.586/1] w-full flex-col justify-between overflow-hidden rounded-xl p-5"
+      style={{ background: gradient, boxShadow: "var(--shadow-card)" }}
+    >
+      <div className="absolute inset-0 bg-white/5 mix-blend-overlay" />
+      <div className={`relative z-10 flex items-start justify-between ${textColor}`}>
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">{card.bank}</span>
+        <Wifi className="h-4 w-4 rotate-90 opacity-40" />
+      </div>
+      <div className="relative z-10">
+        <p className={`font-headline text-sm font-bold tracking-wide ${textColor}`}>{card.name}</p>
+        {card.welcome_bonus_points ? (
+          <p className={`mt-0.5 text-[10px] ${textMuted}`}>
+            {card.welcome_bonus_points.toLocaleString()} {card.points_currency ?? "pts"}
+          </p>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
+function StatCard({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="rounded-2xl bg-surface-container p-4">
+      <p className="text-xs text-on-surface-variant">{label}</p>
+      <p className="mt-1 font-mono tabular-nums text-xl text-primary">{value}</p>
+    </div>
+  )
+}
 
 export default function CardsPage() {
   const { catalogCards: allCards, loading: catalogLoading } = useCatalog()
@@ -68,6 +107,11 @@ export default function CardsPage() {
     })
   }, [cards, bank, search])
 
+  const uniqueBanks = useMemo(
+    () => new Set(filtered.map((c) => c.bank)).size,
+    [filtered],
+  )
+
   return (
     <AppShell>
       <div className="space-y-6">
@@ -99,13 +143,38 @@ export default function CardsPage() {
           }}
         />
 
+        {/* Stats row */}
+        <div className="grid grid-cols-3 gap-3">
+          <StatCard label="Total Cards" value={cards.length} />
+          <StatCard label="Showing" value={filtered.length} />
+          <StatCard label="Banks" value={uniqueBanks} />
+        </div>
+
         {loading ? (
           <div className="space-y-5">
-            <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
-            <div className="h-48 animate-pulse rounded-xl bg-[var(--surface)]" />
+            <div className="h-14 animate-pulse rounded-xl bg-surface-container" />
+            <div className="h-48 animate-pulse rounded-xl bg-surface-container" />
           </div>
         ) : (
-          <CardGrid cards={filtered} />
+          <>
+            {/* Mobile carousel */}
+            <div className="md:hidden">
+              <div className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+                {filtered.map((card) => (
+                  <div key={card.id} className="w-72 shrink-0 snap-start">
+                    <CatalogCardThumb card={card} />
+                    <p className="mt-2 truncate text-sm font-medium text-on-surface">{card.name}</p>
+                    <p className="text-xs text-on-surface-variant">{card.bank}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop grid */}
+            <div className="hidden md:block">
+              <CardGrid cards={filtered} />
+            </div>
+          </>
         )}
       </div>
     </AppShell>
