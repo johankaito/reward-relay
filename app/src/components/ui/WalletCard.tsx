@@ -37,7 +37,7 @@ export function WalletCard({ card, showProgress = false, onClick }: Props) {
     >
       {/* Card face */}
       <div
-        className="relative aspect-[1.586/1] w-full rounded-xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg overflow-hidden"
+        className="relative aspect-[1.586/1] w-full rounded-xl p-6 flex flex-col justify-between overflow-hidden shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] transition-transform duration-300 group-hover:-translate-y-2"
         style={{ background: gradient }}
       >
         {/* Subtle overlay */}
@@ -62,26 +62,20 @@ export function WalletCard({ card, showProgress = false, onClick }: Props) {
             </p>
           )}
         </div>
-      </div>
 
-      {/* Progress bar below card (compact) */}
-      {showProgress && progressPct !== null && (
-        <div className="mt-3 px-1 space-y-1">
-          <div className="flex justify-between text-[10px] font-medium text-slate-400">
-            <span>Spend progress</span>
-            <span className="tabular-nums text-[#4edea3]">{progressPct}%</span>
-          </div>
-          <div className="h-1 w-full rounded-full bg-[#313442] overflow-hidden">
+        {/* Progress bar — embedded at bottom of card face */}
+        {showProgress && progressPct !== null && (
+          <div className="absolute bottom-0 inset-x-0 h-1.5 z-20">
             <div
-              className="h-full rounded-full transition-all duration-700"
+              className="h-full transition-all duration-700"
               style={{
                 width: `${progressPct}%`,
                 background: "linear-gradient(90deg, #10b981 0%, #4edea3 100%)",
               }}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }
