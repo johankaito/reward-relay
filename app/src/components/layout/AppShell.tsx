@@ -55,90 +55,68 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
       {/* ── Desktop fixed sidebar ── */}
-      <aside
-        className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col z-30"
-        style={{ background: "#171b28", borderRight: "1px solid rgba(255,255,255,0.05)" }}
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-2.5 px-5 py-5">
-          <div
-            className="flex h-8 w-8 items-center justify-center rounded-xl text-white shadow-sm flex-shrink-0"
-            style={{ background: "var(--gradient-cta)" }}
-          >
-            <Sparkles className="h-4 w-4" />
+      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 font-['Plus_Jakarta_Sans'] antialiased tracking-tight">
+        <div className="p-8 flex flex-col h-full">
+          {/* Logo */}
+          <div className="mb-10">
+            <h1 className="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</h1>
+            <p className="text-[10px] uppercase tracking-widest text-slate-500 mt-1">The Financial Luminary</p>
           </div>
-          <div>
-            <p className="text-sm font-semibold" style={{ color: "var(--primary)" }}>
-              Reward Relay
-            </p>
-            <p className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(148,163,184,0.6)" }}>
-              The Financial Luminary
-            </p>
-          </div>
-        </div>
 
-        {/* Nav */}
-        <nav className="flex-1 px-3 py-2 space-y-0.5">
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const active = isActive(href)
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-surface-container text-primary"
-                    : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface"
-                }`}
-              >
-                <Icon className={`h-4 w-4 flex-shrink-0 ${active ? "scale-110" : ""}`} />
-                {label}
-              </Link>
-            )
-          })}
-        </nav>
+          {/* Nav */}
+          <nav className="flex flex-col gap-2">
+            {navItems.map(({ href, label, icon: Icon }) => {
+              const active = isActive(href)
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    active
+                      ? "bg-[#1b1f2c] text-[#4edea3]"
+                      : "text-slate-400 hover:text-white hover:bg-[#313442] transition-colors"
+                  }`}
+                >
+                  <Icon className="h-4 w-4 flex-shrink-0" />
+                  <span className="font-medium">{label}</span>
+                </Link>
+              )
+            })}
+          </nav>
 
-        {/* Sidebar footer */}
-        <div className="px-3 pb-5 space-y-3">
-          {/* User info */}
-          {userEmail && (
-            <div className="flex items-center gap-2.5 px-2 py-1.5">
-              <div
-                className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold flex-shrink-0"
-                style={{ background: "var(--primary-container)", color: "var(--on-primary)" }}
-              >
-                {userEmail[0].toUpperCase()}
+          {/* Sidebar footer */}
+          <div className="mt-auto pt-10">
+            {/* Add New Card pill */}
+            <button
+              onClick={() => router.push("/cards")}
+              className="w-full py-4 rounded-full bg-gradient-to-br from-[#4edea3] to-[#10b981] text-on-primary font-bold transition-transform active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-primary/10"
+            >
+              Add New Card
+            </button>
+
+            {/* User info */}
+            {userEmail && (
+              <div className="mt-8 flex items-center gap-3 px-2">
+                <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
+                  <span className="text-sm font-bold text-on-surface">{userEmail[0].toUpperCase()}</span>
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-bold text-on-surface truncate">{userEmail.split("@")[0]}</span>
+                  <span className="text-xs text-slate-500">Elite Tier</span>
+                </div>
               </div>
-              <p className="text-xs truncate" style={{ color: "rgba(148,163,184,0.7)" }}>
-                {userEmail}
-              </p>
-            </div>
-          )}
+            )}
 
-          {/* "The Financial Luminary" label */}
-          <p className="text-[10px] uppercase tracking-widest px-2" style={{ color: "rgba(148,163,184,0.4)" }}>
-            The Financial Luminary
-          </p>
-
-          {/* Add New Card pill */}
-          <button
-            onClick={() => router.push("/cards")}
-            className="w-full rounded-full py-2 px-4 text-sm font-semibold transition-opacity hover:opacity-90"
-            style={{ background: "var(--gradient-cta)", color: "var(--on-primary)" }}
-          >
-            + Add New Card
-          </button>
-
-          {/* Sign out */}
-          <button
-            onClick={handleSignOut}
-            disabled={signingOut}
-            className="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-lg transition-colors hover:bg-white/5 disabled:opacity-50"
-            style={{ color: "rgba(148,163,184,0.5)" }}
-          >
-            <LogOut className="h-4 w-4 flex-shrink-0" />
-            {signingOut ? "Signing out…" : "Sign out"}
-          </button>
+            {/* Sign out */}
+            <button
+              onClick={handleSignOut}
+              disabled={signingOut}
+              className="mt-4 flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-lg transition-colors hover:bg-white/5 disabled:opacity-50 text-slate-500"
+            >
+              <LogOut className="h-4 w-4 flex-shrink-0" />
+              {signingOut ? "Signing out…" : "Sign out"}
+            </button>
+          </div>
         </div>
       </aside>
 
