@@ -57,7 +57,7 @@ export function AppShell({ children }: AppShellProps) {
       {/* ── Desktop fixed sidebar ── */}
       <aside
         className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col z-30"
-        style={{ background: "#171b28", borderRight: "1px solid rgba(255,255,255,0.05)" }}
+        style={{ background: "var(--surface)", borderRight: "1px solid rgba(255,255,255,0.05)" }}
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 py-5">
@@ -124,7 +124,7 @@ export function AppShell({ children }: AppShellProps) {
           <button
             onClick={() => router.push("/cards")}
             className="w-full rounded-full py-2 px-4 text-sm font-semibold transition-opacity hover:opacity-90"
-            style={{ background: "var(--gradient-cta)", color: "#003824" }}
+            style={{ background: "var(--gradient-cta)", color: "var(--on-primary)" }}
           >
             + Add New Card
           </button>

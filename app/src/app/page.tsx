@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <div
       className="relative flex flex-col text-white"
-      style={{ backgroundColor: "#0f131f" }}
+      style={{ backgroundColor: "var(--background)" }}
     >
       {/* Background glow blobs */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
@@ -62,7 +62,7 @@ export default function Home() {
           <div className="relative z-10 mx-auto max-w-5xl text-center">
             {/* Badge */}
             <div className="mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest"
-              style={{ background: "rgba(78, 222, 163, 0.1)", color: "#4edea3" }}>
+              style={{ background: "rgba(78, 222, 163, 0.1)", color: "var(--primary)" }}>
               Command Your Wealth
             </div>
 
@@ -72,11 +72,11 @@ export default function Home() {
               style={{ fontFamily: "var(--font-grotesk)" }}
             >
               Master the{" "}
-              <span style={{ color: "#10b981" }}>Churn</span>
+              <span style={{ color: "var(--primary)" }}>Churn</span>
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
-              style={{ color: "#bbcabf" }}>
+              style={{ color: "var(--on-surface-variant)" }}>
               Track every card. Earn every bonus. Know when to cancel.
             </p>
 
@@ -100,7 +100,7 @@ export default function Home() {
                   borderColor: "rgba(78, 222, 163, 0.25)",
                   background: "rgba(27, 31, 44, 0.6)",
                   backdropFilter: "blur(20px)",
-                  color: "#dfe2f3",
+                  color: "var(--on-surface)",
                 }}
               >
                 See how it works
@@ -118,11 +118,11 @@ export default function Home() {
                   <div key={stat.label} className="text-center">
                     <div
                       className="text-3xl font-extrabold tabular-nums"
-                      style={{ color: "#4edea3", fontFamily: "var(--font-grotesk)" }}
+                      style={{ color: "var(--primary)", fontFamily: "var(--font-grotesk)" }}
                     >
                       {stat.value}
                     </div>
-                    <div className="mt-1 text-sm" style={{ color: "#bbcabf" }}>
+                    <div className="mt-1 text-sm" style={{ color: "var(--on-surface-variant)" }}>
                       {stat.label}
                     </div>
                   </div>
@@ -133,10 +133,10 @@ export default function Home() {
         </section>
 
         {/* How it Works */}
-        <section id="how-it-works" className="px-8 py-24" style={{ backgroundColor: "#171b28" }}>
+        <section id="how-it-works" className="px-8 py-24" style={{ backgroundColor: "var(--surface)" }}>
           <div className="mx-auto max-w-5xl">
             <div className="mb-16 text-center">
-              <p className="mb-3 text-xs font-bold uppercase tracking-widest" style={{ color: "#4edea3" }}>
+              <p className="mb-3 text-xs font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
                 How it works
               </p>
               <h2
@@ -176,11 +176,11 @@ export default function Home() {
                 >
                   <div
                     className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
-                    style={{ background: "rgba(78, 222, 163, 0.12)", color: "#4edea3" }}
+                    style={{ background: "rgba(78, 222, 163, 0.12)", color: "var(--primary)" }}
                   >
                     {step.icon}
                   </div>
-                  <p className="mb-1 text-xs font-bold uppercase tracking-widest" style={{ color: "#4edea3" }}>
+                  <p className="mb-1 text-xs font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
                     {step.step}
                   </p>
                   <h3
@@ -189,7 +189,7 @@ export default function Home() {
                   >
                     {step.title}
                   </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "#bbcabf" }}>
+                  <p className="text-sm leading-relaxed" style={{ color: "var(--on-surface-variant)" }}>
                     {step.body}
                   </p>
                 </div>
@@ -204,7 +204,7 @@ export default function Home() {
             {/* Spend progress ring */}
             <div
               className="flex flex-col items-center justify-center overflow-hidden rounded-2xl p-10 text-center md:col-span-12 lg:col-span-5"
-              style={{ backgroundColor: "#1b1f2c", border: "1px solid rgba(60, 74, 66, 0.1)" }}
+              style={{ backgroundColor: "var(--surface-container)", border: "1px solid rgba(60, 74, 66, 0.1)" }}
             >
               <h3
                 className="mb-10 text-3xl font-bold"
@@ -231,14 +231,14 @@ export default function Home() {
                   <span className="text-5xl font-extrabold tabular-nums" style={{ fontFamily: "var(--font-grotesk)" }}>
                     $3,420
                   </span>
-                  <span className="mt-1 text-sm font-medium uppercase tracking-widest" style={{ color: "#bbcabf" }}>
+                  <span className="mt-1 text-sm font-medium uppercase tracking-widest" style={{ color: "var(--on-surface-variant)" }}>
                     of $4,000 goal
                   </span>
                 </div>
               </div>
               <div
                 className="mt-10 rounded-full px-6 py-2 text-sm font-bold uppercase tracking-widest"
-                style={{ background: "rgba(78, 222, 163, 0.1)", color: "#4edea3" }}
+                style={{ background: "rgba(78, 222, 163, 0.1)", color: "var(--primary)" }}
               >
                 85% Complete — 12 Days Left
               </div>
@@ -247,7 +247,7 @@ export default function Home() {
             {/* Card portfolio stack */}
             <div
               className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-10 md:col-span-12 lg:col-span-7"
-              style={{ backgroundColor: "#1b1f2c", border: "1px solid rgba(60, 74, 66, 0.1)" }}
+              style={{ backgroundColor: "var(--surface-container)", border: "1px solid rgba(60, 74, 66, 0.1)" }}
             >
               <div className="relative z-10">
                 <h3
@@ -256,7 +256,7 @@ export default function Home() {
                 >
                   Portfolio Integration
                 </h3>
-                <p className="max-w-md text-lg" style={{ color: "#bbcabf" }}>
+                <p className="max-w-md text-lg" style={{ color: "var(--on-surface-variant)" }}>
                   Visualise your entire card portfolio in one command center.
                 </p>
               </div>
@@ -317,7 +317,7 @@ export default function Home() {
                   <p className="text-[10px] font-bold uppercase tracking-widest text-white/80">Platinum Command</p>
                   <div className="mt-8">
                     <p className="text-2xl font-bold tabular-nums text-white">245.5k</p>
-                    <p className="mt-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: "#4edea3" }}>AMEX Active</p>
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>AMEX Active</p>
                   </div>
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default function Home() {
             >
               See Your Path to Rewards
             </h2>
-            <p className="text-lg" style={{ color: "#bbcabf" }}>
+            <p className="text-lg" style={{ color: "var(--on-surface-variant)" }}>
               Visualize how many cards and months to reach your travel goals
             </p>
           </div>
@@ -360,7 +360,7 @@ export default function Home() {
                     <Plane className="h-6 w-6 text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "#4edea3" }}>
+                    <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--primary)" }}>
                       Example Goal
                     </p>
                     <p className="text-lg font-bold text-white">Free Domestic Flight</p>
@@ -368,26 +368,26 @@ export default function Home() {
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-bold" style={{ color: "#4edea3" }}>4</span>
-                    <span className="text-xl font-semibold" style={{ color: "#bbcabf" }}>months</span>
+                    <span className="text-5xl font-bold" style={{ color: "var(--primary)" }}>4</span>
+                    <span className="text-xl font-semibold" style={{ color: "var(--on-surface-variant)" }}>months</span>
                   </div>
                   <div
                     className="rounded-2xl border p-4"
                     style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
                   >
-                    <p className="text-xs font-semibold" style={{ color: "#bbcabf" }}>With 1 card:</p>
+                    <p className="text-xs font-semibold" style={{ color: "var(--on-surface-variant)" }}>With 1 card:</p>
                     <p className="mt-1 text-base font-semibold text-white">ANZ Rewards Black</p>
                     <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm"
-                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "#bbcabf" }}>
+                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "var(--on-surface-variant)" }}>
                       <span>15k pts</span>
                       <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span>$375 fee</span>
                       <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
-                      <span className="font-semibold" style={{ color: "#4edea3" }}>$75 net</span>
+                      <span className="font-semibold" style={{ color: "var(--primary)" }}>$75 net</span>
                     </div>
                   </div>
                   <div className="rounded-xl px-4 py-2 text-sm"
-                    style={{ background: "rgba(59,130,246,0.1)", color: "#dfe2f3" }}>
+                    style={{ background: "rgba(59,130,246,0.1)", color: "var(--on-surface)" }}>
                     Sydney → Melbourne return • Worth: $150
                   </div>
                 </div>
@@ -413,10 +413,10 @@ export default function Home() {
                       border: "1px solid rgba(78,222,163,0.25)",
                     }}
                   >
-                    <Globe className="h-6 w-6" style={{ color: "#4edea3" }} />
+                    <Globe className="h-6 w-6" style={{ color: "var(--primary)" }} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "#4edea3" }}>
+                    <p className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--primary)" }}>
                       Example Goal
                     </p>
                     <p className="text-lg font-bold text-white">International Economy</p>
@@ -424,26 +424,26 @@ export default function Home() {
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-bold" style={{ color: "#4edea3" }}>10</span>
-                    <span className="text-xl font-semibold" style={{ color: "#bbcabf" }}>months</span>
+                    <span className="text-5xl font-bold" style={{ color: "var(--primary)" }}>10</span>
+                    <span className="text-xl font-semibold" style={{ color: "var(--on-surface-variant)" }}>months</span>
                   </div>
                   <div
                     className="rounded-2xl border p-4"
                     style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
                   >
-                    <p className="text-xs font-semibold" style={{ color: "#bbcabf" }}>With 2 cards:</p>
+                    <p className="text-xs font-semibold" style={{ color: "var(--on-surface-variant)" }}>With 2 cards:</p>
                     <p className="mt-1 text-base font-semibold text-white">ANZ + Westpac Altitude Black</p>
                     <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm"
-                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "#bbcabf" }}>
+                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "var(--on-surface-variant)" }}>
                       <span>80k pts</span>
                       <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span>$670 fees</span>
                       <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
-                      <span className="font-semibold" style={{ color: "#4edea3" }}>$130 net</span>
+                      <span className="font-semibold" style={{ color: "var(--primary)" }}>$130 net</span>
                     </div>
                   </div>
                   <div className="rounded-xl px-4 py-2 text-sm"
-                    style={{ background: "rgba(59,130,246,0.1)", color: "#dfe2f3" }}>
+                    style={{ background: "rgba(59,130,246,0.1)", color: "var(--on-surface)" }}>
                     Sydney → Tokyo return • Worth: $800
                   </div>
                 </div>
@@ -484,16 +484,16 @@ export default function Home() {
                 <div className="space-y-3">
                   <div className="flex items-baseline gap-2">
                     <span className="text-5xl font-bold text-purple-400">18</span>
-                    <span className="text-xl font-semibold" style={{ color: "#bbcabf" }}>months</span>
+                    <span className="text-xl font-semibold" style={{ color: "var(--on-surface-variant)" }}>months</span>
                   </div>
                   <div
                     className="rounded-2xl border p-4"
                     style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
                   >
-                    <p className="text-xs font-semibold" style={{ color: "#bbcabf" }}>With 3 cards:</p>
+                    <p className="text-xs font-semibold" style={{ color: "var(--on-surface-variant)" }}>With 3 cards:</p>
                     <p className="mt-1 text-base font-semibold text-white">ANZ + Westpac + AMEX</p>
                     <div className="mt-3 flex items-center gap-3 border-t pt-3 text-sm"
-                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "#bbcabf" }}>
+                      style={{ borderColor: "rgba(255,255,255,0.08)", color: "var(--on-surface-variant)" }}>
                       <span>200k pts</span>
                       <span style={{ color: "rgba(255,255,255,0.2)" }}>•</span>
                       <span>$1,145 fees</span>
@@ -502,7 +502,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="rounded-xl px-4 py-2 text-sm"
-                    style={{ background: "rgba(139,92,246,0.1)", color: "#dfe2f3" }}>
+                    style={{ background: "rgba(139,92,246,0.1)", color: "var(--on-surface)" }}>
                     Sydney → Singapore return • Worth: $2,000
                   </div>
                   <BetaGate>
@@ -530,7 +530,7 @@ export default function Home() {
               >
                 Start Tracking Your Cards
               </a>
-              <p className="mt-3 text-sm" style={{ color: "#bbcabf" }}>Start with free tier • Upgrade anytime</p>
+              <p className="mt-3 text-sm" style={{ color: "var(--on-surface-variant)" }}>Start with free tier • Upgrade anytime</p>
             </BetaGate>
             <BetaOnly>
               <BetaRequestForm
@@ -542,7 +542,7 @@ export default function Home() {
         </section>
 
         {/* Feature highlights */}
-        <section className="px-8 py-24" style={{ backgroundColor: "#171b28" }}>
+        <section className="px-8 py-24" style={{ backgroundColor: "var(--surface)" }}>
           <div className="mx-auto max-w-7xl space-y-8">
             <div className="space-y-3 text-center">
               <h2
@@ -551,7 +551,7 @@ export default function Home() {
               >
                 Everything You Need to Churn Smarter
               </h2>
-              <p className="text-lg" style={{ color: "#bbcabf" }}>
+              <p className="text-lg" style={{ color: "var(--on-surface-variant)" }}>
                 Powerful features that help you maximize rewards while staying organized
               </p>
             </div>
@@ -559,7 +559,7 @@ export default function Home() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {[
                 {
-                  icon: <Calendar className="h-8 w-8" style={{ color: "#4edea3" }} />,
+                  icon: <Calendar className="h-8 w-8" style={{ color: "var(--primary)" }} />,
                   iconBg: "rgba(78,222,163,0.15)",
                   iconBorder: "rgba(78,222,163,0.25)",
                   title: "Visual Churning Calendar",
@@ -590,7 +590,7 @@ export default function Home() {
                 <div
                   key={f.title}
                   className="flex flex-col gap-4 rounded-2xl p-6"
-                  style={{ backgroundColor: "#1b1f2c", border: "1px solid rgba(255,255,255,0.04)" }}
+                  style={{ backgroundColor: "var(--surface-container)", border: "1px solid rgba(255,255,255,0.04)" }}
                 >
                   <div
                     className="flex h-14 w-14 items-center justify-center rounded-2xl"
@@ -600,7 +600,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-white">{f.title}</h3>
-                    <p className="mt-2 text-sm" style={{ color: "#bbcabf" }}>{f.body}</p>
+                    <p className="mt-2 text-sm" style={{ color: "var(--on-surface-variant)" }}>{f.body}</p>
                   </div>
                 </div>
               ))}
@@ -612,24 +612,24 @@ export default function Home() {
         <section className="px-8 py-24">
           <div className="mx-auto max-w-7xl">
             <div className="mb-8 text-center">
-              <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "#4edea3" }}>
+              <p className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--primary)" }}>
                 Built for Australian Churners
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
               {[
                 {
-                  icon: <Lock className="h-6 w-6" style={{ color: "#4edea3" }} />,
+                  icon: <Lock className="h-6 w-6" style={{ color: "var(--primary)" }} />,
                   title: "Your data stays in Australia",
                   body: "No offshore storage. Compliant with local privacy laws.",
                 },
                 {
-                  icon: <BarChart3 className="h-6 w-6" style={{ color: "#4edea3" }} />,
+                  icon: <BarChart3 className="h-6 w-6" style={{ color: "var(--primary)" }} />,
                   title: "Track unlimited cards",
                   body: "Pro tier removes all limits. Churn as many as you want.",
                 },
                 {
-                  icon: <Zap className="h-6 w-6" style={{ color: "#4edea3" }} />,
+                  icon: <Zap className="h-6 w-6" style={{ color: "var(--primary)" }} />,
                   title: "Never miss a cancellation deadline",
                   body: "Email reminders at 30, 14, and 7 days before annual fee.",
                 },
@@ -649,7 +649,7 @@ export default function Home() {
                     {t.icon}
                   </div>
                   <p className="text-sm font-semibold text-white">{t.title}</p>
-                  <p className="text-xs" style={{ color: "#bbcabf" }}>{t.body}</p>
+                  <p className="text-xs" style={{ color: "var(--on-surface-variant)" }}>{t.body}</p>
                 </div>
               ))}
             </div>
@@ -658,7 +658,7 @@ export default function Home() {
 
         {/* Pricing */}
         <BetaGate>
-          <section className="px-8 py-24" style={{ backgroundColor: "#171b28" }}>
+          <section className="px-8 py-24" style={{ backgroundColor: "var(--surface)" }}>
             <div className="mx-auto max-w-7xl space-y-8">
               <div className="space-y-3 text-center">
                 <h2
@@ -667,7 +667,7 @@ export default function Home() {
                 >
                   Select Your Plan
                 </h2>
-                <p style={{ color: "#bbcabf" }}>
+                <p style={{ color: "var(--on-surface-variant)" }}>
                   Professional tools for the modern financial luminary.
                 </p>
               </div>
@@ -677,7 +677,7 @@ export default function Home() {
                 <div
                   className="flex flex-col rounded-2xl p-10 transition-all hover:border-[rgba(78,222,163,0.2)]"
                   style={{
-                    backgroundColor: "#1b1f2c",
+                    backgroundColor: "var(--surface-container)",
                     border: "1px solid rgba(60, 74, 66, 0.1)",
                   }}
                 >
@@ -687,13 +687,13 @@ export default function Home() {
                     </h3>
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold tabular-nums">$0</span>
-                      <span style={{ color: "#bbcabf" }}>/month</span>
+                      <span style={{ color: "var(--on-surface-variant)" }}>/month</span>
                     </div>
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
                     {["Track 2–3 cards", "Basic reminders", "12-month rule tracking"].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
-                        <Check className="h-5 w-5 shrink-0" style={{ color: "#4edea3" }} />
+                        <Check className="h-5 w-5 shrink-0" style={{ color: "var(--primary)" }} />
                         {f}
                       </li>
                     ))}
@@ -730,7 +730,7 @@ export default function Home() {
                     </h3>
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold tabular-nums">$9.99</span>
-                      <span style={{ color: "#bbcabf" }}>/month</span>
+                      <span style={{ color: "var(--on-surface-variant)" }}>/month</span>
                     </div>
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
@@ -743,7 +743,7 @@ export default function Home() {
                       "Priority support",
                     ].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
-                        <Check className="h-5 w-5 shrink-0" style={{ color: "#4edea3" }} />
+                        <Check className="h-5 w-5 shrink-0" style={{ color: "var(--primary)" }} />
                         <strong>{f}</strong>
                       </li>
                     ))}
@@ -759,15 +759,15 @@ export default function Home() {
                   >
                     Start 7-Day Trial
                   </a>
-                  <p className="mt-3 text-center text-xs" style={{ color: "#bbcabf" }}>
+                  <p className="mt-3 text-center text-xs" style={{ color: "var(--on-surface-variant)" }}>
                     Then $9.99/month • Cancel anytime
                   </p>
                 </div>
               </div>
 
               <div className="text-center">
-                <p className="flex items-center justify-center gap-2 text-sm" style={{ color: "#dfe2f3" }}>
-                  <Lightbulb className="h-5 w-5" style={{ color: "#4edea3" }} />
+                <p className="flex items-center justify-center gap-2 text-sm" style={{ color: "var(--on-surface)" }}>
+                  <Lightbulb className="h-5 w-5" style={{ color: "var(--primary)" }} />
                   <span>
                     <strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)
                   </span>
@@ -779,7 +779,7 @@ export default function Home() {
 
         {/* Beta-Only */}
         <BetaOnly>
-          <section className="px-8 py-24" style={{ backgroundColor: "#171b28" }}>
+          <section className="px-8 py-24" style={{ backgroundColor: "var(--surface)" }}>
             <div className="mx-auto max-w-3xl space-y-6 text-center">
               <div
                 className="inline-flex items-center gap-2 rounded-full px-6 py-3"
@@ -789,8 +789,8 @@ export default function Home() {
                   backdropFilter: "blur(12px)",
                 }}
               >
-                <Lock className="h-5 w-5" style={{ color: "#4edea3" }} />
-                <span className="text-sm font-semibold" style={{ color: "#4edea3" }}>
+                <Lock className="h-5 w-5" style={{ color: "var(--primary)" }} />
+                <span className="text-sm font-semibold" style={{ color: "var(--primary)" }}>
                   Private Beta • Invite Only
                 </span>
               </div>
@@ -800,10 +800,10 @@ export default function Home() {
               >
                 Join the Private Beta
               </h2>
-              <p className="text-lg" style={{ color: "#dfe2f3" }}>
+              <p className="text-lg" style={{ color: "var(--on-surface)" }}>
                 We&apos;re testing Reward Relay with a small group of Australian churners. During the
                 private beta, all features are{" "}
-                <strong style={{ color: "#4edea3" }}>completely free</strong>.
+                <strong style={{ color: "var(--primary)" }}>completely free</strong>.
               </p>
               <div className="grid gap-4 pt-4 text-left md:grid-cols-2">
                 {[
@@ -821,10 +821,10 @@ export default function Home() {
                     }}
                   >
                     <div className="flex items-start gap-3">
-                      <Check className="mt-1 h-5 w-5 shrink-0" style={{ color: "#4edea3" }} />
+                      <Check className="mt-1 h-5 w-5 shrink-0" style={{ color: "var(--primary)" }} />
                       <div>
                         <p className="font-semibold text-white">{b.title}</p>
-                        <p className="mt-1 text-sm" style={{ color: "#bbcabf" }}>{b.body}</p>
+                        <p className="mt-1 text-sm" style={{ color: "var(--on-surface-variant)" }}>{b.body}</p>
                       </div>
                     </div>
                   </div>
@@ -865,7 +865,7 @@ export default function Home() {
                 className="relative rounded-2xl p-8 italic"
                 style={{
                   border: "1px solid rgba(60, 74, 66, 0.1)",
-                  color: "#bbcabf",
+                  color: "var(--on-surface-variant)",
                 }}
               >
                 <span
@@ -888,7 +888,7 @@ export default function Home() {
                     </p>
                     <p
                       className="text-xs font-bold uppercase tracking-wider"
-                      style={{ color: "#4edea3" }}
+                      style={{ color: "var(--primary)" }}
                     >
                       {t.role}
                     </p>
@@ -919,7 +919,7 @@ export default function Home() {
             >
               Ready to Master the Churn?
             </h2>
-            <p className="mx-auto mb-12 max-w-2xl text-lg" style={{ color: "#bbcabf" }}>
+            <p className="mx-auto mb-12 max-w-2xl text-lg" style={{ color: "var(--on-surface-variant)" }}>
               Stop leaving points on the table. Join 5,000+ Aussies who have optimized their credit
               card game with precision.
             </p>
@@ -949,7 +949,7 @@ export default function Home() {
         </section>
 
         {/* FAQ */}
-        <section className="px-8 py-24" style={{ backgroundColor: "#171b28" }}>
+        <section className="px-8 py-24" style={{ backgroundColor: "var(--surface)" }}>
           <div className="mx-auto max-w-3xl space-y-8">
             <h2
               className="text-center text-3xl font-bold sm:text-4xl"
@@ -989,12 +989,12 @@ export default function Home() {
                     {faq.q}
                     <span
                       className="transition-transform group-open:rotate-180"
-                      style={{ color: "#4edea3" }}
+                      style={{ color: "var(--primary)" }}
                     >
                       ▼
                     </span>
                   </summary>
-                  <p className="px-6 pb-6 text-sm" style={{ color: "#bbcabf" }}>{faq.a}</p>
+                  <p className="px-6 pb-6 text-sm" style={{ color: "var(--on-surface-variant)" }}>{faq.a}</p>
                 </details>
               ))}
 
@@ -1008,11 +1008,11 @@ export default function Home() {
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between p-6 text-lg font-semibold text-white">
                     What happens after the 7-day free trial?
-                    <span className="transition-transform group-open:rotate-180" style={{ color: "#4edea3" }}>
+                    <span className="transition-transform group-open:rotate-180" style={{ color: "var(--primary)" }}>
                       ▼
                     </span>
                   </summary>
-                  <p className="px-6 pb-6 text-sm" style={{ color: "#bbcabf" }}>
+                  <p className="px-6 pb-6 text-sm" style={{ color: "var(--on-surface-variant)" }}>
                     After 7 days, you&apos;ll be charged $9.99/month. You can cancel anytime before the
                     trial ends with no charge. No credit card tricks — just honest billing.
                   </p>
@@ -1027,7 +1027,7 @@ export default function Home() {
       <footer
         className="w-full py-16"
         style={{
-          backgroundColor: "#0f131f",
+          backgroundColor: "var(--background)",
           borderTop: "1px solid rgba(30, 41, 59, 0.2)",
         }}
       >
@@ -1035,7 +1035,7 @@ export default function Home() {
           <div className="flex flex-col items-center gap-2">
             <div
               className="text-2xl font-bold tracking-tighter"
-              style={{ color: "#4edea3", fontFamily: "var(--font-grotesk)" }}
+              style={{ color: "var(--primary)", fontFamily: "var(--font-grotesk)" }}
             >
               Reward Relay
             </div>
