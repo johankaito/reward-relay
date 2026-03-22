@@ -147,6 +147,7 @@ jobs:
 
       - name: Deploy to Vercel (staging preview)
         id: deploy
+        working-directory: app
         run: |
           DEPLOY_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
           echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
