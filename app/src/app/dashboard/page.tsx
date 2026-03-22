@@ -96,11 +96,28 @@ export default function DashboardPage() {
   const stats = useMemo(() => {
     const active = cards.filter((c) => c.status === "active").length
     const pending = cards.filter((c) => c.status === "pending").length
-    return { active, pending, total: cards.length }
-  }, [cards])
+    const bonusReady = cards.filter((c) => c.status === "active" && !c.bonus_earned).length
+
+    const catalogById = new Map(catalogCards.map((c) => [c.id, c]))
+    const now = new Date()
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+
+    let totalPoints = 0
+    let monthlyPoints = 0
+    for (const uc of cards) {
+      if (!uc.bonus_earned || !uc.card_id) continue
+      const pts = catalogById.get(uc.card_id)?.welcome_bonus_points ?? 0
+      totalPoints += pts
+      if (uc.bonus_earned_at && new Date(uc.bonus_earned_at) >= monthStart) {
+        monthlyPoints += pts
+      }
+    }
+
+    return { active, pending, total: cards.length, bonusReady, totalPoints, monthlyPoints }
+  }, [cards, catalogCards])
 
   const cancelAlerts = useMemo(() => {
-    const now = Date.now()
+    const now = new Date().getTime()
     return cards.filter((c) => {
       if (!c.cancellation_date) return false
       const daysLeft = (new Date(c.cancellation_date).getTime() - now) / 86_400_000
@@ -139,8 +156,8 @@ export default function DashboardPage() {
       <AppShell>
         <div className="space-y-5">
           <div className="h-14 animate-pulse rounded-xl bg-[#1b1f2c]" />
-          <div className="grid grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {[1, 2, 3, 4].map((i) => (
               <div key={i} className="h-20 animate-pulse rounded-xl bg-[#1b1f2c]" />
             ))}
           </div>
@@ -176,23 +193,20 @@ export default function DashboardPage() {
         )}
 
         {/* Hero metric */}
-        <div className="rounded-2xl bg-[#1b1f2c] p-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
+        <div className="rounded-2xl bg-surface-container p-8">
+          <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
             {displayName ? `Hey, ${displayName}` : "Dashboard"}
           </p>
-          <div className="mt-2 flex items-baseline gap-4">
-            <span className="font-headline text-5xl font-bold tabular-nums tracking-tighter text-[#4edea3]">
+          <div className="mt-3 flex items-baseline gap-4">
+            <span className="font-headline text-6xl font-extrabold tabular-nums tracking-tighter text-primary">
               {stats.active}
             </span>
-            <span className="text-sm font-medium text-slate-400">active cards tracked</span>
+            <span className="text-base text-on-surface-variant">cards working for you</span>
           </div>
-          <p className="mt-1 text-xs text-slate-500">
-            {stats.total} total · {stats.pending} pending
-          </p>
           <Button
             size="sm"
-            className="mt-5 rounded-full font-semibold text-[#003824] shadow-sm"
-            style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
+            className="mt-6 rounded-full font-semibold text-on-primary shadow-sm"
+            style={{ background: "var(--gradient-cta)" }}
             onClick={() => router.push("/cards")}
           >
             <CreditCard className="mr-1.5 h-3.5 w-3.5" />
@@ -201,17 +215,16 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {[
-            { label: "Active cards", value: stats.active },
-            { label: "Pending", value: stats.pending },
-            { label: "Total tracked", value: stats.total },
+            { label: "Total Points", value: stats.totalPoints >= 1000 ? `${Math.round(stats.totalPoints / 1000)}k` : stats.totalPoints.toString() },
+            { label: "Monthly Earning", value: stats.monthlyPoints >= 1000 ? `${Math.round(stats.monthlyPoints / 1000)}k` : stats.monthlyPoints.toString() },
+            { label: "Cards Active", value: stats.active.toString() },
+            { label: "Bonus Ready", value: stats.bonusReady.toString() },
           ].map(({ label, value }) => (
-            <div key={label} className="rounded-2xl bg-[#1b1f2c] px-5 py-4">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                {label}
-              </p>
-              <p className="mt-1 text-3xl font-bold tabular-nums text-[#dfe2f3]">{value}</p>
+            <div key={label} className="rounded-2xl bg-surface-container p-4">
+              <p className="text-xs text-on-surface-variant">{label}</p>
+              <p className="mt-1 font-mono tabular-nums text-xl text-primary">{value}</p>
             </div>
           ))}
         </div>
