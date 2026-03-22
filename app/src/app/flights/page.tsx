@@ -212,10 +212,12 @@ export default function FlightsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">
             Rewards
           </p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">Award Flights</h1>
+          <h1 className="mt-1 font-headline text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
+            Award Flights
+          </h1>
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
             What you can book with your points
           </p>
@@ -429,28 +431,36 @@ function RouteCard({
   route: RouteWithBalance
   accent: 'green' | 'amber' | 'default'
 }) {
-  const borderClass =
+  const accentBorder =
     accent === 'green'
-      ? 'border-green-200 bg-[var(--surface)]'
+      ? 'rgba(78, 222, 163, 0.2)'
       : accent === 'amber'
-        ? 'border-amber-200 bg-[var(--surface)]'
-        : 'border-[var(--border-default)] bg-[var(--surface)]'
+        ? 'rgba(251, 191, 36, 0.2)'
+        : 'rgba(255,255,255,0.05)'
+
+  const programGradient =
+    route.program === 'qff'
+      ? 'linear-gradient(135deg, #c0392b 0%, #8e0000 100%)'
+      : 'linear-gradient(135deg, #1a56db 0%, #0a2e7a 100%)'
 
   return (
-    <Card className={`border shadow-sm ${borderClass}`}>
+    <div
+      className="glass-panel rounded-2xl overflow-hidden"
+      style={{ borderColor: accentBorder }}
+    >
+      {/* Airline gradient header bar */}
+      <div
+        className="px-4 py-2 flex items-center justify-between"
+        style={{ background: programGradient }}
+      >
+        <span className="text-xs font-bold uppercase tracking-widest text-white/90">
+          {PROGRAM_LABELS[route.program] ?? route.program}
+        </span>
+        <span className="rounded-full bg-white/15 px-2 py-0.5 text-xs font-medium text-white/90">
+          {CABIN_LABELS[route.cabin_class] ?? route.cabin_class}
+        </span>
+      </div>
       <CardContent className="space-y-3 p-4">
-        {/* Program + cabin badges */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-[var(--text-secondary)]">
-            {PROGRAM_LABELS[route.program] ?? route.program}
-          </span>
-          <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${CABIN_STYLES[route.cabin_class] ?? CABIN_STYLES.economy}`}
-          >
-            {CABIN_LABELS[route.cabin_class] ?? route.cabin_class}
-          </span>
-        </div>
-
         {/* Route */}
         <div>
           <p className="text-base font-semibold text-[var(--text-primary)]">
@@ -496,6 +506,6 @@ function RouteCard({
           </Button>
         )}
       </CardContent>
-    </Card>
+    </div>
   )
 }
