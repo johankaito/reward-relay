@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plane, ExternalLink, Search } from 'lucide-react'
+import { Plane, ExternalLink, Search, MapPin, PlaneLanding, Calendar } from 'lucide-react'
 
 import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/button'
@@ -227,14 +227,69 @@ export default function FlightsPage() {
             {/* Route Search — Qantas award pricing */}
             {awardRoutes.length > 0 && (
               <div className="space-y-3">
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-                  <Input
-                    value={routeSearch}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    placeholder="Search by IATA (SYD, LHR) or city name (Sydney, London)…"
-                    className="rounded-full pl-10"
-                  />
+                {/* Glass-card 4-field search form */}
+                <div className="glass-card rounded-2xl p-3 flex flex-col lg:flex-row gap-3 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+                  <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {/* Origin */}
+                    <div
+                      className={`bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border ${originFilter !== 'all' ? 'border-primary/40' : 'border-white/5'}`}
+                      onClick={() => setOriginFilter(originFilter === 'all' ? 'SYD' : originFilter === 'SYD' ? 'MEL' : originFilter === 'MEL' ? 'BNE' : 'all')}
+                    >
+                      <label className="block text-[10px] uppercase tracking-[0.15em] text-primary font-bold mb-1.5 opacity-80 cursor-pointer">Origin</label>
+                      <div className="flex items-center gap-3">
+                        <MapPin className="w-5 h-5 text-primary/70 shrink-0" />
+                        <span className="font-bold text-on-surface text-lg">
+                          {originFilter === 'all' ? 'Any' : originFilter}
+                        </span>
+                      </div>
+                    </div>
+                    {/* Destination (search) */}
+                    <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+                      <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5 cursor-pointer">Destination</label>
+                      <div className="flex items-center gap-3">
+                        <PlaneLanding className="w-5 h-5 text-slate-500 shrink-0" />
+                        <input
+                          value={routeSearch}
+                          onChange={(e) => handleSearch(e.target.value)}
+                          placeholder="LHR, Tokyo…"
+                          className="bg-transparent font-bold text-on-surface text-base placeholder:text-slate-600 focus:outline-none w-full"
+                        />
+                      </div>
+                    </div>
+                    {/* Cabin Class */}
+                    <div
+                      className={`bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border ${cabinFilter !== 'all' ? 'border-primary/40' : 'border-white/5'}`}
+                      onClick={() => setCabinFilter(cabinFilter === 'all' ? 'business' : cabinFilter === 'business' ? 'first' : cabinFilter === 'first' ? 'economy' : 'all')}
+                    >
+                      <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5 cursor-pointer">Cabin Class</label>
+                      <div className="flex items-center gap-3">
+                        <Plane className="w-5 h-5 text-slate-500 shrink-0" />
+                        <span className="font-bold text-on-surface text-lg capitalize">
+                          {cabinFilter === 'all' ? 'Any Cabin' : cabinFilter}
+                        </span>
+                      </div>
+                    </div>
+                    {/* Program */}
+                    <div
+                      className={`bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border ${programFilter !== 'all' ? 'border-primary/40' : 'border-white/5'}`}
+                      onClick={() => setProgramFilter(programFilter === 'all' ? 'qff' : programFilter === 'qff' ? 'velocity' : 'all')}
+                    >
+                      <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5 cursor-pointer">Program</label>
+                      <div className="flex items-center gap-3">
+                        <Calendar className="w-5 h-5 text-slate-500 shrink-0" />
+                        <span className="font-bold text-on-surface text-lg">
+                          {programFilter === 'all' ? 'All Programs' : PROGRAM_LABELS[programFilter]}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleSearch(routeSearch)}
+                    className="bg-primary text-[#003824] font-black px-8 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(78,222,163,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 lg:flex-col lg:py-4 whitespace-nowrap"
+                  >
+                    <Search className="w-4 h-4" />
+                    <span className="tracking-widest text-xs uppercase">Find Rewards</span>
+                  </button>
                 </div>
 
                 {/* Search results — only when user has typed */}
@@ -310,56 +365,9 @@ export default function FlightsPage() {
               </div>
             )}
 
-            {/* Filters — horizontal scrollable chip row */}
+            {/* Amex MR toggle */}
             {hasBalances && (
-              <div className="mb-8 space-y-2">
-                <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-1">
-                  {/* Program chips */}
-                  {(['all', 'qff', 'velocity'] as ProgramFilter[]).map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setProgramFilter(v)}
-                      className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
-                        programFilter === v
-                          ? 'bg-[var(--primary)] text-[var(--on-primary)]'
-                          : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
-                      }`}
-                    >
-                      {v === 'all' ? 'All programs' : v === 'qff' ? 'Qantas FF' : 'Velocity'}
-                    </button>
-                  ))}
-                  <span className="mx-1 self-center text-white/10">|</span>
-                  {/* Cabin chips */}
-                  {(['all', 'economy', 'business', 'first'] as CabinFilter[]).map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setCabinFilter(v)}
-                      className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
-                        cabinFilter === v
-                          ? 'bg-[var(--primary)] text-[var(--on-primary)]'
-                          : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
-                      }`}
-                    >
-                      {v === 'all' ? 'All cabins' : v}
-                    </button>
-                  ))}
-                  <span className="mx-1 self-center text-white/10">|</span>
-                  {/* Origin chips */}
-                  {(['all', 'SYD', 'MEL', 'BNE'] as OriginFilter[]).map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setOriginFilter(v)}
-                      className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
-                        originFilter === v
-                          ? 'bg-[var(--primary)] text-[var(--on-primary)]'
-                          : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
-                      }`}
-                    >
-                      {v === 'all' ? 'All origins' : v}
-                    </button>
-                  ))}
-                </div>
-                {/* Amex MR toggle */}
+              <div className="mb-8">
                 <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/5 bg-surface-container px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:bg-surface-container-highest">
                   <input
                     type="checkbox"
