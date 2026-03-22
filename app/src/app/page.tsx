@@ -77,8 +77,7 @@ export default function Home() {
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
               style={{ color: "#bbcabf" }}>
-              The high-stakes command center for credit card optimization and point maximization.
-              Orchestrate your credit portfolio with the precision of a master.
+              Track every card. Earn every bonus. Know when to cancel.
             </p>
 
             {/* CTAs */}
@@ -92,36 +91,40 @@ export default function Home() {
                   boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
                 }}
               >
-                Join the Elite
+                Get started free
               </a>
-              <BetaGate>
-                <a
-                  href="/signup"
-                  className="w-full rounded-full border px-10 py-4 text-lg font-bold transition-colors hover:bg-white/10 md:w-auto"
-                  style={{
-                    borderColor: "rgba(60, 74, 66, 0.4)",
-                    background: "rgba(27, 31, 44, 0.6)",
-                    backdropFilter: "blur(20px)",
-                  }}
-                >
-                  Create Account
-                </a>
-              </BetaGate>
+              <a
+                href="#how-it-works"
+                className="w-full rounded-full border px-10 py-4 text-lg font-bold transition-colors hover:bg-white/10 md:w-auto"
+                style={{
+                  borderColor: "rgba(78, 222, 163, 0.25)",
+                  background: "rgba(27, 31, 44, 0.6)",
+                  backdropFilter: "blur(20px)",
+                  color: "#dfe2f3",
+                }}
+              >
+                See how it works
+              </a>
             </div>
 
-            {/* Trust signals */}
+            {/* Social proof row */}
             <div className="mt-20 border-t pt-10" style={{ borderColor: "rgba(60, 74, 66, 0.15)" }}>
-              <p className="mb-6 text-sm font-medium uppercase tracking-widest" style={{ color: "#bbcabf" }}>
-                Trusted by 5,000+ Aussie Points Hackers
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-12 opacity-30 transition-all duration-500 hover:opacity-60">
-                {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((b) => (
-                  <div
-                    key={b}
-                    className="text-2xl font-bold"
-                    style={{ fontFamily: "var(--font-grotesk)" }}
-                  >
-                    {b}
+              <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
+                {[
+                  { value: "2,847", label: "cards tracked" },
+                  { value: "$1.2M", label: "in bonuses earned" },
+                  { value: "840", label: "members" },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <div
+                      className="text-3xl font-extrabold tabular-nums"
+                      style={{ color: "#4edea3", fontFamily: "var(--font-grotesk)" }}
+                    >
+                      {stat.value}
+                    </div>
+                    <div className="mt-1 text-sm" style={{ color: "#bbcabf" }}>
+                      {stat.label}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -130,59 +133,65 @@ export default function Home() {
         </section>
 
         {/* How it Works */}
-        <section className="px-8 py-24" style={{ backgroundColor: "#171b28" }}>
-          <div className="mx-auto max-w-4xl">
+        <section id="how-it-works" className="px-8 py-24" style={{ backgroundColor: "#171b28" }}>
+          <div className="mx-auto max-w-5xl">
             <div className="mb-16 text-center">
+              <p className="mb-3 text-xs font-bold uppercase tracking-widest" style={{ color: "#4edea3" }}>
+                How it works
+              </p>
               <h2
-                className="mb-4 text-4xl font-extrabold"
+                className="mb-4 text-4xl font-extrabold tracking-tight"
                 style={{ fontFamily: "var(--font-grotesk)" }}
               >
-                How it Works
+                Three steps to maximize every card
               </h2>
-              <div className="mx-auto h-1.5 w-16 rounded-full" style={{ backgroundColor: "#4edea3" }} />
+              <div className="mx-auto h-1 w-12 rounded-full" style={{ backgroundColor: "#4edea3" }} />
             </div>
 
-            <div className="space-y-16">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {[
                 {
-                  n: "1",
-                  title: "Track Your Portfolio",
-                  body: "Add your credit cards, application dates, and annual fees. We calculate the 12-month rule and cancellation windows automatically.",
+                  icon: <BarChart3 className="h-7 w-7" />,
+                  step: "01",
+                  title: "Track",
+                  body: "Add every card, fee, and application date. We automatically calculate your 12-month rule and cancellation windows.",
                 },
                 {
-                  n: "2",
-                  title: "Algorithm Audit",
-                  body: "Our engine analyses your spending patterns and eligibility against 500+ card offers to surface your optimal next move.",
+                  icon: <Zap className="h-7 w-7" />,
+                  step: "02",
+                  title: "Earn",
+                  body: "Hit every bonus threshold on time. Real-time spend tracking against your minimum spend goals.",
                 },
                 {
-                  n: "3",
-                  title: "Execute & Conquer",
-                  body: "Get real-time reminders on when to spend, when to apply, and when to cancel — keeping your credit score pristine.",
+                  icon: <Plane className="h-7 w-7" />,
+                  step: "03",
+                  title: "Redeem",
+                  body: "See exactly what award flights your points unlock — and the smartest moment to book or transfer.",
                 },
               ].map((step) => (
-                <div key={step.n} className="flex flex-col items-start gap-8 md:flex-row">
+                <div
+                  key={step.step}
+                  className="glass-panel rounded-2xl p-8"
+                  style={{ borderColor: "rgba(78, 222, 163, 0.08)" }}
+                >
                   <div
-                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border text-2xl font-bold"
-                    style={{
-                      borderColor: "rgba(78, 222, 163, 0.2)",
-                      background: "rgba(16, 185, 129, 0.15)",
-                      color: "#4edea3",
-                      fontFamily: "var(--font-grotesk)",
-                    }}
+                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
+                    style={{ background: "rgba(78, 222, 163, 0.12)", color: "#4edea3" }}
                   >
-                    {step.n}
+                    {step.icon}
                   </div>
-                  <div>
-                    <h3
-                      className="mb-3 text-2xl font-bold"
-                      style={{ fontFamily: "var(--font-grotesk)" }}
-                    >
-                      {step.title}
-                    </h3>
-                    <p className="text-lg leading-relaxed" style={{ color: "#bbcabf" }}>
-                      {step.body}
-                    </p>
-                  </div>
+                  <p className="mb-1 text-xs font-bold uppercase tracking-widest" style={{ color: "#4edea3" }}>
+                    {step.step}
+                  </p>
+                  <h3
+                    className="mb-3 text-xl font-bold"
+                    style={{ fontFamily: "var(--font-grotesk)" }}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: "#bbcabf" }}>
+                    {step.body}
+                  </p>
                 </div>
               ))}
             </div>
