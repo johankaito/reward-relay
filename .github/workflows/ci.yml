@@ -219,6 +219,7 @@ jobs:
         run: |
           vercel promote ${{ needs.deploy-staging.outputs.staging_url }} \
             --token=${{ secrets.VERCEL_TOKEN }} \
+            --scope=${{ secrets.VERCEL_ORG_ID }} \
             --yes
           echo "✅ Promoted ${{ needs.deploy-staging.outputs.staging_url }} to production"
         env:
