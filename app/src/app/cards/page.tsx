@@ -32,7 +32,7 @@ function CatalogCardThumb({ card }: { card: CardRecord }) {
       <div className="relative z-10">
         <p className={`font-headline text-sm font-bold tracking-wide ${textColor}`}>{card.name}</p>
         {card.welcome_bonus_points ? (
-          <p className={`mt-0.5 text-[10px] ${textMuted}`}>
+          <p className={`mt-0.5 tabular-nums text-[10px] ${textMuted}`}>
             {card.welcome_bonus_points.toLocaleString()} {card.points_currency ?? "pts"}
           </p>
         ) : null}
