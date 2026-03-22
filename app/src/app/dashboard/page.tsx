@@ -11,9 +11,6 @@ import { ProGate } from "@/components/ui/ProGate"
 import { WalletCard } from "@/components/ui/WalletCard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { StatCard } from "@/components/ui/stat-card"
-import { ActivityItem } from "@/components/ui/activity-item"
-import { ProgressBar } from "@/components/ui/progress-bar"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
@@ -203,76 +200,79 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Alert strip — cancellations within 30 days */}
         {cancelAlerts.length > 0 && (
-          <div
-            className="flex items-center justify-between gap-4 rounded-r-xl border-l-4 px-4 py-3"
-            style={{
-              borderColor: "rgba(78,222,163,0.6)",
-              background: "rgba(78,222,163,0.05)",
-            }}
-          >
+          <div className="bg-surface-container-high/50 border-l-4 border-primary p-4 rounded-r-lg flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <AlertTriangle className="h-4 w-4 shrink-0 text-primary" />
-              <p className="text-sm font-medium text-on-surface">
+              <p className="text-sm font-medium">
                 <span className="font-semibold text-primary">{cancelAlerts[0].name}</span>{" "}
-                cancels {cancelAlerts[0].cancellation_date} — take action before the date.
+                cancels {cancelAlerts[0].cancellation_date}.{" "}
+                <Link href={`/dashboard/cards/${cancelAlerts[0].id}`} className="text-primary cursor-pointer hover:underline">
+                  Take action before the date.
+                </Link>
               </p>
             </div>
-            <Link href={`/dashboard/cards/${cancelAlerts[0].id}`}>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="shrink-0 rounded-full text-primary hover:bg-primary/10 hover:text-primary"
-              >
-                Take action
-              </Button>
-            </Link>
           </div>
         )}
 
-        {/* Hero metric */}
-        <div className="rounded-2xl bg-surface-container p-8">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-            {displayName ? `Hey, ${displayName}` : "Dashboard"}
-          </p>
-          {stats.portfolioValue > 0 ? (
-            <div className="mt-3 flex items-baseline gap-3">
-              <span className="font-headline text-[48px] font-extrabold tabular-nums tracking-tighter text-primary md:text-6xl">
-                ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-              </span>
-              <span className="text-base text-on-surface-variant">total portfolio value</span>
+        {/* Hero metric + quick stats */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-slate-500 text-sm font-semibold uppercase tracking-widest">
+                {displayName ? `Hey, ${displayName}` : "Total Valuation (AUD)"}
+              </h2>
+              {stats.portfolioValue > 0 ? (
+                <div className="flex items-baseline gap-4">
+                  <span className="text-[48px] md:text-[64px] font-extrabold font-headline text-on-surface tabular-nums tracking-tighter">
+                    ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                  </span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20">total portfolio value</span>
+                </div>
+              ) : (
+                <div className="flex items-baseline gap-4">
+                  <span className="text-[48px] md:text-[64px] font-extrabold font-headline text-on-surface tabular-nums tracking-tighter">
+                    {stats.active}
+                  </span>
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20">
+                    {stats.active === 1 ? "card" : "cards"} working for you
+                  </span>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="mt-3 flex items-baseline gap-4">
-              <span className="font-headline text-[48px] font-extrabold tabular-nums tracking-tighter text-primary md:text-6xl">
-                {stats.active}
-              </span>
-              <span className="text-base text-on-surface-variant">
-                {stats.active === 1 ? "card" : "cards"} working for you
-              </span>
-            </div>
-          )}
-          <Button
-            size="sm"
-            className="mt-6 rounded-full font-semibold text-on-primary shadow-sm"
-            style={{ background: "var(--gradient-cta)" }}
-            onClick={() => router.push("/cards")}
-          >
-            <CreditCard className="mr-1.5 h-3.5 w-3.5" />
-            Add card
-          </Button>
-        </div>
 
-        {/* Stats row */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {[
-            { label: "Total Points", value: stats.totalPoints >= 1000 ? `${Math.round(stats.totalPoints / 1000)}k` : stats.totalPoints.toString() },
-            { label: "Monthly Earning", value: stats.monthlyPoints >= 1000 ? `${Math.round(stats.monthlyPoints / 1000)}k` : stats.monthlyPoints.toString() },
-            { label: "Cards Active", value: stats.active.toString() },
-            { label: "Bonus Ready", value: stats.bonusReady.toString() },
-          ].map(({ label, value }) => (
-            <StatCard key={label} label={label} value={value} accent />
-          ))}
-        </div>
+            {/* Quick Stats Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: "Points Sum", value: stats.totalPoints >= 1000 ? `${Math.round(stats.totalPoints / 1000)}k` : stats.totalPoints.toString() },
+                { label: "Monthly Earning", value: stats.monthlyPoints >= 1000 ? `${Math.round(stats.monthlyPoints / 1000)}k` : stats.monthlyPoints.toString() },
+                { label: "Cards Active", value: stats.active.toString() },
+                { label: "Bonus Ready", value: stats.bonusReady.toString() },
+              ].map(({ label, value }) => (
+                <div key={label} className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+                  <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">{label}</span>
+                  <div className="text-xl font-bold tabular-nums">{value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Secondary Hero Visual */}
+          <div className="bg-gradient-to-br from-[#1b1f2c] to-[#0a0e1a] p-8 rounded-xl border border-white/5 relative overflow-hidden flex flex-col justify-end">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-10 -mt-10" />
+            <h3 className="text-xl font-bold mb-2">Next Flight Opportunity</h3>
+            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+              {stats.totalPoints > 0
+                ? `You have ${stats.totalPoints.toLocaleString()} points — potentially enough for a redemption.`
+                : "Start earning points to unlock your next redemption opportunity."}
+            </p>
+            <button
+              onClick={() => router.push("/flights")}
+              className="bg-white/5 hover:bg-white/10 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all border border-white/10 self-start"
+            >
+              Explore Deals
+            </button>
+          </div>
+        </section>
 
         {/* ── Bonus tracker bento ── */}
         {bonusChasingCards.length > 0 && (
@@ -289,7 +289,7 @@ export default function DashboardPage() {
                   ? Math.max(0, Math.ceil((new Date(card.bonus_spend_deadline).getTime() - Date.now()) / 86400000))
                   : null
                 return (
-                  <div key={card.id} className="glass-panel rounded-2xl p-5 transition-colors duration-200 hover:border-primary/30">
+                  <div key={card.id} className="bg-surface-container p-8 rounded-xl border border-white/5 flex flex-col justify-between group hover:border-primary/30 transition-all duration-300">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="text-xs font-bold text-on-surface">{card.bank} {card.name}</p>
@@ -308,7 +308,12 @@ export default function DashboardPage() {
                         <span>${Math.round(card.current_spend ?? 0).toLocaleString()} spent</span>
                         <span>{pct}%</span>
                       </div>
-                      <ProgressBar value={pct} />
+                      <div className="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-primary-container to-primary rounded-full"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
                       <p className="mt-1 text-[10px] text-on-surface-variant">
                         of ${card.spendTarget.toLocaleString()} target
                       </p>
@@ -318,7 +323,7 @@ export default function DashboardPage() {
               })}
               <button
                 onClick={() => router.push("/spending")}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/20 p-5 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
+                className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-primary/20 p-8 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
               >
                 <CreditCard className="h-4 w-4" />
                 Track new bonus
@@ -327,108 +332,120 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* ── 3D wallet card stack ── */}
-        <div>
-          <div className="mb-4 flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-              Your Cards
-            </p>
-            <Link href="/cards">
-              <Button size="sm" variant="ghost" className="rounded-full text-on-surface-variant hover:text-on-surface">
-                Browse catalog
-              </Button>
-            </Link>
-          </div>
-
-          {cards.length === 0 ? (
-            <div className="glass-panel flex flex-col items-start gap-3 rounded-2xl p-6">
-              <p className="font-semibold text-on-surface">No cards tracked yet</p>
-              <p className="text-sm text-on-surface-variant">
-                Add your current cards and churn targets to see reminders and eligibility.
+        {/* ── Credit Portfolio ── */}
+        <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="xl:col-span-2 space-y-6">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                Your Cards
               </p>
-              <Button
-                size="sm"
-                onClick={() => router.push("/cards")}
-                className="rounded-full font-semibold text-on-primary"
-                style={{ background: "var(--gradient-cta)" }}
-              >
-                <CreditCard className="mr-1.5 h-3.5 w-3.5" />
-                Browse cards
-              </Button>
+              <Link href="/cards">
+                <Button size="sm" variant="ghost" className="rounded-full text-on-surface-variant hover:text-on-surface">
+                  Browse catalog
+                </Button>
+              </Link>
             </div>
-          ) : (
-            <>
-              {/* Stacked card visual for first 3 */}
-              {cards.filter(c => c.status === "active").length >= 2 ? (
-                <div className="relative mb-6 overflow-x-hidden" style={{ height: 180 }}>
-                  {cards
-                    .filter(c => c.status === "active")
-                    .slice(0, 3)
-                    .reverse()
-                    .map((card, revIdx, arr) => {
-                      const idx = arr.length - 1 - revIdx
-                      const rotations = ["rotate-3", "rotate-1", "-rotate-1"]
-                      const tops = [8, 4, 0]
-                      return (
-                        <div
-                          key={card.id}
-                          className={`absolute inset-x-0 ${rotations[idx] ?? ""} cursor-pointer transition-transform duration-300 hover:-translate-y-2`}
-                          style={{ top: tops[idx] ?? 0, zIndex: idx + 1 }}
-                          onClick={() => handleEditCard(card)}
-                        >
-                          <WalletCard card={card} showProgress />
-                        </div>
-                      )
-                    })}
-                </div>
-              ) : (
-                <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-                  {cards.map((card) => (
-                    <WalletCard key={card.id} card={card} showProgress onClick={() => handleEditCard(card)} />
-                  ))}
-                </div>
-              )}
-              {/* All cards list link when stack shown */}
-              {cards.filter(c => c.status === "active").length >= 2 && (
-                <div className="flex flex-wrap gap-2">
-                  {cards.map((card) => (
-                    <button
-                      key={card.id}
-                      onClick={() => handleEditCard(card)}
-                      className="rounded-full border border-white/5 bg-surface-container px-3 py-1 text-xs font-medium text-on-surface-variant hover:bg-surface-container-high"
-                    >
-                      {card.bank} {card.name}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
 
-        {/* ── Recent points activity feed ── */}
-        {recentEarned.length > 0 && (
-          <div>
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-              Recent Bonuses
-            </p>
-            <div className="glass-panel divide-y divide-white/5 rounded-2xl">
-              {recentEarned.map((card) => {
-                const earnedDate = card.bonus_earned_at
-                  ? new Date(card.bonus_earned_at).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })
-                  : null
-                return (
-                  <ActivityItem
-                    key={card.id}
-                    primary={`${card.bank} ${card.name}`}
-                    secondary={earnedDate ? `Earned ${earnedDate}` : undefined}
-                    value={card.bonusPoints > 0 ? `+${card.bonusPoints.toLocaleString()} pts` : undefined}
-                  />
-                )
-              })}
-            </div>
+            {cards.length === 0 ? (
+              <div className="bg-surface-container rounded-xl border border-white/5 flex flex-col items-start gap-3 p-8">
+                <p className="font-semibold text-on-surface">No cards tracked yet</p>
+                <p className="text-sm text-on-surface-variant">
+                  Add your current cards and churn targets to see reminders and eligibility.
+                </p>
+                <Button
+                  size="sm"
+                  onClick={() => router.push("/cards")}
+                  className="rounded-full font-semibold text-on-primary"
+                  style={{ background: "var(--gradient-cta)" }}
+                >
+                  <CreditCard className="mr-1.5 h-3.5 w-3.5" />
+                  Browse cards
+                </Button>
+              </div>
+            ) : (
+              <>
+                {/* Stacked card visual for first 3 */}
+                {cards.filter(c => c.status === "active").length >= 2 ? (
+                  <div className="relative mb-6 overflow-x-hidden" style={{ height: 220 }}>
+                    {cards
+                      .filter(c => c.status === "active")
+                      .slice(0, 3)
+                      .reverse()
+                      .map((card, revIdx, arr) => {
+                        const idx = arr.length - 1 - revIdx
+                        const stackStyles = [
+                          "absolute top-16 left-0 w-full md:w-[450px] aspect-[1.58/1] rounded-xl bg-gradient-to-br from-[#1d1e22] to-[#343a40] shadow-2xl border border-white/10 p-8 transform -rotate-3 hover:-translate-y-[10px] transition-transform z-10",
+                          "absolute top-8 left-4 w-full md:w-[450px] aspect-[1.58/1] rounded-xl bg-gradient-to-br from-[#4b3c1b] to-[#1c180e] shadow-2xl border border-white/10 p-8 transform rotate-1 z-20",
+                          "absolute top-0 left-8 w-full md:w-[450px] aspect-[1.58/1] rounded-xl bg-gradient-to-br from-[#10b981] to-[#064e3b] shadow-2xl border border-white/20 p-8 transform -rotate-1 z-30",
+                        ]
+                        return (
+                          <div
+                            key={card.id}
+                            className={`${stackStyles[idx] ?? stackStyles[0]} cursor-pointer`}
+                            onClick={() => handleEditCard(card)}
+                          >
+                            <WalletCard card={card} showProgress />
+                          </div>
+                        )
+                      })}
+                  </div>
+                ) : (
+                  <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {cards.map((card) => (
+                      <WalletCard key={card.id} card={card} showProgress onClick={() => handleEditCard(card)} />
+                    ))}
+                  </div>
+                )}
+                {/* All cards list link when stack shown */}
+                {cards.filter(c => c.status === "active").length >= 2 && (
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {cards.map((card) => (
+                      <button
+                        key={card.id}
+                        onClick={() => handleEditCard(card)}
+                        className="rounded-full border border-white/5 bg-surface-container px-3 py-1 text-xs font-medium text-on-surface-variant hover:bg-surface-container-high"
+                      >
+                        {card.bank} {card.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
-        )}
+
+          {/* Recent Points Activity */}
+          {recentEarned.length > 0 && (
+            <div className="space-y-4">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+                Recent Bonuses
+              </p>
+              <div className="bg-surface-container rounded-xl border border-white/5 divide-y divide-white/5 overflow-hidden">
+                {recentEarned.map((card) => {
+                  const earnedDate = card.bonus_earned_at
+                    ? new Date(card.bonus_earned_at).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })
+                    : null
+                  return (
+                    <div key={card.id} className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <CreditCard className="text-primary h-5 w-5" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-on-surface">{card.bank} {card.name}</p>
+                          {earnedDate && <p className="text-xs text-slate-500">Earned {earnedDate}</p>}
+                        </div>
+                      </div>
+                      {card.bonusPoints > 0 && (
+                        <span className="text-sm font-bold text-primary">+{card.bonusPoints.toLocaleString()} pts</span>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </section>
 
         {/* Top recommendation */}
         {topRecommendation && (
