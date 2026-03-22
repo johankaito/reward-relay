@@ -1,17 +1,25 @@
 /**
  * Visual diff tool — screenshots Stitch HTML exports vs live dev server
- * Usage: pnpm tsx tests/visual-diff.ts [page]
- *        pnpm tsx tests/visual-diff.ts landing
- *        pnpm tsx tests/visual-diff.ts  (all pages)
+ * Usage: pnpm visual-diff [page]
+ *        pnpm visual-diff landing
+ *        pnpm visual-diff          (all pages)
  *
  * Output: tests/visual-diff-output/{page}-stitch.png + {page}-live.png
- *
- * After running, pass the screenshot pairs to claude-qa for a visual gap report.
+ * Authenticated pages are handled automatically using TEST_EMAIL / TEST_PASSWORD from .env.local
  */
 
-import puppeteer from "puppeteer"
+import puppeteer, { type Browser, type Page } from "puppeteer"
 import path from "path"
 import fs from "fs"
+
+// Load .env.local so TEST_EMAIL / TEST_PASSWORD are available without extra setup
+const envLocal = path.resolve(__dirname, "../.env.local")
+if (fs.existsSync(envLocal)) {
+  for (const line of fs.readFileSync(envLocal, "utf-8").split("\n")) {
+    const match = line.match(/^([^#=]+)=(.*)$/)
+    if (match) process.env[match[1].trim()] ??= match[2].trim()
+  }
+}
 
 const DESIGN_DIR = path.resolve(__dirname, "../../design/stitch_profit_dashboard_v1")
 const OUTPUT_DIR = path.resolve(__dirname, "visual-diff-output")
@@ -23,54 +31,82 @@ const PAGES = [
     name: "landing",
     stitch: "reward_relay_landing_page_desktop_updated_portfolio/code.html",
     live: "/",
-    waitFor: "networkidle0",
+    auth: false,
   },
   {
     name: "dashboard",
     stitch: "dashboard_desktop/code.html",
     live: "/dashboard",
-    waitFor: "networkidle0",
+    auth: true,
   },
   {
     name: "cards",
     stitch: "card_portfolio_desktop/code.html",
     live: "/cards",
-    waitFor: "networkidle0",
+    auth: true,
   },
   {
     name: "spending",
     stitch: "spend_tracker_interactive_arc/code.html",
     live: "/spending",
-    waitFor: "networkidle0",
+    auth: true,
   },
   {
     name: "profit",
     stitch: "profit_dashboard_desktop/code.html",
     live: "/profit",
-    waitFor: "networkidle0",
+    auth: true,
   },
   {
     name: "flights",
     stitch: "flights_desktop_refined/code.html",
     live: "/flights",
-    waitFor: "networkidle0",
+    auth: true,
   },
 ] as const
 
-async function screenshotPage(
-  browser: Awaited<ReturnType<typeof puppeteer.launch>>,
-  url: string,
-  outputPath: string
-) {
+async function login(browser: Browser): Promise<void> {
+  const email = process.env.TEST_EMAIL
+  const password = process.env.TEST_PASSWORD
+
+  if (!email || !password) {
+    throw new Error("TEST_EMAIL / TEST_PASSWORD not set — check .env.local")
+  }
+
+  console.log(`  🔐 Logging in as ${email}...`)
   const page = await browser.newPage()
   await page.setViewport(VIEWPORT)
+  await page.goto(`${LIVE_BASE}/login`, { waitUntil: "networkidle0", timeout: 30000 })
+
+  // Fill email + password and submit
+  await page.locator('input[type="email"], input[name="email"]').fill(email)
+  await page.locator('input[type="password"], input[name="password"]').fill(password)
+  await page.locator('button[type="submit"]').click()
+
+  // Wait for redirect to dashboard
+  await page.waitForNavigation({ waitUntil: "networkidle0", timeout: 15000 })
+
+  const url = page.url()
+  if (url.includes("/login") || url.includes("/auth")) {
+    throw new Error(`Login failed — still on ${url}. Check credentials in .env.local`)
+  }
+
+  console.log(`  ✓ Logged in — session established`)
+  await page.close()
+}
+
+async function screenshotPage(browser: Browser, url: string, outputPath: string): Promise<void> {
+  const page: Page = await browser.newPage()
+  await page.setViewport(VIEWPORT)
+
   try {
     await page.goto(url, { waitUntil: "networkidle0", timeout: 30000 })
   } catch {
-    // fallback if networkidle0 times out (e.g. SSE/websocket connections)
+    // fallback for pages with persistent connections (SSE, websockets)
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 })
   }
-  // Let animations/fonts settle
+
+  // Let fonts, animations, and data settle
   await new Promise((r) => setTimeout(r, 1500))
   await page.screenshot({ path: outputPath as `${string}.png`, fullPage: true })
   await page.close()
@@ -93,6 +129,12 @@ async function main() {
     args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-gpu"],
   })
 
+  // Log in once if any target page requires auth — Puppeteer shares cookies across pages in same browser
+  const needsAuth = targets.some((t) => t.auth)
+  if (needsAuth) {
+    await login(browser)
+  }
+
   const results: Array<{ name: string; stitch: string; live: string }> = []
 
   for (const target of targets) {
@@ -101,7 +143,7 @@ async function main() {
     const stitchOut = path.join(OUTPUT_DIR, `${target.name}-stitch.png`)
     const liveOut = path.join(OUTPUT_DIR, `${target.name}-live.png`)
 
-    // Stitch HTML export
+    // Stitch HTML export (file://)
     const stitchFile = path.join(DESIGN_DIR, target.stitch)
     if (fs.existsSync(stitchFile)) {
       await screenshotPage(browser, `file://${stitchFile}`, stitchOut)
@@ -117,13 +159,13 @@ async function main() {
 
   await browser.close()
 
-  // Write manifest for qa script to consume
+  // Write manifest for visual-diff-report.ts to consume
   const manifest = path.join(OUTPUT_DIR, "manifest.json")
   fs.writeFileSync(manifest, JSON.stringify(results, null, 2))
 
   console.log(`\n✅  Done. Screenshots in: ${OUTPUT_DIR}`)
   console.log(`   Manifest: ${manifest}`)
-  console.log(`\n   Next: pnpm tsx tests/visual-diff-report.ts`)
+  console.log(`\n   Next: pnpm visual-diff:report`)
 }
 
 main().catch((e) => {
