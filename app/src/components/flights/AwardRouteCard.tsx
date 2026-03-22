@@ -36,10 +36,10 @@ const CABIN_LABELS: Record<string, string> = {
 }
 
 const CABIN_STYLES: Record<string, string> = {
-  economy: 'bg-[var(--surface-strong)] text-[var(--text-secondary)]',
-  premium_economy: 'bg-sky-100 text-sky-700',
-  business: 'bg-blue-100 text-blue-700',
-  first: 'bg-purple-100 text-purple-700',
+  economy: 'bg-white/5 text-on-surface-variant',
+  premium_economy: 'bg-sky-500/15 text-sky-300',
+  business: 'bg-blue-500/15 text-blue-300',
+  first: 'bg-purple-500/15 text-purple-300',
 }
 
 function formatPts(pts: number): string {
@@ -69,15 +69,27 @@ export function AwardRouteCard({ route, centsPerPoint = 2 }: AwardRouteCardProps
   )
 
   return (
-    <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-      <CardContent className="space-y-3 p-4">
+    <Card className="overflow-hidden border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+      {/* Gradient destination header bar */}
+      <div
+        className="flex items-center justify-between px-4 py-2"
+        style={{ background: "linear-gradient(135deg, #1a3a2a 0%, #0f2d24 100%)" }}
+      >
+        <span className="text-xs font-bold uppercase tracking-widest text-primary/90">
+          {route.origin_iata} → {route.destination_iata}
+        </span>
+        <span className="rounded-full px-2 py-0.5 text-xs font-medium text-white/60">
+          {route.distance_miles.toLocaleString('en-AU')} mi
+        </span>
+      </div>
+      <CardContent className="space-y-3 p-6">
         {/* Route header */}
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-base font-semibold text-[var(--text-primary)]">
+            <p className="text-base font-semibold text-on-surface">
               {route.origin_city ?? route.origin_iata} → {route.destination_city ?? route.destination_iata}
             </p>
-            <p className="text-xs text-[var(--text-secondary)]">
+            <p className="text-xs text-on-surface-variant">
               {route.origin_iata}–{route.destination_iata}
               {route.zone !== null && (
                 <>
@@ -96,7 +108,7 @@ export function AwardRouteCard({ route, centsPerPoint = 2 }: AwardRouteCardProps
               {' · '}
               {route.distance_miles.toLocaleString('en-AU')} mi
               {route.is_domestic && (
-                <span className="ml-1 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
                   Domestic
                 </span>
               )}
@@ -111,11 +123,11 @@ export function AwardRouteCard({ route, centsPerPoint = 2 }: AwardRouteCardProps
             return (
               <div
                 key={cabin.key}
-                className={`flex items-center justify-between rounded-lg px-3 py-2 ${
-                  isBestValue
-                    ? 'bg-blue-50 ring-1 ring-blue-200'
-                    : 'bg-[var(--surface-muted)]'
-                }`}
+                className="flex items-center justify-between rounded-lg px-3 py-2"
+                style={{
+                  background: isBestValue ? 'rgba(78,222,163,0.08)' : 'rgba(255,255,255,0.03)',
+                  border: isBestValue ? '1px solid rgba(78,222,163,0.2)' : '1px solid rgba(255,255,255,0.05)',
+                }}
               >
                 <div className="flex items-center gap-2">
                   <span
@@ -124,14 +136,14 @@ export function AwardRouteCard({ route, centsPerPoint = 2 }: AwardRouteCardProps
                     {CABIN_LABELS[cabin.key] ?? cabin.key}
                   </span>
                   {isBestValue && (
-                    <span className="text-xs font-medium text-blue-600">Best value</span>
+                    <span className="text-xs font-medium text-primary">Best value</span>
                   )}
                 </div>
                 <div className="text-right">
-                  <span className="text-sm font-semibold text-[var(--text-primary)]">
+                  <span className="text-sm font-semibold text-on-surface">
                     {formatPts(cabin.pts!)} pts
                   </span>
-                  <span className="ml-2 text-xs text-[var(--text-secondary)]">
+                  <span className="ml-2 text-xs text-on-surface-variant">
                     ({calcValue(cabin.pts!, centsPerPoint)} value)
                   </span>
                 </div>
@@ -142,21 +154,21 @@ export function AwardRouteCard({ route, centsPerPoint = 2 }: AwardRouteCardProps
 
         {/* Dynamic pricing warning */}
         {route.is_dynamic && (
-          <p className="text-xs text-amber-600">
+          <p className="text-xs text-amber-400">
             Dynamic pricing — points shown are minimums. Actual redemptions vary by availability.
           </p>
         )}
 
         {/* Notes / caveats */}
         {route.notes && (
-          <div className="flex items-start gap-1.5 rounded-lg bg-amber-50 px-3 py-2">
-            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" />
-            <p className="text-xs text-amber-700">{route.notes}</p>
+          <div className="flex items-start gap-1.5 rounded-lg px-3 py-2" style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.15)' }}>
+            <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-400" />
+            <p className="text-xs text-amber-300">{route.notes}</p>
           </div>
         )}
 
         {/* Data freshness */}
-        <p className="text-xs text-[var(--text-secondary)]/60">
+        <p className="text-xs text-on-surface-variant/60">
           Data as of {new Date(route.data_last_updated).toLocaleDateString('en-AU', { month: 'short', year: 'numeric' })}
           {' · '}
           <a

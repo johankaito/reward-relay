@@ -203,11 +203,17 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Alert strip — cancellations within 30 days */}
         {cancelAlerts.length > 0 && (
-          <div className="flex items-center justify-between gap-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3">
+          <div
+            className="flex items-center justify-between gap-4 rounded-r-xl border-l-4 px-4 py-3"
+            style={{
+              borderColor: "rgba(78,222,163,0.6)",
+              background: "rgba(78,222,163,0.05)",
+            }}
+          >
             <div className="flex items-center gap-3">
-              <AlertTriangle className="h-4 w-4 shrink-0 text-destructive" />
+              <AlertTriangle className="h-4 w-4 shrink-0 text-primary" />
               <p className="text-sm font-medium text-on-surface">
-                <span className="font-semibold text-destructive">{cancelAlerts[0].name}</span>{" "}
+                <span className="font-semibold text-primary">{cancelAlerts[0].name}</span>{" "}
                 cancels {cancelAlerts[0].cancellation_date} — take action before the date.
               </p>
             </div>
@@ -215,7 +221,7 @@ export default function DashboardPage() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="shrink-0 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+                className="shrink-0 rounded-full text-primary hover:bg-primary/10 hover:text-primary"
               >
                 Take action
               </Button>
@@ -230,14 +236,14 @@ export default function DashboardPage() {
           </p>
           {stats.portfolioValue > 0 ? (
             <div className="mt-3 flex items-baseline gap-3">
-              <span className="font-headline text-6xl font-extrabold tabular-nums tracking-tighter text-primary">
+              <span className="font-headline text-[48px] font-extrabold tabular-nums tracking-tighter text-primary md:text-6xl">
                 ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
               </span>
               <span className="text-base text-on-surface-variant">total portfolio value</span>
             </div>
           ) : (
             <div className="mt-3 flex items-baseline gap-4">
-              <span className="font-headline text-6xl font-extrabold tabular-nums tracking-tighter text-primary">
+              <span className="font-headline text-[48px] font-extrabold tabular-nums tracking-tighter text-primary md:text-6xl">
                 {stats.active}
               </span>
               <span className="text-base text-on-surface-variant">

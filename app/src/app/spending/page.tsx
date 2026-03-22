@@ -553,13 +553,13 @@ export default function SpendingTrackerPage() {
 
                 {/* Arc + stats */}
                 <div className="hidden gap-5 rounded-b-[4rem] md:flex md:flex-row md:items-center">
-                  {/* Arc — 60% width */}
-                  <div className="flex flex-[3] items-center justify-center py-4">
+                  {/* Arc — 40% width */}
+                  <div className="flex flex-[2] items-center justify-center py-4">
                     <SpendArc spent={activeCard.current_spend} target={activeCard.spend_target} />
                   </div>
 
-                  {/* Stats panel — 40% width */}
-                  <div className="glass-panel premium-glow flex flex-[2] flex-col gap-5 rounded-2xl p-6">
+                  {/* Stats panel — 60% width */}
+                  <div className="glass-panel premium-glow flex flex-[3] flex-col gap-5 rounded-2xl p-6">
                     {activeCard.spend_deadline && (
                       <div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
@@ -641,9 +641,22 @@ export default function SpendingTrackerPage() {
                       {transactions[activeCard.id].slice(0, 5).map((txn) => (
                         <div
                           key={txn.id}
-                          className="flex items-center justify-between py-2 text-sm"
+                          className="flex items-center justify-between gap-3 py-2 text-sm"
                         >
-                          <span className="text-on-surface">{txn.description}</span>
+                          <div className="flex items-center gap-3">
+                            <div
+                              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
+                              style={{
+                                background: "rgba(78,222,163,0.1)",
+                                border: "1px solid rgba(78,222,163,0.1)",
+                              }}
+                            >
+                              <span className="text-[10px] font-bold text-primary">
+                                {txn.description?.charAt(0)?.toUpperCase() ?? "·"}
+                              </span>
+                            </div>
+                            <span className="text-on-surface">{txn.description}</span>
+                          </div>
                           <span className="tabular-nums font-medium text-on-surface">
                             {formatCurrency(txn.amount)}
                           </span>

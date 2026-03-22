@@ -319,7 +319,9 @@ export default function ProfitPage() {
             </p>
           </div>
         ) : (
-          <>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+            {/* ── Left col: chart + bento ───────────────────────────── */}
+            <div className="order-2 space-y-6 md:order-2 md:col-span-7">
             {/* ── Hero ──────────────────────────────────────────────── */}
             <div
               className="relative overflow-hidden rounded-2xl bg-surface-container p-8"
@@ -335,7 +337,7 @@ export default function ProfitPage() {
               </p>
               <div className="mt-3 flex flex-wrap items-baseline gap-3">
                 <span
-                  className="tabular-nums text-5xl font-extrabold text-primary"
+                  className="tabular-nums text-5xl font-extrabold text-primary md:text-7xl"
                  
                 >
                   {fmtAud(fyNet)}
@@ -362,30 +364,29 @@ export default function ProfitPage() {
 
               {/* Stat cards */}
               <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="rounded-2xl bg-surface-container p-5" style={{ border: "1px solid rgba(78,222,163,0.12)" }}>
+                <div className="rounded-2xl p-5" style={{ backgroundColor: "#171b28", border: "1px solid rgba(78,222,163,0.12)" }}>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                     Bonuses Earned
                   </p>
-                  <p
-                    className="mt-2 tabular-nums text-2xl font-bold text-primary"
-                   
-                  >
+                  <p className="mt-2 tabular-nums text-2xl font-bold text-primary">
                     +{fmtAud(fyBonus)}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-surface-container p-5" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
+                <div className="rounded-2xl p-5" style={{ backgroundColor: "#171b28", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                     Fees Paid
                   </p>
-                  <p
-                    className="mt-2 tabular-nums text-2xl font-bold text-on-surface-variant"
-                   
-                  >
+                  <p className="mt-2 tabular-nums text-2xl font-bold text-on-surface-variant">
                     -{fmtAud(fyFees)}
                   </p>
                 </div>
               </div>
             </div>
+
+            </div>{/* end right col */}
+
+            {/* ── Left col: chart + bento ───────────────────────────── */}
+            <div className="order-1 space-y-6 md:order-1 md:col-span-5">
 
             {/* ── Bar chart ──────────────────────────────────────────── */}
             {chartData.length > 0 && (
@@ -709,7 +710,8 @@ export default function ProfitPage() {
                 </div>
               </div>
             )}
-          </>
+            </div>
+          </div>
         )}
       </div>
     </AppShell>

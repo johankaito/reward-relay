@@ -58,7 +58,7 @@ export default function Home() {
 
       <main className="relative z-10 flex-1">
         {/* Hero Section */}
-        <section className="flex min-h-[800px] items-center justify-center overflow-hidden px-8 py-20 md:py-28">
+        <section className="flex min-h-[800px] items-center justify-center overflow-hidden px-6 py-20 md:px-20 md:py-28">
           <div className="relative z-10 mx-auto max-w-5xl text-center">
             {/* Badge */}
             <div className="mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest"
@@ -87,7 +87,7 @@ export default function Home() {
                 className="w-full rounded-full px-10 py-4 text-lg font-bold shadow-lg transition-transform hover:scale-105 md:w-auto"
                 style={{
                   background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
-                  color: "#003824",
+                  color: "var(--on-primary)",
                   boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
                 }}
               >
@@ -107,24 +107,15 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Social proof row */}
-            <div className="mt-20 border-t pt-10" style={{ borderColor: "rgba(60, 74, 66, 0.15)" }}>
-              <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
-                {[
-                  { value: "2,847", label: "cards tracked" },
-                  { value: "$1.2M", label: "in bonuses earned" },
-                  { value: "840", label: "members" },
-                ].map((stat) => (
-                  <div key={stat.label} className="text-center">
-                    <div
-                      className="text-3xl font-extrabold tabular-nums"
-                      style={{ color: "var(--primary)", fontFamily: "var(--font-grotesk)" }}
-                    >
-                      {stat.value}
-                    </div>
-                    <div className="mt-1 text-sm" style={{ color: "var(--on-surface-variant)" }}>
-                      {stat.label}
-                    </div>
+            {/* Brand logos row */}
+            <div className="mt-20 border-t pt-10" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+              <p className="mb-6 text-sm font-medium uppercase tracking-widest" style={{ color: "#64748b" }}>
+                Trusted by 5,000+ Aussie Points Hackers
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-12 opacity-40 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0">
+                {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((brand) => (
+                  <div key={brand} className="text-2xl font-bold" style={{ fontFamily: "var(--font-grotesk)" }}>
+                    {brand}
                   </div>
                 ))}
               </div>
@@ -133,65 +124,58 @@ export default function Home() {
         </section>
 
         {/* How it Works */}
-        <section id="how-it-works" className="px-8 py-24" style={{ backgroundColor: "var(--surface)" }}>
-          <div className="mx-auto max-w-5xl">
+        <section id="how-it-works" className="px-6 py-24 md:px-20" style={{ backgroundColor: "#171b28" }}>
+          <div className="mx-auto max-w-4xl">
             <div className="mb-16 text-center">
-              <p className="mb-3 text-xs font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
-                How it works
-              </p>
               <h2
-                className="mb-4 text-4xl font-extrabold tracking-tight"
+                className="mb-4 text-4xl font-extrabold"
                 style={{ fontFamily: "var(--font-grotesk)" }}
               >
-                Three steps to maximize every card
+                How it Works
               </h2>
-              <div className="mx-auto h-1 w-12 rounded-full" style={{ backgroundColor: "#4edea3" }} />
+              <div className="mx-auto h-1.5 w-16 rounded-full" style={{ backgroundColor: "#4edea3" }} />
             </div>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="space-y-16">
               {[
                 {
+                  num: "1",
                   icon: <BarChart3 className="h-7 w-7" />,
-                  step: "01",
                   title: "Track",
                   body: "Add every card, fee, and application date. We automatically calculate your 12-month rule and cancellation windows.",
                 },
                 {
+                  num: "2",
                   icon: <Zap className="h-7 w-7" />,
-                  step: "02",
                   title: "Earn",
                   body: "Hit every bonus threshold on time. Real-time spend tracking against your minimum spend goals.",
                 },
                 {
+                  num: "3",
                   icon: <Plane className="h-7 w-7" />,
-                  step: "03",
                   title: "Redeem",
                   body: "See exactly what award flights your points unlock — and the smartest moment to book or transfer.",
                 },
               ].map((step) => (
-                <div
-                  key={step.step}
-                  className="glass-panel rounded-2xl p-8"
-                  style={{ borderColor: "rgba(78, 222, 163, 0.08)" }}
-                >
+                <div key={step.num} className="flex flex-col gap-8 md:flex-row md:items-start">
                   <div
-                    className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
-                    style={{ background: "rgba(78, 222, 163, 0.12)", color: "var(--primary)" }}
+                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border text-2xl font-bold"
+                    style={{
+                      background: "rgba(78,222,163,0.1)",
+                      borderColor: "rgba(78,222,163,0.2)",
+                      color: "#4edea3",
+                      fontFamily: "var(--font-grotesk)",
+                    }}
                   >
-                    {step.icon}
+                    {step.num}
                   </div>
-                  <p className="mb-1 text-xs font-bold uppercase tracking-widest" style={{ color: "var(--primary)" }}>
-                    {step.step}
-                  </p>
-                  <h3
-                    className="mb-3 text-xl font-bold"
-                    style={{ fontFamily: "var(--font-grotesk)" }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "var(--on-surface-variant)" }}>
-                    {step.body}
-                  </p>
+                  <div>
+                    <h3 className="mb-3 text-2xl font-bold" style={{ fontFamily: "var(--font-grotesk)" }}>
+                      {step.title}
+                    </h3>
+                    <p className="text-lg leading-relaxed" style={{ color: "#bbcabf" }}>
+                      {step.body}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>

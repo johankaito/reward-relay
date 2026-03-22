@@ -57,7 +57,7 @@ export function AppShell({ children }: AppShellProps) {
       {/* ── Desktop fixed sidebar ── */}
       <aside
         className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col z-30"
-        style={{ background: "var(--surface)", borderRight: "1px solid rgba(255,255,255,0.05)" }}
+        style={{ background: "#171b28", borderRight: "1px solid rgba(255,255,255,0.05)" }}
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 py-5">
