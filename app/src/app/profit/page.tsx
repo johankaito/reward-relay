@@ -316,7 +316,153 @@ export default function ProfitPage() {
           </div>
         ) : (
           <>
-            {/* ── Hero + Chart: 2-col grid ─────────────────────────────── */}
+            {/* ── Mobile view (md:hidden) ── */}
+            <div className="md:hidden space-y-8">
+              {/* Mobile Hero */}
+              <section className="flex flex-col gap-1">
+                <span className="text-primary text-[11px] uppercase tracking-[0.2em] font-bold">Total Net Profit</span>
+                <div className="flex items-end gap-3 mt-1">
+                  <h2 className="text-5xl font-headline font-extrabold tracking-tight tabular-nums">{fmtAud(fyNet)}</h2>
+                  {fyNet > 0 && (
+                    <div className="flex items-center mb-1 text-primary">
+                      <TrendingUp className="h-4 w-4" />
+                      <span className="text-sm font-bold ml-0.5">{fy}</span>
+                    </div>
+                  )}
+                </div>
+                <p className="text-slate-500 text-sm mt-1">
+                  Across {fyCards.length} active card{fyCards.length !== 1 ? "s" : ""} this FY
+                </p>
+              </section>
+
+              {/* Horizontal scroll CSS bar chart */}
+              {chartData.length > 0 && (
+                <section className="flex flex-col gap-5">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xl font-headline font-bold">Monthly Yield</h3>
+                    <span className="px-3 py-1 bg-surface-container-highest/50 rounded-full text-[10px] font-extrabold text-slate-400 tracking-wider">
+                      {chartData.length} MONTHS
+                    </span>
+                  </div>
+                  <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
+                    <div className="flex items-end gap-5 min-w-[500px] h-44 pb-2">
+                      {(() => {
+                        const maxBonus = Math.max(...chartData.map((d) => d.bonuses), 1)
+                        const lastIdx = chartData.length - 1
+                        return chartData.map((d, i) => {
+                          const bonusPct = d.bonuses / maxBonus
+                          const isActive = i === lastIdx
+                          return (
+                            <div key={d.month} className="flex-1 flex flex-col items-center gap-3">
+                              <div
+                                className={`w-full rounded-t-xl relative ${isActive ? "bg-primary/5 ring-1 ring-primary/30" : "bg-surface-container-high/40"}`}
+                                style={{ height: `${Math.max(bonusPct * 144, 20)}px` }}
+                              >
+                                <div
+                                  className={`absolute bottom-0 w-full rounded-t-xl ${isActive ? "bg-primary shadow-[0_0_25px_rgba(78,222,163,0.3)]" : "bg-primary/80"}`}
+                                  style={{ height: `${bonusPct * 66}%` }}
+                                />
+                              </div>
+                              <span className={`text-[10px] font-bold ${isActive ? "text-primary" : "text-slate-500"}`}>
+                                {d.month.toUpperCase()}
+                              </span>
+                            </div>
+                          )
+                        })
+                      })()}
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* Bento grid: Points Val / Fees / ROI */}
+              <section className="grid grid-cols-2 gap-4">
+                <div className="col-span-1 p-6 rounded-2xl bg-surface-container/60 border border-white/5 flex flex-col gap-2">
+                  <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Points Val</span>
+                  <span className="text-2xl font-headline font-bold tabular-nums">{fmtAud(fyBonus)}</span>
+                  <div className="mt-2 w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div className="bg-[#50e3c2] h-full" style={{ width: fyNet > 0 ? "66%" : "0%" }} />
+                  </div>
+                </div>
+                <div className="col-span-1 p-6 rounded-2xl bg-surface-container/60 border border-white/5 flex flex-col gap-2">
+                  <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Fees Paid</span>
+                  <span className="text-2xl font-headline font-bold tabular-nums">{fmtAud(fyFees)}</span>
+                  <div className="mt-2 w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                    <div className="bg-secondary h-full" style={{ width: fyBonus > 0 ? `${Math.min((fyFees / fyBonus) * 100, 100)}%` : "0%" }} />
+                  </div>
+                </div>
+                <div className="col-span-2 p-6 rounded-2xl bg-[#1b1f2c] border border-white/5 flex items-center justify-between">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Average ROI</span>
+                    <span className="text-3xl font-headline font-bold tabular-nums" style={{ color: "#50e3c2" }}>
+                      {fyCards.length > 0
+                        ? `${(fyCards.reduce((s, c) => s + c.bonusAud / Math.max(c.fee, 1), 0) / fyCards.length).toFixed(1)}x`
+                        : "—"}
+                    </span>
+                  </div>
+                  <div className="h-12 w-12 rounded-full bg-surface-container-highest flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                  </div>
+                </div>
+              </section>
+
+              {/* Earned This FY */}
+              {fyCards.length > 0 && (
+                <section className="flex flex-col gap-5">
+                  <h3 className="text-xl font-headline font-bold px-1">Earned This FY</h3>
+                  <div className="space-y-4">
+                    {[...fyCards]
+                      .sort((a, b) => b.bonusAud - a.bonusAud)
+                      .map((c) => {
+                        const roi = c.bonusAud / Math.max(c.fee, 1)
+                        const onTrack = roi >= 2
+                        return (
+                          <div key={c.id} className="p-6 rounded-2xl bg-surface-container-low border border-white/5 flex flex-col gap-5">
+                            <div className="flex justify-between items-start">
+                              <div className="flex gap-4 items-center">
+                                <div className="w-10 h-6 bg-gradient-to-r from-[#d4af37] to-[#8b6b00] rounded-sm" />
+                                <div>
+                                  <p className="text-[15px] font-bold font-headline">{c.name}</p>
+                                  <p className="text-[10px] text-slate-500 tracking-wide uppercase">{c.bank}</p>
+                                </div>
+                              </div>
+                              <div className="flex flex-col items-end">
+                                <span className="text-sm font-bold" style={{ color: onTrack ? "#50e3c2" : "#ffab00" }}>
+                                  +{fmtAud(c.bonusAud)}
+                                </span>
+                                <span
+                                  className="text-[10px] font-bold mt-0.5"
+                                  style={{ color: onTrack ? "rgba(80,227,194,0.6)" : "rgba(255,171,0,0.6)" }}
+                                >
+                                  {onTrack ? "ON TRACK" : "NEEDS ATTENTION"}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-[11px] font-bold text-slate-400">
+                                <span className="tracking-wide">ROI</span>
+                                <span className="tabular-nums">{roi.toFixed(1)}x return</span>
+                              </div>
+                              <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                                <div
+                                  className="h-full rounded-full"
+                                  style={{
+                                    width: `${Math.min(roi / 5, 1) * 100}%`,
+                                    background: onTrack ? "#50e3c2" : "#ffab00",
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                  </div>
+                </section>
+              )}
+            </div>
+
+            {/* ── Desktop Hero + Chart ─────────────────────────────── */}
+            <div className="hidden md:block">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
               {/* Hero Metrics Card: col-span-5 */}
               <div className="lg:col-span-5 flex flex-col justify-between p-10 bg-surface-container rounded-lg relative overflow-hidden group">
@@ -404,6 +550,7 @@ export default function ProfitPage() {
                 )}
               </div>
             </div>
+            </div>{/* end hidden md:block */}
 
             {/* ── Insight bento ──────────────────────────────────────── */}
             {fyCards.length > 0 && (() => {
