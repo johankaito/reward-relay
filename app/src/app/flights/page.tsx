@@ -57,9 +57,9 @@ const CABIN_LABELS: Record<string, string> = {
 }
 
 const CABIN_STYLES: Record<string, string> = {
-  economy: 'bg-[var(--surface-strong)] text-[var(--text-secondary)]',
-  business: 'bg-blue-100 text-blue-700',
-  first: 'bg-purple-100 text-purple-700',
+  economy: 'bg-white/5 text-on-surface-variant',
+  business: 'bg-blue-500/15 text-blue-300',
+  first: 'bg-purple-500/15 text-purple-300',
 }
 
 const PROGRAM_LABELS: Record<string, string> = {
@@ -192,9 +192,9 @@ export default function FlightsPage() {
     return (
       <AppShell>
         <div className="space-y-5">
-          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
-          <div className="h-32 animate-pulse rounded-xl bg-[var(--surface)]" />
-          <div className="h-64 animate-pulse rounded-xl bg-[var(--surface)]" />
+          <div className="h-14 animate-pulse rounded-xl bg-surface-container" />
+          <div className="h-32 animate-pulse rounded-xl bg-surface-container" />
+          <div className="h-64 animate-pulse rounded-xl bg-surface-container" />
         </div>
       </AppShell>
     )
@@ -205,13 +205,13 @@ export default function FlightsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
             Rewards
           </p>
-          <h1 className="mt-1 font-headline text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
+          <h1 className="mt-1 font-headline text-3xl font-extrabold tracking-tight text-on-surface">
             Award Flights
           </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          <p className="mt-1 text-sm text-on-surface-variant">
             What you can book with your points
           </p>
         </div>
@@ -219,11 +219,11 @@ export default function FlightsPage() {
         {/* Route Search — Qantas award pricing */}
         {awardRoutes.length > 0 && (
           <section className="space-y-3">
-            <h2 className="text-sm font-semibold text-[var(--text-primary)]">
+            <h2 className="text-sm font-semibold text-on-surface">
               Qantas Classic Rewards — Route Search
             </h2>
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-secondary)]" />
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
               <Input
                 value={routeSearch}
                 onChange={(e) => handleSearch(e.target.value)}
@@ -244,17 +244,17 @@ export default function FlightsPage() {
             {/* Not found fallback */}
             {searchNotFound && (
               <div className="glass-panel rounded-2xl py-6 text-center">
-                <Plane className="mx-auto mb-3 h-7 w-7 text-[var(--text-secondary)]/40" />
-                <p className="text-sm font-medium text-[var(--text-primary)]">
+                <Plane className="mx-auto mb-3 h-7 w-7 text-on-surface-variant/40" />
+                <p className="text-sm font-medium text-on-surface">
                   Route not in our database
                 </p>
-                <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                <p className="mt-1 text-xs text-on-surface-variant">
                   Check{' '}
                   <a
                     href="https://www.qantas.com/us/en/frequent-flyer/use-points/classic-flight-rewards.html"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-0.5 text-[var(--accent)] hover:underline"
+                    className="inline-flex items-center gap-0.5 text-primary hover:underline"
                   >
                     qantas.com
                     <ExternalLink className="h-3 w-3" />
@@ -282,18 +282,18 @@ export default function FlightsPage() {
 
         {/* My Points — balance-aware sweet spot */}
         <section>
-          <h2 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
+          <h2 className="mb-3 text-sm font-semibold text-on-surface">
             My Points Sweet Spot
           </h2>
 
           {/* No balances empty state */}
           {!hasBalances && (
             <div className="glass-panel rounded-2xl py-12 text-center">
-              <Plane className="mx-auto mb-3 h-8 w-8 text-[var(--text-secondary)]" />
-              <p className="text-sm font-medium text-[var(--text-primary)]">
+              <Plane className="mx-auto mb-3 h-8 w-8 text-on-surface-variant" />
+              <p className="text-sm font-medium text-on-surface">
                 No loyalty balances found
               </p>
-              <p className="mt-1 text-xs text-[var(--text-secondary)]">
+              <p className="mt-1 text-xs text-on-surface-variant">
                 Add your loyalty balances to see what you can book
               </p>
             </div>
@@ -349,12 +349,12 @@ export default function FlightsPage() {
                 ))}
               </div>
               {/* Amex MR toggle */}
-              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/5 bg-[var(--surface)] px-4 py-1.5 text-xs font-semibold text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/5 bg-surface-container px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:bg-surface-container-highest">
                 <input
                   type="checkbox"
                   checked={includeAmexTransfers}
                   onChange={(e) => setIncludeAmexTransfers(e.target.checked)}
-                  className="h-3.5 w-3.5 accent-[var(--accent)]"
+                  className="h-3.5 w-3.5 accent-primary"
                 />
                 Include Amex MR transfers
               </label>
@@ -394,7 +394,7 @@ export default function FlightsPage() {
           {/* All routes grid */}
           {otherRoutes.length > 0 && hasBalances && (
             <div>
-              <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">
+              <h3 className="mb-3 text-sm font-semibold text-on-surface">
                 All routes ({otherRoutes.length})
               </h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -408,7 +408,7 @@ export default function FlightsPage() {
           {/* Empty filtered state */}
           {filtered.length === 0 && hasBalances && (
             <div className="glass-panel rounded-2xl py-12 text-center">
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-sm text-on-surface-variant">
                 No routes match your filters.
               </p>
             </div>
@@ -455,10 +455,10 @@ function RouteCard({
           {CABIN_LABELS[route.cabin_class] ?? route.cabin_class}
         </span>
       </div>
-      <CardContent className="space-y-3 p-4">
+      <CardContent className="space-y-3 p-6">
         {/* Route */}
         <div>
-          <p className="text-base font-semibold text-[var(--text-primary)]">
+          <p className="text-base font-semibold text-on-surface">
             {route.origin_city} ({route.origin_iata}) → {route.destination_city} (
             {route.destination_iata})
           </p>
@@ -466,10 +466,10 @@ function RouteCard({
 
         {/* Points + taxes */}
         <div className="flex items-baseline gap-2">
-          <span className="text-sm font-semibold text-[var(--text-primary)]">
+          <span className="text-sm font-semibold text-on-surface">
             {route.points_required.toLocaleString()} pts
           </span>
-          <span className="text-xs text-[var(--text-secondary)]">
+          <span className="text-xs text-on-surface-variant">
             + ~${route.taxes_aud} taxes
           </span>
         </div>
