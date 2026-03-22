@@ -345,7 +345,7 @@ export default function SpendingTrackerPage() {
             {activeCard && pace && (
               <>
                 {/* Arc + stats */}
-                <div className="flex flex-col gap-5 md:flex-row md:items-center">
+                <div className="flex flex-col gap-5 rounded-b-[4rem] md:flex-row md:items-center">
                   {/* Arc — 60% width */}
                   <div className="flex flex-[3] items-center justify-center py-4">
                     <SpendArc spent={activeCard.current_spend} target={activeCard.spend_target} />
