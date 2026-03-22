@@ -207,10 +207,12 @@ export default function FlightsPage() {
       <div className="max-w-[1440px] mx-auto p-8 space-y-10">
 
         {/* Hero search section */}
-        <div className="relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-end p-10 shadow-2xl border border-white/5">
+        <div className="relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-end p-10 shadow-2xl border border-white/10">
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1b1f2c 0%, #0a0e1a 100%)' }}></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e2640 0%, #111827 60%, #0a0e1a 100%)' }}></div>
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0f131f]/60 via-transparent to-transparent"></div>
           </div>
           <div className="relative z-10 w-full">
             <div className="mb-10 max-w-2xl">
@@ -235,7 +237,7 @@ export default function FlightsPage() {
                   />
                 </div>
 
-                {/* Search results */}
+                {/* Search results — only when user has typed */}
                 {routeSearch.trim() && searchResults.length > 0 && (
                   <div className="grid gap-4 sm:grid-cols-2">
                     {searchResults.map((route) => (
@@ -266,19 +268,22 @@ export default function FlightsPage() {
                     </p>
                   </div>
                 )}
-
-                {/* Show all Qantas routes when no search active */}
-                {!routeSearch.trim() && (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {awardRoutes.map((route) => (
-                      <AwardRouteCard key={route.id} route={route} centsPerPoint={CENTS_PER_POINT} />
-                    ))}
-                  </div>
-                )}
               </div>
             )}
           </div>
         </div>
+
+        {/* Qantas Classic Rewards full route table — below the hero */}
+        {awardRoutes.length > 0 && !routeSearch.trim() && (
+          <div className="bg-surface-container-low rounded-3xl p-8 border border-white/5">
+            <h3 className="text-lg font-headline font-bold mb-6 text-on-surface">Qantas Classic Rewards — Route Search</h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {awardRoutes.map((route) => (
+                <AwardRouteCard key={route.id} route={route} centsPerPoint={CENTS_PER_POINT} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Balance progress bar section */}
         <div className="bg-[#171b28]/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden shadow-xl">
