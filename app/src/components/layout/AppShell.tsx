@@ -187,7 +187,7 @@ export function AppShell({ children }: AppShellProps) {
           boxShadow: "0 -8px 32px rgba(0,0,0,0.5)",
         }}
       >
-        <div className="grid grid-cols-5 h-20 pb-safe">
+        <div className="grid grid-cols-5 h-20 pb-safe" style={{ minHeight: 80 }}>
           {navItems.map(({ href, label, icon: Icon }) => {
             const active = isActive(href)
             return (
