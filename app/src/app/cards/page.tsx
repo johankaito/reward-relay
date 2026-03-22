@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, useCallback } from "react"
 import { Wifi } from "lucide-react"
 import { toast } from "sonner"
 
@@ -45,7 +45,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded-2xl bg-surface-container p-4">
       <p className="text-xs text-on-surface-variant">{label}</p>
-      <p className="mt-1 font-mono tabular-nums text-xl text-primary">{value}</p>
+      <p className="mt-1 font-headline tabular-nums text-3xl font-extrabold text-primary">{value}</p>
     </div>
   )
 }
@@ -57,6 +57,7 @@ export default function CardsPage() {
   const [search, setSearch] = useState("")
   const [bank, setBank] = useState<string | null>(null)
   const [userCardCount, setUserCardCount] = useState<number | null>(null)
+  const [selectedCard, setSelectedCard] = useState<CardRecord | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -116,13 +117,13 @@ export default function CardsPage() {
     <AppShell>
       <div className="space-y-6">
         <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
+          <p className="text-xs font-medium uppercase tracking-widest text-primary">
             Cards
           </p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
+          <h1 className="mt-1 text-2xl font-semibold text-on-surface">
             Australian cards
           </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          <p className="mt-1 text-sm text-on-surface-variant">
             Search, filter, and start tracking a card.
           </p>
         </div>
@@ -161,7 +162,7 @@ export default function CardsPage() {
             <div className="md:hidden">
               <div className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
                 {filtered.map((card) => (
-                  <div key={card.id} className="min-w-[310px] shrink-0 snap-start" style={{ minWidth: '310px' }}>
+                  <div key={card.id} className="min-w-[310px] shrink-0 snap-start" style={{ minWidth: "310px" }}>
                     <CatalogCardThumb card={card} />
                     <p className="mt-2 truncate text-sm font-medium text-on-surface">{card.name}</p>
                     <p className="text-xs text-on-surface-variant">{card.bank}</p>
@@ -170,9 +171,77 @@ export default function CardsPage() {
               </div>
             </div>
 
-            {/* Desktop grid */}
-            <div className="hidden md:block">
-              <CardGrid cards={filtered} />
+            {/* Desktop: 12-col split — grid + detail aside */}
+            <div className="hidden md:grid md:grid-cols-12 md:gap-6">
+              {/* Left col: card grid */}
+              <div className="md:col-span-8">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                  {filtered.map((card) => (
+                    <button
+                      key={card.id}
+                      className="w-full text-left"
+                      onClick={() => setSelectedCard(card)}
+                    >
+                      <div className={`transition-all ${selectedCard?.id === card.id ? "ring-2 ring-primary rounded-2xl" : ""}`}>
+                        <CatalogCardThumb card={card} />
+                        <p className="mt-2 truncate text-sm font-medium text-on-surface">{card.name}</p>
+                        <p className="text-xs text-on-surface-variant">{card.bank}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right col: detail aside */}
+              <aside className="md:col-span-4">
+                <div
+                  className="sticky top-6 rounded-2xl p-6"
+                  style={{ backgroundColor: "#1b1f2c", border: "1px solid rgba(78,222,163,0.1)" }}
+                >
+                  <h3 className="mb-4 text-lg font-bold text-on-surface">Card Details</h3>
+                  {selectedCard ? (
+                    <div className="space-y-4">
+                      <CatalogCardThumb card={selectedCard} />
+                      <div className="space-y-3 pt-2">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Bank</p>
+                          <p className="mt-0.5 text-sm font-semibold text-on-surface">{selectedCard.bank}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Card</p>
+                          <p className="mt-0.5 text-sm font-semibold text-on-surface">{selectedCard.name}</p>
+                        </div>
+                        {selectedCard.welcome_bonus_points != null && (
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Welcome Bonus</p>
+                            <p className="mt-0.5 text-sm font-bold text-primary tabular-nums">
+                              {selectedCard.welcome_bonus_points.toLocaleString()} {selectedCard.points_currency ?? "pts"}
+                            </p>
+                          </div>
+                        )}
+                        {selectedCard.annual_fee != null && (
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Annual Fee</p>
+                            <p className="mt-0.5 text-sm font-semibold text-on-surface tabular-nums">
+                              ${selectedCard.annual_fee.toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                        {selectedCard.min_income != null && (
+                          <div>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Min Income</p>
+                            <p className="mt-0.5 text-sm font-semibold text-on-surface tabular-nums">
+                              ${selectedCard.min_income.toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-on-surface-variant">Select a card to view details</p>
+                  )}
+                </div>
+              </aside>
             </div>
           </>
         )}
