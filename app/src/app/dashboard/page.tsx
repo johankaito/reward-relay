@@ -203,11 +203,11 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Alert strip — cancellations within 30 days */}
         {cancelAlerts.length > 0 && (
-          <div className="flex items-center justify-between gap-4 rounded-xl border border-[#ffb4ab]/20 bg-[#93000a]/20 px-4 py-3">
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="h-4 w-4 shrink-0 text-[#ffb4ab]" />
-              <p className="text-sm font-medium text-[#dfe2f3]">
-                <span className="font-semibold text-[#ffb4ab]">{cancelAlerts[0].name}</span>{" "}
+              <AlertTriangle className="h-4 w-4 shrink-0 text-destructive" />
+              <p className="text-sm font-medium text-on-surface">
+                <span className="font-semibold text-destructive">{cancelAlerts[0].name}</span>{" "}
                 cancels {cancelAlerts[0].cancellation_date} — take action before the date.
               </p>
             </div>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
               <Button
                 size="sm"
                 variant="ghost"
-                className="shrink-0 rounded-full text-[#ffb4ab] hover:bg-[#ffb4ab]/10 hover:text-[#ffb4ab]"
+                className="shrink-0 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive"
               >
                 Take action
               </Button>
