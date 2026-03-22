@@ -343,7 +343,7 @@ export default function ProjectionsPage() {
               <div
                 className={`mt-4 flex items-center justify-between rounded-2xl border p-3 ${
                   isSufficient
-                    ? "border-[#4edea3]/20 bg-primary/10"
+                    ? "border-primary/20 bg-primary/10"
                     : "border-red-500/10 bg-red-500/5"
                 }`}
               >
@@ -403,8 +403,8 @@ export default function ProjectionsPage() {
                     key={card.id}
                     className={`flex flex-col overflow-hidden rounded-3xl border transition-all duration-500 ${
                       isHighlighted
-                        ? "border-[#4edea3]/40 ring-1 ring-[#4edea3]/20 scale-[1.02] shadow-[0_24px_48px_-12px_rgba(78,222,163,0.15)]"
-                        : "border-white/5 hover:border-[#4edea3]/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]"
+                        ? "border-primary/40 ring-1 ring-primary/20 scale-[1.02] shadow-[0_24px_48px_-12px_rgba(78,222,163,0.15)]"
+                        : "border-white/5 hover:border-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]"
                     }`}
                     style={{ background: "rgba(23, 27, 40, 0.5)" }}
                   >
@@ -481,7 +481,7 @@ export default function ProjectionsPage() {
                         <div
                           className={`rounded-2xl border p-3 ${
                             wouldSuffice
-                              ? "border-[#4edea3]/20 bg-primary/10"
+                              ? "border-primary/20 bg-primary/10"
                               : "border-white/5 bg-surface-container/30"
                           }`}
                         >

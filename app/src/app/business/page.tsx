@@ -130,7 +130,7 @@ export default function BusinessPage() {
                   </div>
                   <div>
                     <p className="text-xs text-[var(--text-secondary)]">Net</p>
-                    <p className="mt-1 text-2xl font-bold" style={{ color: (totalBonus - totalFees) >= 0 ? 'var(--accent)' : '#ef4444' }}>
+                    <p className="mt-1 text-2xl font-bold" style={{ color: (totalBonus - totalFees) >= 0 ? 'var(--accent)' : 'var(--destructive)' }}>
                       {fmt(totalBonus - totalFees)}
                     </p>
                   </div>

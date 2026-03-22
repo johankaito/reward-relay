@@ -112,7 +112,7 @@ export function CardBreakdown({ cards }: CardBreakdownProps) {
           {sorted.length > 1 && (
             <span>
               Worst: <span className="font-semibold text-[var(--text-primary)]">{worst.bank} {worst.name}</span>{" "}
-              <span style={{ color: worst.netValue < 0 ? "#ef4444" : "#f59e0b" }}>({fmtAud(worst.netValue)} net)</span>
+              <span style={{ color: worst.netValue < 0 ? "var(--destructive)" : "var(--color-amber-400, #f59e0b)" }}>({fmtAud(worst.netValue)} net)</span>
             </span>
           )}
         </div>
