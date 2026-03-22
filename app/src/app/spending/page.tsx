@@ -144,6 +144,62 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
   )
 }
 
+function MobileSpendArc({ spent, target }: { spent: number; target: number }) {
+  const pct = target > 0 ? Math.min(spent / target, 1) : 0
+  const TOTAL_LEN = Math.PI * 80 // semicircle path length ≈ 251.3
+  const filled = TOTAL_LEN * pct
+  return (
+    <div className="arc-hero-bg -mx-4 px-4 pb-8 pt-4">
+      <svg width="100%" viewBox="0 0 200 100" style={{ overflow: "visible" }}>
+        {/* Track */}
+        <path
+          d="M 20 90 A 80 80 0 0 1 180 90"
+          fill="none"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth={10}
+          strokeLinecap="round"
+        />
+        {/* Fill */}
+        <path
+          d="M 20 90 A 80 80 0 0 1 180 90"
+          fill="none"
+          stroke="#4edea3"
+          strokeWidth={10}
+          strokeLinecap="round"
+          strokeDasharray={`${filled} ${TOTAL_LEN - filled}`}
+          style={{
+            transition: "stroke-dasharray 600ms ease-out",
+            filter: "drop-shadow(0 0 8px rgba(78,222,163,0.4))",
+          }}
+        />
+        {/* Amount */}
+        <text
+          x="100"
+          y="62"
+          textAnchor="middle"
+          fill="white"
+          fontSize="20"
+          fontWeight="bold"
+          fontFamily="'Plus Jakarta Sans', sans-serif"
+        >
+          {formatCurrencyCompact(spent)}
+        </text>
+        {/* Label */}
+        <text
+          x="100"
+          y="78"
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.4)"
+          fontSize="9"
+          fontFamily="Inter, sans-serif"
+        >
+          of {formatCurrencyCompact(target)}
+        </text>
+      </svg>
+    </div>
+  )
+}
+
 function formatCurrencyCompact(amount: number): string {
   if (amount >= 1000) return `$${(amount / 1000).toFixed(1)}k`
   return `$${Math.round(amount)}`
@@ -413,8 +469,13 @@ export default function SpendingTrackerPage() {
                   )
                 })()}
 
+                {/* Mobile arc (semicircle hero) — hidden on desktop */}
+                <div className="md:hidden">
+                  <MobileSpendArc spent={activeCard.current_spend} target={activeCard.spend_target} />
+                </div>
+
                 {/* Arc + stats */}
-                <div className="flex flex-col gap-5 rounded-b-[4rem] md:flex-row md:items-center">
+                <div className="hidden gap-5 rounded-b-[4rem] md:flex md:flex-row md:items-center">
                   {/* Arc — 60% width */}
                   <div className="flex flex-[3] items-center justify-center py-4">
                     <SpendArc spent={activeCard.current_spend} target={activeCard.spend_target} />
