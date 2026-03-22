@@ -383,7 +383,7 @@ export default function ProjectionsPage() {
 
           {topRecommendations.length === 0 ? (
             <div className="rounded-3xl border border-white/5 bg-surface-container p-12 text-center">
-              <TrendingUp className="mx-auto h-12 w-12 text-slate-600" />
+              <TrendingUp className="mx-auto h-12 w-12 text-on-surface-variant" />
               <p className="mt-4 text-lg font-semibold text-white">No recommendations available</p>
               <p className="mt-2 text-sm text-on-surface-variant">
                 All active cards are already in your portfolio
