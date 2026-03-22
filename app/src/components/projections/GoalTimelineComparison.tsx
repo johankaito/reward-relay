@@ -33,7 +33,7 @@ export function GoalTimelineComparison({
               <div className="flex items-center gap-2 text-lg font-semibold">
                 {path.cards.map((card, idx) => (
                   <div key={card.id} className="flex items-center gap-2">
-                    {idx > 0 && <span className="text-slate-400">+</span>}
+                    {idx > 0 && <span className="text-on-surface-variant">+</span>}
                     {card.application_link ? (
                       <Link
                         href={card.application_link}
@@ -66,20 +66,20 @@ export function GoalTimelineComparison({
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-on-surface">
               {path.cards.map(c => c.name).join(", ")}
             </p>
           </div>
           <div className="flex gap-4 text-sm">
-            <div className="flex items-center gap-2 text-slate-300">
+            <div className="flex items-center gap-2 text-on-surface">
               <Clock className="h-4 w-4" />
               <span className="font-semibold text-white">{path.timeToGoal} months</span>
             </div>
-            <div className="flex items-center gap-2 text-slate-300">
+            <div className="flex items-center gap-2 text-on-surface">
               <DollarSign className="h-4 w-4" />
               <span className="font-semibold text-white">${path.totalCost}</span>
             </div>
-            <div className="flex items-center gap-2 text-slate-300">
+            <div className="flex items-center gap-2 text-on-surface">
               <TrendingUp className="h-4 w-4" />
               <span className="font-semibold text-[var(--success)]">
                 {path.totalPoints.toLocaleString()} pts
@@ -110,7 +110,7 @@ export function GoalTimelineComparison({
                     {isComplete ? (
                       <CheckCircle className="h-6 w-6 text-[var(--success)]" />
                     ) : (
-                      <Clock className="h-6 w-6 text-slate-400" />
+                      <Clock className="h-6 w-6 text-on-surface-variant" />
                     )}
                   </div>
 
@@ -119,7 +119,7 @@ export function GoalTimelineComparison({
                     <p className="text-xs font-semibold text-white">
                       {milestone.action === "apply" ? "Apply" : "Goal Reached!"}
                     </p>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-on-surface-variant">
                       Month {milestone.month}
                     </p>
                     {isFinalMilestone && (
@@ -147,7 +147,7 @@ export function GoalTimelineComparison({
                       ) : (
                         <p className="text-xs font-medium text-white">{milestone.card.bank}</p>
                       )}
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-on-surface-variant">
                         +{milestone.card.welcome_bonus_points?.toLocaleString()} pts
                       </p>
                     </div>
@@ -161,17 +161,17 @@ export function GoalTimelineComparison({
         {/* Net Value Summary */}
         <div className="mt-6 flex items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] p-4">
           <div>
-            <p className="text-xs text-slate-400">Net Value</p>
+            <p className="text-xs text-on-surface-variant">Net Value</p>
             <p className="text-lg font-semibold text-white">
               ${path.netValue.toFixed(2)}
             </p>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-on-surface">
               Points worth ${(path.totalPoints * 0.01).toFixed(2)} - ${path.totalCost} fees
             </p>
           </div>
           {isRecommended && (
             <div className="text-right">
-              <p className="text-xs text-slate-400">Why recommended?</p>
+              <p className="text-xs text-on-surface-variant">Why recommended?</p>
               <p className="text-sm font-medium text-[var(--accent)]">
                 {path.rank === "fastest" ? "Fastest path to goal" :
                  path.rank === "cheapest" ? "Best value for money" :
@@ -213,7 +213,7 @@ export function GoalTimelineComparison({
               <p className="font-semibold text-[var(--info-fg)]">
                 Timeline Assumptions
               </p>
-              <ul className="space-y-1 text-slate-300">
+              <ul className="space-y-1 text-on-surface">
                 <li>• 3 months to meet minimum spend requirement</li>
                 <li>• 1 month for bonus points to post after spend met</li>
                 <li>• 6 months minimum spacing between card applications</li>

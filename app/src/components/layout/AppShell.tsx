@@ -88,7 +88,7 @@ export function AppShell({ children }: AppShellProps) {
                 className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                   active
                     ? "bg-surface-container text-primary"
-                    : "text-slate-400 hover:bg-surface-container-highest hover:text-on-surface"
+                    : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface"
                 }`}
               >
                 <Icon className={`h-4 w-4 flex-shrink-0 ${active ? "scale-110" : ""}`} />
@@ -195,7 +195,7 @@ export function AppShell({ children }: AppShellProps) {
                 key={href}
                 onClick={() => router.push(href)}
                 className={`flex flex-col items-center gap-1 py-2 px-1 transition-colors active:bg-white/5 ${
-                  active ? "text-primary" : "text-slate-400"
+                  active ? "text-primary" : "text-on-surface-variant"
                 }`}
               >
                 <Icon className={`h-5 w-5 flex-shrink-0 transition-transform ${active ? "scale-110" : ""}`} />

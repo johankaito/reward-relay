@@ -92,7 +92,7 @@ export function OnboardingQuiz() {
     <div className="flex min-h-screen items-center justify-center bg-[var(--surface-muted)] px-4">
       <Card className="w-full max-w-2xl border border-[var(--border-default)] bg-[var(--surface)] shadow-xl">
         <CardHeader>
-          <div className="mb-4 flex justify-between text-sm text-slate-400">
+          <div className="mb-4 flex justify-between text-sm text-on-surface-variant">
             <span>Question {step} of 3</span>
             <span>{Math.round((step / 3) * 100)}% complete</span>
           </div>
@@ -107,7 +107,7 @@ export function OnboardingQuiz() {
           {/* Question 1: Spending Category */}
           {step === 1 && (
             <div className="space-y-4">
-              <p className="text-lg text-slate-300">
+              <p className="text-lg text-on-surface">
                 What&apos;s your primary spending category?
               </p>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -154,7 +154,7 @@ export function OnboardingQuiz() {
           {/* Question 2: Optimization Goal */}
           {step === 2 && (
             <div className="space-y-4">
-              <p className="text-lg text-slate-300">
+              <p className="text-lg text-on-surface">
                 What are you optimizing for?
               </p>
               <div className="grid grid-cols-1 gap-3">
@@ -183,7 +183,7 @@ export function OnboardingQuiz() {
               <Button
                 variant="ghost"
                 onClick={handleBack}
-                className="mt-4 text-slate-400"
+                className="mt-4 text-on-surface-variant"
               >
                 ← Back
               </Button>
@@ -193,7 +193,7 @@ export function OnboardingQuiz() {
           {/* Question 3: Churning Goal */}
           {step === 3 && (
             <div className="space-y-4">
-              <p className="text-lg text-slate-300">
+              <p className="text-lg text-on-surface">
                 What&apos;s your churning goal?
               </p>
               <div className="grid grid-cols-1 gap-3">
@@ -231,7 +231,7 @@ export function OnboardingQuiz() {
                 <Button
                   variant="ghost"
                   onClick={handleBack}
-                  className="text-slate-400"
+                  className="text-on-surface-variant"
                 >
                   ← Back
                 </Button>
@@ -253,7 +253,7 @@ export function OnboardingQuiz() {
               <div
                 key={i}
                 className={`h-1 flex-1 rounded-full transition-colors ${
-                  i <= step ? "bg-teal-500" : "bg-slate-700"
+                  i <= step ? "bg-teal-500" : "bg-surface-container"
                 }`}
               />
             ))}
@@ -287,7 +287,7 @@ function OptionButton({ onClick, selected, icon, title, description, className =
         <div className="text-4xl">{icon}</div>
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-white">{title}</h3>
-          <p className="mt-1 text-sm text-slate-400">{description}</p>
+          <p className="mt-1 text-sm text-on-surface-variant">{description}</p>
         </div>
         {selected && (
           <div className="text-2xl text-teal-500">✓</div>

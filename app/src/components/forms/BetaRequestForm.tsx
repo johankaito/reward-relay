@@ -64,7 +64,7 @@ export function BetaRequestForm({
         <button onClick={() => setShowForm(true)} className={buttonClassName}>
           {buttonText}
         </button>
-        {subtitle && <p className="mt-3 text-sm text-slate-400">{subtitle}</p>}
+        {subtitle && <p className="mt-3 text-sm text-on-surface-variant">{subtitle}</p>}
       </>
     )
   }
@@ -121,7 +121,7 @@ export function BetaRequestForm({
         </button>
       </div>
 
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-on-surface-variant">
         We&apos;ll review your request and send you an invite if accepted.
       </p>
     </form>

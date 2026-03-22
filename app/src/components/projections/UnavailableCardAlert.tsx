@@ -33,7 +33,7 @@ export function UnavailableCardAlert({
             <h3 className="text-lg font-semibold text-white">
               ⚠️ Your goal uses an unavailable card
             </h3>
-            <p className="text-sm text-slate-200">
+            <p className="text-sm text-on-surface">
               The <span className="font-semibold text-orange-400">{cardBank} {cardName}</span> is no longer available.
               Your &quot;<span className="font-semibold">{goalLabel}</span>&quot; goal currently uses this card in its recommended path.
             </p>
@@ -74,7 +74,7 @@ export function UnavailableCardAlert({
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="shrink-0 rounded-full p-1 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+            className="shrink-0 rounded-full p-1 text-on-surface-variant transition-colors hover:bg-white/10 hover:text-white"
             aria-label="Dismiss alert"
           >
             <X className="h-5 w-5" />

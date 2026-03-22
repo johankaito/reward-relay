@@ -124,14 +124,14 @@ export function AddCardForm({ cards, onCreated }: Props) {
     <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-md">
       <CardHeader className="border-b border-[var(--border-default)] bg-[var(--surface-strong)]/60">
         <CardTitle className="text-lg text-white">Track a card</CardTitle>
-        <p className="text-sm text-slate-300">
+        <p className="text-sm text-on-surface">
           Pick from catalog or add custom. Add your primary card and churn target first.
         </p>
       </CardHeader>
       <CardContent className="pt-6">
         <form className="grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
           <div className="md:col-span-2 space-y-2">
-            <Label className="text-slate-200">Select from catalog (optional)</Label>
+            <Label className="text-on-surface">Select from catalog (optional)</Label>
             <Select
               value={selectedCardId || "none"}
               onValueChange={(value) => {
@@ -159,7 +159,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bank" className="text-slate-200">
+            <Label htmlFor="bank" className="text-on-surface">
               Bank
             </Label>
             <Input
@@ -168,12 +168,12 @@ export function AddCardForm({ cards, onCreated }: Props) {
               onChange={(e) => setBank(e.target.value)}
               placeholder="e.g. ANZ"
               required={!selectedCard}
-              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-slate-200">
+            <Label htmlFor="name" className="text-on-surface">
               Card name
             </Label>
             <Input
@@ -182,12 +182,12 @@ export function AddCardForm({ cards, onCreated }: Props) {
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Frequent Flyer Black"
               required={!selectedCard}
-              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="status" className="text-slate-200">
+            <Label htmlFor="status" className="text-on-surface">
               Status
             </Label>
             <Select value={status ?? undefined} onValueChange={(v) => setStatus(v as typeof status)}>
@@ -205,7 +205,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="applicationDate" className="text-slate-200">
+            <Label htmlFor="applicationDate" className="text-on-surface">
               Application date
             </Label>
             <Input
@@ -213,12 +213,12 @@ export function AddCardForm({ cards, onCreated }: Props) {
               type="date"
               value={applicationDate}
               onChange={(e) => setApplicationDate(e.target.value)}
-              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cancellationDate" className="text-slate-200">
+            <Label htmlFor="cancellationDate" className="text-on-surface">
               Cancellation date
             </Label>
             <Input
@@ -226,12 +226,12 @@ export function AddCardForm({ cards, onCreated }: Props) {
               type="date"
               value={cancellationDate}
               onChange={(e) => setCancellationDate(e.target.value)}
-              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="annualFee" className="text-slate-200">
+            <Label htmlFor="annualFee" className="text-on-surface">
               Annual fee
             </Label>
             <Input
@@ -241,12 +241,12 @@ export function AddCardForm({ cards, onCreated }: Props) {
               value={annualFee}
               onChange={(e) => setAnnualFee(e.target.value)}
               placeholder="e.g. 425"
-              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
             />
           </div>
 
           <div className="md:col-span-2 space-y-2">
-            <Label htmlFor="notes" className="text-slate-200">
+            <Label htmlFor="notes" className="text-on-surface">
               Notes
             </Label>
             <Input
@@ -254,7 +254,7 @@ export function AddCardForm({ cards, onCreated }: Props) {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add reminder or spend target"
-              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+              className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
             />
           </div>
 

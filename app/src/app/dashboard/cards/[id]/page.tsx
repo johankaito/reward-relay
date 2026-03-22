@@ -62,7 +62,7 @@ export default function CardDetailsPage() {
   if (loading) {
     return (
       <AppShell>
-        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-slate-200 shadow-sm">
+        <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-on-surface shadow-sm">
           Loading card details...
         </div>
       </AppShell>
@@ -81,7 +81,7 @@ export default function CardDetailsPage() {
             <ArrowLeft className="h-4 w-4" />
             Back to dashboard
           </Button>
-          <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-slate-200 shadow-sm">
+          <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface)] p-6 text-sm text-on-surface shadow-sm">
             Card not found
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function CardDetailsPage() {
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">
+                <p className="text-xs uppercase tracking-wide text-on-surface-variant">
                   Application Date
                 </p>
                 <p className="mt-2 text-lg font-semibold text-white">
@@ -140,7 +140,7 @@ export default function CardDetailsPage() {
                 </p>
               </div>
               <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400">
+                <p className="text-xs uppercase tracking-wide text-on-surface-variant">
                   Cancellation Target
                 </p>
                 <p className="mt-2 text-lg font-semibold text-white">
@@ -151,28 +151,28 @@ export default function CardDetailsPage() {
 
             {card.notes && (
               <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-soft)] p-4">
-                <p className="text-xs uppercase tracking-wide text-slate-400 mb-2">
+                <p className="text-xs uppercase tracking-wide text-on-surface-variant mb-2">
                   Notes
                 </p>
-                <p className="text-sm text-slate-200">{card.notes}</p>
+                <p className="text-sm text-on-surface">{card.notes}</p>
               </div>
             )}
 
             <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] p-4">
-              <p className="text-xs uppercase tracking-wide text-slate-400 mb-3">
+              <p className="text-xs uppercase tracking-wide text-on-surface-variant mb-3">
                 Card Information
               </p>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Status:</span>
+                  <span className="text-on-surface-variant">Status:</span>
                   <span className="font-medium capitalize text-white">{status}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Bank:</span>
+                  <span className="text-on-surface-variant">Bank:</span>
                   <span className="font-medium text-white">{card.bank || "—"}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Added:</span>
+                  <span className="text-on-surface-variant">Added:</span>
                   <span className="font-medium text-white">
                     {card.created_at
                       ? new Date(card.created_at).toLocaleDateString()
