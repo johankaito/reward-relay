@@ -67,12 +67,9 @@ export default function Home() {
             </div>
 
             {/* Headline */}
-            <h1
-              className="mb-6 text-5xl font-extrabold leading-[1.1] tracking-tight md:text-7xl"
-              style={{ fontFamily: "var(--font-grotesk)" }}
-            >
+            <h1 className="mb-6 font-headline text-5xl font-extrabold leading-[1.1] tracking-tight text-on-surface md:text-7xl">
               Master the{" "}
-              <span style={{ color: "var(--primary)" }}>Churn</span>
+              <span className="text-primary">Churn</span>
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
@@ -84,12 +81,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
               <a
                 href="/login"
-                className="w-full rounded-full px-10 py-4 text-lg font-bold shadow-lg transition-transform hover:scale-105 md:w-auto"
-                style={{
-                  background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
-                  color: "var(--on-primary)",
-                  boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
-                }}
+                className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform hover:scale-105 md:w-auto"
               >
                 Get started free
               </a>
@@ -124,7 +116,7 @@ export default function Home() {
         </section>
 
         {/* How it Works */}
-        <section id="how-it-works" className="px-6 py-24 md:px-20" style={{ backgroundColor: "#171b28" }}>
+        <section id="how-it-works" className="bg-surface-container-low px-6 py-24 md:px-20">
           <div className="mx-auto max-w-4xl">
             <div className="mb-16 text-center">
               <h2
@@ -249,7 +241,7 @@ export default function Home() {
               <div className="relative mb-4 mt-12 flex h-64 justify-center">
                 {/* NAB */}
                 <div
-                  className="absolute z-10 h-44 w-72 -translate-x-24 translate-y-16 -rotate-12 rounded-2xl border p-5 shadow-2xl"
+                  className="absolute z-10 h-48 w-80 -translate-x-24 translate-y-16 -rotate-12 rounded-xl border p-6 shadow-2xl"
                   style={{
                     background: "linear-gradient(135deg, #c91d1d, #7a0a0a)",
                     borderColor: "rgba(255,255,255,0.1)",
@@ -263,7 +255,7 @@ export default function Home() {
                 </div>
                 {/* CBA */}
                 <div
-                  className="absolute z-20 h-44 w-72 -translate-x-8 translate-y-8 -rotate-3 rounded-2xl border p-5 shadow-2xl"
+                  className="absolute z-20 h-48 w-80 -translate-x-8 translate-y-8 -rotate-3 rounded-xl border p-6 shadow-2xl"
                   style={{
                     background: "linear-gradient(135deg, #ffcc00, #e6b800)",
                     borderColor: "rgba(255,255,255,0.1)",
@@ -277,7 +269,7 @@ export default function Home() {
                 </div>
                 {/* ANZ */}
                 <div
-                  className="absolute z-30 h-44 w-72 translate-x-12 translate-y-4 rotate-6 rounded-2xl border p-5 shadow-2xl"
+                  className="absolute z-30 h-48 w-80 translate-x-12 translate-y-4 rotate-6 rounded-xl border p-6 shadow-2xl"
                   style={{
                     background: "linear-gradient(135deg, #004165, #002a42)",
                     borderColor: "rgba(96, 165, 250, 0.2)",
@@ -291,7 +283,7 @@ export default function Home() {
                 </div>
                 {/* Amex */}
                 <div
-                  className="absolute z-40 h-44 w-72 -translate-y-4 translate-x-24 rotate-12 rounded-2xl border p-5 shadow-2xl"
+                  className="absolute z-40 h-48 w-80 -translate-y-4 translate-x-24 rotate-12 rounded-xl border p-6 shadow-2xl"
                   style={{
                     background: "linear-gradient(135deg, #1b1f2c, #0a0e1a)",
                     borderColor: "rgba(255,255,255,0.1)",
@@ -885,14 +877,7 @@ export default function Home() {
 
         {/* CTA / Footer section */}
         <section className="px-8 py-24 text-center">
-          <div
-            className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl p-16"
-            style={{
-              background: "rgba(27, 31, 44, 0.6)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(60, 74, 66, 0.1)",
-            }}
-          >
+          <div className="glass-card relative mx-auto max-w-4xl overflow-hidden rounded-lg p-16 border border-outline-variant/10">
             <div
               className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full blur-[100px]"
               style={{ background: "rgba(78,222,163,0.05)" }}
@@ -1008,19 +993,10 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer
-        className="w-full py-16"
-        style={{
-          backgroundColor: "var(--background)",
-          borderTop: "1px solid rgba(30, 41, 59, 0.2)",
-        }}
-      >
+      <footer className="w-full border-t border-slate-800/20 bg-[#0f131f] py-16">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-8 text-center">
           <div className="flex flex-col items-center gap-2">
-            <div
-              className="text-2xl font-bold tracking-tighter"
-              style={{ color: "var(--primary)", fontFamily: "var(--font-grotesk)" }}
-            >
+            <div className="font-headline text-2xl font-bold tracking-tighter text-primary">
               Reward Relay
             </div>
             <p className="max-w-md text-sm" style={{ color: "#64748b" }}>
