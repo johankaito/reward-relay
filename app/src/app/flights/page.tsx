@@ -8,13 +8,6 @@ import { AppShell } from '@/components/layout/AppShell'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { RedemptionProgress } from '@/components/flights/RedemptionProgress'
 import { AwardRouteCard, type AwardRouteRow } from '@/components/flights/AwardRouteCard'
 import { supabase } from '@/lib/supabase/client'
@@ -230,12 +223,12 @@ export default function FlightsPage() {
               Qantas Classic Rewards — Route Search
             </h2>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-secondary)]" />
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--text-secondary)]" />
               <Input
                 value={routeSearch}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Search by IATA (SYD, LHR) or city name (Sydney, London)…"
-                className="pl-9"
+                className="rounded-full pl-10"
               />
             </div>
 
@@ -306,54 +299,62 @@ export default function FlightsPage() {
             </div>
           )}
 
-          {/* Filters + Amex toggle */}
+          {/* Filters — horizontal scrollable chip row */}
           {hasBalances && (
-            <div className="mb-4 flex flex-wrap items-center gap-3">
-              <Select
-                value={programFilter}
-                onValueChange={(v) => setProgramFilter(v as ProgramFilter)}
-              >
-                <SelectTrigger className="w-36">
-                  <SelectValue placeholder="Program" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All programs</SelectItem>
-                  <SelectItem value="qff">Qantas FF</SelectItem>
-                  <SelectItem value="velocity">Velocity</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={cabinFilter} onValueChange={(v) => setCabinFilter(v as CabinFilter)}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Cabin" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All cabins</SelectItem>
-                  <SelectItem value="economy">Economy</SelectItem>
-                  <SelectItem value="business">Business</SelectItem>
-                  <SelectItem value="first">First</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={originFilter} onValueChange={(v) => setOriginFilter(v as OriginFilter)}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Origin" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All origins</SelectItem>
-                  <SelectItem value="SYD">Sydney (SYD)</SelectItem>
-                  <SelectItem value="MEL">Melbourne (MEL)</SelectItem>
-                  <SelectItem value="BNE">Brisbane (BNE)</SelectItem>
-                </SelectContent>
-              </Select>
-
+            <div className="mb-4 space-y-2">
+              <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-1">
+                {/* Program chips */}
+                {(['all', 'qff', 'velocity'] as ProgramFilter[]).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setProgramFilter(v)}
+                    className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                      programFilter === v
+                        ? 'bg-[var(--primary)] text-[var(--on-primary)]'
+                        : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
+                    }`}
+                  >
+                    {v === 'all' ? 'All programs' : v === 'qff' ? 'Qantas FF' : 'Velocity'}
+                  </button>
+                ))}
+                <span className="mx-1 self-center text-white/10">|</span>
+                {/* Cabin chips */}
+                {(['all', 'economy', 'business', 'first'] as CabinFilter[]).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setCabinFilter(v)}
+                    className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
+                      cabinFilter === v
+                        ? 'bg-[var(--primary)] text-[var(--on-primary)]'
+                        : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
+                    }`}
+                  >
+                    {v === 'all' ? 'All cabins' : v}
+                  </button>
+                ))}
+                <span className="mx-1 self-center text-white/10">|</span>
+                {/* Origin chips */}
+                {(['all', 'SYD', 'MEL', 'BNE'] as OriginFilter[]).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setOriginFilter(v)}
+                    className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+                      originFilter === v
+                        ? 'bg-[var(--primary)] text-[var(--on-primary)]'
+                        : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
+                    }`}
+                  >
+                    {v === 'all' ? 'All origins' : v}
+                  </button>
+                ))}
+              </div>
               {/* Amex MR toggle */}
-              <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-lg border border-white/5 bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/5 bg-[var(--surface)] px-4 py-1.5 text-xs font-semibold text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
                 <input
                   type="checkbox"
                   checked={includeAmexTransfers}
                   onChange={(e) => setIncludeAmexTransfers(e.target.checked)}
-                  className="h-4 w-4 accent-[var(--accent)]"
+                  className="h-3.5 w-3.5 accent-[var(--accent)]"
                 />
                 Include Amex MR transfers
               </label>
