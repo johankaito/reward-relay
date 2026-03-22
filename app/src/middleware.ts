@@ -2,19 +2,14 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
-  // IP restriction only applies to staging
-  if (process.env.NEXT_PUBLIC_APP_ENV !== "staging") {
-    return NextResponse.next()
-  }
-
   const allowedIps = (process.env.STAGING_ALLOWED_IPS ?? "")
     .split(",")
     .map((ip) => ip.trim())
     .filter(Boolean)
 
-  // No allowlist configured — fail closed
+  // STAGING_ALLOWED_IPS not set → production, no restriction
   if (allowedIps.length === 0) {
-    return new NextResponse("Access denied", { status: 403 })
+    return NextResponse.next()
   }
 
   // x-forwarded-for may be a comma-separated list; take the first (client) IP
