@@ -177,7 +177,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
               </div>
               <div className="bg-surface-container-highest p-4 rounded-lg flex flex-col items-center justify-center text-center border-b-2 border-primary/30">
                 <span className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Annual Fee</span>
-                <p className="font-headline font-extrabold text-sm tabular-nums">{fmtDate(card.annual_fee_date)}</p>
+                <p className="font-headline font-extrabold text-sm tabular-nums">{card.card?.annual_fee != null ? fmt(card.card.annual_fee) : "—"}</p>
               </div>
               <div className="bg-surface-container-highest p-4 rounded-lg flex flex-col items-center justify-center text-center">
                 <span className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Cancel By</span>
