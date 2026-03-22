@@ -92,7 +92,7 @@ export function PointsBalanceWidget({
     <>
       <Card className="border border-[var(--border-default)] bg-gradient-to-br from-[var(--surface)] to-[color-mix(in_srgb,var(--accent)_3%,transparent)] shadow-md">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-slate-300">
+          <CardTitle className="text-sm font-medium text-on-surface">
             Qantas FF Points
           </CardTitle>
           <TrendingUp className="h-4 w-4 text-[var(--accent)]" />
@@ -103,7 +103,7 @@ export function PointsBalanceWidget({
               <p className="text-3xl font-bold text-white">
                 {currentBalance.toLocaleString()}
               </p>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-on-surface-variant">
                 Updated {formatDate(lastUpdated)}
               </p>
             </div>
@@ -144,7 +144,7 @@ export function PointsBalanceWidget({
                 placeholder="e.g., 50000"
               />
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-on-surface-variant">
               💡 Tip: Check your Qantas account monthly to keep your projections
               accurate
             </p>

@@ -85,7 +85,7 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
             <Sparkles className="h-6 w-6 text-teal-400" />
             Upgrade to Pro
           </DialogTitle>
-          <DialogDescription className="text-slate-300">
+          <DialogDescription className="text-on-surface">
             Unlock all features with a 7-day free trial
           </DialogDescription>
         </DialogHeader>
@@ -93,13 +93,13 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Free */}
           <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface-muted)] p-4">
-            <p className="text-sm font-semibold text-slate-400">Free</p>
+            <p className="text-sm font-semibold text-on-surface-variant">Free</p>
             <p className="mt-1 text-2xl font-bold text-white">$0</p>
-            <p className="text-xs text-slate-400">Current plan</p>
+            <p className="text-xs text-on-surface-variant">Current plan</p>
             <ul className="mt-4 space-y-2">
               {FREE_FEATURES.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-slate-300">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500" />
+                <li key={f} className="flex items-start gap-2 text-sm text-on-surface">
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-on-surface-variant" />
                   {f}
                 </li>
               ))}
@@ -110,12 +110,12 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
           <div className="rounded-xl border-2 border-teal-500/50 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 p-4">
             <p className="text-sm font-semibold text-teal-400">Pro</p>
             <p className="mt-1 text-2xl font-bold text-white">
-              $9.99<span className="text-sm font-normal text-slate-400">/mo</span>
+              $9.99<span className="text-sm font-normal text-on-surface-variant">/mo</span>
             </p>
             <p className="text-xs text-teal-300">7-day free trial</p>
             <ul className="mt-4 space-y-2">
               {PRO_FEATURES.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-slate-200">
+                <li key={f} className="flex items-start gap-2 text-sm text-on-surface">
                   <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-teal-400" />
                   {f}
                 </li>
@@ -141,7 +141,7 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
           >
             {loading === "annual" ? "Redirecting..." : `Start Trial — ${PLANS.annual.display} (${PLANS.annual.savings})`}
           </Button>
-          <p className="text-center text-xs text-slate-400">
+          <p className="text-center text-xs text-on-surface-variant">
             Cancel anytime during your 7-day trial. No charge until trial ends.
           </p>
         </div>

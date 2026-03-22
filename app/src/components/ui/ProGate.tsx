@@ -64,7 +64,7 @@ export function ProGate({ feature, children, teaserText }: ProGateProps) {
             <p className="text-lg font-semibold text-white">
               Upgrade to Pro
             </p>
-            <p className="text-sm text-slate-300">
+            <p className="text-sm text-on-surface">
               Unlock {feature} and all Pro features with a 7-day free trial
             </p>
           </div>

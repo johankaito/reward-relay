@@ -57,7 +57,7 @@ export default function UpdatePasswordPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--surface-muted)] px-4 text-white">
         <Card className="w-full max-w-md border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-          <CardContent className="py-8 text-center text-sm text-slate-300">
+          <CardContent className="py-8 text-center text-sm text-on-surface">
             Checking reset link...
           </CardContent>
         </Card>
@@ -69,13 +69,13 @@ export default function UpdatePasswordPage() {
     <div className="flex min-h-screen items-center justify-center bg-[var(--surface-muted)] px-4 text-white">
       <Card className="w-full max-w-md border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
         <CardHeader className="space-y-2">
-          <p className="text-sm text-slate-300">Reward Relay</p>
+          <p className="text-sm text-on-surface">Reward Relay</p>
           <CardTitle className="text-2xl font-semibold text-white">Set a new password</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleUpdate} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-200">
+              <Label htmlFor="password" className="text-on-surface">
                 New password
               </Label>
               <Input
@@ -85,11 +85,11 @@ export default function UpdatePasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="At least 6 characters"
                 required
-                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-slate-200">
+              <Label htmlFor="confirmPassword" className="text-on-surface">
                 Confirm password
               </Label>
               <Input
@@ -99,7 +99,7 @@ export default function UpdatePasswordPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Repeat password"
                 required
-                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
               />
             </div>
             <Button

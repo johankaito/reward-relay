@@ -44,7 +44,7 @@ export default function ResetPasswordPage() {
         <CardContent>
           <form onSubmit={handleReset} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-200">
+              <Label htmlFor="email" className="text-on-surface">
                 Email
               </Label>
               <Input
@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 required
                 placeholder="you@example.com"
-                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
               />
             </div>
             <Button

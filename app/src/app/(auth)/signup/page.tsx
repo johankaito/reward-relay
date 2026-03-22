@@ -87,12 +87,12 @@ export default function SignupPage() {
           <CardTitle className="text-2xl font-semibold text-white">
             Create your account
           </CardTitle>
-          <p className="text-sm text-slate-300">Week 1: add your cards + churn target</p>
+          <p className="text-sm text-on-surface">Week 1: add your cards + churn target</p>
         </CardHeader>
         <CardContent className="space-y-6">
           <form onSubmit={handleSignup} className="space-y-4" name="signup">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-200">
+              <Label htmlFor="email" className="text-on-surface">
                 Email
               </Label>
               <Input
@@ -104,11 +104,11 @@ export default function SignupPage() {
                 onChange={(event) => setEmail(event.target.value)}
                 required
                 placeholder="you@example.com"
-                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-200">
+              <Label htmlFor="password" className="text-on-surface">
                 Password
               </Label>
               <Input
@@ -120,7 +120,7 @@ export default function SignupPage() {
                 onChange={(event) => setPassword(event.target.value)}
                 required
                 placeholder="At least 6 characters"
-                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-slate-500"
+                className="border-[var(--border-default)] bg-[var(--surface-soft)] text-white placeholder:text-on-surface-variant"
               />
             </div>
             <Button
@@ -132,7 +132,7 @@ export default function SignupPage() {
               {isLoading ? "Creating..." : "Create account"}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm text-slate-300">
+          <div className="mt-4 text-center text-sm text-on-surface">
             Already have an account?{" "}
             <Link href="/login" className="text-[var(--accent-strong)] underline">
               Log in

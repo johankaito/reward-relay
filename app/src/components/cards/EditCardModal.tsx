@@ -129,14 +129,14 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
       <DialogContent className="max-w-md bg-[var(--surface)] border-[var(--border-default)] text-white">
         <DialogHeader>
           <DialogTitle>Edit Card</DialogTitle>
-          <DialogDescription className="text-slate-300">
+          <DialogDescription className="text-on-surface">
             Update card details or delete it from your portfolio
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="bank" className="text-slate-200">
+            <Label htmlFor="bank" className="text-on-surface">
               Bank
             </Label>
             <Input
@@ -150,7 +150,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-slate-200">
+            <Label htmlFor="name" className="text-on-surface">
               Card Name
             </Label>
             <Input
@@ -164,7 +164,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="status" className="text-slate-200">
+            <Label htmlFor="status" className="text-on-surface">
               Status
             </Label>
             <Select value={status ?? undefined} onValueChange={(v) => setStatus(v as UserCard["status"])}>
@@ -183,7 +183,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="applicationDate" className="text-slate-200">
+              <Label htmlFor="applicationDate" className="text-on-surface">
                 Application Date
               </Label>
               <Input
@@ -196,7 +196,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cancellationDate" className="text-slate-200">
+              <Label htmlFor="cancellationDate" className="text-on-surface">
                 Cancellation Date
               </Label>
               <Input
@@ -210,7 +210,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="annualFee" className="text-slate-200">
+            <Label htmlFor="annualFee" className="text-on-surface">
               Annual Fee
             </Label>
             <Input
@@ -224,7 +224,7 @@ export function EditCardModal({ card, isOpen, onClose, onUpdate }: EditCardModal
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes" className="text-slate-200">
+            <Label htmlFor="notes" className="text-on-surface">
               Notes
             </Label>
             <Input

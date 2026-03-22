@@ -181,11 +181,11 @@ export default function ProjectionsPage() {
 
             {/* Destination */}
             <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4 transition-colors hover:bg-surface-container-high">
-              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
                 Destination
               </label>
               <div className="flex items-center gap-2">
-                <Plane className="h-5 w-5 text-slate-500" />
+                <Plane className="h-5 w-5 text-on-surface-variant" />
                 <input
                   className="w-full bg-transparent text-lg font-bold text-white outline-none placeholder:text-white/40"
                   value={destination}
@@ -198,7 +198,7 @@ export default function ProjectionsPage() {
 
             {/* Cabin Class */}
             <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4">
-              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
                 Cabin Class
               </label>
               <div className="flex gap-1.5">
@@ -209,7 +209,7 @@ export default function ProjectionsPage() {
                     className={`flex-1 rounded-lg py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
                       cabinClass === c.id
                         ? "bg-primary text-on-primary"
-                        : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
+                        : "bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-on-surface"
                     }`}
                   >
                     {c.label}
@@ -220,7 +220,7 @@ export default function ProjectionsPage() {
 
             {/* Quick routes */}
             <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4">
-              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-on-surface-variant">
                 Quick Routes
               </label>
               <div className="flex flex-wrap gap-1.5">
@@ -231,7 +231,7 @@ export default function ProjectionsPage() {
                       setOrigin(r.origin)
                       setDestination(r.destination)
                     }}
-                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-slate-300 transition-all hover:border-primary/30 hover:text-primary"
+                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-on-surface transition-all hover:border-primary/30 hover:text-primary"
                   >
                     {r.label}
                   </button>
@@ -267,7 +267,7 @@ export default function ProjectionsPage() {
                   {origin} → {destination}
                 </span>
               </h2>
-              <p className="max-w-lg text-base leading-relaxed text-slate-400">
+              <p className="max-w-lg text-base leading-relaxed text-on-surface-variant">
                 {isSufficient ? (
                   <>
                     You have enough points for a{" "}
@@ -291,8 +291,8 @@ export default function ProjectionsPage() {
                 )}
               </p>
               {monthsToClose && !isSufficient && (
-                <div className="flex items-center gap-2 text-sm text-slate-400">
-                  <Clock className="h-4 w-4 text-slate-500" />
+                <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+                  <Clock className="h-4 w-4 text-on-surface-variant" />
                   <span>
                     Est.{" "}
                     <span className="font-semibold text-white">{monthsToClose} months</span> to
@@ -306,19 +306,19 @@ export default function ProjectionsPage() {
             <div className="w-full rounded-2xl border border-white/5 bg-surface/40 p-6 backdrop-blur-md lg:w-[400px]">
               <div className="mb-4 flex items-end justify-between">
                 <div>
-                  <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                  <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                     Current Points Pool
                   </p>
                   <p className="font-[var(--font-grotesk)] text-xl font-bold tabular-nums tracking-tight text-white">
                     {currentPoints.toLocaleString()}{" "}
-                    <span className="text-slate-500">/ {pointsRequired.toLocaleString()}</span>
+                    <span className="text-on-surface-variant">/ {pointsRequired.toLocaleString()}</span>
                   </p>
                 </div>
                 <span
                   className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
                     isSufficient
                       ? "border-[#4edea3]/20 bg-primary/10 text-primary"
-                      : "border-white/10 bg-white/5 text-slate-300"
+                      : "border-white/10 bg-white/5 text-on-surface"
                   }`}
                 >
                   {isSufficient ? "Ready" : `${percentage}%`}
@@ -375,7 +375,7 @@ export default function ProjectionsPage() {
               <h3 className="font-[var(--font-grotesk)] text-2xl font-bold tracking-tight text-white">
                 Top Cards to Close the Gap
               </h3>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-on-surface-variant">
                 Ranked by welcome bonus — highest points first
               </p>
             </div>
@@ -383,9 +383,9 @@ export default function ProjectionsPage() {
 
           {topRecommendations.length === 0 ? (
             <div className="rounded-3xl border border-white/5 bg-surface-container p-12 text-center">
-              <TrendingUp className="mx-auto h-12 w-12 text-slate-600" />
+              <TrendingUp className="mx-auto h-12 w-12 text-on-surface-variant" />
               <p className="mt-4 text-lg font-semibold text-white">No recommendations available</p>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-on-surface-variant">
                 All active cards are already in your portfolio
               </p>
             </div>
@@ -459,17 +459,17 @@ export default function ProjectionsPage() {
                     <div className="flex flex-1 flex-col p-6">
                       <div className="mb-6 space-y-4">
                         <div className="flex items-center justify-between border-b border-white/5 pb-3">
-                          <span className="text-sm font-semibold text-slate-400">Card</span>
+                          <span className="text-sm font-semibold text-on-surface-variant">Card</span>
                           <span className="text-sm font-bold text-white">{card.name}</span>
                         </div>
                         <div className="flex items-center justify-between border-b border-white/5 pb-3">
-                          <span className="text-sm font-semibold text-slate-400">Annual Fee</span>
+                          <span className="text-sm font-semibold text-on-surface-variant">Annual Fee</span>
                           <span className="text-sm font-bold text-white tabular-nums">
                             ${(card.annual_fee ?? 0).toLocaleString()} AUD
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-semibold text-slate-400">Earn Rate</span>
+                          <span className="text-sm font-semibold text-on-surface-variant">Earn Rate</span>
                           <span className="text-sm font-bold text-white tabular-nums">
                             {card.earn_rate_primary ?? 1} pt / $1
                           </span>
@@ -488,7 +488,7 @@ export default function ProjectionsPage() {
                           <div className="flex items-center justify-between">
                             <span
                               className={`text-xs font-bold uppercase tracking-widest ${
-                                wouldSuffice ? "text-primary" : "text-slate-500"
+                                wouldSuffice ? "text-primary" : "text-on-surface-variant"
                               }`}
                             >
                               {wouldSuffice ? "Would cover goal" : "Remaining gap"}
@@ -510,7 +510,7 @@ export default function ProjectionsPage() {
                           className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold uppercase tracking-widest transition-all ${
                             isHighlighted
                               ? "bg-gradient-to-br from-[#4edea3] to-[#10b981] text-on-primary shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]"
-                              : "border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10 hover:text-white"
+                              : "border border-white/10 bg-white/5 text-on-surface hover:bg-white/10 hover:text-on-surface"
                           }`}
                         >
                           <CreditCard className="h-4 w-4" />
