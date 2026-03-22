@@ -6,7 +6,7 @@ type BadgeVariant = "primary" | "warning" | "danger" | "neutral"
 const variantClasses: Record<BadgeVariant, string> = {
   primary: "bg-primary/10 text-primary",
   warning: "bg-amber-400/10 text-amber-400",
-  danger: "bg-[#ffb4ab]/10 text-[#ffb4ab]",
+  danger: "bg-destructive/10 text-destructive",
   neutral: "bg-on-surface/10 text-on-surface-variant",
 }
 

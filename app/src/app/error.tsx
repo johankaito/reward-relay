@@ -33,7 +33,7 @@ export default function Error({
         )}
         <button
           onClick={reset}
-          className="w-full rounded-full py-2 px-4 font-medium text-[#003824] transition-opacity hover:opacity-90"
+          className="w-full rounded-full py-2 px-4 font-medium text-on-primary transition-opacity hover:opacity-90"
           style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
         >
           Try again
