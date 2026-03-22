@@ -246,18 +246,16 @@ export default function ProfitPage() {
 
   return (
     <AppShell>
+      {/* ── Sticky header ── */}
+      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+        <div className="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+          <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent">Profit Dashboard</h2>
+        </div>
+      </header>
+
       <div className="max-w-[1440px] mx-auto p-6 md:p-12 space-y-12">
         {/* Export buttons row */}
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Track</p>
-            <h1
-              className="mt-1 bg-gradient-to-br from-primary to-primary-container bg-clip-text text-2xl font-black text-transparent"
-            >
-              Profit Dashboard
-            </h1>
-          </div>
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
             {isPro && allCards.length > 0 && (
               <Button
                 variant="outline"
@@ -284,7 +282,6 @@ export default function ProfitPage() {
                 </Button>
               </ProGate>
             )}
-          </div>
         </div>
 
         {/* Tab selector — business only */}

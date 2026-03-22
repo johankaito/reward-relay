@@ -195,7 +195,16 @@ export default function FlightsPage() {
 
   return (
     <AppShell>
-      <div className="max-w-[1440px] mx-auto p-6 md:p-12 space-y-12">
+      {/* ── Sticky header ── */}
+      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/60 backdrop-blur-xl border-b border-white/5 h-20 flex items-center justify-between px-8">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">Reward Flights</h2>
+          <div className="h-4 w-[1px] bg-white/10 hidden md:block mx-2" />
+          <span className="hidden md:block px-3 py-1 bg-surface-container/50 border border-white/5 rounded-full text-[10px] font-bold text-primary uppercase tracking-widest">Global Search</span>
+        </div>
+      </header>
+
+      <div className="max-w-[1440px] mx-auto p-8 space-y-10">
 
         {/* Hero search section */}
         <div className="relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-end p-10 shadow-2xl border border-white/5">

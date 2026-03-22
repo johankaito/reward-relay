@@ -357,7 +357,14 @@ export default function SpendingTrackerPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 pb-10">
+      {/* ── Sticky header ── */}
+      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+        <div className="flex items-center justify-between px-10 h-16 w-full max-w-[1440px] mx-auto">
+          <h1 className="text-lg font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent font-headline">Spend Tracker</h1>
+        </div>
+      </header>
+
+      <div className="space-y-6 pb-10 px-10 pt-10">
         {/* ── Spending profile wizard — shown when no profile exists or editing ── */}
         {userId && (hasSpendingProfile === false || editingProfile) && (
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
@@ -864,3 +871,4 @@ export default function SpendingTrackerPage() {
     </AppShell>
   )
 }
+
