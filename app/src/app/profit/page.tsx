@@ -14,7 +14,6 @@ import {
 import { AppShell } from "@/components/layout/AppShell"
 import { ProGate } from "@/components/ui/ProGate"
 import { Button } from "@/components/ui/button"
-import { StatCard } from "@/components/ui/stat-card"
 import { ActivityItem } from "@/components/ui/activity-item"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { supabase } from "@/lib/supabase/client"
@@ -562,31 +561,26 @@ export default function ProfitPage() {
 
               return (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
-                    <StatCard
-                      label="Potential Savings"
-                      value={potentialSavings > 0 ? fmtAud(potentialSavings) : '—'}
-                      sub="fees exceeding bonus value this FY"
-                      className="p-0"
-                    />
+                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 flex flex-col gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-outline">Potential Savings</span>
+                    <h4 className="font-headline font-bold text-lg tabular-nums text-on-surface">
+                      {potentialSavings > 0 ? fmtAud(potentialSavings) : '—'}
+                    </h4>
+                    <p className="text-xs text-on-surface-variant">fees exceeding bonus value this FY</p>
                   </div>
-                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
-                    <StatCard
-                      label="Next ROI Peak"
-                      value={topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
-                      sub={topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}
-                      accent
-                      className="p-0"
-                    />
+                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 flex flex-col gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-outline">Next ROI Peak</span>
+                    <h4 className="font-headline font-bold text-lg tabular-nums text-primary">
+                      {topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
+                    </h4>
+                    <p className="text-xs text-on-surface-variant">{topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}</p>
                   </div>
-                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
-                    <StatCard
-                      label="Wallet Health"
-                      value={avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
-                      sub={`avg ROI across ${fyCards.length} card${fyCards.length !== 1 ? 's' : ''} this FY`}
-                      accent
-                      className="p-0"
-                    />
+                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 flex flex-col gap-3">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-outline">Wallet Health</span>
+                    <h4 className="font-headline font-bold text-lg tabular-nums text-primary">
+                      {avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
+                    </h4>
+                    <p className="text-xs text-on-surface-variant">{`avg ROI across ${fyCards.length} card${fyCards.length !== 1 ? 's' : ''} this FY`}</p>
                   </div>
                 </div>
               )

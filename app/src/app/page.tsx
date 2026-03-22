@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import {
   Lock,
@@ -23,19 +22,13 @@ import { BetaOnly } from "@/components/ui/BetaOnly"
 import { BetaRequestForm } from "@/components/forms/BetaRequestForm"
 
 export default function Home() {
-  const router = useRouter()
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-      if (session) {
-        router.replace("/dashboard")
-      }
-    }
-    checkAuth()
-  }, [router])
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session)
+    })
+  }, [])
 
   return (
     <div
@@ -74,17 +67,26 @@ export default function Home() {
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
               style={{ color: "var(--on-surface-variant)" }}>
-              Track every card. Earn every bonus. Know when to cancel.
+              The high-stakes command center for credit card optimization and point maximization. Orchestrate your credit portfolio with the precision of a master.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
-              <a
-                href="/login"
-                className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform hover:scale-105 md:w-auto"
-              >
-                Get started free
-              </a>
+              {isLoggedIn ? (
+                <a
+                  href="/dashboard"
+                  className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform hover:scale-105 md:w-auto"
+                >
+                  Go to Dashboard →
+                </a>
+              ) : (
+                <a
+                  href="/login"
+                  className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform hover:scale-105 md:w-auto"
+                >
+                  Join the Elite
+                </a>
+              )}
               <a
                 href="#how-it-works"
                 className="w-full rounded-full border px-10 py-4 text-lg font-bold transition-colors hover:bg-white/10 md:w-auto"
@@ -95,7 +97,7 @@ export default function Home() {
                   color: "var(--on-surface)",
                 }}
               >
-                See how it works
+                View Live Dashboard
               </a>
             </div>
 
@@ -131,21 +133,18 @@ export default function Home() {
               {[
                 {
                   num: "1",
-                  icon: <BarChart3 className="h-7 w-7" />,
-                  title: "Track",
-                  body: "Add every card, fee, and application date. We automatically calculate your 12-month rule and cancellation windows.",
+                  title: "Connect Your Vault",
+                  body: "Securely link your bank accounts using military-grade encryption to aggregate your entire financial footprint.",
                 },
                 {
                   num: "2",
-                  icon: <Zap className="h-7 w-7" />,
-                  title: "Earn",
-                  body: "Hit every bonus threshold on time. Real-time spend tracking against your minimum spend goals.",
+                  title: "Algorithm Audit",
+                  body: "Our proprietary engine analyzes your spending patterns against 500+ credit card offers to find your optimal path.",
                 },
                 {
                   num: "3",
-                  icon: <Plane className="h-7 w-7" />,
-                  title: "Redeem",
-                  body: "See exactly what award flights your points unlock — and the smartest moment to book or transfer.",
+                  title: "Execute & Conquer",
+                  body: "Receive real-time notifications on when to spend, when to apply, and when to close to keep your credit score pristine.",
                 },
               ].map((step) => (
                 <div key={step.num} className="flex flex-col gap-8 md:flex-row md:items-start">
@@ -667,12 +666,16 @@ export default function Home() {
                     </div>
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
-                    {["Track 2–3 cards", "Basic reminders", "12-month rule tracking"].map((f) => (
+                    {["Up to 2 Bank Syncs", "Basic Point Dashboard"].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
-                        <Check className="h-5 w-5 shrink-0" style={{ color: "var(--primary)" }} />
+                        <Check className="h-5 w-5 shrink-0 text-outline" />
                         {f}
                       </li>
                     ))}
+                    <li className="flex items-center gap-3 text-sm opacity-40">
+                      <Check className="h-5 w-5 shrink-0 text-outline" />
+                      No Churn Strategy
+                    </li>
                   </ul>
                   <a
                     href="/signup"
@@ -701,22 +704,20 @@ export default function Home() {
                     Most Popular
                   </div>
                   <div className="mb-8">
-                    <h3 className="mb-2 text-2xl font-bold" style={{ fontFamily: "var(--font-grotesk)" }}>
+                    <h3 className="mb-2 text-2xl font-bold font-headline">
                       Command Center
                     </h3>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-extrabold tabular-nums">$9.99</span>
+                      <span className="text-4xl font-extrabold tabular-nums">$29</span>
                       <span style={{ color: "var(--on-surface-variant)" }}>/month</span>
                     </div>
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
                     {[
-                      "Unlimited cards",
-                      "Smart recommendations",
-                      "Goal projections & timeline",
-                      "CSV statement upload",
-                      "Daily insights & deals",
-                      "Priority support",
+                      "Unlimited Bank Sync",
+                      "Sign-up Bonus Tracker",
+                      "Custom Churn Strategy",
+                      "Priority Concierge Support",
                     ].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
                         <Check className="h-5 w-5 shrink-0" style={{ color: "var(--primary)" }} />
@@ -733,11 +734,8 @@ export default function Home() {
                       boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
                     }}
                   >
-                    Start 7-Day Trial
+                    Upgrade Now
                   </a>
-                  <p className="mt-3 text-center text-xs" style={{ color: "var(--on-surface-variant)" }}>
-                    Then $9.99/month • Cancel anytime
-                  </p>
                 </div>
               </div>
 
@@ -875,45 +873,42 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA / Footer section */}
+        {/* CTA Section */}
         <section className="px-8 py-24 text-center">
           <div className="glass-card relative mx-auto max-w-4xl overflow-hidden rounded-lg p-16 border border-outline-variant/10">
             <div
               className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full blur-[100px]"
               style={{ background: "rgba(78,222,163,0.05)" }}
             />
-            <h2
-              className="mb-6 text-4xl font-extrabold md:text-5xl"
-              style={{ fontFamily: "var(--font-grotesk)" }}
-            >
+            <h2 className="mb-6 font-headline text-4xl font-extrabold md:text-5xl">
               Ready to Master the Churn?
             </h2>
             <p className="mx-auto mb-12 max-w-2xl text-lg" style={{ color: "var(--on-surface-variant)" }}>
               Stop leaving points on the table. Join 5,000+ Aussies who have optimized their credit
               card game with precision.
             </p>
-            <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
-              <a
-                href="/login"
-                className="w-full rounded-full px-10 py-4 text-lg font-bold transition-all hover:scale-105 md:w-auto"
-                style={{
-                  background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
-                  color: "#003824",
-                  boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
-                }}
-              >
-                Get Started
-              </a>
-              <BetaGate>
+            <BetaOnly>
+              <BetaRequestForm
+                buttonText="Get Early Access"
+                buttonClassName="px-12 py-4 bg-primary-gradient text-on-primary font-headline font-bold rounded-full hover:scale-105 transition-transform shadow-lg shadow-primary/20"
+                variant="inline"
+              />
+            </BetaOnly>
+            <BetaGate>
+              <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
                 <a
-                  href="/signup"
-                  className="w-full rounded-full border px-10 py-4 text-lg font-bold transition-colors hover:bg-white/10 md:w-auto"
-                  style={{ borderColor: "rgba(134, 148, 138, 0.4)" }}
+                  href="/login"
+                  className="w-full rounded-full px-10 py-4 text-lg font-bold transition-all hover:scale-105 md:w-auto"
+                  style={{
+                    background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
+                    color: "#003824",
+                    boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
+                  }}
                 >
-                  Create Account
+                  Get Early Access
                 </a>
-              </BetaGate>
-            </div>
+              </div>
+            </BetaGate>
           </div>
         </section>
 
