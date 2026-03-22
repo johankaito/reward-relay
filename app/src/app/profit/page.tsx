@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Download, AlertTriangle, CheckCircle, TrendingUp } from "lucide-react"
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
@@ -84,12 +84,11 @@ function buildChartData(cards: ProfitCard[], fy: string) {
     return parseKey(a).getTime() - parseKey(b).getTime()
   })
 
-  // Cumulative net
-  let cumNet = 0
-  return sorted.map(([month, { bonuses, fees }]) => {
-    cumNet += bonuses - fees
-    return { month, net: Math.round(cumNet) }
-  })
+  return sorted.map(([month, { bonuses, fees }]) => ({
+    month,
+    bonuses: Math.round(bonuses),
+    fees: Math.round(fees),
+  }))
 }
 
 // Custom Recharts tooltip with glass-panel styling
@@ -99,17 +98,21 @@ function GlassTooltip({
   label,
 }: {
   active?: boolean
-  payload?: Array<{ value: number }>
+  payload?: Array<{ value: number; name: string; fill: string }>
   label?: string
 }) {
   if (!active || !payload?.length) return null
   return (
     <div
       className="glass-panel rounded-xl px-4 py-3 text-sm"
-      style={{ minWidth: 120 }}
+      style={{ minWidth: 140 }}
     >
-      <p className="text-[10px] font-bold uppercase tracking-widest text-[#bbcabf]">{label}</p>
-      <p className="mt-1 font-bold tabular-nums text-[#4edea3]">{fmtAud(payload[0].value)}</p>
+      <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-[#bbcabf]">{label}</p>
+      {payload.map((entry) => (
+        <p key={entry.name} className="font-bold tabular-nums" style={{ color: entry.fill }}>
+          {entry.name === "bonuses" ? "Bonus" : "Fees"}: {fmtAud(entry.value)}
+        </p>
+      ))}
     </div>
   )
 }
@@ -364,43 +367,32 @@ export default function ProfitPage() {
               </div>
             </div>
 
-            {/* ── Area chart ─────────────────────────────────────────── */}
-            {chartData.length > 1 && (
+            {/* ── Bar chart ──────────────────────────────────────────── */}
+            {chartData.length > 0 && (
               <div className="rounded-2xl bg-[#1b1f2c] p-6" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
                 <p
                   className="mb-4 text-sm font-bold text-white"
                   style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
-                  Cumulative Profit — {fy}
+                  Monthly Bonuses vs Fees — {fy}
                 </p>
-                <div className="h-48">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="profitGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#4edea3" stopOpacity={0.2} />
-                          <stop offset="100%" stopColor="#4edea3" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <XAxis
-                        dataKey="month"
-                        tick={{ fill: "#86948a", fontSize: 10, fontFamily: "Inter" }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <YAxis hide />
-                      <Tooltip content={<GlassTooltip />} />
-                      <Area
-                        type="monotone"
-                        dataKey="net"
-                        stroke="#4edea3"
-                        strokeWidth={2}
-                        fill="url(#profitGradient)"
-                        dot={false}
-                        activeDot={{ r: 4, fill: "#4edea3", strokeWidth: 0 }}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
+                <div className="overflow-x-auto">
+                  <div className="h-48" style={{ minWidth: 480 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={chartData} barGap={2} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                        <XAxis
+                          dataKey="month"
+                          tick={{ fill: "#86948a", fontSize: 10, fontFamily: "Inter" }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <YAxis hide />
+                        <Tooltip content={<GlassTooltip />} />
+                        <Bar dataKey="bonuses" fill="#4edea3" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                        <Bar dataKey="fees" fill="#ffb4ab" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
             )}
