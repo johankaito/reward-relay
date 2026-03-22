@@ -23,7 +23,11 @@ if (fs.existsSync(envLocal)) {
 
 const DESIGN_DIR = path.resolve(__dirname, "../../design/stitch_profit_dashboard_v1")
 const OUTPUT_DIR = path.resolve(__dirname, "visual-diff-output")
-const LIVE_BASE = process.env.LIVE_URL ?? "http://localhost:3000"
+const LIVE_BASE =
+  process.env.LIVE_URL ??
+  (process.env.NEXT_PUBLIC_APP_ENV === "production"
+    ? "https://www.rewardrelay.app"
+    : "https://reward-relay-staging.vercel.app")
 const VIEWPORT = { width: 1440, height: 900 }
 
 const PAGES = [
