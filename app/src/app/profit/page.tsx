@@ -110,7 +110,7 @@ function GlassTooltip({
       className="glass-panel rounded-xl px-4 py-3 text-sm"
       style={{ minWidth: 140 }}
     >
-      <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-[#bbcabf]">{label}</p>
+      <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">{label}</p>
       {payload.map((entry) => (
         <p key={entry.name} className="font-bold tabular-nums" style={{ color: entry.fill }}>
           {entry.name === "bonuses" ? "Bonus" : "Fees"}: {fmtAud(entry.value)}
@@ -235,7 +235,7 @@ export default function ProfitPage() {
       <AppShell>
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 animate-pulse rounded-2xl bg-[#1b1f2c]" />
+            <div key={i} className="h-24 animate-pulse rounded-2xl bg-surface-container" />
           ))}
         </div>
       </AppShell>
@@ -250,10 +250,10 @@ export default function ProfitPage() {
         {/* Export buttons row */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4edea3]">Track</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Track</p>
             <h1
-              className="mt-1 bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-2xl font-black text-transparent"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              className="mt-1 bg-gradient-to-br from-primary to-primary-container bg-clip-text text-2xl font-black text-transparent"
+             
             >
               Profit Dashboard
             </h1>
@@ -264,7 +264,7 @@ export default function ProfitPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => exportProfitCsv(visibleCards)}
-                className="border-white/10 text-[#bbcabf] hover:text-white"
+                className="border-white/10 text-on-surface-variant hover:text-on-surface"
               >
                 <Download className="mr-1.5 h-3.5 w-3.5" />
                 CSV
@@ -276,7 +276,7 @@ export default function ProfitPage() {
                   variant="outline"
                   size="sm"
                   asChild
-                  className="border-white/10 text-[#bbcabf] hover:text-white"
+                  className="border-white/10 text-on-surface-variant hover:text-on-surface"
                 >
                   <a href="/api/business/report" download>
                     <Download className="mr-1.5 h-3.5 w-3.5" />
@@ -291,7 +291,7 @@ export default function ProfitPage() {
         {/* Tab selector — business only */}
         {hasBusinessCards && (
           <ProGate feature="personal/business P&L split">
-            <div className="flex gap-1 rounded-xl border border-white/10 bg-[#1b1f2c] p-1">
+            <div className="flex gap-1 rounded-xl border border-white/10 bg-surface-container p-1">
               {(["all", "personal", "business"] as Tab[]).map((tab) => (
                 <button
                   key={tab}
@@ -299,8 +299,8 @@ export default function ProfitPage() {
                   onClick={() => setActiveTab(tab)}
                   className={`flex-1 rounded-lg px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
                     activeTab === tab
-                      ? "bg-[#4edea3] text-[#003824]"
-                      : "text-[#bbcabf] hover:text-white"
+                      ? "bg-primary text-on-primary"
+                      : "text-on-surface-variant hover:text-on-surface"
                   }`}
                 >
                   {tab}
@@ -312,9 +312,9 @@ export default function ProfitPage() {
 
         {isEmpty ? (
           <div className="glass-panel premium-glow flex flex-col items-center justify-center rounded-2xl py-16 text-center">
-            <TrendingUp className="mb-3 h-10 w-10 text-[#bbcabf]/40" />
-            <p className="font-medium text-white">No bonuses confirmed yet</p>
-            <p className="mt-1 text-sm text-[#bbcabf]">
+            <TrendingUp className="mb-3 h-10 w-10 text-on-surface-variant/40" />
+            <p className="font-medium text-on-surface">No bonuses confirmed yet</p>
+            <p className="mt-1 text-sm text-on-surface-variant">
               Mark a card bonus as received on the dashboard to start your P&amp;L
             </p>
           </div>
@@ -322,7 +322,7 @@ export default function ProfitPage() {
           <>
             {/* ── Hero ──────────────────────────────────────────────── */}
             <div
-              className="relative overflow-hidden rounded-2xl bg-[#1b1f2c] p-8"
+              className="relative overflow-hidden rounded-2xl bg-surface-container p-8"
               style={{ boxShadow: "0 0 40px rgba(78,222,163,0.06)" }}
             >
               {/* Decorative glow */}
@@ -330,13 +330,13 @@ export default function ProfitPage() {
                 className="pointer-events-none absolute right-0 top-0 h-64 w-64 rounded-full blur-3xl"
                 style={{ background: "rgba(78,222,163,0.05)", transform: "translate(30%,-30%)" }}
               />
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#86948a]">
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant">
                 {fy} Net Profit
               </p>
               <div className="mt-3 flex flex-wrap items-baseline gap-3">
                 <span
-                  className="tabular-nums text-5xl font-extrabold text-[#4edea3]"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  className="tabular-nums text-5xl font-extrabold text-primary"
+                 
                 >
                   {fmtAud(fyNet)}
                 </span>
@@ -350,7 +350,7 @@ export default function ProfitPage() {
                       className="rounded-full px-3 py-1 text-xs font-bold"
                       style={{
                         background: positive ? 'rgba(78,222,163,0.12)' : 'rgba(255,180,171,0.12)',
-                        color: positive ? '#4edea3' : '#ffb4ab',
+                        color: positive ? 'var(--primary)' : 'var(--error-container)',
                       }}
                     >
                       {positive ? '+' : ''}{Math.round(change)}% vs last FY
@@ -358,28 +358,28 @@ export default function ProfitPage() {
                   )
                 })()}
               </div>
-              <p className="mt-1 text-sm text-[#bbcabf]">This financial year</p>
+              <p className="mt-1 text-sm text-on-surface-variant">This financial year</p>
 
               {/* Stat cards */}
               <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="rounded-2xl bg-[#1b1f2c] p-5" style={{ border: "1px solid rgba(78,222,163,0.12)" }}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                <div className="rounded-2xl bg-surface-container p-5" style={{ border: "1px solid rgba(78,222,163,0.12)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                     Bonuses Earned
                   </p>
                   <p
-                    className="mt-2 tabular-nums text-2xl font-bold text-[#4edea3]"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                    className="mt-2 tabular-nums text-2xl font-bold text-primary"
+                   
                   >
                     +{fmtAud(fyBonus)}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-[#1b1f2c] p-5" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                <div className="rounded-2xl bg-surface-container p-5" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                     Fees Paid
                   </p>
                   <p
-                    className="mt-2 tabular-nums text-2xl font-bold text-[#bbcabf]"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                    className="mt-2 tabular-nums text-2xl font-bold text-on-surface-variant"
+                   
                   >
                     -{fmtAud(fyFees)}
                   </p>
@@ -389,10 +389,10 @@ export default function ProfitPage() {
 
             {/* ── Bar chart ──────────────────────────────────────────── */}
             {chartData.length > 0 && (
-              <div className="rounded-2xl bg-[#1b1f2c] p-6" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
+              <div className="rounded-2xl bg-surface-container p-6" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
                 <p
-                  className="mb-4 text-sm font-bold text-white"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  className="mb-4 text-sm font-bold text-on-surface"
+                 
                 >
                   Monthly Bonuses vs Fees — {fy}
                 </p>
@@ -402,7 +402,7 @@ export default function ProfitPage() {
                       <BarChart data={chartData} barGap={2} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
                         <XAxis
                           dataKey="month"
-                          tick={{ fill: "#86948a", fontSize: 10, fontFamily: "Inter" }}
+                          tick={{ fill: 'var(--on-surface-variant)', fontSize: 10, fontFamily: "Inter" }}
                           axisLine={false}
                           tickLine={false}
                         />
@@ -453,8 +453,8 @@ export default function ProfitPage() {
 
             {/* ── High Velocity Assets ────────────────────────────────── */}
             {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee >= 5).length > 0 && (
-              <div className="rounded-2xl bg-[#1b1f2c] p-6" style={{ border: '1px solid rgba(78,222,163,0.1)' }}>
-                <p className="mb-4 text-sm font-bold text-white" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <div className="rounded-2xl bg-surface-container p-6" style={{ border: '1px solid rgba(78,222,163,0.1)' }}>
+                <p className="mb-4 text-sm font-bold text-on-surface">
                   ⚡ High Velocity Assets
                 </p>
                 <div className="space-y-3">
@@ -480,8 +480,8 @@ export default function ProfitPage() {
 
             {/* ── Holding Strategy ────────────────────────────────────── */}
             {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee < 2).length > 0 && (
-              <div className="rounded-2xl bg-[#1b1f2c] p-6" style={{ border: '1px solid rgba(255,180,171,0.08)' }}>
-                <p className="mb-4 text-sm font-bold text-white" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <div className="rounded-2xl bg-surface-container p-6" style={{ border: '1px solid rgba(255,180,171,0.08)' }}>
+                <p className="mb-4 text-sm font-bold text-on-surface">
                   ◎ Holding Strategy
                 </p>
                 <div className="space-y-3">
@@ -515,14 +515,14 @@ export default function ProfitPage() {
                       className={`rounded-xl border p-4 ${
                         result.thresholdExceeded
                           ? "border-yellow-500/40 bg-yellow-500/10"
-                          : "border-[#4edea3]/20 bg-[#4edea3]/5"
+                          : "border-primary/20 bg-primary/5"
                       }`}
                     >
                       <div className="flex items-start gap-3">
                         {result.thresholdExceeded ? (
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-400" />
                         ) : (
-                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#4edea3]" />
+                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                         )}
                         <div className="space-y-1 text-sm">
                           {result.thresholdExceeded ? (
@@ -530,28 +530,28 @@ export default function ProfitPage() {
                               <p className="font-semibold text-yellow-300">
                                 FBT Exposure Indicator — {result.fbtYear}
                               </p>
-                              <p className="text-[#bbcabf]">
+                              <p className="text-on-surface-variant">
                                 You earned {result.totalBusinessPoints.toLocaleString()} business card
                                 points (~{fmtAud(result.totalBusinessAud)}) this FBT year. This exceeds
                                 the 250,000-point indicative threshold.
                               </p>
-                              <p className="text-[#bbcabf]">
+                              <p className="text-on-surface-variant">
                                 Indicative FBT exposure: ~{fmtAud(result.estimatedFbtLiability)} (47% of
                                 ~{fmtAud(result.estimatedTaxableValue)})
                               </p>
                             </>
                           ) : (
                             <>
-                              <p className="font-semibold text-[#4edea3]">
+                              <p className="font-semibold text-primary">
                                 Under FBT threshold — {result.fbtYear}
                               </p>
-                              <p className="text-[#bbcabf]">
+                              <p className="text-on-surface-variant">
                                 {result.totalBusinessPoints.toLocaleString()} business card points
                                 earned — under the 250,000-point indicative threshold.
                               </p>
                             </>
                           )}
-                          <p className="text-xs text-[#bbcabf]/60">{result.disclaimer}</p>
+                          <p className="text-xs text-on-surface-variant/60">{result.disclaimer}</p>
                         </div>
                       </div>
                     </div>
@@ -563,13 +563,13 @@ export default function ProfitPage() {
             {/* ── Per-card ROI table ─────────────────────────────────── */}
             <ProGate feature="card breakdown">
               <div
-                className="rounded-2xl bg-[#1b1f2c] overflow-hidden"
+                className="rounded-2xl bg-surface-container overflow-hidden"
                 style={{ border: "1px solid rgba(255,255,255,0.05)" }}
               >
                 <div className="px-6 pt-6 pb-3">
                   <p
-                    className="text-sm font-bold text-white"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                    className="text-sm font-bold text-on-surface"
+                   
                   >
                     Per-Card ROI
                   </p>
@@ -578,16 +578,16 @@ export default function ProfitPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr>
-                        <th className="px-6 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-6 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           Card
                         </th>
-                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           Bonus Earned
                         </th>
-                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           Annual Fee
                         </th>
-                        <th className="px-6 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-6 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           Net Value
                         </th>
                       </tr>
@@ -595,18 +595,18 @@ export default function ProfitPage() {
                     <tbody>
                       {roiRows.map((card) => (
                         <tr key={card.id} className="hover:bg-white/[0.02] transition-colors">
-                          <td className="px-6 py-3.5 font-medium text-[#dfe2f3]">
+                          <td className="px-6 py-3.5 font-medium text-on-surface">
                             {card.bank} {card.name}
                           </td>
-                          <td className="px-4 py-3.5 text-right tabular-nums text-[#dfe2f3]">
+                          <td className="px-4 py-3.5 text-right tabular-nums text-on-surface">
                             {fmtAud(card.bonusAud)}
                           </td>
-                          <td className="px-4 py-3.5 text-right tabular-nums text-[#bbcabf]">
+                          <td className="px-4 py-3.5 text-right tabular-nums text-on-surface-variant">
                             {fmtAud(card.fee)}
                           </td>
                           <td
                             className={`px-6 py-3.5 text-right tabular-nums font-bold ${
-                              card.netValue >= 0 ? "text-[#4edea3]" : "text-[#ffb4ab]"
+                              card.netValue >= 0 ? "text-primary" : "text-destructive"
                             }`}
                           >
                             {fmtAud(card.netValue)}
@@ -622,13 +622,13 @@ export default function ProfitPage() {
             {/* ── FY breakdown table — Pro only ──────────────────────── */}
             <ProGate feature="profit breakdown">
               <div
-                className="rounded-2xl bg-[#1b1f2c] overflow-hidden"
+                className="rounded-2xl bg-surface-container overflow-hidden"
                 style={{ border: "1px solid rgba(255,255,255,0.05)" }}
               >
                 <div className="px-6 pt-6 pb-3">
                   <p
-                    className="text-sm font-bold text-white"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                    className="text-sm font-bold text-on-surface"
+                   
                   >
                     By Financial Year
                   </p>
@@ -637,16 +637,16 @@ export default function ProfitPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr>
-                        <th className="px-6 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-6 py-2.5 text-left text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           FY
                         </th>
-                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           Bonuses
                         </th>
-                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-4 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           Fees
                         </th>
-                        <th className="px-6 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+                        <th className="px-6 py-2.5 text-right text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                           Net
                         </th>
                       </tr>
@@ -654,16 +654,16 @@ export default function ProfitPage() {
                     <tbody>
                       {fyRows.map((row) => (
                         <tr key={row.fy} className="hover:bg-white/[0.02] transition-colors">
-                          <td className="px-6 py-3.5 font-medium text-[#dfe2f3]">{row.fy}</td>
-                          <td className="px-4 py-3.5 text-right tabular-nums text-[#dfe2f3]">
+                          <td className="px-6 py-3.5 font-medium text-on-surface">{row.fy}</td>
+                          <td className="px-4 py-3.5 text-right tabular-nums text-on-surface">
                             {fmtAud(row.bonusAud)}
                           </td>
-                          <td className="px-4 py-3.5 text-right tabular-nums text-[#bbcabf]">
+                          <td className="px-4 py-3.5 text-right tabular-nums text-on-surface-variant">
                             {fmtAud(row.fee)}
                           </td>
                           <td
                             className={`px-6 py-3.5 text-right tabular-nums font-bold ${
-                              row.netValue >= 0 ? "text-[#4edea3]" : "text-[#ffb4ab]"
+                              row.netValue >= 0 ? "text-primary" : "text-destructive"
                             }`}
                           >
                             {fmtAud(row.netValue)}
@@ -681,27 +681,27 @@ export default function ProfitPage() {
 
             {/* All-time summary (collapsed detail) */}
             {activeTab !== "all" && (
-              <div className="rounded-2xl bg-[#1b1f2c] p-6" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-[#86948a]">
+              <div className="rounded-2xl bg-surface-container p-6" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
                   All-time Summary
                 </p>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <p className="text-xs text-[#bbcabf]">Total bonuses</p>
-                    <p className="mt-1 tabular-nums text-lg font-bold text-[#dfe2f3]">
+                    <p className="text-xs text-on-surface-variant">Total bonuses</p>
+                    <p className="mt-1 tabular-nums text-lg font-bold text-on-surface">
                       {fmtAud(totalBonusAud)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-[#bbcabf]">Total fees paid</p>
-                    <p className="mt-1 tabular-nums text-lg font-bold text-[#dfe2f3]">
+                    <p className="text-xs text-on-surface-variant">Total fees paid</p>
+                    <p className="mt-1 tabular-nums text-lg font-bold text-on-surface">
                       {fmtAud(totalFees)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-[#bbcabf]">Net profit</p>
+                    <p className="text-xs text-on-surface-variant">Net profit</p>
                     <p
-                      className={`mt-1 tabular-nums text-2xl font-bold ${netProfit >= 0 ? "text-[#4edea3]" : "text-[#ffb4ab]"}`}
+                      className={`mt-1 tabular-nums text-2xl font-bold ${netProfit >= 0 ? "text-primary" : "text-destructive"}`}
                     >
                       {fmtAud(netProfit)}
                     </p>
