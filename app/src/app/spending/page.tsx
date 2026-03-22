@@ -219,20 +219,20 @@ function formatDate(dateStr: string): string {
 }
 
 function getPaceStatus(card: UserCard): { label: string; color: string } {
-  if (!card.spend_deadline || !card.spend_target) return { label: "On Track", color: "text-[#4edea3]" }
+  if (!card.spend_deadline || !card.spend_target) return { label: "On Track", color: "text-primary" }
 
   const remaining = card.spend_target - card.current_spend
-  if (remaining <= 0) return { label: "Bonus Earned", color: "text-[#4edea3]" }
+  if (remaining <= 0) return { label: "Bonus Earned", color: "text-primary" }
 
   const daysLeft = Math.ceil(
     (new Date(card.spend_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
   )
-  if (daysLeft <= 0) return { label: "Will Miss Bonus", color: "text-[#ffb4ab]" }
+  if (daysLeft <= 0) return { label: "Will Miss Bonus", color: "text-destructive" }
 
   const dailyNeeded = remaining / daysLeft
-  if (dailyNeeded > 100) return { label: "Will Miss Bonus", color: "text-[#ffb4ab]" }
+  if (dailyNeeded > 100) return { label: "Will Miss Bonus", color: "text-destructive" }
   if (dailyNeeded > 50) return { label: "Behind Pace", color: "text-amber-400" }
-  return { label: "On Track", color: "text-[#4edea3]" }
+  return { label: "On Track", color: "text-primary" }
 }
 
 export default function SpendingTrackerPage() {
@@ -331,10 +331,10 @@ export default function SpendingTrackerPage() {
     return (
       <AppShell>
         <div className="space-y-5">
-          <div className="h-14 animate-pulse rounded-xl bg-[#1b1f2c]" />
-          <div className="h-64 animate-pulse rounded-2xl bg-[#1b1f2c]" />
+          <div className="h-14 animate-pulse rounded-xl bg-surface-container" />
+          <div className="h-64 animate-pulse rounded-2xl bg-surface-container" />
           {[1, 2].map((i) => (
-            <div key={i} className="h-20 animate-pulse rounded-xl bg-[#1b1f2c]" />
+            <div key={i} className="h-20 animate-pulse rounded-xl bg-surface-container" />
           ))}
         </div>
       </AppShell>
@@ -349,9 +349,9 @@ export default function SpendingTrackerPage() {
       <div className="space-y-6 pb-10">
         {/* Page header */}
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#4edea3]">Spending</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Spending</p>
           <h1
-            className="mt-1 bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-2xl font-black text-transparent"
+            className="mt-1 bg-gradient-to-br from-primary to-primary-container bg-clip-text text-2xl font-black text-transparent"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             Spend Tracker
@@ -366,11 +366,11 @@ export default function SpendingTrackerPage() {
             >
               No active cards
             </p>
-            <p className="text-sm text-[#bbcabf]">
+            <p className="text-sm text-on-surface-variant">
               Add cards with spending requirements to track your progress.
             </p>
             <Button
-              className="rounded-full font-bold text-[#003824]"
+              className="rounded-full font-bold text-on-primary"
               style={{ background: "var(--gradient-cta)" }}
               onClick={() => (window.location.href = "/cards")}
             >
@@ -388,7 +388,7 @@ export default function SpendingTrackerPage() {
                 <select
                   value={selectedCardId ?? ""}
                   onChange={(e) => setSelectedCardId(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-[#1b1f2c] px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#4edea3]/40"
+                  className="w-full rounded-xl border border-white/10 bg-surface-container px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary/40"
                 >
                   {userCards.map((c) => (
                     <option key={c.id} value={c.id}>

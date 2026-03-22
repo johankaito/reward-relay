@@ -186,13 +186,13 @@ export default function DashboardPage() {
     return (
       <AppShell>
         <div className="space-y-5">
-          <div className="h-14 animate-pulse rounded-xl bg-[#1b1f2c]" />
+          <div className="h-14 animate-pulse rounded-xl bg-surface-container" />
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-20 animate-pulse rounded-xl bg-[#1b1f2c]" />
+              <div key={i} className="h-20 animate-pulse rounded-xl bg-surface-container" />
             ))}
           </div>
-          <div className="h-48 animate-pulse rounded-xl bg-[#1b1f2c]" />
+          <div className="h-48 animate-pulse rounded-xl bg-surface-container" />
         </div>
       </AppShell>
     )
@@ -427,7 +427,7 @@ export default function DashboardPage() {
         {/* Top recommendation */}
         {topRecommendation && (
           <div>
-            <p className="mb-2 text-sm font-medium text-slate-400">Top opportunity</p>
+            <p className="mb-2 text-sm font-medium text-on-surface-variant">Top opportunity</p>
             <RecommendationCard recommendation={topRecommendation} variant="hero" />
           </div>
         )}
@@ -435,24 +435,24 @@ export default function DashboardPage() {
         {/* Projection preview */}
         {projection && (
           <ProGate feature="goal projections & timeline">
-            <Card className="border-[#4edea3]/20 bg-[#1b1f2c] shadow-sm">
+            <Card className="border-primary/20 bg-surface-container shadow-sm">
               <CardContent className="pt-5">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-[#4edea3]" />
-                      <p className="text-sm font-medium text-slate-400">Goal projection</p>
+                      <TrendingUp className="h-4 w-4 text-primary" />
+                      <p className="text-sm font-medium text-on-surface-variant">Goal projection</p>
                     </div>
-                    <p className="text-xl font-semibold text-[#dfe2f3]">
+                    <p className="text-xl font-semibold text-on-surface">
                       {projection.goal.label} in{" "}
-                      <span className="text-[#4edea3]">{projection.path.timeToGoal} months</span>
+                      <span className="text-primary">{projection.path.timeToGoal} months</span>
                     </p>
-                    <div className="flex items-center gap-3 text-xs text-slate-400">
+                    <div className="flex items-center gap-3 text-xs text-on-surface-variant">
                       <span>{projection.path.totalPoints.toLocaleString()} pts</span>
                       <span>·</span>
                       <span>${projection.path.totalCost} fees</span>
                       <span>·</span>
-                      <span className="text-[#4edea3]">
+                      <span className="text-primary">
                         ${projection.path.netValue.toFixed(0)} net value
                       </span>
                     </div>
@@ -461,7 +461,7 @@ export default function DashboardPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-full border-[#313442] text-[#dfe2f3] hover:bg-[#313442]"
+                      className="rounded-full border-surface-container-highest text-on-surface hover:bg-surface-container-highest"
                     >
                       View all goals
                     </Button>
@@ -476,7 +476,7 @@ export default function DashboardPage() {
         {userId && (
           <ProGate feature="daily insights & deals">
             <div>
-              <p className="mb-2 text-sm font-medium text-slate-400">Today&apos;s activity</p>
+              <p className="mb-2 text-sm font-medium text-on-surface-variant">Today&apos;s activity</p>
               <DailyInsights userId={userId} />
             </div>
           </ProGate>
