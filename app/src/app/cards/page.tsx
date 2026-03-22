@@ -17,6 +17,9 @@ import type { Database } from "@/types/database.types"
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
+// UserCard enriched with joined catalog card data
+type UserCardWithCatalog = UserCard & { card: CatalogCard | null }
+
 function getCardStatus(card: UserCard): "ACTIVE" | "BEHIND" | "CANCEL SOON" {
   if (card.cancellation_date) {
     const daysLeft = (new Date(card.cancellation_date).getTime() - Date.now()) / 86_400_000
@@ -48,10 +51,10 @@ function statusDot(status: string) {
 export default function CardsPage() {
   const router = useRouter()
   const { catalogCards } = useCatalog()
-  const [userCards, setUserCards] = useState<UserCard[]>([])
+  const [userCards, setUserCards] = useState<UserCardWithCatalog[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
-  const [selectedCard, setSelectedCard] = useState<UserCard | null>(null)
+  const [selectedCard, setSelectedCard] = useState<UserCardWithCatalog | null>(null)
   const [catalogMap, setCatalogMap] = useState<Map<string, CatalogCard>>(new Map())
 
   useEffect(() => {
@@ -73,7 +76,9 @@ export default function CardsPage() {
 
       const { data, error } = await supabase
         .from("user_cards")
-        .select("*")
+        .select(
+          "id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, bonus_earned_at, annual_fee, status, card_id, created_at, user_id, notes, approval_date, next_eligible_date, spend_updated_at, alert_enabled, bonus_earned_suggested, is_business, card:cards(id, name, bank, bonus_spend_requirement, welcome_bonus_points, points_currency, annual_fee)"
+        )
         .order("created_at", { ascending: false })
 
       if (error) {
@@ -82,17 +87,18 @@ export default function CardsPage() {
         return
       }
 
-      setUserCards(data ?? [])
-      if (data && data.length > 0) {
-        setSelectedCard(data[0])
+      const rows = (data ?? []) as unknown as UserCardWithCatalog[]
+      setUserCards(rows)
+      if (rows.length > 0) {
+        setSelectedCard(rows[0])
       }
       setLoading(false)
     }
     load()
   }, [router])
 
-  // Derived catalog card info for a given user card
-  const getCatalogCard = (uc: UserCard) => (uc.card_id ? catalogMap.get(uc.card_id) : undefined)
+  // Derived catalog card info — prefer joined card data, fall back to catalogMap
+  const getCatalogCard = (uc: UserCardWithCatalog) => uc.card ?? (uc.card_id ? catalogMap.get(uc.card_id) : undefined)
 
   // Stats
   const stats = useMemo(() => {
@@ -101,10 +107,11 @@ export default function CardsPage() {
     let totalPoints = 0
     for (const uc of userCards) {
       totalSpend += uc.current_spend ?? 0
-      const cc = uc.card_id ? catalogMap.get(uc.card_id) : undefined
+      const cc = getCatalogCard(uc)
       if (cc?.welcome_bonus_points) totalPoints += cc.welcome_bonus_points
     }
     return { totalLimit, totalSpend, totalPoints, count: userCards.length }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userCards, catalogMap])
 
   const activeCount = userCards.filter((c) => c.status === "active").length
@@ -167,12 +174,15 @@ export default function CardsPage() {
               // Reload user cards
               supabase
                 .from("user_cards")
-                .select("*")
+                .select(
+                  "id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, bonus_earned_at, annual_fee, status, card_id, created_at, user_id, notes, approval_date, next_eligible_date, spend_updated_at, alert_enabled, bonus_earned_suggested, is_business, card:cards(id, name, bank, bonus_spend_requirement, welcome_bonus_points, points_currency, annual_fee)"
+                )
                 .order("created_at", { ascending: false })
                 .then(({ data }) => {
                   if (data) {
-                    setUserCards(data)
-                    if (data.length > 0) setSelectedCard(data[0])
+                    const rows = data as unknown as UserCardWithCatalog[]
+                    setUserCards(rows)
+                    if (rows.length > 0) setSelectedCard(rows[0])
                   }
                 })
             }}
