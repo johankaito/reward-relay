@@ -308,15 +308,17 @@ export default function SpendingTrackerPage() {
         .from("user_cards")
         .select(`*, card:cards(*)`)
         .eq("user_id", user.id)
-        .in("status", ["active", "pending_spend"])
+        .not("status", "in", '("cancelled","churned","closed")')
         .order("activated_date", { ascending: false })
 
       if (error) throw error
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const enrichedCards = (cards || []).map((card: any) => {
-        const spendTarget = card.card?.bonus_spend_requirement || 0
-        const windowMonths = card.card?.bonus_spend_window_months || 3
+        // Supabase may return the join as array or object depending on relationship type
+        const cardData = Array.isArray(card.card) ? card.card[0] : card.card
+        const spendTarget = cardData?.bonus_spend_requirement || 0
+        const windowMonths = cardData?.bonus_spend_window_months || 3
         let deadline = null
         if (card.activated_date && spendTarget > 0) {
           const d = new Date(card.activated_date)
@@ -324,6 +326,7 @@ export default function SpendingTrackerPage() {
         }
         return {
           ...card,
+          card: cardData ?? null,  // normalise join to object (not array)
           current_spend: card.current_spend || 0,
           spend_target: spendTarget,
           spend_deadline: deadline?.toISOString() || null,
@@ -436,21 +439,17 @@ export default function SpendingTrackerPage() {
           </Card>
         )}
 
-        {/* ── Profile summary row (when profile exists and not editing) ── */}
+        {/* Profile edit trigger — only visible when profile exists and not editing */}
         {userId && hasSpendingProfile && !editingProfile && (
-          <div className="flex items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--surface)] px-4 py-3">
-            <div>
-              <p className="text-xs font-medium text-[var(--text-secondary)]">Spending profile</p>
-              <p className="text-sm font-semibold text-[var(--text-primary)]">Active</p>
-            </div>
+          <div className="flex justify-end">
             <Button
               variant="ghost"
               size="sm"
-              className="rounded-full text-[var(--text-secondary)]"
+              className="rounded-full text-on-surface-variant hover:text-on-surface text-xs"
               onClick={() => setEditingProfile(true)}
             >
-              <Pencil className="mr-1.5 h-3.5 w-3.5" />
-              Edit
+              <Pencil className="mr-1.5 h-3 w-3" />
+              Edit spending profile
             </Button>
           </div>
         )}
