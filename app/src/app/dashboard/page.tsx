@@ -11,6 +11,9 @@ import { ProGate } from "@/components/ui/ProGate"
 import { WalletCard } from "@/components/ui/WalletCard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { StatCard } from "@/components/ui/stat-card"
+import { ActivityItem } from "@/components/ui/activity-item"
+import { ProgressBar } from "@/components/ui/progress-bar"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { RecommendationCard } from "@/components/dashboard/RecommendationCard"
 import { DailyInsights } from "@/components/dashboard/DailyInsights"
@@ -261,10 +264,7 @@ export default function DashboardPage() {
             { label: "Cards Active", value: stats.active.toString() },
             { label: "Bonus Ready", value: stats.bonusReady.toString() },
           ].map(({ label, value }) => (
-            <div key={label} className="rounded-2xl bg-surface-container p-4">
-              <p className="text-xs text-on-surface-variant">{label}</p>
-              <p className="mt-1 font-mono tabular-nums text-xl text-primary">{value}</p>
-            </div>
+            <StatCard key={label} label={label} value={value} accent />
           ))}
         </div>
 
@@ -302,15 +302,7 @@ export default function DashboardPage() {
                         <span>${Math.round(card.current_spend ?? 0).toLocaleString()} spent</span>
                         <span>{pct}%</span>
                       </div>
-                      <div className="h-1.5 overflow-hidden rounded-full bg-surface-container-highest">
-                        <div
-                          className="h-full rounded-full transition-all duration-700"
-                          style={{
-                            width: `${pct}%`,
-                            background: "linear-gradient(90deg, var(--primary-container) 0%, var(--primary) 100%)",
-                          }}
-                        />
-                      </div>
+                      <ProgressBar value={pct} />
                       <p className="mt-1 text-[10px] text-on-surface-variant">
                         of ${card.spendTarget.toLocaleString()} target
                       </p>
@@ -420,19 +412,12 @@ export default function DashboardPage() {
                   ? new Date(card.bonus_earned_at).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })
                   : null
                 return (
-                  <div key={card.id} className="flex items-center justify-between px-5 py-4">
-                    <div>
-                      <p className="text-sm font-semibold text-on-surface">{card.bank} {card.name}</p>
-                      {earnedDate && (
-                        <p className="text-[10px] text-on-surface-variant">Earned {earnedDate}</p>
-                      )}
-                    </div>
-                    {card.bonusPoints > 0 && (
-                      <span className="tabular-nums text-sm font-bold text-primary">
-                        +{card.bonusPoints.toLocaleString()} pts
-                      </span>
-                    )}
-                  </div>
+                  <ActivityItem
+                    key={card.id}
+                    primary={`${card.bank} ${card.name}`}
+                    secondary={earnedDate ? `Earned ${earnedDate}` : undefined}
+                    value={card.bonusPoints > 0 ? `+${card.bonusPoints.toLocaleString()} pts` : undefined}
+                  />
                 )
               })}
             </div>

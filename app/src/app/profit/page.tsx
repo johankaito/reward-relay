@@ -14,6 +14,9 @@ import {
 import { AppShell } from "@/components/layout/AppShell"
 import { ProGate } from "@/components/ui/ProGate"
 import { Button } from "@/components/ui/button"
+import { StatCard } from "@/components/ui/stat-card"
+import { ActivityItem } from "@/components/ui/activity-item"
+import { StatusBadge } from "@/components/ui/status-badge"
 import { supabase } from "@/lib/supabase/client"
 import { getPointValue, getFinancialYear } from "@/lib/pointValuations"
 import { CardBreakdown, type ProfitCard } from "@/components/profit/CardBreakdown"
@@ -424,27 +427,26 @@ export default function ProfitPage() {
 
               return (
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <div className="glass-panel rounded-2xl p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">Potential Savings</p>
-                    <p className="mt-2 tabular-nums text-2xl font-extrabold text-[#ffb4ab]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                      {potentialSavings > 0 ? fmtAud(potentialSavings) : '—'}
-                    </p>
-                    <p className="mt-1 text-xs text-[#bbcabf]">fees exceeding bonus value this FY</p>
-                  </div>
-                  <div className="glass-panel rounded-2xl p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">Next ROI Peak</p>
-                    <p className="mt-2 tabular-nums text-2xl font-extrabold text-[#4edea3]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                      {topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
-                    </p>
-                    <p className="mt-1 text-xs text-[#bbcabf]">{topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}</p>
-                  </div>
-                  <div className="glass-panel rounded-2xl p-5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">Wallet Health</p>
-                    <p className="mt-2 tabular-nums text-2xl font-extrabold text-[#4edea3]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                      {avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
-                    </p>
-                    <p className="mt-1 text-xs text-[#bbcabf]">avg ROI across {fyCards.length} card{fyCards.length !== 1 ? 's' : ''} this FY</p>
-                  </div>
+                  <StatCard
+                    label="Potential Savings"
+                    value={potentialSavings > 0 ? fmtAud(potentialSavings) : '—'}
+                    sub="fees exceeding bonus value this FY"
+                    className="p-5"
+                  />
+                  <StatCard
+                    label="Next ROI Peak"
+                    value={topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
+                    sub={topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}
+                    accent
+                    className="p-5"
+                  />
+                  <StatCard
+                    label="Wallet Health"
+                    value={avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
+                    sub={`avg ROI across ${fyCards.length} card${fyCards.length !== 1 ? 's' : ''} this FY`}
+                    accent
+                    className="p-5"
+                  />
                 </div>
               )
             })()}
@@ -462,15 +464,13 @@ export default function ProfitPage() {
                     .map(c => {
                       const roi = c.bonusAud / c.fee
                       return (
-                        <div key={c.id} className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-semibold text-white">{c.bank} {c.name}</p>
-                            <p className="text-xs text-[#86948a]">{fmtAud(c.bonusAud)} bonus · {fmtAud(c.fee)} fee</p>
-                          </div>
-                          <span className="rounded-full bg-[#4edea3]/10 px-3 py-1 text-sm font-bold text-[#4edea3]">
-                            {roi.toFixed(1)}x
-                          </span>
-                        </div>
+                        <ActivityItem
+                          key={c.id}
+                          primary={`${c.bank} ${c.name}`}
+                          secondary={`${fmtAud(c.bonusAud)} bonus · ${fmtAud(c.fee)} fee`}
+                          value={<StatusBadge variant="primary">{roi.toFixed(1)}x</StatusBadge>}
+                          className="px-0 py-0"
+                        />
                       )
                     })
                   }
@@ -491,15 +491,13 @@ export default function ProfitPage() {
                     .map(c => {
                       const roi = c.bonusAud / c.fee
                       return (
-                        <div key={c.id} className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-semibold text-white">{c.bank} {c.name}</p>
-                            <p className="text-xs text-[#86948a]">{fmtAud(c.bonusAud)} bonus · {fmtAud(c.fee)} fee</p>
-                          </div>
-                          <span className="rounded-full bg-[#ffb4ab]/10 px-3 py-1 text-sm font-bold text-[#ffb4ab]">
-                            {roi.toFixed(1)}x
-                          </span>
-                        </div>
+                        <ActivityItem
+                          key={c.id}
+                          primary={`${c.bank} ${c.name}`}
+                          secondary={`${fmtAud(c.bonusAud)} bonus · ${fmtAud(c.fee)} fee`}
+                          value={<StatusBadge variant="danger">{roi.toFixed(1)}x</StatusBadge>}
+                          className="px-0 py-0"
+                        />
                       )
                     })
                   }

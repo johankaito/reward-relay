@@ -6,6 +6,7 @@ import { AppShell } from "@/components/layout/AppShell"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { StatCard } from "@/components/ui/stat-card"
 import {
   Dialog,
   DialogContent,
@@ -446,24 +447,14 @@ export default function SpendingTrackerPage() {
                   return (
                     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                       {stats.map((s) => (
-                        <div key={s.label} className="glass-panel rounded-2xl p-4">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-[#bbcabf]">
-                              {s.label}
-                            </p>
-                            <span className="text-[#4edea3]/40 text-sm">{s.icon}</span>
-                          </div>
-                          <p
-                            className="mt-2 text-2xl font-black tabular-nums"
-                            style={{
-                              fontFamily: "'Plus Jakarta Sans', sans-serif",
-                              color: s.accent ? "#4edea3" : "#dfe2f3",
-                            }}
-                          >
-                            {s.value}
-                          </p>
-                          <p className="mt-0.5 text-[11px] text-[#bbcabf]">{s.sub}</p>
-                        </div>
+                        <StatCard
+                          key={s.label}
+                          label={s.label}
+                          value={s.value}
+                          sub={s.sub}
+                          icon={s.icon}
+                          accent={s.accent}
+                        />
                       ))}
                     </div>
                   )
