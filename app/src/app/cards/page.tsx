@@ -161,7 +161,7 @@ export default function CardsPage() {
             <div className="md:hidden">
               <div className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
                 {filtered.map((card) => (
-                  <div key={card.id} className="min-w-[310px] shrink-0 snap-start">
+                  <div key={card.id} className="min-w-[310px] shrink-0 snap-start" style={{ minWidth: '310px' }}>
                     <CatalogCardThumb card={card} />
                     <p className="mt-2 truncate text-sm font-medium text-on-surface">{card.name}</p>
                     <p className="text-xs text-on-surface-variant">{card.bank}</p>

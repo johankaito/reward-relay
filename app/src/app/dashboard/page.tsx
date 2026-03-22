@@ -354,7 +354,7 @@ export default function DashboardPage() {
             <>
               {/* Stacked card visual for first 3 */}
               {cards.filter(c => c.status === "active").length >= 2 ? (
-                <div className="relative mb-6" style={{ height: 180 }}>
+                <div className="relative mb-6 overflow-x-hidden" style={{ height: 180 }}>
                   {cards
                     .filter(c => c.status === "active")
                     .slice(0, 3)
