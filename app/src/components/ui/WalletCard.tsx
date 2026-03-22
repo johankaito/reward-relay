@@ -70,7 +70,7 @@ export function WalletCard({ card, showProgress = false, onClick }: Props) {
               className="h-full transition-all duration-700"
               style={{
                 width: `${progressPct}%`,
-                background: "linear-gradient(90deg, #10b981 0%, #4edea3 100%)",
+                background: "linear-gradient(90deg, var(--primary-container) 0%, var(--primary) 100%)",
               }}
             />
           </div>

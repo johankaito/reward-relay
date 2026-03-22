@@ -21,7 +21,7 @@ function LogoContent() {
 
 export default function Header({ logoClickable = false }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0e1a]/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-surface-container-lowest/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         {logoClickable ? (
           <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
@@ -44,8 +44,8 @@ export default function Header({ logoClickable = false }: HeaderProps) {
               href="/signup"
               className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold transition-all hover:scale-105"
               style={{
-                background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
-                color: "#003824",
+                background: "var(--gradient-cta)",
+                color: "var(--on-primary)",
                 boxShadow: "0 4px 16px rgba(78, 222, 163, 0.25)",
               }}
             >
