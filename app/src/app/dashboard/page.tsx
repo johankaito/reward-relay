@@ -117,6 +117,33 @@ export default function DashboardPage() {
     return { active, pending, total: cards.length, bonusReady, totalPoints, monthlyPoints, portfolioValue }
   }, [cards, catalogCards])
 
+  // Cards chasing a bonus spend target — active, unearned, with a deadline
+  const bonusChasingCards = useMemo(() => {
+    const catalogById = new Map(catalogCards.map((c) => [c.id, c]))
+    return cards
+      .filter((c) => c.status === "active" && !c.bonus_earned && c.bonus_spend_deadline && c.card_id)
+      .map((c) => ({
+        ...c,
+        spendTarget: catalogById.get(c.card_id!)?.bonus_spend_requirement ?? 0,
+        bonusPoints: catalogById.get(c.card_id!)?.welcome_bonus_points ?? 0,
+      }))
+      .filter((c) => c.spendTarget > 0)
+      .slice(0, 2)
+  }, [cards, catalogCards])
+
+  // Recently earned bonuses — for activity feed
+  const recentEarned = useMemo(() => {
+    const catalogById = new Map(catalogCards.map((c) => [c.id, c]))
+    return cards
+      .filter((c) => c.bonus_earned && c.bonus_earned_at && c.card_id)
+      .sort((a, b) => new Date(b.bonus_earned_at!).getTime() - new Date(a.bonus_earned_at!).getTime())
+      .slice(0, 4)
+      .map((c) => ({
+        ...c,
+        bonusPoints: catalogById.get(c.card_id!)?.welcome_bonus_points ?? 0,
+      }))
+  }, [cards, catalogCards])
+
   const cancelAlerts = useMemo(() => {
     const now = new Date().getTime()
     return cards.filter((c) => {
@@ -241,50 +268,176 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Your cards as WalletCards */}
+        {/* ── Bonus tracker bento ── */}
+        {bonusChasingCards.length > 0 && (
+          <div>
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+              Bonus Tracker
+            </p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {bonusChasingCards.map((card) => {
+                const pct = card.spendTarget > 0
+                  ? Math.min(100, Math.round(((card.current_spend ?? 0) / card.spendTarget) * 100))
+                  : 0
+                const daysLeft = card.bonus_spend_deadline
+                  ? Math.max(0, Math.ceil((new Date(card.bonus_spend_deadline).getTime() - Date.now()) / 86400000))
+                  : null
+                return (
+                  <div key={card.id} className="glass-panel rounded-2xl p-5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-xs font-bold text-on-surface">{card.bank} {card.name}</p>
+                        {daysLeft !== null && (
+                          <p className="mt-0.5 text-[10px] text-on-surface-variant">{daysLeft}d remaining</p>
+                        )}
+                      </div>
+                      {card.bonusPoints > 0 && (
+                        <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                          {(card.bonusPoints / 1000).toFixed(0)}k pts
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-4">
+                      <div className="mb-1 flex justify-between text-[10px] text-on-surface-variant">
+                        <span>${Math.round(card.current_spend ?? 0).toLocaleString()} spent</span>
+                        <span>{pct}%</span>
+                      </div>
+                      <div className="h-1.5 overflow-hidden rounded-full bg-surface-container-highest">
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{
+                            width: `${pct}%`,
+                            background: "linear-gradient(90deg, var(--primary-container) 0%, var(--primary) 100%)",
+                          }}
+                        />
+                      </div>
+                      <p className="mt-1 text-[10px] text-on-surface-variant">
+                        of ${card.spendTarget.toLocaleString()} target
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+              <button
+                onClick={() => router.push("/spending")}
+                className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-primary/20 p-5 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
+              >
+                <CreditCard className="h-4 w-4" />
+                Track new bonus
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── 3D wallet card stack ── */}
         <div>
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[#dfe2f3]">Your cards</h2>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+              Your Cards
+            </p>
             <Link href="/cards">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="rounded-full text-slate-400 hover:text-[#dfe2f3]"
-              >
+              <Button size="sm" variant="ghost" className="rounded-full text-on-surface-variant hover:text-on-surface">
                 Browse catalog
               </Button>
             </Link>
           </div>
 
           {cards.length === 0 ? (
-            <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed border-[#313442] bg-[#1b1f2c] p-6">
-              <p className="font-medium text-[#dfe2f3]">No cards tracked yet</p>
-              <p className="text-sm text-slate-400">
+            <div className="glass-panel flex flex-col items-start gap-3 rounded-2xl p-6">
+              <p className="font-semibold text-on-surface">No cards tracked yet</p>
+              <p className="text-sm text-on-surface-variant">
                 Add your current cards and churn targets to see reminders and eligibility.
               </p>
               <Button
                 size="sm"
                 onClick={() => router.push("/cards")}
-                className="rounded-full font-semibold text-[#003824]"
-                style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
+                className="rounded-full font-semibold text-on-primary"
+                style={{ background: "var(--gradient-cta)" }}
               >
                 <CreditCard className="mr-1.5 h-3.5 w-3.5" />
                 Browse cards
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              {cards.map((card) => (
-                <WalletCard
-                  key={card.id}
-                  card={card}
-                  showProgress
-                  onClick={() => handleEditCard(card)}
-                />
-              ))}
-            </div>
+            <>
+              {/* Stacked card visual for first 3 */}
+              {cards.filter(c => c.status === "active").length >= 2 ? (
+                <div className="relative mb-6" style={{ height: 180 }}>
+                  {cards
+                    .filter(c => c.status === "active")
+                    .slice(0, 3)
+                    .reverse()
+                    .map((card, revIdx, arr) => {
+                      const idx = arr.length - 1 - revIdx
+                      const rotations = ["rotate-3", "rotate-1", "-rotate-1"]
+                      const tops = [8, 4, 0]
+                      return (
+                        <div
+                          key={card.id}
+                          className={`absolute inset-x-0 ${rotations[idx] ?? ""} cursor-pointer transition-transform duration-300 hover:-translate-y-2`}
+                          style={{ top: tops[idx] ?? 0, zIndex: idx + 1 }}
+                          onClick={() => handleEditCard(card)}
+                        >
+                          <WalletCard card={card} showProgress />
+                        </div>
+                      )
+                    })}
+                </div>
+              ) : (
+                <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {cards.map((card) => (
+                    <WalletCard key={card.id} card={card} showProgress onClick={() => handleEditCard(card)} />
+                  ))}
+                </div>
+              )}
+              {/* All cards list link when stack shown */}
+              {cards.filter(c => c.status === "active").length >= 2 && (
+                <div className="flex flex-wrap gap-2">
+                  {cards.map((card) => (
+                    <button
+                      key={card.id}
+                      onClick={() => handleEditCard(card)}
+                      className="rounded-full border border-white/5 bg-surface-container px-3 py-1 text-xs font-medium text-on-surface-variant hover:bg-surface-container-high"
+                    >
+                      {card.bank} {card.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
+
+        {/* ── Recent points activity feed ── */}
+        {recentEarned.length > 0 && (
+          <div>
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
+              Recent Bonuses
+            </p>
+            <div className="glass-panel divide-y divide-white/5 rounded-2xl">
+              {recentEarned.map((card) => {
+                const earnedDate = card.bonus_earned_at
+                  ? new Date(card.bonus_earned_at).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })
+                  : null
+                return (
+                  <div key={card.id} className="flex items-center justify-between px-5 py-4">
+                    <div>
+                      <p className="text-sm font-semibold text-on-surface">{card.bank} {card.name}</p>
+                      {earnedDate && (
+                        <p className="text-[10px] text-on-surface-variant">Earned {earnedDate}</p>
+                      )}
+                    </div>
+                    {card.bonusPoints > 0 && (
+                      <span className="tabular-nums text-sm font-bold text-primary">
+                        +{card.bonusPoints.toLocaleString()} pts
+                      </span>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Top recommendation */}
         {topRecommendation && (
