@@ -122,11 +122,11 @@ export default function ProjectionsPage() {
     return (
       <AppShell>
         <div className="space-y-5">
-          <div className="h-64 animate-pulse rounded-3xl bg-[#1b1f2c]" />
-          <div className="h-40 animate-pulse rounded-3xl bg-[#1b1f2c]" />
+          <div className="h-64 animate-pulse rounded-3xl bg-surface-container" />
+          <div className="h-40 animate-pulse rounded-3xl bg-surface-container" />
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-56 animate-pulse rounded-3xl bg-[#1b1f2c]" />
+              <div key={i} className="h-56 animate-pulse rounded-3xl bg-surface-container" />
             ))}
           </div>
         </div>
@@ -140,14 +140,14 @@ export default function ProjectionsPage() {
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#4edea3]">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-primary">
               Plan
             </p>
             <h1 className="mt-1 font-[var(--font-grotesk)] text-2xl font-bold tracking-tight text-white">
               Reward Flights
             </h1>
           </div>
-          <span className="rounded-full border border-white/10 bg-[#1b1f2c] px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#4edea3]">
+          <span className="rounded-full border border-white/10 bg-surface-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
             Gap Analysis
           </span>
         </div>
@@ -163,12 +163,12 @@ export default function ProjectionsPage() {
         >
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {/* Origin */}
-            <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4 transition-colors hover:bg-[#262a37]">
-              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#4edea3]">
+            <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4 transition-colors hover:bg-surface-container-high">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary">
                 Origin
               </label>
               <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-[#4edea3]/70" />
+                <MapPin className="h-5 w-5 text-primary/70" />
                 <input
                   className="w-full bg-transparent text-lg font-bold text-white outline-none placeholder:text-white/40"
                   value={origin}
@@ -180,7 +180,7 @@ export default function ProjectionsPage() {
             </div>
 
             {/* Destination */}
-            <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4 transition-colors hover:bg-[#262a37]">
+            <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4 transition-colors hover:bg-surface-container-high">
               <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
                 Destination
               </label>
@@ -197,7 +197,7 @@ export default function ProjectionsPage() {
             </div>
 
             {/* Cabin Class */}
-            <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4">
+            <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4">
               <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
                 Cabin Class
               </label>
@@ -208,7 +208,7 @@ export default function ProjectionsPage() {
                     onClick={() => setCabinClass(c.id)}
                     className={`flex-1 rounded-lg py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
                       cabinClass === c.id
-                        ? "bg-[#4edea3] text-[#003824]"
+                        ? "bg-primary text-on-primary"
                         : "bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white"
                     }`}
                   >
@@ -219,7 +219,7 @@ export default function ProjectionsPage() {
             </div>
 
             {/* Quick routes */}
-            <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-[#1b1f2c]/60 p-4">
+            <div className="flex flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4">
               <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
                 Quick Routes
               </label>
@@ -231,7 +231,7 @@ export default function ProjectionsPage() {
                       setOrigin(r.origin)
                       setDestination(r.destination)
                     }}
-                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-slate-300 transition-all hover:border-[#4edea3]/30 hover:text-[#4edea3]"
+                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-slate-300 transition-all hover:border-primary/30 hover:text-primary"
                   >
                     {r.label}
                   </button>
@@ -254,16 +254,16 @@ export default function ProjectionsPage() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#4edea3] opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#4edea3]" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
                 </span>
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#4edea3]">
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-primary">
                   Active Redemption Goal
                 </span>
               </div>
               <h2 className="font-[var(--font-grotesk)] text-3xl font-extrabold tracking-tight text-white">
                 {percentage}% to {selectedCabin.label}{" "}
-                <span className="text-[#4edea3]">
+                <span className="text-primary">
                   {origin} → {destination}
                 </span>
               </h2>
@@ -273,7 +273,7 @@ export default function ProjectionsPage() {
                     You have enough points for a{" "}
                     <span className="font-bold text-white">{selectedCabin.label}</span> redemption.
                     You have a surplus of{" "}
-                    <span className="font-bold text-[#4edea3]">
+                    <span className="font-bold text-primary">
                       {Math.abs(gap).toLocaleString()} pts
                     </span>
                     .
@@ -303,7 +303,7 @@ export default function ProjectionsPage() {
             </div>
 
             {/* Right: points card + bar */}
-            <div className="w-full rounded-2xl border border-white/5 bg-[#0f131f]/40 p-6 backdrop-blur-md lg:w-[400px]">
+            <div className="w-full rounded-2xl border border-white/5 bg-surface/40 p-6 backdrop-blur-md lg:w-[400px]">
               <div className="mb-4 flex items-end justify-between">
                 <div>
                   <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-slate-500">
@@ -317,7 +317,7 @@ export default function ProjectionsPage() {
                 <span
                   className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
                     isSufficient
-                      ? "border-[#4edea3]/20 bg-[#4edea3]/10 text-[#4edea3]"
+                      ? "border-[#4edea3]/20 bg-primary/10 text-primary"
                       : "border-white/10 bg-white/5 text-slate-300"
                   }`}
                 >
@@ -326,7 +326,7 @@ export default function ProjectionsPage() {
               </div>
 
               {/* Progress bar */}
-              <div className="relative h-4 overflow-hidden rounded-full bg-[#313442]/50 p-0.5 shadow-inner">
+              <div className="relative h-4 overflow-hidden rounded-full bg-surface-container-highest/50 p-0.5 shadow-inner">
                 <div
                   className="h-full rounded-full transition-all duration-1000 ease-out"
                   style={{
@@ -343,20 +343,20 @@ export default function ProjectionsPage() {
               <div
                 className={`mt-4 flex items-center justify-between rounded-2xl border p-3 ${
                   isSufficient
-                    ? "border-[#4edea3]/20 bg-[#4edea3]/10"
+                    ? "border-[#4edea3]/20 bg-primary/10"
                     : "border-red-500/10 bg-red-500/5"
                 }`}
               >
                 <span
                   className={`text-xs font-bold uppercase tracking-widest ${
-                    isSufficient ? "text-[#4edea3]" : "text-red-400"
+                    isSufficient ? "text-primary" : "text-red-400"
                   }`}
                 >
                   {isSufficient ? "Balance Status" : "Gap to target"}
                 </span>
                 <span
                   className={`font-[var(--font-grotesk)] text-lg font-extrabold tabular-nums ${
-                    isSufficient ? "text-[#4edea3]" : "text-white"
+                    isSufficient ? "text-primary" : "text-white"
                   }`}
                 >
                   {isSufficient
@@ -382,7 +382,7 @@ export default function ProjectionsPage() {
           </div>
 
           {topRecommendations.length === 0 ? (
-            <div className="rounded-3xl border border-white/5 bg-[#1b1f2c] p-12 text-center">
+            <div className="rounded-3xl border border-white/5 bg-surface-container p-12 text-center">
               <TrendingUp className="mx-auto h-12 w-12 text-slate-600" />
               <p className="mt-4 text-lg font-semibold text-white">No recommendations available</p>
               <p className="mt-2 text-sm text-slate-400">
@@ -443,12 +443,12 @@ export default function ProjectionsPage() {
                           <span className="font-[var(--font-grotesk)] text-4xl font-extrabold tabular-nums tracking-tighter text-white">
                             {bonusPoints.toLocaleString()}
                           </span>
-                          <span className="ml-2 text-[11px] font-bold uppercase tracking-widest text-[#4edea3]">
+                          <span className="ml-2 text-[11px] font-bold uppercase tracking-widest text-primary">
                             Bonus pts
                           </span>
                         </div>
                         {isHighlighted && (
-                          <span className="rounded bg-[#4edea3] px-2 py-1 text-[10px] font-black uppercase tracking-widest text-[#003824]">
+                          <span className="rounded bg-primary px-2 py-1 text-[10px] font-black uppercase tracking-widest text-on-primary">
                             Best
                           </span>
                         )}
@@ -481,21 +481,21 @@ export default function ProjectionsPage() {
                         <div
                           className={`rounded-2xl border p-3 ${
                             wouldSuffice
-                              ? "border-[#4edea3]/20 bg-[#4edea3]/10"
-                              : "border-white/5 bg-[#1b1f2c]/30"
+                              ? "border-[#4edea3]/20 bg-primary/10"
+                              : "border-white/5 bg-surface-container/30"
                           }`}
                         >
                           <div className="flex items-center justify-between">
                             <span
                               className={`text-xs font-bold uppercase tracking-widest ${
-                                wouldSuffice ? "text-[#4edea3]" : "text-slate-500"
+                                wouldSuffice ? "text-primary" : "text-slate-500"
                               }`}
                             >
                               {wouldSuffice ? "Would cover goal" : "Remaining gap"}
                             </span>
                             <span
                               className={`font-[var(--font-grotesk)] text-base font-extrabold tabular-nums ${
-                                wouldSuffice ? "text-[#4edea3]" : "text-white"
+                                wouldSuffice ? "text-primary" : "text-white"
                               }`}
                             >
                               {wouldSuffice
@@ -509,7 +509,7 @@ export default function ProjectionsPage() {
                           href="/cards"
                           className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold uppercase tracking-widest transition-all ${
                             isHighlighted
-                              ? "bg-gradient-to-br from-[#4edea3] to-[#10b981] text-[#003824] shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]"
+                              ? "bg-gradient-to-br from-[#4edea3] to-[#10b981] text-on-primary shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]"
                               : "border border-white/10 bg-white/5 text-slate-200 hover:bg-white/10 hover:text-white"
                           }`}
                         >

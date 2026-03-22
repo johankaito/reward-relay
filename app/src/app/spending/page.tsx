@@ -118,7 +118,7 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
             style={{ height: "100%", textAlign: "center" }}
           >
             <span
-              className="progress-center-amount tabular-nums font-bold text-white"
+              className="progress-center-amount tabular-nums font-bold text-on-surface"
               style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontSize: "1.875rem",
@@ -361,7 +361,7 @@ export default function SpendingTrackerPage() {
         {userCards.length === 0 ? (
           <div className="glass-panel premium-glow flex flex-col items-center gap-4 rounded-2xl px-8 py-16 text-center">
             <p
-              className="font-semibold text-white"
+              className="font-semibold text-on-surface"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               No active cards
@@ -382,7 +382,7 @@ export default function SpendingTrackerPage() {
             {/* Card selector */}
             {userCards.length > 1 && (
               <div>
-                <Label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-[#bbcabf]">
+                <Label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-on-surface-variant">
                   Tracking card
                 </Label>
                 <select
@@ -476,11 +476,11 @@ export default function SpendingTrackerPage() {
                   <div className="glass-panel premium-glow flex flex-[2] flex-col gap-5 rounded-2xl p-6">
                     {activeCard.spend_deadline && (
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
                           Days Remaining
                         </p>
                         <p
-                          className="mt-0.5 text-5xl font-black tabular-nums text-white"
+                          className="mt-0.5 text-5xl font-black tabular-nums text-on-surface"
                           style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                         >
                           {Math.max(
@@ -495,7 +495,7 @@ export default function SpendingTrackerPage() {
                     )}
 
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
                         Pace
                       </p>
                       <p
@@ -509,10 +509,10 @@ export default function SpendingTrackerPage() {
                     {activeCard.spend_deadline &&
                       activeCard.spend_target > activeCard.current_spend && (
                         <div>
-                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
                             Daily Target
                           </p>
-                          <p className="mt-0.5 text-lg font-bold tabular-nums text-white">
+                          <p className="mt-0.5 text-lg font-bold tabular-nums text-on-surface">
                             {(() => {
                               const daysLeft = Math.ceil(
                                 (new Date(activeCard.spend_deadline).getTime() - Date.now()) /
@@ -531,11 +531,11 @@ export default function SpendingTrackerPage() {
 
                     {!!activeCard.card.welcome_bonus_points && (
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
                           Earn on Completion
                         </p>
                         <p
-                          className="mt-0.5 text-lg font-bold tabular-nums text-[#c3c0ff]"
+                          className="mt-0.5 text-lg font-bold tabular-nums text-secondary"
                           style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                         >
                           {activeCard.card.welcome_bonus_points.toLocaleString()} pts
@@ -548,7 +548,7 @@ export default function SpendingTrackerPage() {
                 {/* Recent transactions */}
                 {(transactions[activeCard.id]?.length ?? 0) > 0 && (
                   <div>
-                    <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#bbcabf]">
+                    <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
                       Recent Transactions
                     </p>
                     <div className="space-y-2">
@@ -557,8 +557,8 @@ export default function SpendingTrackerPage() {
                           key={txn.id}
                           className="flex items-center justify-between py-2 text-sm"
                         >
-                          <span className="text-[#dfe2f3]">{txn.description}</span>
-                          <span className="tabular-nums font-medium text-white">
+                          <span className="text-on-surface">{txn.description}</span>
+                          <span className="tabular-nums font-medium text-on-surface">
                             {formatCurrency(txn.amount)}
                           </span>
                         </div>
@@ -571,22 +571,22 @@ export default function SpendingTrackerPage() {
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
                     <Button
-                      className="w-full rounded-full py-6 text-base font-bold text-[#003824]"
+                      className="w-full rounded-full py-6 text-base font-bold text-on-primary"
                       style={{ background: "var(--gradient-cta)" }}
                     >
                       + Add Transaction
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="border border-white/10 bg-[#1b1f2c]">
+                  <DialogContent className="border border-white/10 bg-surface-container">
                     <DialogHeader>
-                      <DialogTitle className="text-white">Record Transaction</DialogTitle>
-                      <DialogDescription className="text-[#bbcabf]">
+                      <DialogTitle className="text-on-surface">Record Transaction</DialogTitle>
+                      <DialogDescription className="text-on-surface-variant">
                         Record a purchase made with {activeCard.card.name}
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="amount" className="text-[#bbcabf]">
+                        <Label htmlFor="amount" className="text-on-surface-variant">
                           Amount (AUD)
                         </Label>
                         <Input
@@ -598,11 +598,11 @@ export default function SpendingTrackerPage() {
                           onChange={(e) =>
                             setNewTransaction({ ...newTransaction, amount: e.target.value })
                           }
-                          className="border-white/10 bg-[#262a37] text-white"
+                          className="border-white/10 bg-surface-container-high text-on-surface"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="description" className="text-[#bbcabf]">
+                        <Label htmlFor="description" className="text-on-surface-variant">
                           Description
                         </Label>
                         <Input
@@ -615,11 +615,11 @@ export default function SpendingTrackerPage() {
                               description: e.target.value,
                             })
                           }
-                          className="border-white/10 bg-[#262a37] text-white"
+                          className="border-white/10 bg-surface-container-high text-on-surface"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="txn-date" className="text-[#bbcabf]">
+                        <Label htmlFor="txn-date" className="text-on-surface-variant">
                           Date
                         </Label>
                         <Input
@@ -629,12 +629,12 @@ export default function SpendingTrackerPage() {
                           onChange={(e) =>
                             setNewTransaction({ ...newTransaction, date: e.target.value })
                           }
-                          className="border-white/10 bg-[#262a37] text-white"
+                          className="border-white/10 bg-surface-container-high text-on-surface"
                         />
                       </div>
                       <Button
                         onClick={handleAddTransaction}
-                        className="w-full rounded-full font-bold text-[#003824]"
+                        className="w-full rounded-full font-bold text-on-primary"
                         style={{ background: "var(--gradient-cta)" }}
                       >
                         Save Transaction
