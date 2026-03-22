@@ -17,7 +17,6 @@ type UserCard = {
   bonus_spend_deadline: string | null
   cancellation_date: string | null
   bonus_earned: boolean
-  annual_fee_date: string | null
   card: {
     bonus_spend_requirement: number | null
     name: string
@@ -55,7 +54,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
 
       const { data } = await supabase
         .from("user_cards")
-        .select("id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, annual_fee_date, card:cards(bonus_spend_requirement, name, bank, welcome_bonus_points, points_currency, annual_fee)")
+        .select("id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, card:cards(bonus_spend_requirement, name, bank, welcome_bonus_points, points_currency, annual_fee)")
         .eq("id", params.id)
         .eq("user_id", user.id)
         .single()
