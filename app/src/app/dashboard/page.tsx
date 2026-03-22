@@ -283,7 +283,7 @@ export default function DashboardPage() {
                   ? Math.max(0, Math.ceil((new Date(card.bonus_spend_deadline).getTime() - Date.now()) / 86400000))
                   : null
                 return (
-                  <div key={card.id} className="glass-panel rounded-2xl p-5">
+                  <div key={card.id} className="glass-panel rounded-2xl p-5 transition-colors duration-200 hover:border-primary/30">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="text-xs font-bold text-on-surface">{card.bank} {card.name}</p>
