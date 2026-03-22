@@ -277,7 +277,7 @@ export default function FlightsPage() {
 
         {/* Divider */}
         {awardRoutes.length > 0 && (
-          <div className="border-t border-[var(--border-default)]" />
+          <div className="border-t border-white/5" />
         )}
 
         {/* My Points — balance-aware sweet spot */}
@@ -364,8 +364,8 @@ export default function FlightsPage() {
           {/* Can book now */}
           {canBookRoutes.length > 0 && (
             <div className="mb-4">
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-green-600">
-                <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-primary">
+                <span className="inline-block h-2 w-2 rounded-full bg-primary" />
                 Can book now ({canBookRoutes.length})
               </h3>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -379,7 +379,7 @@ export default function FlightsPage() {
           {/* Almost there */}
           {almostThereRoutes.length > 0 && (
             <div className="mb-4">
-              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-amber-600">
+              <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-amber-400">
                 <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
                 Almost there ({almostThereRoutes.length})
               </h3>
@@ -476,7 +476,7 @@ function RouteCard({
 
         {/* Amex transfer badge */}
         {route.bookableViaTransfer && (
-          <span className="inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+          <span className="inline-block rounded-full bg-blue-950/60 px-2 py-0.5 text-xs font-medium text-blue-300">
             Bookable via Amex MR transfer
           </span>
         )}
@@ -493,7 +493,8 @@ function RouteCard({
         {route.canBook && route.booking_url && (
           <Button
             size="sm"
-            className="w-full bg-green-600 text-white hover:bg-green-700"
+            className="w-full text-on-primary"
+            style={{ background: "var(--gradient-cta)" }}
             onClick={() => window.open(route.booking_url!, '_blank')}
           >
             Book now
