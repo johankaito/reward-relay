@@ -214,7 +214,7 @@ export default function InquiriesPage() {
 
         {/* Summary strip */}
         <div className="grid grid-cols-3 gap-3">
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+          <Card className="border border-white/5 bg-[var(--surface)] shadow-sm">
             <CardHeader className="pb-1 pt-4">
               <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">
                 Last 3 months
@@ -224,7 +224,7 @@ export default function InquiriesPage() {
               {last3m}
             </CardContent>
           </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+          <Card className="border border-white/5 bg-[var(--surface)] shadow-sm">
             <CardHeader className="pb-1 pt-4">
               <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">
                 Last 6 months
@@ -234,7 +234,7 @@ export default function InquiriesPage() {
               {last6m}
             </CardContent>
           </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+          <Card className="border border-white/5 bg-[var(--surface)] shadow-sm">
             <CardHeader className="pb-1 pt-4">
               <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">
                 Last 12 months
@@ -247,7 +247,7 @@ export default function InquiriesPage() {
         </div>
 
         {/* Add application form */}
-        <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+        <Card className="border border-white/5 bg-[var(--surface)] shadow-sm">
           <CardHeader className="border-b border-[var(--border-default)]">
             <CardTitle className="flex items-center gap-2 text-[var(--text-primary)]">
               <PlusCircle className="h-4 w-4 text-[var(--accent)]" />
@@ -291,7 +291,7 @@ export default function InquiriesPage() {
                       setForm((f) => ({ ...f, card_name: e.target.value }))
                     }
                     placeholder="e.g. ANZ Frequent Flyer Black"
-                    className="w-full rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                    className="w-full rounded-lg border border-white/5 bg-[var(--surface-muted)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   />
                 </div>
 
@@ -306,7 +306,7 @@ export default function InquiriesPage() {
                     onChange={(e) =>
                       setForm((f) => ({ ...f, application_date: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                    className="w-full rounded-lg border border-white/5 bg-[var(--surface-muted)] px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                   />
                 </div>
 
@@ -346,7 +346,7 @@ export default function InquiriesPage() {
                   }
                   placeholder="Any notes about this application..."
                   rows={2}
-                  className="w-full rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="w-full rounded-lg border border-white/5 bg-[var(--surface-muted)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 />
               </div>
 
@@ -363,7 +363,7 @@ export default function InquiriesPage() {
         </Card>
 
         {/* Application history table */}
-        <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+        <Card className="border border-white/5 bg-[var(--surface)] shadow-sm">
           <CardHeader className="border-b border-[var(--border-default)]">
             <CardTitle className="text-[var(--text-primary)]">Application history</CardTitle>
           </CardHeader>
@@ -463,7 +463,7 @@ export default function InquiriesPage() {
                                     notes: e.target.value,
                                   }))
                                 }
-                                className="w-full rounded border border-[var(--border-default)] bg-[var(--surface-muted)] px-2 py-1 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+                                className="w-full rounded border border-white/5 bg-[var(--surface-muted)] px-2 py-1 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
                               />
                             ) : (
                               <span className="truncate text-xs text-[var(--text-secondary)]">
