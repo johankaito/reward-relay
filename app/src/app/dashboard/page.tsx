@@ -113,7 +113,8 @@ export default function DashboardPage() {
       }
     }
 
-    return { active, pending, total: cards.length, bonusReady, totalPoints, monthlyPoints }
+    const portfolioValue = totalPoints * 0.02 // 2¢ per point — AUD monetary value of earned bonuses
+    return { active, pending, total: cards.length, bonusReady, totalPoints, monthlyPoints, portfolioValue }
   }, [cards, catalogCards])
 
   const cancelAlerts = useMemo(() => {
@@ -194,15 +195,26 @@ export default function DashboardPage() {
 
         {/* Hero metric */}
         <div className="rounded-2xl bg-surface-container p-8">
-          <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
             {displayName ? `Hey, ${displayName}` : "Dashboard"}
           </p>
-          <div className="mt-3 flex items-baseline gap-4">
-            <span className="font-headline text-6xl font-extrabold tabular-nums tracking-tighter text-primary">
-              {stats.active}
-            </span>
-            <span className="text-base text-on-surface-variant">cards working for you</span>
-          </div>
+          {stats.portfolioValue > 0 ? (
+            <div className="mt-3 flex items-baseline gap-3">
+              <span className="font-headline text-6xl font-extrabold tabular-nums tracking-tighter text-primary">
+                ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+              </span>
+              <span className="text-base text-on-surface-variant">total portfolio value</span>
+            </div>
+          ) : (
+            <div className="mt-3 flex items-baseline gap-4">
+              <span className="font-headline text-6xl font-extrabold tabular-nums tracking-tighter text-primary">
+                {stats.active}
+              </span>
+              <span className="text-base text-on-surface-variant">
+                {stats.active === 1 ? "card" : "cards"} working for you
+              </span>
+            </div>
+          )}
           <Button
             size="sm"
             className="mt-6 rounded-full font-semibold text-on-primary shadow-sm"
