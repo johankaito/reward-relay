@@ -207,7 +207,7 @@ export default function CalendarPage() {
         </div>
 
         {bankTimelines.length === 0 ? (
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+          <Card className="border border-white/5 bg-[var(--surface)] shadow-sm">
             <CardContent className="py-8 text-center">
               <CalendarDays className="mx-auto mb-3 h-8 w-8 text-[var(--text-secondary)]/40" />
               <p className="font-medium text-[var(--text-primary)]">No card history yet</p>
@@ -225,7 +225,7 @@ export default function CalendarPage() {
               return (
                 <Card
                   key={timeline.bank}
-                  className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm"
+                  className="border border-white/5 bg-[var(--surface)] shadow-sm"
                   data-bank-timeline={timeline.bank}
                 >
                   <CardContent className="p-4">
@@ -262,7 +262,7 @@ export default function CalendarPage() {
                       {timeline.cards.map(({ card, stages }) => (
                         <div
                           key={card.id}
-                          className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-muted)] px-3 py-2"
+                          className="rounded-lg border border-white/5 bg-[var(--surface-muted)] px-3 py-2"
                         >
                           <p className="mb-1.5 text-xs font-semibold text-[var(--text-primary)]">
                             {card.card?.name || card.name || "Unknown card"}
