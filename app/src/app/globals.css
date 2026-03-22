@@ -283,6 +283,13 @@
   }
 }
 
+/* ─── Sidebar layout offset (guaranteed, supplements md:pl-64) ─── */
+@media (min-width: 768px) {
+  .md\:pl-64 {
+    padding-left: 16rem !important; /* 256px = w-64 sidebar */
+  }
+}
+
 /* ─── Glassmorphism utilities ─── */
 .glass-panel {
   background: rgba(255, 255, 255, 0.03);

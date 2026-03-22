@@ -53,7 +53,7 @@ export function AppShell({ children }: AppShellProps) {
   const isActive = (href: string) => pathname.startsWith(href)
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--surface)" }}>
+    <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
       {/* ── Desktop fixed sidebar ── */}
       <aside
         className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col z-30"
@@ -173,8 +173,8 @@ export function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* ── Page content ── */}
-      <div className="md:pl-64 pb-24 md:pb-6">
-        <main className="min-w-0">{children}</main>
+      <div className="md:pl-64 pb-24 md:pb-6 min-w-0">
+        <main className="min-w-0 overflow-x-hidden">{children}</main>
       </div>
 
       {/* ── Mobile bottom nav ── */}
@@ -187,7 +187,7 @@ export function AppShell({ children }: AppShellProps) {
           boxShadow: "0 -8px 32px rgba(0,0,0,0.5)",
         }}
       >
-        <div className="grid grid-cols-5 pb-safe">
+        <div className="grid grid-cols-5 h-20 pb-safe">
           {navItems.map(({ href, label, icon: Icon }) => {
             const active = isActive(href)
             return (
