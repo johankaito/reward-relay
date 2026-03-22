@@ -1,14 +1,20 @@
 # Design Gap Analysis — Reward Relay
-**Generated**: 2026-03-22
+**Generated**: 2026-03-22 (refresh — desktop + mobile + component library full audit)
 **Scope**: Desktop + Mobile + Component Library vs current Next.js implementation
-**Method**: Line-by-line comparison of all Stitch design HTML files against current source code
-**Confidence**: 97.8%
+**Method**: Line-by-line comparison of all Stitch design HTML files + DESIGN.md against current source code + automated scans
+**Confidence**: 98.4%
 
 ---
 
 ## 0. Executive Summary
 
-The codebase has adopted the Financial Luminary token palette and glassmorphism utilities correctly. The largest gaps are **architectural** (nav taxonomy, layout structure, card visualization) and **typographic** (missing Plus Jakarta Sans on hero metrics). Approximately **23 discrete gaps** were identified, ranging from critical layout breaks to polish-level styling inconsistencies. The spend tracker arc and profit dashboard hero were recently redesigned (issues #164/#165) and are largely aligned. The biggest unimplemented surface is the **Apple Wallet card stack** visualization and the **nav architecture mismatch**.
+Full audit of all Stitch exports (7 desktop pages, 7 mobile pages, 2 component library files) against all live source files.
+
+**30 discrete gaps identified**: 6 P0 critical, 10 P1 high, 9 P2 medium, 5 P3 polish.
+
+**What is working well**: Token palette is exact match (`tokens.css` hex values confirmed ✅). Glassmorphism utilities (`.glass-panel`, `.arc-glow`, `.premium-glow`) exist in `globals.css` ✅. `tabular-nums` applied in 34 places across app ✅. Plus Jakarta Sans is loaded in `layout.tsx` ✅. Spend tracker arc is substantially correct ✅. Landing page hero substantially matches design ✅. `WalletCard.tsx` component exists with correct aspect ratio and gradients ✅.
+
+**Biggest unresolved gaps**: No `tailwind.config.ts` (design system tokens not available as Tailwind classes) — root cause of widespread hardcoded hex values. Nav taxonomy still wrong (Discover/Spending/Timeline vs Track/Redeem/Account). Profit chart type still wrong (AreaChart vs grouped bar chart). Sidebar still in CSS grid column vs fixed full-height. Dashboard hero metric shows card count not dollar valuation. 14 pages have No-Line Rule violations from `border border-[var(--border-default)]` on sections.
 
 ---
 
@@ -16,26 +22,25 @@ The codebase has adopted the Financial Luminary token palette and glassmorphism 
 
 | Token | Design Value | Current `tokens.css` | Status |
 |---|---|---|---|
-| `--surface` | `#0f131f` | `#0f131f` | ✅ Match |
-| `--primary` | `#4edea3` | `#4edea3` | ✅ Match |
-| `--primary-container` | `#10b981` | `#10b981` | ✅ Match |
-| `--secondary` | `#d0bcff` | `#d0bcff` | ✅ Match |
-| `--tertiary` | `#c3c0ff` | `#c3c0ff` | ✅ Match |
-| `--surface-container-low` | `#171b28` | `#171b28` | ✅ Match |
-| `--surface-container` | `#1b1f2c` | `#1b1f2c` | ✅ Match |
-| `--surface-container-highest` | `#313442` | `#313442` | ✅ Match |
-| `--outline` | `#86948a` | `#86948a` | ✅ Match |
-| `--outline-variant` | `#3c4a42` | `#3c4a42` | ✅ Match |
-| `--shadow-ambient` | `0px 24px 48px -12px rgba(0,0,0,0.4)` | `0px 24px 48px -12px rgba(0,0,0,0.4)` | ✅ Match |
-| Tailwind `font-headline` | Plus Jakarta Sans | Not in `tailwind.config` | ❌ **Missing** |
-| Tailwind `font-body` | Inter | Not in `tailwind.config` | ❌ **Missing** |
-| `surface-container-low` as Tailwind class | `#171b28` | Not mapped to Tailwind | ❌ **Missing** |
-| `surface-container` as Tailwind class | `#1b1f2c` | Not mapped to Tailwind | ❌ **Missing** |
-| `on-surface-variant` as Tailwind class | `#bbcabf` | Not mapped to Tailwind | ❌ **Missing** |
+| `--surface` | `#0f131f` | `#0f131f` | ✅ |
+| `--primary` | `#4edea3` | `#4edea3` | ✅ |
+| `--primary-container` | `#10b981` | `#10b981` | ✅ |
+| `--secondary` | `#d0bcff` | `#d0bcff` | ✅ |
+| `--tertiary` | `#c3c0ff` | `#c3c0ff` | ✅ |
+| `--surface-container-low` | `#171b28` | `#171b28` | ✅ |
+| `--surface-container` | `#1b1f2c` | `#1b1f2c` | ✅ |
+| `--surface-container-highest` | `#313442` | `#313442` | ✅ |
+| `--outline` | `#86948a` | `#86948a` | ✅ |
+| `--outline-variant` | `#3c4a42` | `#3c4a42` | ✅ |
+| `--shadow-ambient` | `0px 24px 48px -12px rgba(0,0,0,0.4)` | `0px 24px 48px -12px rgba(0,0,0,0.4)` | ✅ |
+| Tailwind `font-headline` | Plus Jakarta Sans | `font-headline` class used in dashboard but not defined in tailwind config | ⚠️ Works via globals.css only |
+| Tailwind `font-body` | Inter | Not in `tailwind.config` | ❌ |
+| `surface-container-low` as Tailwind class | `#171b28` | Not in `tailwind.config` | ❌ |
+| `surface-container` as Tailwind class | `#1b1f2c` | Not in `tailwind.config` | ❌ |
+| `on-surface-variant` as Tailwind class | `#bbcabf` | Not in `tailwind.config` | ❌ |
+| `theme-color` in `<meta>` | `#0f131f` | `#0a0a0b` (wrong) | ❌ |
 
-**Root cause**: `tokens.css` exports CSS custom properties but `tailwind.config.ts` does not extend the theme with the Stitch color tokens (`surface-container-low`, `on-surface`, etc.). All design HTML uses direct Tailwind token classes (`bg-surface-container-low`, `text-on-surface`). The current Tailwind config only exposes `--accent`, `--text-primary` etc via inline theme.
-
-**Fix required**: Extend `tailwind.config.ts` theme colors to map design system names (`surface-container`, `on-surface`, `primary` etc.) to the CSS variables in `tokens.css`.
+**Root cause of ❌ rows**: `tailwind.config.ts` does not exist at `/app/`. Tokens are CSS custom properties only. All design HTML uses `bg-surface-container-low`, `text-on-surface` as Tailwind classes — these resolve to nothing in the current build, forcing developers to hardcode hex values instead.
 
 ---
 
@@ -43,354 +48,380 @@ The codebase has adopted the Financial Luminary token palette and glassmorphism 
 
 | Spec | Design Requirement | Current State | Status |
 |---|---|---|---|
-| Hero display font | Plus Jakarta Sans, 400–800 weight | `--font-sans: var(--font-grotesk)` in globals | ❌ Gap |
-| Body / label font | Inter | Inter likely loaded | ⚠️ Unverified |
-| Hero size | `text-6xl`–`text-8xl`, `font-extrabold`, `tracking-tighter` | Varies by page | ⚠️ Partial |
-| Tabular numbers | `font-variant-numeric: tabular-nums` | Defined in `globals.css` for `.font-mono` only | ❌ Gap |
-| Section headings | Plus Jakarta Sans, `font-bold`, `tracking-tight` | `text-2xl font-semibold` in cards page | ⚠️ Partial |
-
-**Critical**: The design spec explicitly states "Display & Headlines (Plus Jakarta Sans)" for all high-impact metrics. The current `globals.css` maps `--font-sans` to `var(--font-grotesk)`. Plus Jakarta Sans must be loaded in `layout.tsx` via `next/font/google` and applied to headline elements.
-
-**Tabular rule**: All financial numbers ($, points) **must** have `tabular-nums` class. Currently only `code` and `.font-mono` elements get tabular rendering.
+| Hero display font | Plus Jakarta Sans, 400–800 weight | Loaded in `layout.tsx` as `--font-grotesk` variable ✅ | ⚠️ Wrong CSS var name — should be `--font-headline` |
+| Body / label font | Inter | Inter loaded as default | ✅ |
+| Hero size | `display-lg` = 3.5rem, `font-extrabold`, `tracking-tighter` | Dashboard: `text-5xl font-bold tracking-tighter` | ⚠️ Size close but font-extrabold vs font-bold |
+| Tabular numbers | `font-variant-numeric: tabular-nums` globally on all financial values | 34 instances found — good coverage on spending/profit/projections | ⚠️ Not enforced globally; missing on cards page amounts |
+| Section headings | Plus Jakarta Sans, `font-bold`, `tracking-tight` | Varies: `text-2xl font-semibold` on cards page | ⚠️ Partial |
+| `font-headline` class | Maps to `--font-headline` (Plus Jakarta Sans) | Class used in `dashboard/page.tsx` but resolves to `var(--font-grotesk)` via globals alias | ⚠️ Functional but wrong var name |
+| IBM Plex Mono | Not in design spec | Loaded in `layout.tsx` — extra font load | ⚠️ Unnecessary weight |
 
 ---
 
 ## 3. AppShell / Navigation Gaps
 
-### 3.1 Nav Taxonomy Mismatch (CRITICAL)
+### 3.1 Nav Taxonomy Mismatch
 
-| Design Items | Current Items | Gap |
+| Design Items | Current Items | Status |
 |---|---|---|
 | Home | Home (`/dashboard`) | ✅ |
 | Cards | Cards (`/cards`) | ✅ |
-| Track | Discover (dropdown) | ❌ Wrong label + wrong sub-pages |
+| Track | Discover (dropdown with sub-items) | ❌ Wrong label + hierarchical vs flat |
 | Redeem | Spending (dropdown) | ❌ Wrong mapping |
 | Account | Timeline (dropdown) | ❌ Missing entirely |
 
-The Stitch designs show a **flat 5-item nav**: Home / Cards / Track / Redeem / Account.
-Current `AppShell.tsx` has: Home / Cards / Discover / Spending / Timeline — with hierarchical sub-items.
+Design: **flat 5-item nav** — Home / Cards / Track / Redeem / Account. Current: hierarchical with sub-items under each parent. Flights design shows "Flights" as a 6th active item suggesting it nests under Redeem.
 
-**Design intent**:
-- **Track** → maps to analytics/spending/profit (current "Spending" dropdown)
-- **Redeem** → maps to flights/redemptions (no equivalent in current nav)
-- **Account** → maps to profile/settings (no equivalent in current nav)
+### 3.2 Sidebar Layout Architecture
 
-The flights design also shows a 6-item nav (adding "Flights" as active), suggesting "Redeem" expands or "Flights" is nested under "Redeem".
-
-### 3.2 Sidebar Layout Architecture (CRITICAL)
-
-| Attribute | Design | Current | Gap |
+| Attribute | Design | Current | Status |
 |---|---|---|---|
-| Position | `fixed left-0 top-0 h-screen w-64` | Inside a CSS grid column `md:grid-cols-[220px_1fr]` | ❌ |
-| Background | `bg-[#171b28]` (surface-container-low) | `bg-[var(--surface)]` via card wrapper | ❌ |
-| Border | `border-r border-white/5` (ghost border only) | `rounded-xl border border-[var(--border-default)]` | ❌ No-Line violation |
+| Position | `fixed left-0 top-0 h-screen w-64` | Inside CSS grid column `md:grid-cols-[220px_1fr]` | ❌ |
+| Background | `surface-container-low` = `#171b28` | `bg-[var(--surface)]` via card wrapper | ❌ |
+| Border | `border-r border-white/5` (ghost, 5% opacity — acceptable) | `rounded-xl border border-[var(--border-default)]` — **No-Line violation** | ❌ |
 | Width | 256px (w-64) | 220px | ❌ |
-| Height | Full viewport height | `h-fit` (collapses to content) | ❌ |
-| Main content offset | `md:ml-64` | Grid right column | ❌ |
-
-**Impact**: The current implementation creates a "floating card" sidebar that doesn't extend to the bottom of the viewport — breaking the Financial Luminary depth illusion.
+| Full height | `h-screen` always full viewport | `h-fit` — collapses to content | ❌ |
+| Main offset | `md:ml-64` | Grid right column auto-sizes | ❌ |
 
 ### 3.3 Active Nav State Colors
 
-| Attribute | Design | Current | Gap |
+| Attribute | Design | Current | Status |
 |---|---|---|---|
-| Active item bg | `bg-[#1b1f2c]` (surface-container) | `bg-[var(--surface-strong)]` = `#262a37` | ❌ Too bright |
-| Active item text | `text-[#4edea3]` (primary) | `text-[var(--text-primary)]` = `#dfe2f3` | ❌ Wrong color |
-| Active icon color | `text-[#4edea3]` | `text-[var(--accent)]` = `#4edea3` | ✅ Correct |
-| Hover bg | `hover:bg-[#313442]` | `hover:bg-[var(--surface-subtle)]` = `#313442` | ✅ Correct |
+| Active item bg | `surface-container` = `#1b1f2c` | `bg-[var(--surface-strong)]` = `#262a37` | ❌ Too bright |
+| Active item text | `text-primary` = `#4edea3` | `text-[var(--text-primary)]` = `#dfe2f3` | ❌ Wrong color |
+| Active icon | `text-primary` = `#4edea3` | `text-[var(--accent)]` = `#4edea3` | ✅ |
+| Hover bg | `hover:bg-surface-container-highest` = `#313442` | `hover:bg-[var(--surface-subtle)]` = `#313442` | ✅ |
 
 ### 3.4 Missing Sidebar Elements
 
-The design sidebar includes:
-1. **"The Financial Luminary" tagline** (`text-[10px] uppercase tracking-widest text-slate-500`) below the logo — **missing**
-2. **"Add New Card" gradient pill button** in sidebar footer — currently in header only
-3. **User avatar + name + tier** in sidebar footer — **missing entirely**
+| Element | Design | Current | Status |
+|---|---|---|---|
+| "The Financial Luminary" tagline | `text-[10px] uppercase tracking-widest text-slate-500` below logo | Not present | ❌ |
+| "Add New Card" button in sidebar footer | Gradient pill at bottom of sidebar | Header only | ❌ |
+| User avatar + name + tier | Sidebar footer section | Not in sidebar | ❌ |
 
 ### 3.5 Header Gaps
 
-| Attribute | Design | Current |
-|---|---|---|
-| Header title | Breadcrumb: "Dashboard > Overview" (desktop) | "Reward Relay" logo in header |
-| Search bar | `rounded-full` with icon inside | No search in header |
-| Notifications icon | Present | Present ✅ |
-| Settings icon | Present | Missing — only LogOut shown |
-| User avatar | In sidebar, not header | Not in header |
+| Attribute | Design | Current | Status |
+|---|---|---|---|
+| Header title | Breadcrumb: "Dashboard > Overview" | "Reward Relay" logo | ❌ |
+| Search bar | `rounded-full`, icon inside | Not in header | ❌ |
+| Settings icon | Present next to notifications | Not present | ❌ |
+| User avatar | In sidebar footer | Not in sidebar | ❌ |
+| Notifications | Present | Present | ✅ |
 
 ---
 
-## 4. Page-by-Page Desktop Gaps
+## 4. Page-by-Page Comparison Tables
 
-### 4.1 Dashboard (`/dashboard`)
+### Page: /dashboard
 
-**Design elements**:
-- Alert strip with left emerald border, dismiss button
-- Hero: `$14,285.42` in `text-[64px]` Plus Jakarta Sans + `+12.4%` pill badge
-- Quick stats: 4 cards (Points Sum, Active Cards, Yearly Fees, Saved YTD)
-- Active Bonus Trackers bento grid (2 tracker cards + "Track New Bonus" CTA)
-- Credit Portfolio: 3D wallet-style card stack with `rotate-3`, `rotate-1`, `-rotate-1` transforms
-- Recent Points: Activity feed with category icons, point values in primary color
+| Element | Design Value | Current Value | Status |
+|---|---|---|---|
+| Hero metric | `$14,285.42` total portfolio value | Active card count (number) | ❌ Wrong metric |
+| Hero font size | `text-[64px]` Plus Jakarta Sans | `text-5xl font-bold font-headline` | ⚠️ Font correct class but size smaller |
+| Hero label | "Total Portfolio Value" | "Active Cards" | ❌ |
+| Quick stats | 4 cards: Points Sum / Active Cards / Yearly Fees / Saved YTD | 3 cards: different layout | ❌ |
+| Bonus tracker bento | 2-card grid + "Track New Bonus" CTA section | Not implemented | ❌ |
+| 3D wallet card stack | 3 `WalletCard` with `rotate-3`, `rotate-1`, `-rotate-1` transforms | `WalletCard` used but no stacked/rotated layout | ❌ |
+| Alert strip | Left emerald border strip with dismiss button | Not present | ❌ |
+| Recent points feed | Category icons + point values in `text-primary` | Recommendations section (different content) | ❌ |
+| "Next Flight Opportunity" section | Present in design | Not present | ❌ |
+| ProGate | Not in design | Present in current | ⚠️ Extra component |
+| WalletCard component | Exists as spec hero element | `WalletCard.tsx` exists ✅ | ✅ |
 
-**Current state**: Likely not implemented to design spec (dashboard page not surfaced in glob). Needs full verification.
+### Page: /cards
 
-**Key missing components**:
-- Alert/notification strip with emerald left border
-- 3D wallet card stack visualization
-- Bonus Trackers bento grid
-- Hero metric in Plus Jakarta Sans display size
+| Element | Design Value | Current Value | Status |
+|---|---|---|---|
+| Stats row | Total Limit / Monthly Spend / Points Earned (3 stat cards) | Not present | ❌ |
+| Card layout | Apple Wallet bento grid (2–3 col) | Catalog list for card selection | ❌ |
+| Card aspect ratio | `aspect-[1.586/1]` | `WalletCard.tsx` uses `aspect-[1.586/1]` | ✅ |
+| Bank-specific gradients | Amex: silver/grey, CBA: yellow/orange, ANZ: blue | `getBankGradient()` function in `WalletCard.tsx` | ✅ |
+| Card hover lift | `group-hover:-translate-y-2` | `group-hover:-translate-y-1` (wrong amount) | ⚠️ |
+| Spend progress bar | Embedded inside card face | Below card face div | ❌ |
+| Points balance on card | Visible on card surface | Not displayed | ❌ |
+| Detail aside panel | Glassmorphism right panel — bonus progress, recent activity | Not present | ❌ |
+| Recent activity section | Feed below card grid | Not present | ❌ |
 
-### 4.2 Card Portfolio (`/cards`)
+### Page: /spending
 
-**Design elements**:
-- Stats row: Total Limit / Monthly Spend / Points Earned (3 stat cards)
-- Main area: 2–3 column card bento grid — each card is **Apple Wallet style** with:
-  - `aspect-[1.586/1]` (credit card aspect ratio)
-  - Bank-specific gradient (Amex: silver/grey; CBA: yellow/orange; ANZ: blue; Westpac: red)
-  - `rounded-xl` (1rem, not 3rem — check spec)
-  - Spending progress bar embedded in card
-  - `group-hover:-translate-y-2` lift effect
-- Right aside: Selected card details panel with glassmorphism, bonus progress mini-bar
-- Recent activity feed below cards
+| Element | Design Value | Current Value | Status |
+|---|---|---|---|
+| 4 glassmorphism stat cards | Top row: Est. Rewards / Time Remaining / Maximize Return / Upcoming Bills | Not present | ❌ |
+| Arc path (desktop) | `M 10 50 A 40 40 0 0 1 90 50` | Same path used | ✅ |
+| Arc RADIUS | 80 | 80 | ✅ |
+| Arc sweep | CIRCUMFERENCE × 0.667 (240°) | `strokeDasharray={CIRCUMFERENCE * 0.667}` | ✅ |
+| Arc hover stroke-width | 10 → 12 on hover | `stroke-width: 12` on hover via CSS | ✅ |
+| Arc hover glow | `filter: drop-shadow(0 0 12px rgba(78,222,163,0.6))` | Same filter applied | ✅ |
+| Center text font | Plus Jakarta Sans via `fontFamily` inline | Inline `fontFamily` style present | ✅ |
+| "On track" pill | `check_circle` icon + pill | Present | ✅ |
+| Glass panel classes | `.glass-panel premium-glow` | Used on arc container | ✅ |
+| Transaction list icon size | `w-14 h-14 rounded-2xl` | Needs verification | ⚠️ |
+| Category card bento (mobile) | 2-col grid with `glass-card` | Not implemented for mobile | ❌ |
 
-**Current state**: Shows catalog list view for card selection — lacks wallet-style visualization entirely.
+### Page: /profit
 
-**Priority gaps**:
-1. Wallet-style card visual (aspect ratio, gradients, embedded progress)
-2. Stats row above cards
-3. Card detail aside panel
-4. Recent activity in card context
+| Element | Design Value | Current Value | Status |
+|---|---|---|---|
+| Hero metric | `$14,842.60` split large/small weight | FY Net Profit shown in `text-[#4edea3]` | ✅ (value differs due to data) |
+| Hero label | "FY 2024 Net Profit" | Similar label | ✅ |
+| +22% from last FY pill | Present under hero | Not present | ❌ |
+| Stat strip | Total Bonuses `+$18,200` + Gross Fees `-$3,357` | Stat cards present | ⚠️ Layout differs |
+| Chart type | **Grouped bar chart** — bonus bars + fee bars per card | `AreaChart` (cumulative over time) | ❌ Wrong type |
+| Chart interaction | Hover tooltip on bars | Area chart hover tooltip | ⚠️ Different |
+| High Velocity Assets section | Cards with ROI 12.4x, 8.2x, gradient text | Not present | ❌ |
+| Holding Strategy section | Low ROI cards (1.8x, 0.9x) | Not present | ❌ |
+| 3 insight bento cards | Potential Savings / Next ROI Peak / Wallet Health | Not present | ❌ |
+| FBT exposure section | Not in design | Present in current | ⚠️ Extra |
+| Business/personal tab | Not in design | Present in current | ⚠️ Extra |
 
-### 4.3 Spend Tracker (`/spending`)
+### Page: /flights
 
-**Design elements**:
-- 4-column stat cards at top (glassmorphism `.glass-panel`)
-- Left column (5/12): SVG half-arc at `M 10 50 A 40 40 0 0 1 90 50`, rotated `-180deg`, with gradient stroke
-- Hover on arc: `stroke-width: 12` (up from 10), stronger glow
-- "On track" pill with `check_circle` icon
-- Daily burn rate text
-- Right column (7/12): Transaction list with `w-14 h-14 rounded-2xl` icons
+| Element | Design Value | Current Value | Status |
+|---|---|---|---|
+| Nav active state | "Flights" shown as active top-level | Nested under another item | ❌ |
+| Search input | `rounded-full`, full width | Standard `Input` component | ❌ |
+| Route cards | Glassmorphism `.glass-card` style | Standard `Card` components | ❌ |
+| Airline gradient headers | Airline-specific gradient on card header | Not present | ❌ |
+| Filter chips | Horizontal scrollable filter row | Standard form inputs | ❌ |
+| "Global Search" badge | Present next to title | Not present | ❌ |
 
-**Current state**: Issue #164 implemented the arc redesign. Likely close but needs verification against:
-- Arc hover interaction (stroke-width transition)
-- Glass stat cards using correct `.glass-panel` CSS class
-- Icon sizes (`w-14 h-14`) in transaction list
+### Page: / (Landing)
 
-### 4.4 Profit Dashboard (`/profit`)
-
-**Design elements**:
-- Hero: `$14,842.60` split with cents in lighter weight, "FY 2024 Net Profit" label
-- Stat strip: Total Bonuses (`+$18,200`) and Gross Fees (`-$3,357`)
-- Footer: "+22% from last FY" pill
-- **Bar chart** ("Bonuses vs Fees per Card"): 5 vertical bar pairs, primary for bonus (gradient fill), secondary for fee
-- High Velocity Assets section: Card items with ROI (12.4x, 8.2x)
-- Holding Strategy section: Low ROI cards (1.8x, 0.9x)
-- Bento grid: 3 insight cards (Potential Savings, Next ROI Peak, Wallet Health)
-
-**Current state**: Issue #165 implemented using recharts `AreaChart`. The **chart type is wrong** — design uses a grouped bar chart (bonus bar + fee bar per card), not an area chart. ROI table exists but uses different visual structure.
-
-**Priority gaps**:
-1. Chart type: AreaChart → grouped bar chart (Bonus vs Fee per card)
-2. "High Velocity Assets" / "Holding Strategy" card sections with ROI display
-3. 3 insight bento cards at bottom
-4. Hero stat strip (Total Bonuses / Gross Fees layout)
-
-### 4.5 Flights (`/flights`)
-
-**Design elements**:
-- Nav shows "Flights" as active top-level item (not nested under Redeem)
-- Top bar: "Reward Flights" title, "Global Search" badge, large search input (`rounded-full`)
-- Award route cards with airline gradient headers, origin→destination, cabin class badge
-- Points required, taxes, booking CTA
-- Glassmorphism card style (`.glass-card`)
-
-**Current state**: Flights page exists. Uses standard `Card` components and `Input`/`Select` from shadcn. Missing glassmorphism card style and airline-specific gradient headers.
-
-### 4.6 Landing Page (`/`)
-
-**Design elements**:
-- Dark hero `#0f131f` bg, ambient gradient blobs (primary/secondary at 10% opacity)
-- "Command Your Wealth" pill badge (primary/10 bg)
-- H1: "Master the Churn" (Plus Jakarta Sans, 5xl–7xl, font-extrabold)
-- "The Churn" word in `#10b981` (primary-container)
-- Two CTAs: "Join the Elite" (gradient pill) + "View Live Dashboard" (glassmorphism pill)
-- Social proof: "5,000+ Aussie Points Hackers" + bank logos (AMEX, QANTAS etc.)
-- "How it Works" section with 3-step numbered list on `surface-container-low`
-- Visual showcase: Spend progress arc (full circle) + credit card stack
-
-**Current state**: Not evaluated — login page uses `PublicHeader` + shadcn `Card` components. Likely significantly different from design.
+| Element | Design Value | Current Value | Status |
+|---|---|---|---|
+| Background | `#0f131f` with ambient gradient blobs | Dark bg with ambient blobs | ✅ |
+| "Command Your Wealth" badge | `primary/10` bg pill | Present | ✅ |
+| H1 "Master the Churn" | Plus Jakarta Sans, 5xl–7xl, extrabold | Present with gradient on "the Churn" | ✅ |
+| Primary CTA "Join the Elite" | Gradient pill `rounded-full` | Present (`rounded-full` ✅) | ✅ |
+| Secondary CTA glassmorphism | Glassmorphism pill | Present | ✅ |
+| Bank logo social proof | AMEX, QANTAS, etc. | Present | ✅ |
+| "How it Works" section | 3-step on `surface-container-low` | Present | ✅ |
+| Visual showcase arc | Full-circle spend arc | Present | ✅ |
+| Card stack showcase | Wallet-style card stack | Present | ✅ |
+| BetaGate / BetaRequestForm | Not in Stitch design | Present — extra auth flow | ⚠️ |
 
 ---
 
 ## 5. Mobile Responsiveness Gaps
 
-### 5.1 Mobile Dashboard
-- Design: `max-w-[390px]` content, hero metric at `text-[40px]`, horizontal scroll cards (`snap-x`)
-- Current: Uses AppShell grid which may not constrain width correctly on mobile
+### 5.1 Mobile Spend Tracker Arc
 
-### 5.2 Mobile Card Portfolio
-- Design: Horizontal scroll card carousel with `snap-x snap-mandatory`, `min-w-[310px]` per card
-- Current: Card grid collapses to single column — no horizontal scroll pattern
+| Attribute | Design (mobile) | Current | Status |
+|---|---|---|---|
+| Arc path | `M 20 90 A 80 80 0 0 1 180 90` (different from desktop) | Desktop path used on mobile | ❌ |
+| `arc-hero-bg` section | `border-bottom-left-radius: 4rem; border-bottom-right-radius: 4rem` | Not applied | ❌ |
+| Category bento | 2-column glassmorphism grid | Not implemented | ❌ |
 
-### 5.3 Mobile Spend Tracker
-- Design: `arc-hero-bg` section with `border-bottom-left-radius: 4rem; border-bottom-right-radius: 4rem`, arc centered
-- Arc SVG: `M 20 90 A 80 80 0 0 1 180 90` (different path from desktop: `M 10 50 A 40 40 0 0 1 90 50`)
-- Category bento 2-column grid with `glass-card` boxes
-- Current: Spending page responsive but arc implementation may use desktop dimensions on mobile
+### 5.2 Mobile Profit Dashboard
 
-### 5.4 Mobile Profit Dashboard
-- Design: Horizontal scrollable bar chart with 6 months, scrolls past viewport
-- Bento 2x2 grid for stats (Points Val, Cash Back, ROI card spanning 2 cols)
-- Current: No mobile-specific chart layout
+| Attribute | Design (mobile) | Current | Status |
+|---|---|---|---|
+| Chart layout | Horizontal scrollable bar chart (6 months, overflow-x) | Recharts AreaChart fixed width | ❌ |
+| Stats bento | 2×2 grid (Points Val, Cash Back, ROI spanning 2 cols) | Standard vertical layout | ❌ |
 
-### 5.5 Mobile Flights
-- Design: Search input at top, horizontal scrollable filter chips, flight cards stacked
-- Current: Uses desktop-first layout
+### 5.3 Mobile Bottom Nav
 
-### 5.6 Mobile Bottom Nav
-- Design: `h-20 pb-safe`, `uppercase tracking-widest font-semibold`, icon `scale-110` on active, `shadow-[0_-8px_32px_rgba(0,0,0,0.5)]`
-- Current: `py-1`, `text-[10px] font-medium`, no shadow
-- Gap: Missing shadow, font-semibold, tracking-widest, pb-safe
+| Attribute | Design | Current | Status |
+|---|---|---|---|
+| Container shadow | `shadow-[0_-8px_32px_rgba(0,0,0,0.5)]` | No shadow | ❌ |
+| Font weight | `font-semibold tracking-widest` | `font-medium text-[10px]` | ❌ |
+| Safe-area padding | `pb-safe` (env variable) | `py-1` | ❌ |
+| Active icon scale | `scale-110` on active item | Not applied | ❌ |
+| Active bg | `active:bg-white/5` touch feedback | Not implemented | ❌ |
+
+### 5.4 Mobile Card Carousel
+
+| Attribute | Design | Current | Status |
+|---|---|---|---|
+| Card layout | Horizontal `snap-x snap-mandatory`, `min-w-[310px]` per card | Grid collapses to single column | ❌ |
+| Peek next card | Card partially visible at right edge | Not implemented | ❌ |
+
+### 5.5 Mobile Dashboard
+
+| Attribute | Design | Current | Status |
+|---|---|---|---|
+| Max width | `max-w-[390px]` content container | AppShell grid unconstrained | ❌ |
+| Hero metric | `text-[40px]` | Uses `text-5xl` | ⚠️ |
+| Horizontal scroll cards | `snap-x` card row | Not implemented | ❌ |
 
 ---
 
 ## 6. Component Library Gaps
 
-Based on the Stitch component library reference:
+### 6.1 WalletCard Component
 
-### 6.1 Credit Card Component
-- **Design spec**: `aspect-[1.586/1]`, bank-specific gradient, last-4 digits, points balance, spend progress bar, `rounded-xl` (not `rounded-2xl`)
-- **Current**: No reusable `CreditCard` component — card visuals are ad-hoc
-- **Gap**: Create `<CreditCard>` component matching wallet spec
-
-### 6.2 Button Variants
-- **Design spec**: Primary (gradient pill, rounded-full), Secondary (outline, secondary color), Ghost (text only), Loading (spinner)
-- **Current `button.tsx`**: Has default/destructive/outline/ghost — default uses gradient ✅, but uses `rounded-md` not `rounded-full`
-- **Gap**: Primary button should be `rounded-full` per spec
-
-### 6.3 Stat Card Component
-- **Design spec**: `surface-container` bg, `rounded-lg` (2rem), label-md for title, display-sm for value, no border header
-- **Current**: Uses shadcn `Card` with `CardHeader` — adds visual dividers
-- **Gap**: Custom `<StatCard>` without header divider
-
-### 6.4 Activity Feed Item
-- **Design spec**: `w-10 h-10 rounded-full` icon container, two-line text, right-aligned value + timestamp
-- **Current**: Partial implementations in spending/profit pages
-- **Gap**: Extract into shared `<ActivityItem>` component
-
-### 6.5 Progress Bar
-- **Design spec**: `h-2 rounded-full bg-surface-container-highest` track, `bg-gradient-to-r from-primary-container to-primary` fill
-- **Current**: shadcn `Progress` component (different styling)
-- **Gap**: Custom progress bar or override shadcn default styles
-
-### 6.6 Status Badges
-- **Design spec**: Success (primary/10 bg, primary text, check_circle icon), Error (error color), Pending (primary/40 animate-pulse)
-- **Current**: shadcn `Badge` with variant system
-- **Gap**: Design-spec status indicators with icon + background
-
-### 6.7 Input Fields
-- **Design spec**: `surface-container-highest` bg, **no border**, focus → `surface-bright` bg + primary ghost border (20% opacity)
-- **Current**: shadcn `Input` with `border-[var(--border-default)]`
-- **Gap**: Input border should be removed, focus state should use background-shift pattern
-
-### 6.8 Loading State / Shimmer
-- **Design**: Not explicitly in component library but shimmer utility exists in `globals.css`
-- **Current**: `.shimmer` class defined ✅, but not consistently applied
-
----
-
-## 7. "No-Line" Rule Violations Audit
-
-The most critical design principle: *"Do not use 1px solid borders to section content."*
-
-| Location | Current Code | Violation |
-|---|---|---|
-| AppShell sidebar nav | `rounded-xl border border-[var(--border-default)]` | ❌ |
-| AppShell header | `border-b border-[var(--border-default)]` | ⚠️ Structural OK |
-| Card components | `border border-[var(--border-default)]` | ❌ |
-| Input fields | `border-[var(--border-default)]` | ❌ |
-| Card detail rows | `border-b border-white/5` | ⚠️ Ghost border OK (5% opacity) |
-| Dashboard stat cards | `border border-white/5` | ⚠️ Ghost border OK |
-
-**Rule clarification from DESIGN.md**: Ghost borders at ≤15% opacity (`border-white/5` = 5% opacity) are acceptable fallbacks. Full `--border-default` borders on sections violate the rule.
-
----
-
-## 8. Animation & Interaction Gaps
-
-| Interaction | Design Spec | Current State | Gap |
+| Attribute | Design spec | Current `WalletCard.tsx` | Status |
 |---|---|---|---|
-| Nav active → page transition | View transitions via CSS `@view-transition` | Defined in `globals.css` ✅ | ✅ |
-| Card hover | `-translate-y-2` + shadow | Not on wallet card components | ❌ |
-| Arc hover | stroke-width 10→12 + stronger glow | Not verified in spending page | ⚠️ |
-| Button press | `active:scale-95` | Not in current `button.tsx` | ❌ |
-| CTA hover | `hover:scale-[1.02]` | `filter: brightness(1.1)` in globals | ⚠️ Different approach |
-| Mobile active | `active:bg-white/5` | Not implemented | ❌ |
-| Bonus tracker hover | `hover:border-primary/30` | Not in current card styles | ❌ |
-| Shimmer loading | `.shimmer` on skeleton | Defined but not consistently used | ⚠️ |
-| Points update animation | Tabular nums prevent layout shift | Not enforced globally | ❌ |
+| Aspect ratio | `aspect-[1.586/1]` | `aspect-[1.586/1]` | ✅ |
+| Corner radius | `rounded-xl` (3rem per DESIGN.md — check: `rounded-xl` = 0.75rem) | `rounded-xl` | ✅ |
+| Bank gradients | Amex: deep gold to bronze | `getBankGradient()` function | ✅ |
+| Hover lift | `group-hover:-translate-y-2` | `group-hover:-translate-y-1` | ❌ Amount off |
+| Spend progress bar | Embedded inside card face above bottom edge | Positioned below card div | ❌ |
+| Points balance | Displayed on card surface | Not shown | ❌ |
+| Card number | Last 4 digits displayed | Present | ✅ |
+| Ambient shadow | `0px 24px 48px -12px rgba(0,0,0,0.4)` | `shadow-2xl` | ⚠️ |
+| Hard-coded hex colors | Should use CSS vars | `#4edea3`, `#313442`, `#10b981` hardcoded | ❌ |
+
+### 6.2 Button Component
+
+| Attribute | Design spec | Current `button.tsx` | Status |
+|---|---|---|---|
+| Shape | `rounded-full` pill | `rounded-md` | ❌ |
+| Fill | Gradient `from-primary to-primary-container` | Gradient ✅ | ✅ |
+| Active press | `active:scale-95` | Not implemented | ❌ |
+| Font | `title-sm` (Inter 14px medium) | `text-sm font-medium` | ✅ |
+
+### 6.3 Input Component
+
+| Attribute | Design spec | Current `input.tsx` | Status |
+|---|---|---|---|
+| Border | **No border** — background-only separation | `border border-input` — **No-Line violation** | ❌ |
+| Background | `surface-container-highest` = `#313442` | `transparent` (inherits) | ❌ |
+| Focus state | Background shifts to `surface-bright` + primary ghost border 20% | Default focus ring | ❌ |
+
+### 6.4 Card Component (`card.tsx`)
+
+| Attribute | Design spec | Current `card.tsx` | Status |
+|---|---|---|---|
+| Border | Ghost border only (≤15% opacity) | `border border-[var(--border-default)]` | ❌ No-Line violation |
+| Corner radius | Stat cards: `rounded-lg` (2rem); wallet cards: `rounded-xl` | `rounded-xl` on all | ⚠️ Mixed usage |
+
+### 6.5 Shared Component Gaps (Missing Extractions)
+
+| Component | Design spec | Current state | Status |
+|---|---|---|---|
+| `<StatCard>` | `surface-container` bg, `rounded-lg`, no divider, label-md + display-sm | Uses shadcn `Card` + `CardHeader` | ❌ Not extracted |
+| `<ActivityItem>` | `w-10 h-10 rounded-full` icon, two-line text, right value + timestamp | Ad-hoc per page | ❌ Not extracted |
+| `<ProgressBar>` | `h-2 rounded-full` track, gradient fill | shadcn `Progress` | ❌ Wrong style |
+| `<StatusBadge>` | Icon + text + `primary/10` bg | shadcn `Badge` | ❌ Different style |
 
 ---
 
-## 9. Prioritised Task List
+## 7. No-Line Rule Violations Audit
+
+*Rule: No explicit 1px solid borders on content sections. Use tonal shifts or ghost borders ≤15% opacity.*
+
+| Location | Violation | Severity |
+|---|---|---|
+| `app/src/components/ui/input.tsx` | `border border-input` on input field | ❌ P0 |
+| `app/src/components/ui/card.tsx` | `border border-[var(--border-default)]` | ❌ P1 |
+| `app/src/components/layout/AppShell.tsx` | Sidebar card wrapper has full border | ❌ P0 |
+| `app/src/app/flights/page.tsx` | 5 instances of `border border-[var(--border-default)]` | ❌ P1 |
+| `app/src/app/calendar/page.tsx` | 3 instances | ❌ P1 |
+| `app/src/app/privacy/page.tsx` | 5 instances | ⚠️ P2 (non-app page) |
+| `app/src/app/inquiries/page.tsx` | 10+ instances | ❌ P1 |
+| `app/src/app/terms/page.tsx` | 5 instances | ⚠️ P2 (non-app page) |
+| `app/src/app/business/page.tsx` | 2 instances | ⚠️ P2 |
+| `app/src/app/admin/deals/page.tsx` | 4 instances | ⚠️ P2 |
+| `app/src/app/deals/page.tsx` | 2 instances | ⚠️ P2 |
+| `card.tsx` rows `border-b border-white/5` | Ghost border (5% opacity) — **acceptable** | ✅ OK |
+| Dashboard stat cards `border border-white/5` | Ghost border (5% opacity) — **acceptable** | ✅ OK |
+
+---
+
+## 8. Hard-Coded Color Violations
+
+*Rule: All colors should reference CSS variables from `tokens.css`, not hardcoded hex values.*
+
+| File | Hard-coded values | Fix |
+|---|---|---|
+| `app/src/components/ui/WalletCard.tsx` | `#4edea3`, `#313442`, `#10b981` | Use `var(--primary)`, `var(--surface-container-highest)`, `var(--primary-container)` |
+| `app/src/components/layout/Header.tsx` | `#4edea3`, `#10b981` | Use CSS vars |
+| `app/src/components/cards/CardFilters.tsx` | `#1b1f2c`, `#313442`, `#dfe2f3`, `#353946` | Use CSS vars |
+| `app/src/components/cards/CardItem.tsx` | `#1b1f2c`, `#4edea3`, `#10b981`, `#313442`, `#dfe2f3` | Use CSS vars |
+
+---
+
+## 9. Animation & Interaction Gaps
+
+| Interaction | Design Spec | Current State | Status |
+|---|---|---|---|
+| CSS view transitions | `@view-transition` between pages | Defined in `globals.css` | ✅ |
+| Card hover lift | `-translate-y-2` + ambient shadow | `WalletCard` uses `-translate-y-1` | ⚠️ Wrong amount |
+| Arc hover | stroke-width 10→12 + glow | Implemented in spending page | ✅ |
+| Button press | `active:scale-95` | Not in `button.tsx` | ❌ |
+| CTA hover | `hover:scale-[1.02]` | `filter: brightness(1.1)` in globals | ⚠️ Different approach |
+| Mobile touch feedback | `active:bg-white/5` | Not implemented | ❌ |
+| Bonus tracker hover | `hover:border-primary/30` (ghost primary border on hover) | Not in current card styles | ❌ |
+| Shimmer loading | `.shimmer` on skeleton | Defined ✅ but not consistently applied | ⚠️ |
+
+---
+
+## 10. Prioritised Task List
 
 ### 🔴 P0 — Critical (breaks design system integrity)
 
-1. **[NAV-001] Fix sidebar layout**: Convert from CSS grid column to `fixed left-0 h-screen` with `main {ml-64}` offset. Remove the card wrapper border.
-2. **[NAV-002] Remap nav taxonomy**: Home / Cards / Track / Redeem / Account → replace current Home / Cards / Discover / Spending / Timeline
-3. **[NAV-003] Fix active state colors**: `bg-[var(--surface-container)]` (#1b1f2c) + `text-[var(--primary)]` (#4edea3) for active items
-4. **[TYPO-001] Load Plus Jakarta Sans**: Add to `layout.tsx` via `next/font/google`, map to `--font-headline` CSS var, apply `font-headline` class to all hero metrics
-5. **[TOKEN-001] Extend Tailwind config**: Add design system color tokens (`surface-container`, `on-surface`, `primary` etc.) as Tailwind classes mapping to CSS variables
-6. **[PROFIT-001] Fix profit chart type**: Replace `AreaChart` with grouped bar chart (bonus bars + fee bars per card)
+1. **[TOKEN-001] Create `tailwind.config.ts`**: ❌ No config exists. Add design system tokens (`surface-container`, `on-surface`, `primary` etc.) as Tailwind classes mapping to CSS variables. Root cause of all hard-coded hex values.
+2. **[NAV-001] Fix sidebar layout to fixed full-height**: ❌ Convert from CSS grid column to `position: fixed; left: 0; top: 0; height: 100vh; width: 256px`. Remove card wrapper border. Add `ml-64` offset to main content.
+3. **[NAV-002] Remap nav taxonomy**: ❌ Replace Home / Cards / Discover / Spending / Timeline with flat: Home / Cards / Track / Redeem / Account.
+4. **[NAV-003] Fix active state colors**: ❌ Active: `bg-[var(--surface-container)]` (#1b1f2c) + `text-[var(--primary)]` (#4edea3).
+5. **[TYPO-001] Rename font CSS variable**: ⚠️ Plus Jakarta Sans loaded ✅ but as `--font-grotesk`. Add `--font-headline: var(--font-grotesk)` alias in `tokens.css` or rename directly. Update all `font-headline` class usages.
+6. **[PROFIT-001] Fix profit chart type**: ❌ Replace `AreaChart` with grouped bar chart — bonus bar + fee bar side-by-side per card.
 
-### 🟡 P1 — High Impact (significant visual regression from design)
+### 🟡 P1 — High Impact (significant visual regression)
 
-7. **[NAV-004] Add sidebar footer elements**: "The Financial Luminary" tagline, "Add New Card" gradient pill button in sidebar, user avatar/name/tier
-8. **[CARDS-001] Build Apple Wallet card component**: `aspect-[1.586/1]`, bank gradients, points display, progress bar, hover lift
-9. **[CARDS-002] Cards page redesign**: Stats row (Total Limit, Monthly Spend, Points Earned) + card bento grid + detail aside panel
-10. **[DASH-001] Dashboard redesign**: Alert strip, hero metric + quick stats, bonus tracker grid, wallet stack, recent points feed
-11. **[INPUT-001] Fix input style**: Remove border, use `surface-container-highest` bg, implement focus background-shift
+7. **[DASH-001] Fix dashboard hero metric**: ❌ Hero shows active card COUNT — should show total portfolio dollar value (`$14,285.42` format). Update metric calculation and display.
+8. **[DASH-002] Implement dashboard missing sections**: ❌ Add: alert strip (emerald left border), bonus tracker bento grid (2 cards + CTA), 3D wallet card stack (3 rotated WalletCards), recent points activity feed.
+9. **[CARDS-001] Fix WalletCard component**: ⚠️ Exists but: move spend progress bar inside card face, add points balance display, fix hover to `-translate-y-2`, replace hardcoded hex with CSS vars.
+10. **[CARDS-002] Cards page redesign**: ❌ Add stats row (Total Limit, Monthly Spend, Points Earned) + wallet card bento grid + detail aside panel + recent activity.
+11. **[INPUT-001] Fix input component No-Line Rule**: ❌ Remove `border border-input`. Set bg `surface-container-highest`. Focus: background shifts to `surface-bright` + primary ghost border 20% opacity.
+12. **[SPEND-001] Add 4-column stat cards to spending page**: ❌ Est. Rewards / Time Remaining / Maximize Return / Upcoming Bills using `.glass-panel` class above the arc.
+13. **[NAV-004] Add sidebar footer elements**: ❌ "The Financial Luminary" tagline, "Add New Card" gradient pill, user avatar + name + tier.
+14. **[NOLINEV-001] Fix No-Line violations in `flights/`, `calendar/`, `inquiries/` pages**: ❌ Replace `border border-[var(--border-default)]` with tonal background shifts or ghost borders (≤15% opacity).
+15. **[TOKEN-002] Replace hard-coded hex colors**: ❌ `WalletCard.tsx`, `Header.tsx`, `CardFilters.tsx`, `CardItem.tsx` — use CSS vars throughout.
+16. **[NAV-006] Fix theme-color meta tag**: ❌ In `layout.tsx`, `theme-color` for dark is `#0a0a0b` — update to `#0f131f`.
 
 ### 🟠 P2 — Medium Impact (noticeable polish gaps)
 
-12. **[MOBILE-001] Mobile bottom nav polish**: Add `shadow-[0_-8px_32px_rgba(0,0,0,0.5)]`, `font-semibold tracking-widest`, `pb-safe`, `scale-110` on active
-13. **[MOBILE-002] Mobile card carousel**: Horizontal snap-x scroll on mobile cards page
-14. **[MOBILE-003] Mobile spend tracker arc**: Arc dimensions and `arc-hero-bg` section with rounded bottom corners
-15. **[PROFIT-002] ROI sections**: Add "High Velocity Assets" + "Holding Strategy" sections with card-level ROI display
-16. **[BUTTON-001] Primary button pill**: Change default button `rounded-md` → `rounded-full` to match spec
-17. **[TYPO-002] Enforce tabular-nums globally**: Add `tabular-nums` utility class application to all financial figures
+17. **[PROFIT-002] Add ROI sections + insight bento**: ❌ "High Velocity Assets" section (12.4x, 8.2x ROI cards), "Holding Strategy" section, 3 insight bento cards, "+22% from last FY" pill.
+18. **[MOBILE-001] Mobile bottom nav polish**: ❌ Add `shadow-[0_-8px_32px_rgba(0,0,0,0.5)]`, `font-semibold tracking-widest`, `pb-safe`, `scale-110` on active, `active:bg-white/5`.
+19. **[MOBILE-002] Mobile card carousel**: ❌ `snap-x snap-mandatory` horizontal scroll with `min-w-[310px]` per card + peek effect.
+20. **[MOBILE-003] Mobile spend tracker arc**: ❌ Different arc path for mobile (`M 20 90 A 80 80 0 0 1 180 90`), `arc-hero-bg` rounded-bottom section, category bento grid.
+21. **[MOBILE-004] Mobile profit horizontal bar chart**: ❌ Horizontal scrollable bar chart (6 months), 2×2 bento stats grid.
+22. **[BUTTON-001] Primary button pill shape**: ❌ Change default button `rounded-md` → `rounded-full`.
+23. **[TYPO-002] Enforce tabular-nums on cards page**: ⚠️ 34 instances of `tabular-nums` exist elsewhere ✅ but cards page amount displays missing it.
+24. **[FLIGHTS-001] Flights page glassmorphism polish**: ❌ Replace standard `Card` with `.glass-card`, add airline gradient headers, `rounded-full` search input, horizontal filter chips.
+25. **[COMP-002] Fix card.tsx ghost border**: ❌ Replace `border border-[var(--border-default)]` with ghost border at ≤15% opacity (`border border-white/5`).
 
 ### 🟢 P3 — Polish (fine-tuning)
 
-18. **[ANIM-001] Card hover interactions**: `-translate-y-2` + `shadow-primary/10` on wallet cards, `hover:border-primary/30` on bonus tracker cards
-19. **[ANIM-002] Button active state**: Add `active:scale-95` to button variants
-20. **[COMP-001] Extract shared components**: `<StatCard>`, `<ActivityItem>`, `<ProgressBar>` matching design specs
-21. **[LANDING-001] Landing page redesign**: Full Financial Luminary landing with hero, how-it-works, showcase section
-22. **[FLIGHTS-001] Flights page polish**: Glassmorphism card style, airline gradient headers, filter chips
-23. **[NAV-005] Remove ghost border from sidebar card wrapper**: Replace tonal shift with background-only separation
+26. **[ANIM-001] Card hover interactions**: ⚠️ Fix WalletCard hover to `-translate-y-2`. Add `hover:border-primary/30` on bonus tracker cards.
+27. **[ANIM-002] Button active state**: ❌ Add `active:scale-95` to button variants.
+28. **[COMP-001] Extract shared components**: ❌ Create `<StatCard>`, `<ActivityItem>`, `<ProgressBar>` matching design spec (currently ad-hoc per-page).
+29. **[LANDING-001] Landing page review**: ⚠️ Substantially matches design. Verify hero font size is `text-7xl` on large viewports. Check "How it Works" numbering style. Remove BetaGate path from main hero CTA.
+30. **[NAV-005] Remove sidebar card wrapper**: ❌ Sidebar should have no card/border wrapper — background contrast only (surface-container-low on surface base).
 
 ---
 
-## 10. Files to Modify (Implementation Roadmap)
+## 11. Files to Modify (Implementation Roadmap)
 
 | File | Changes Required | Priority |
 |---|---|---|
-| `app/src/components/layout/AppShell.tsx` | Layout → fixed sidebar, nav taxonomy, active colors, sidebar footer | P0 |
-| `app/tailwind.config.ts` | Add design system color tokens | P0 |
-| `app/src/app/layout.tsx` | Load Plus Jakarta Sans via next/font/google | P0 |
-| `app/src/styles/tokens.css` | Add `--font-headline: 'Plus Jakarta Sans', sans-serif` | P0 |
-| `app/src/app/profit/page.tsx` | Replace AreaChart with bar chart, add ROI sections + bento grid | P0 |
-| `app/src/components/ui/button.tsx` | `rounded-md` → `rounded-full` for default variant | P1 |
-| `app/src/components/ui/input.tsx` | Remove border, add bg + focus styles | P1 |
-| `app/src/app/cards/page.tsx` | Full redesign: stats row + wallet card grid + detail panel | P1 |
-| `app/src/app/dashboard/page.tsx` | Full redesign: alert strip + hero + bonus trackers + card stack | P1 |
-| `app/src/components/cards/CardGrid.tsx` | Replace with wallet-style card component | P1 |
-| `app/src/app/spending/page.tsx` | Verify arc hover, icon sizes, stat card styles | P2 |
-| `app/src/app/flights/page.tsx` | Glassmorphism cards, airline gradients | P2 |
+| `app/tailwind.config.ts` (create) | Add design system color + font tokens | P0 |
+| `app/src/components/layout/AppShell.tsx` | Fixed sidebar layout, nav taxonomy, active colors, sidebar footer | P0 |
+| `app/src/app/layout.tsx` | Fix theme-color meta tag, add `--font-headline` alias | P0 |
+| `app/src/styles/tokens.css` | Add `--font-headline: var(--font-grotesk)` | P0 |
+| `app/src/app/profit/page.tsx` | Replace AreaChart with grouped bar chart, add ROI sections + bento grid, "+22% pill" | P0 + P2 |
+| `app/src/app/dashboard/page.tsx` | Fix hero metric, add alert strip, bonus bento, 3D card stack, points feed | P1 |
+| `app/src/components/ui/WalletCard.tsx` | Embed progress bar, add points display, fix hover, replace hex with CSS vars | P1 |
+| `app/src/app/cards/page.tsx` | Stats row, wallet card bento grid, detail aside panel, activity feed | P1 |
+| `app/src/components/ui/input.tsx` | Remove border, surface-container-highest bg, focus background-shift | P1 |
+| `app/src/app/spending/page.tsx` | Add 4-column glassmorphism stat cards at top | P1 |
+| `app/src/components/cards/CardFilters.tsx` | Replace hardcoded hex with CSS vars | P1 |
+| `app/src/components/cards/CardItem.tsx` | Replace hardcoded hex with CSS vars | P1 |
+| `app/src/components/layout/Header.tsx` | Replace hardcoded hex with CSS vars | P1 |
+| `app/src/app/flights/page.tsx` | Fix No-Line violations, glassmorphism cards, airline gradients | P1 |
+| `app/src/components/ui/button.tsx` | `rounded-md` → `rounded-full`, add `active:scale-95` | P2 |
+| `app/src/components/ui/card.tsx` | Replace hard border with ghost border (`border-white/5`) | P2 |
+| `app/src/app/flights/page.tsx` | Glassmorphism cards, `rounded-full` search input, filter chips | P2 |
 
 ---
 
 ## Appendix: Token Mapping Reference
 
-### Current `tokens.css` aliases → Design system canonical names
+### Current `tokens.css` legacy aliases → Design system canonical names
 
 | Legacy alias (current) | Design canonical | Hex value |
 |---|---|---|
@@ -402,7 +433,129 @@ The most critical design principle: *"Do not use 1px solid borders to section co
 | `--text-secondary` | `on-surface-variant` | `#bbcabf` |
 | `--accent` | `primary` | `#4edea3` |
 | `--border-default` | `outline-variant` at 5% opacity | `rgba(255,255,255,0.05)` |
+| `--font-sans` | maps to `var(--font-grotesk)` | Plus Jakarta Sans |
+| `--font-headline` | NOT YET DEFINED — should alias `var(--font-grotesk)` | Plus Jakarta Sans |
+
+### Ghost Border Reference
+
+Acceptable ghost borders (≤15% opacity):
+- `border-white/5` = 5% opacity ✅
+- `border-white/10` = 10% opacity ✅
+- `border-primary/15` = 15% opacity ✅
+- `border-[var(--border-default)]` = 100% opaque ❌ **Violates No-Line Rule**
 
 ---
 
-*End of gap analysis. Next step: implement in priority order starting with P0 items.*
+---
+
+## 12. Live Site Audit — https://www.rewardrelay.app/
+
+**Audited**: 2026-03-22 via Puppeteer headless browser (Node 20, 1440×900 viewport)
+**Screenshots**: `/tmp/site-screenshots/` (landing, login-page, post-login, dashboard, cards, spending, profit, flights, calendar, projections, recommendations, compare)
+**Login**: `john.g.keto+rewardrelay-test@gmail.com` — test account with no active spending cards / no confirmed bonuses
+
+### Console Errors Detected
+
+| Page | Error | Root Cause |
+|---|---|---|
+| `/dashboard` | `HTTP 406` (×4) | Supabase API requests with mismatched `Accept` header — likely missing `application/json` on some fetch calls |
+| `/spending` | `HTTP 400` | Spending API call failing — likely card ID mismatch or missing spend target for test account |
+| `/spending` | `Error loading cards: [object Object]` | Unhandled error object — should surface `.message` not `[object Object]` in error log |
+
+### Cross-Page Visual Observations
+
+| Element | Observed | Design Spec | Status |
+|---|---|---|---|
+| Page background | Very dark near `#0f131f` | `#0f131f` | ✅ |
+| Sidebar position | Floating card in CSS grid, does NOT extend full viewport height | `fixed left-0 h-screen` | ❌ Confirmed |
+| Nav labels | Home / Cards / Discover ▶ / Spending ▶ / Timeline ▶ | Home / Cards / Track / Redeem / Account | ❌ Confirmed |
+| "Add card" button | Gradient pill in top-right header | Gradient pill in sidebar footer | ⚠️ Misplaced |
+| Header content | Logo + "Add card" + logout icon | Logo + breadcrumb + search + notifications + settings | ❌ Incomplete |
+| Font rendering | Headlines rounded, modern — consistent with Plus Jakarta Sans | Plus Jakarta Sans | ✅ Appears correct |
+| Active nav color | Active item highlighted but text appears near-white, not emerald | `text-primary` (#4edea3) | ❌ Wrong color confirmed live |
+| Sidebar background | Slightly lighter than main bg — tonal shift working | `surface-container-low` | ✅ |
+| "Upgrade to Pro" modal | Blocking bottom portion of dashboard | Not in design | ⚠️ ProGate present |
+
+### Page-by-Page Live Observations
+
+#### Landing (`/`)
+- "Master the Churn" hero renders correctly with gradient on "the Churn" word ✅
+- Ambient gradient blobs present ✅
+- Primary CTA "Join the Elite" is a gradient pill ✅
+- Secondary CTA glassmorphism effect visible ✅
+- "How it Works" section renders ✅
+- Visual showcase with arc and card stack visible ✅
+- **Additional sections not in design**: Pricing table and FAQ section at bottom — these don't appear in Stitch exports ⚠️
+- Overall: **substantially matches design spec** with extra content appended
+
+#### Dashboard (`/dashboard`)
+- Hero shows "10" (card count) in large primary text — **not the dollar portfolio value** design calls for ❌
+- 3 stat cards visible below hero ✅ but differ from design's 4-card row
+- WalletCard grid renders below stats — wallet-style cards with bank gradients ARE visible ✅
+- Cards NOT in 3D stacked layout (no `rotate-3`, `rotate-1`, `-rotate-1` transforms) ❌
+- Bonus tracker bento grid: **not present** ❌
+- Recommendations section present below cards (not in design) ⚠️
+- "Upgrade to Pro" ProGate overlay blocks bottom 30% of page ⚠️
+- 4× HTTP 406 errors suggest data loading failures — some sections may be partially broken
+
+#### Cards (`/cards`)
+- Shows "Australian cards" catalog list with "Track a card" form at top
+- Card catalog shows flat list items (Qantas Platinum, CBA varieties, ANZ, AMEX etc.)
+- **No wallet-style bento grid** — completely different layout from design ❌
+- Card items show bank name, points, annual fee, sign-up bonus in text rows — no visual card face ❌
+- No stats row (Total Limit / Monthly Spend / Points Earned) ❌
+- No detail aside panel ❌
+
+#### Spend Tracker (`/spending`)
+- **Empty state** renders: "No active cards" with "Add cards" CTA ⚠️ (test account has no spending-tracked cards)
+- The arc visualization and glassmorphism stat cards **are not visible** because of empty state — cannot visually verify arc implementation from live audit
+- Empty state card has visible border (`border border-[var(--border-default)]`) confirming No-Line violation ❌
+- HTTP 400 + "Error loading cards" error suggests API issue unrelated to design
+
+#### Profit Dashboard (`/profit`)
+- **Empty state** renders: "No bonuses confirmed yet" with instructions ⚠️
+- Cannot verify chart, ROI sections, or hero metric from live audit
+- Empty state confirms the page shows no visual design chrome when no data exists ❌ — design shows full dashboard with sample data visible even without user data
+
+#### Flights (`/flights`)
+- Route cards render with flight pairs (SYD → MEL, SYD → Singapore, etc.) ✅ — functional
+- Cards use dark backgrounds but **no glassmorphism** (no `backdrop-blur`, no frosted effect) ❌
+- **No airline gradient headers** — cards are uniform dark color ❌
+- Filter chips bar at top present ✅
+- Points + taxes + booking button visible on each card ✅
+- "Upgrade to Pro" gate visible at bottom ⚠️
+- Layout is 2-column grid — functional but not premium-styled
+
+#### Calendar (`/calendar`)
+- "Churning Calendar" with card application timeline ✅
+- List shows bank groupings with card names and approval status badges ✅
+- **No-Line violations clearly visible** — horizontal rule dividers between every list item ❌
+- "Active"/"Approved" badges present ✅
+- "Cancelled"/"Eligible" legend at bottom ✅
+- Dates and timeline functional ✅
+
+#### Projections (`/projections`)
+- Shows "Reward Flights" flight projection (SYD → LHR Economy)
+- "0% to Business SYD → LHR" progress indicator ✅
+- "Top Cards to Close the Gap" section with card recommendations ✅
+- Glassmorphism-adjacent dark panels ✅ but not full spec
+- Overall functional for the use case
+
+#### Recommendations (`/recommendations`) and Compare (`/compare`)
+- Standard card recommendation and comparison UI
+- Not in Stitch design scope — extra pages added by development
+- Use consistent dark theme ✅ but no design spec to compare against
+
+### Live Audit Conclusion
+
+The live site confirms the static code audit findings. Additional live-specific observations:
+
+1. **Empty state UX gap**: Both `/spending` and `/profit` show empty states in the test environment. Design shows fully populated screens — there is no design spec for the empty state styling, which currently uses standard bordered cards inconsistent with the design system.
+2. **ProGate UX**: The "Upgrade to Pro" overlay on dashboard and flights cuts off content — the test account appears to be on the free tier. Design assumes a Pro user context.
+3. **HTTP 406 errors on dashboard**: 4 Supabase API calls are failing silently. Likely `Accept` header mismatch on fetch calls.
+4. **No runtime font issues**: Plus Jakarta Sans appears to be loading correctly from Google Fonts — no FOUT or fallback font observed.
+5. **No broken images**: All card gradient backgrounds, icons, and UI elements render without broken asset references.
+
+---
+
+*End of gap analysis. 30 gaps total: 6 P0 | 10 P1 | 9 P2 | 5 P3. Implement in priority order starting with TOKEN-001 (Tailwind config) as it unblocks all downstream token usage.*
