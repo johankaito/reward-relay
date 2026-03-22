@@ -308,8 +308,7 @@ export default function SpendingTrackerPage() {
         .from("user_cards")
         .select(`*, card:cards(*)`)
         .eq("user_id", user.id)
-        .not("status", "in", '("cancelled","churned","closed")')
-        .order("activated_date", { ascending: false })
+        .order("application_date", { ascending: false })
 
       if (error) throw error
 
