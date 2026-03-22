@@ -7,9 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { StatCard } from "@/components/ui/stat-card"
-import { Badge } from "@/components/ui/badge"
-import { AlertCircle, CheckCircle, Clock, TrendingUp, Plus, Pencil } from "lucide-react"
+import { Pencil } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -71,8 +69,6 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
       style={{ position: "relative" }}
     >
       <style>{`
-        .progress-arc-container { transition: transform 300ms ease-out; }
-        .progress-arc-container:hover { transform: scale(1.02); }
         .progress-arc-container:hover .progress-arc-path {
           stroke-width: 12 !important;
           filter: drop-shadow(0 0 12px rgba(78,222,163,0.6));
@@ -149,59 +145,96 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
   )
 }
 
-function MobileSpendArc({ spent, target }: { spent: number; target: number }) {
+function MobileSpendArc({
+  spent,
+  target,
+  paceLabel,
+  bonusPts,
+}: {
+  spent: number
+  target: number
+  paceLabel: string
+  bonusPts?: number
+}) {
   const pct = target > 0 ? Math.min(spent / target, 1) : 0
-  const TOTAL_LEN = Math.PI * 80 // semicircle path length ≈ 251.3
+  const TOTAL_LEN = Math.PI * 80 // semicircle path ≈ 251.3
   const filled = TOTAL_LEN * pct
   return (
-    <div className="arc-hero-bg -mx-4 px-4 pb-8 pt-4">
-      <svg width="100%" viewBox="0 0 200 100" style={{ overflow: "visible" }}>
-        {/* Track */}
-        <path
-          d="M 20 90 A 80 80 0 0 1 180 90"
-          fill="none"
-          stroke="rgba(255,255,255,0.1)"
-          strokeWidth={10}
-          strokeLinecap="round"
-        />
-        {/* Fill */}
-        <path
-          d="M 20 90 A 80 80 0 0 1 180 90"
-          fill="none"
-          stroke="#4edea3"
-          strokeWidth={10}
-          strokeLinecap="round"
-          strokeDasharray={`${filled} ${TOTAL_LEN - filled}`}
-          style={{
-            transition: "stroke-dasharray 600ms ease-out",
-            filter: "drop-shadow(0 0 8px rgba(78,222,163,0.4))",
-          }}
-        />
-        {/* Amount */}
-        <text
-          x="100"
-          y="62"
-          textAnchor="middle"
-          fill="white"
-          fontSize="20"
-          fontWeight="bold"
-          fontFamily="'Plus Jakarta Sans', sans-serif"
-        >
+    <section className="arc-hero-bg -mx-4 pt-10 pb-20 px-6 text-center relative overflow-hidden">
+      {/* Header */}
+      <header className="mb-10 relative z-10">
+        <p className="text-primary text-[11px] uppercase tracking-[0.2em] font-bold mb-3 opacity-90">
+          Current Statement Balance
+        </p>
+        <h1 className="text-6xl font-extrabold font-headline tracking-tighter tabular-nums text-on-surface">
           {formatCurrencyCompact(spent)}
-        </text>
-        {/* Label */}
-        <text
-          x="100"
-          y="78"
-          textAnchor="middle"
-          fill="rgba(255,255,255,0.4)"
-          fontSize="9"
-          fontFamily="Inter, sans-serif"
-        >
-          of {formatCurrencyCompact(target)}
-        </text>
-      </svg>
-    </div>
+          <span className="text-surface-bright/80 font-medium text-3xl align-baseline">
+            {target > 0 ? ` / ${formatCurrencyCompact(target)}` : ""}
+          </span>
+        </h1>
+      </header>
+
+      {/* Centered Arc */}
+      <div className="relative w-64 h-32 mx-auto mb-12">
+        <svg className="w-full h-full" viewBox="0 0 200 100">
+          <defs>
+            <linearGradient id="arcGradMobile" x1="0%" x2="100%" y1="0%" y2="0%">
+              <stop offset="0%" stopColor="#4edea3" />
+              <stop offset="100%" stopColor="#10b981" />
+            </linearGradient>
+          </defs>
+          {/* Track */}
+          <path
+            d="M 20 90 A 80 80 0 0 1 180 90"
+            fill="none"
+            stroke="rgba(255,255,255,0.05)"
+            strokeLinecap="round"
+            strokeWidth="12"
+          />
+          {/* Fill */}
+          <path
+            d="M 20 90 A 80 80 0 0 1 180 90"
+            fill="none"
+            stroke="url(#arcGradMobile)"
+            strokeLinecap="round"
+            strokeWidth="12"
+            strokeDasharray={`${filled} ${TOTAL_LEN - filled}`}
+            style={{
+              transition: "stroke-dasharray 600ms ease-out",
+              filter: "drop-shadow(0 0 8px rgba(78,222,163,0.4))",
+            }}
+          />
+        </svg>
+        {/* Pace badge */}
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
+            <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+            <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{paceLabel}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 2-col glass stat cards */}
+      <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto relative z-10">
+        <div className="glass-card p-5 rounded-2xl text-left">
+          <p className="text-slate-400 text-xs font-semibold mb-2">Projected Points</p>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-on-surface font-bold text-2xl tabular-nums">
+              {bonusPts ? `${(bonusPts / 1000).toFixed(0)}k` : "—"}
+            </span>
+            {bonusPts ? <span className="text-primary text-xs font-bold">pts</span> : null}
+          </div>
+        </div>
+        <div className="glass-card p-5 rounded-2xl text-left">
+          <p className="text-slate-400 text-xs font-semibold mb-2">Progress</p>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-on-surface font-bold text-2xl tabular-nums">
+              {target > 0 ? `${Math.round(pct * 100)}%` : "—"}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -212,14 +245,6 @@ function formatCurrencyCompact(amount: number): string {
 
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD" }).format(amount)
-}
-
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("en-AU", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  })
 }
 
 function getPaceStatus(card: UserCard): { label: string; color: string } {
@@ -368,19 +393,15 @@ export default function SpendingTrackerPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 pb-10">
-        {/* Page header */}
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Spending</p>
-          <h1
-            className="mt-1 bg-gradient-to-br from-primary to-primary-container bg-clip-text text-2xl font-black text-transparent"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-          >
-            Spend Tracker
-          </h1>
+      {/* ── Sticky header ── */}
+      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+        <div className="flex items-center justify-between px-10 h-16 w-full max-w-[1440px] mx-auto">
+          <h1 className="text-lg font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent font-headline">Spend Tracker</h1>
         </div>
+      </header>
 
-        {/* Spending profile wizard — shown when no profile exists or editing */}
+      <div className="space-y-6 pb-10 px-10 pt-10">
+        {/* ── Spending profile wizard — shown when no profile exists or editing ── */}
         {userId && (hasSpendingProfile === false || editingProfile) && (
           <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
             <CardContent className="p-5">
@@ -396,7 +417,7 @@ export default function SpendingTrackerPage() {
           </Card>
         )}
 
-        {/* Profile summary row (when profile exists and not editing) */}
+        {/* ── Profile summary row (when profile exists and not editing) ── */}
         {userId && hasSpendingProfile && !editingProfile && (
           <div className="flex items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--surface)] px-4 py-3">
             <div>
@@ -415,35 +436,82 @@ export default function SpendingTrackerPage() {
           </div>
         )}
 
-        {/* Summary stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="px-4 py-3">
-              <p className="text-xs text-[var(--text-secondary)]">Active cards</p>
-              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                {userCards.length}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="px-4 py-3">
-              <p className="text-xs text-[var(--text-secondary)]">Needs spend</p>
-              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                {cardsNeedingSpend}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="px-4 py-3">
-              <p className="text-xs text-[var(--text-secondary)]">Total target</p>
-              <p className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-                {formatCurrency(totalTarget)}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        {/* ── Top stats row (Stitch 4-col glass panels) ── */}
+        {activeCard && pace && (() => {
+          const daysLeft = activeCard.spend_deadline
+            ? Math.max(0, Math.ceil((new Date(activeCard.spend_deadline).getTime() - Date.now()) / 86400000))
+            : null
+          const remaining = Math.max(0, activeCard.spend_target - activeCard.current_spend)
+          const dailyPace = daysLeft && daysLeft > 0 ? remaining / daysLeft : null
+          const pct = activeCard.spend_target > 0
+            ? Math.min(100, Math.round((activeCard.current_spend / activeCard.spend_target) * 100))
+            : 0
+          const bonusPts = activeCard.card.welcome_bonus_points
 
-        {/* Card spending progress */}
+          return (
+            <section className="max-w-[1440px] mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
+                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Est. Rewards</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-headline font-bold text-tertiary tabular-nums tracking-tighter">
+                      {bonusPts ? `${(bonusPts / 1000).toFixed(0)}k` : "—"}
+                    </span>
+                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">
+                      {bonusPts ? "pts" : "if target hit"}
+                    </span>
+                  </div>
+                </div>
+                <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
+                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Time Remaining</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-headline font-bold text-white tabular-nums tracking-tighter">
+                      {daysLeft !== null ? daysLeft : "—"}
+                    </span>
+                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Days</span>
+                  </div>
+                </div>
+                <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
+                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Daily Pace</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-headline font-bold text-white tabular-nums tracking-tighter">
+                      {dailyPace !== null ? `$${Math.ceil(dailyPace)}` : "—"}
+                    </span>
+                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">/day</span>
+                  </div>
+                </div>
+                <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
+                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Bonus Progress</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-headline font-bold text-white tabular-nums tracking-tighter">{pct}%</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )
+        })()}
+
+        {/* ── Card selector (multi-card) ── */}
+        {userCards.length > 1 && (
+          <div>
+            <Label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-on-surface-variant">
+              Tracking card
+            </Label>
+            <select
+              value={selectedCardId ?? ""}
+              onChange={(e) => setSelectedCardId(e.target.value)}
+              className="w-full rounded-xl border border-white/10 bg-surface-container px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary/40"
+            >
+              {userCards.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.card.bank} — {c.card.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* ── Empty state ── */}
         {userCards.length === 0 ? (
           <div className="glass-panel premium-glow flex flex-col items-center gap-4 rounded-2xl px-8 py-16 text-center">
             <p
@@ -463,289 +531,352 @@ export default function SpendingTrackerPage() {
               Add cards
             </Button>
           </div>
-        ) : (
+        ) : activeCard && pace ? (
           <>
-            {/* Card selector */}
-            {userCards.length > 1 && (
-              <div>
-                <Label className="mb-1.5 block text-xs font-bold uppercase tracking-widest text-on-surface-variant">
-                  Tracking card
-                </Label>
-                <select
-                  value={selectedCardId ?? ""}
-                  onChange={(e) => setSelectedCardId(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-surface-container px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary/40"
-                >
-                  {userCards.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.card.bank} — {c.card.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+            {/* ── Mobile arc hero — hidden on desktop ── */}
+            <div className="md:hidden">
+              <MobileSpendArc
+                spent={activeCard.current_spend}
+                target={activeCard.spend_target}
+                paceLabel={pace.label}
+                bonusPts={activeCard.card.welcome_bonus_points}
+              />
+            </div>
 
-            {activeCard && pace && (
-              <>
-                {/* ── 4-column glassmorphism stat cards ── */}
-                {(() => {
-                  const daysLeft = activeCard.spend_deadline
-                    ? Math.max(0, Math.ceil((new Date(activeCard.spend_deadline).getTime() - Date.now()) / 86400000))
-                    : null
-                  const remaining = Math.max(0, activeCard.spend_target - activeCard.current_spend)
-                  const dailyPace = daysLeft && daysLeft > 0 ? remaining / daysLeft : null
-                  const pct = activeCard.spend_target > 0
-                    ? Math.min(100, Math.round((activeCard.current_spend / activeCard.spend_target) * 100))
-                    : 0
-                  const bonusPts = activeCard.card.welcome_bonus_points
+            {/* ── Desktop: Stitch grid-cols-12 arc + activity layout ── */}
+            <div className="hidden md:block max-w-[1440px] mx-auto">
+              <div className="grid grid-cols-12 gap-10">
+                {/* Arc panel: col-span-5 */}
+                <div className="col-span-12 lg:col-span-5">
+                  <div className="bg-surface-container-low rounded-2xl p-10 relative overflow-hidden flex flex-col items-center text-center border border-white/5 h-full">
+                    <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full" />
+                    <div className="relative w-full">
+                      <h2 className="text-slate-500 text-[11px] uppercase tracking-[0.2em] font-bold mb-10">
+                        {activeCard.card.bank} {activeCard.card.name} Bonus Progress
+                      </h2>
 
-                  const stats = [
-                    {
-                      label: "Est. Rewards",
-                      value: bonusPts ? `${(bonusPts / 1000).toFixed(0)}k pts` : "—",
-                      sub: "if target hit",
-                      icon: "✦",
-                      accent: true,
-                    },
-                    {
-                      label: "Time Remaining",
-                      value: daysLeft !== null ? `${daysLeft}d` : "—",
-                      sub: "until deadline",
-                      icon: "◷",
-                      accent: daysLeft !== null && daysLeft < 14,
-                    },
-                    {
-                      label: "Daily Pace",
-                      value: dailyPace !== null ? `$${Math.ceil(dailyPace)}/d` : "—",
-                      sub: "needed to hit bonus",
-                      icon: "⚡",
-                      accent: false,
-                    },
-                    {
-                      label: "Bonus Progress",
-                      value: `${pct}%`,
-                      sub: `$${Math.round(activeCard.current_spend).toLocaleString()} of $${Math.round(activeCard.spend_target).toLocaleString()}`,
-                      icon: "◎",
-                      accent: pct >= 100,
-                    },
-                  ]
-
-                  return (
-                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                      {stats.map((s) => (
-                        <StatCard
-                          key={s.label}
-                          label={s.label}
-                          value={s.value}
-                          sub={s.sub}
-                          icon={s.icon}
-                          accent={s.accent}
-                        />
-                      ))}
-                    </div>
-                  )
-                })()}
-
-                {/* Mobile arc (semicircle hero) — hidden on desktop */}
-                <div className="md:hidden">
-                  <MobileSpendArc spent={activeCard.current_spend} target={activeCard.spend_target} />
-                </div>
-
-                {/* Arc + stats */}
-                <div className="hidden gap-5 rounded-b-[4rem] md:flex md:flex-row md:items-center">
-                  {/* Arc — 40% width */}
-                  <div className="flex flex-[2] items-center justify-center py-4">
-                    <SpendArc spent={activeCard.current_spend} target={activeCard.spend_target} />
-                  </div>
-
-                  {/* Stats panel — 60% width */}
-                  <div className="glass-panel premium-glow flex flex-[3] flex-col gap-5 rounded-2xl p-6">
-                    {activeCard.spend_deadline && (
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-                          Days Remaining
-                        </p>
-                        <p
-                          className="mt-0.5 text-5xl font-black tabular-nums text-on-surface"
-                          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                        >
-                          {Math.max(
-                            0,
-                            Math.ceil(
-                              (new Date(activeCard.spend_deadline).getTime() - Date.now()) /
-                                86400000,
-                            ),
-                          )}
-                        </p>
-                      </div>
-                    )}
-
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-                        Pace
-                      </p>
-                      <p
-                        className={`mt-0.5 text-lg font-bold ${pace.color}`}
-                        style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                      >
-                        {pace.label}
-                      </p>
-                    </div>
-
-                    {activeCard.spend_deadline &&
-                      activeCard.spend_target > activeCard.current_spend && (
-                        <div>
-                          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-                            Daily Target
-                          </p>
-                          <p className="mt-0.5 text-lg font-bold tabular-nums text-on-surface">
-                            {(() => {
-                              const daysLeft = Math.ceil(
-                                (new Date(activeCard.spend_deadline).getTime() - Date.now()) /
-                                  86400000,
-                              )
-                              if (daysLeft <= 0) return "—"
-                              return (
-                                formatCurrency(
-                                  (activeCard.spend_target - activeCard.current_spend) / daysLeft,
-                                ) + "/day"
-                              )
-                            })()}
-                          </p>
-                        </div>
-                      )}
-
-                    {!!activeCard.card.welcome_bonus_points && (
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-                          Earn on Completion
-                        </p>
-                        <p
-                          className="mt-0.5 text-lg font-bold tabular-nums text-secondary"
-                          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                        >
-                          {activeCard.card.welcome_bonus_points.toLocaleString()} pts
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Recent transactions */}
-                {(transactions[activeCard.id]?.length ?? 0) > 0 && (
-                  <div>
-                    <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-                      Recent Transactions
-                    </p>
-                    <div className="space-y-2">
-                      {transactions[activeCard.id].slice(0, 5).map((txn) => (
-                        <div
-                          key={txn.id}
-                          className="flex items-center justify-between gap-3 py-2 text-sm"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div
-                              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
-                              style={{
-                                background: "rgba(78,222,163,0.1)",
-                                border: "1px solid rgba(78,222,163,0.1)",
-                              }}
-                            >
-                              <span className="text-[10px] font-bold text-primary">
-                                {txn.description?.charAt(0)?.toUpperCase() ?? "·"}
-                              </span>
-                            </div>
-                            <span className="text-on-surface">{txn.description}</span>
-                          </div>
-                          <span className="tabular-nums font-medium text-on-surface">
-                            {formatCurrency(txn.amount)}
+                      {/* Stitch-style arc: w-80 h-48 semicircle with gradient */}
+                      <div className="relative w-80 h-48 mx-auto progress-arc-container">
+                        <svg className="w-full h-full transform -rotate-180" viewBox="0 0 100 55">
+                          <path
+                            d="M 10 50 A 40 40 0 0 1 90 50"
+                            fill="none"
+                            opacity="0.6"
+                            stroke="#262a37"
+                            strokeLinecap="round"
+                            strokeWidth="10"
+                          />
+                          <path
+                            d="M 10 50 A 40 40 0 0 1 90 50"
+                            fill="none"
+                            stroke="#313442"
+                            strokeDasharray="0.5 7.5"
+                            strokeLinecap="round"
+                            strokeWidth="10"
+                          />
+                          {(() => {
+                            // Total arc path length for "M 10 50 A 40 40 0 0 1 90 50" ≈ 125.66
+                            const totalLen = Math.PI * 40
+                            const pct = activeCard.spend_target > 0
+                              ? Math.min(activeCard.current_spend / activeCard.spend_target, 1)
+                              : 0
+                            const filled = totalLen * pct
+                            return (
+                              <path
+                                className="arc-glow progress-arc-path"
+                                d="M 10 50 A 40 40 0 0 1 90 50"
+                                fill="none"
+                                stroke="url(#arc-gradient-spend)"
+                                strokeDasharray={`${filled} ${totalLen - filled}`}
+                                strokeLinecap="round"
+                                strokeWidth="10"
+                                style={{ transition: "stroke-dasharray 600ms ease-out" }}
+                              />
+                            )
+                          })()}
+                          <defs>
+                            <linearGradient id="arc-gradient-spend" x1="0%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="0%" stopColor="#4edea3" />
+                              <stop offset="100%" stopColor="#a7f3d0" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                        <div className="absolute bottom-0 inset-x-0 flex flex-col items-center pb-2">
+                          <span className="text-5xl font-headline font-extrabold tabular-nums tracking-tight text-white">
+                            {formatCurrencyCompact(activeCard.current_spend)}
+                          </span>
+                          <span className="text-slate-500 text-[10px] uppercase tracking-[0.15em] font-bold mt-2">
+                            of {formatCurrencyCompact(activeCard.spend_target)} Goal
                           </span>
                         </div>
-                      ))}
+                      </div>
+                    </div>
+
+                    <div className="mt-12 flex flex-col items-center gap-6">
+                      <div className={`flex items-center gap-2.5 bg-primary/10 px-5 py-2 rounded-full border border-primary/30 premium-glow`}>
+                        <span className={`text-xs font-bold uppercase tracking-widest ${pace.color}`}>{pace.label}</span>
+                      </div>
+                      {activeCard.spend_deadline && activeCard.spend_target > activeCard.current_spend && (() => {
+                        const daysLeft = Math.ceil(
+                          (new Date(activeCard.spend_deadline).getTime() - Date.now()) / 86400000,
+                        )
+                        if (daysLeft <= 0) return null
+                        const dailyAmt = (activeCard.spend_target - activeCard.current_spend) / daysLeft
+                        return (
+                          <p className="text-slate-400 text-sm max-w-[300px] leading-relaxed">
+                            Spend{" "}
+                            <span className="text-on-surface font-semibold tabular-nums">
+                              {formatCurrency(dailyAmt)}
+                            </span>{" "}
+                            per day for the next{" "}
+                            <span className="text-on-surface font-semibold">{daysLeft} days</span>{" "}
+                            to hit your bonus.
+                          </p>
+                        )
+                      })()}
                     </div>
                   </div>
-                )}
+                </div>
 
-                {/* CTA */}
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      className="w-full rounded-full py-6 text-base font-bold text-on-primary"
-                      style={{ background: "var(--gradient-cta)" }}
-                    >
-                      + Add Transaction
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="border border-white/10 bg-surface-container">
-                    <DialogHeader>
-                      <DialogTitle className="text-on-surface">Record Transaction</DialogTitle>
-                      <DialogDescription className="text-on-surface-variant">
-                        Record a purchase made with {activeCard.card.name}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="amount" className="text-on-surface-variant">
-                          Amount (AUD)
-                        </Label>
-                        <Input
-                          id="amount"
-                          type="number"
-                          step="0.01"
-                          placeholder="100.00"
-                          value={newTransaction.amount}
-                          onChange={(e) =>
-                            setNewTransaction({ ...newTransaction, amount: e.target.value })
-                          }
-                          className="border-white/10 bg-surface-container-high text-on-surface"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="description" className="text-on-surface-variant">
-                          Description
-                        </Label>
-                        <Input
-                          id="description"
-                          placeholder="e.g., Groceries at Woolworths"
-                          value={newTransaction.description}
-                          onChange={(e) =>
-                            setNewTransaction({
-                              ...newTransaction,
-                              description: e.target.value,
-                            })
-                          }
-                          className="border-white/10 bg-surface-container-high text-on-surface"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="txn-date" className="text-on-surface-variant">
-                          Date
-                        </Label>
-                        <Input
-                          id="txn-date"
-                          type="date"
-                          value={newTransaction.date}
-                          onChange={(e) =>
-                            setNewTransaction({ ...newTransaction, date: e.target.value })
-                          }
-                          className="border-white/10 bg-surface-container-high text-on-surface"
-                        />
-                      </div>
-                      <Button
-                        onClick={handleAddTransaction}
-                        className="w-full rounded-full font-bold text-on-primary"
-                        style={{ background: "var(--gradient-cta)" }}
-                      >
-                        Save Transaction
-                      </Button>
+                {/* Activity panel: col-span-7 */}
+                <div className="col-span-12 lg:col-span-7">
+                  <div className="flex items-center justify-between mb-8">
+                    <div>
+                      <h3 className="text-2xl font-headline font-bold tracking-tight">Recent Activity</h3>
+                      <p className="text-slate-500 text-sm mt-1.5 font-medium">
+                        Spend transactions for {activeCard.card.bank} {activeCard.card.name}
+                      </p>
                     </div>
-                  </DialogContent>
-                </Dialog>
-              </>
-            )}
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button
+                          className="rounded-xl font-bold text-on-primary px-5 py-2.5"
+                          style={{ background: "var(--gradient-cta)" }}
+                        >
+                          + Add Transaction
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="border border-white/10 bg-surface-container">
+                        <DialogHeader>
+                          <DialogTitle className="text-on-surface">Record Transaction</DialogTitle>
+                          <DialogDescription className="text-on-surface-variant">
+                            Record a purchase made with {activeCard.card.name}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div>
+                            <Label htmlFor="amount" className="text-on-surface-variant">
+                              Amount (AUD)
+                            </Label>
+                            <Input
+                              id="amount"
+                              type="number"
+                              step="0.01"
+                              placeholder="100.00"
+                              value={newTransaction.amount}
+                              onChange={(e) =>
+                                setNewTransaction({ ...newTransaction, amount: e.target.value })
+                              }
+                              className="border-white/10 bg-surface-container-high text-on-surface"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="description" className="text-on-surface-variant">
+                              Description
+                            </Label>
+                            <Input
+                              id="description"
+                              placeholder="e.g., Groceries at Woolworths"
+                              value={newTransaction.description}
+                              onChange={(e) =>
+                                setNewTransaction({
+                                  ...newTransaction,
+                                  description: e.target.value,
+                                })
+                              }
+                              className="border-white/10 bg-surface-container-high text-on-surface"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="txn-date" className="text-on-surface-variant">
+                              Date
+                            </Label>
+                            <Input
+                              id="txn-date"
+                              type="date"
+                              value={newTransaction.date}
+                              onChange={(e) =>
+                                setNewTransaction({ ...newTransaction, date: e.target.value })
+                              }
+                              className="border-white/10 bg-surface-container-high text-on-surface"
+                            />
+                          </div>
+                          <Button
+                            onClick={handleAddTransaction}
+                            className="w-full rounded-full font-bold text-on-primary"
+                            style={{ background: "var(--gradient-cta)" }}
+                          >
+                            Save Transaction
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+
+                  {/* Transaction list */}
+                  <div className="bg-surface-container/30 rounded-2xl overflow-hidden border border-white/5">
+                    <div className="divide-y divide-white/5">
+                      {(transactions[activeCard.id]?.length ?? 0) > 0 ? (
+                        transactions[activeCard.id].slice(0, 5).map((txn) => (
+                          <div
+                            key={txn.id}
+                            className="p-6 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group"
+                          >
+                            <div className="flex items-center gap-5">
+                              <div className="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-primary">
+                                <span className="text-lg font-bold text-primary">
+                                  {txn.description?.charAt(0)?.toUpperCase() ?? "·"}
+                                </span>
+                              </div>
+                              <div>
+                                <h4 className="font-bold text-on-surface text-base">{txn.description}</h4>
+                                <p className="text-slate-500 text-xs mt-0.5 font-medium">{txn.category}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className="block font-headline font-bold tabular-nums text-xl">
+                                {formatCurrency(txn.amount)}
+                              </span>
+                              <div className="flex items-center justify-end gap-2 mt-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                <span className="text-[10px] uppercase font-bold tracking-widest text-primary">Qualified</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="p-6 text-center text-slate-500 text-sm">
+                          No transactions yet. Add one to start tracking.
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-5 bg-surface-container-high/30 border-t border-white/5 flex justify-center">
+                      <button className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2 px-8">
+                        Load More Activity
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── Mobile: Category Bento + Transaction List (Stitch) — hidden on desktop ── */}
+            <div className="md:hidden">
+              {/* Category Bento — overlaps arc with negative margin */}
+              {(() => {
+                const daysLeft = activeCard.spend_deadline
+                  ? Math.max(0, Math.ceil((new Date(activeCard.spend_deadline).getTime() - Date.now()) / 86400000))
+                  : null
+                const remaining = Math.max(0, activeCard.spend_target - activeCard.current_spend)
+                const dailyPaceMobile = daysLeft && daysLeft > 0 ? remaining / daysLeft : null
+                return (
+                  <section className="-mx-4 px-4 -mt-10 grid grid-cols-2 gap-5">
+                    <div className="bg-surface-container/80 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-xl transition-transform active:scale-95">
+                      <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">Spend Progress</p>
+                      <p className="text-2xl font-bold font-headline tabular-nums">{formatCurrencyCompact(activeCard.current_spend)}</p>
+                      <p className="text-slate-500 text-xs mt-1">of {formatCurrencyCompact(activeCard.spend_target)} goal</p>
+                    </div>
+                    <div className="bg-surface-container/80 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-xl transition-transform active:scale-95">
+                      <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">
+                        {daysLeft !== null ? "Days Left" : "Daily Pace"}
+                      </p>
+                      <p className="text-2xl font-bold font-headline tabular-nums">
+                        {daysLeft !== null ? daysLeft : dailyPaceMobile !== null ? `$${Math.ceil(dailyPaceMobile)}` : "—"}
+                      </p>
+                      <p className="text-slate-500 text-xs mt-1">
+                        {daysLeft !== null ? "until deadline" : "per day needed"}
+                      </p>
+                    </div>
+                  </section>
+                )
+              })()}
+
+              {/* Transaction List */}
+              <section className="mt-14 -mx-4 px-4">
+                <div className="flex items-center justify-between mb-8 px-1">
+                  <div>
+                    <h3 className="text-2xl font-bold font-headline tracking-tight">Recent Activity</h3>
+                    <p className="text-slate-500 text-xs mt-1">Spend tracking for {activeCard.card.name}</p>
+                  </div>
+                  <button
+                    onClick={() => setIsDialogOpen(true)}
+                    className="text-primary text-sm font-bold bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {(transactions[activeCard.id]?.length ?? 0) > 0 ? (
+                    transactions[activeCard.id].slice(0, 5).map((txn) => (
+                      <div
+                        key={txn.id}
+                        className="group active:bg-white/5 transition-all p-4 rounded-2xl flex items-center justify-between hover:bg-white/[0.02]"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-surface-container-highest flex items-center justify-center border border-white/5">
+                            <span className="text-on-surface-variant font-bold text-lg">
+                              {txn.description?.charAt(0)?.toUpperCase() ?? "·"}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-bold text-on-surface text-base leading-tight">{txn.description}</p>
+                            <p className="text-slate-500 text-xs mt-0.5">{txn.category}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold font-headline text-base tabular-nums">-{formatCurrency(txn.amount)}</p>
+                          <div className="flex items-center justify-end gap-1 mt-1">
+                            <span className="w-1 h-1 bg-primary rounded-full" />
+                            <span className="text-primary text-[9px] font-extrabold uppercase tracking-widest">Qualified</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-8 text-center rounded-2xl bg-surface-container/30 border border-white/5">
+                      <p className="text-slate-500 text-sm">No transactions recorded yet.</p>
+                      <button
+                        onClick={() => setIsDialogOpen(true)}
+                        className="mt-3 text-primary text-sm font-bold bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors"
+                      >
+                        + Add Transaction
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </section>
+            </div>
           </>
-        )}
+        ) : null}
       </div>
+
+      {/* ── Floating FAB (mobile only) ── */}
+      {activeCard && (
+        <button
+          onClick={() => setIsDialogOpen(true)}
+          className="fixed bottom-28 right-6 w-16 h-16 rounded-2xl z-50 flex items-center justify-center active:scale-90 transition-all md:hidden overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
+            boxShadow: "0 12px 40px rgba(78,222,163,0.4)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            color: "#003824",
+          }}
+        >
+          <span className="text-3xl font-bold leading-none">+</span>
+          <div className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition-opacity" />
+        </button>
+      )}
     </AppShell>
   )
 }
+
