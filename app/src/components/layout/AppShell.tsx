@@ -164,7 +164,7 @@ export function AppShell({ children }: AppShellProps) {
         </Link>
         <Button
           size="sm"
-          className="rounded-full text-[#003824] text-xs font-semibold px-4"
+          className="rounded-full text-on-primary text-xs font-semibold px-4"
           style={{ background: "var(--gradient-cta)" }}
           onClick={() => router.push("/cards")}
         >
