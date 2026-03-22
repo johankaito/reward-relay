@@ -212,6 +212,7 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Promote staging build to production
+        working-directory: app
         run: |
           vercel promote ${{ needs.deploy-staging.outputs.staging_url }} \
             --token=${{ secrets.VERCEL_TOKEN }} \
