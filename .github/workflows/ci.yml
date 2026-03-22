@@ -156,6 +156,18 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
+      - name: Alias staging to fixed domain
+        working-directory: app
+        run: |
+          vercel alias set ${{ steps.deploy.outputs.url }} staging.rewardrelay.app \
+            --token=${{ secrets.VERCEL_TOKEN }} \
+            --scope=${{ secrets.VERCEL_ORG_ID }} \
+            --yes
+          echo "✅ staging.rewardrelay.app → ${{ steps.deploy.outputs.url }}"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
   # ─── Production pipeline (only runs if staging deploy succeeded) ──────────
   #
   # SETUP REQUIRED — GitHub environment secrets:
