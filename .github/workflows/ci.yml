@@ -161,8 +161,7 @@ jobs:
         run: |
           vercel alias set ${{ steps.deploy.outputs.url }} staging.rewardrelay.app \
             --token=${{ secrets.VERCEL_TOKEN }} \
-            --scope=${{ secrets.VERCEL_ORG_ID }} \
-            --yes
+            --scope=${{ secrets.VERCEL_ORG_ID }}
           echo "✅ staging.rewardrelay.app → ${{ steps.deploy.outputs.url }}"
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
