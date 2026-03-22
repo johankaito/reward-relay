@@ -330,13 +330,30 @@ export default function ProfitPage() {
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#86948a]">
                 {fy} Net Profit
               </p>
-              <div className="mt-3 flex items-baseline gap-1">
+              <div className="mt-3 flex flex-wrap items-baseline gap-3">
                 <span
                   className="tabular-nums text-5xl font-extrabold text-[#4edea3]"
                   style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
                   {fmtAud(fyNet)}
                 </span>
+                {(() => {
+                  const prevFY = fyRows.find((r) => r.fy !== fy)
+                  if (!prevFY || prevFY.netValue === 0) return null
+                  const change = ((fyNet - prevFY.netValue) / Math.abs(prevFY.netValue)) * 100
+                  const positive = change >= 0
+                  return (
+                    <span
+                      className="rounded-full px-3 py-1 text-xs font-bold"
+                      style={{
+                        background: positive ? 'rgba(78,222,163,0.12)' : 'rgba(255,180,171,0.12)',
+                        color: positive ? '#4edea3' : '#ffb4ab',
+                      }}
+                    >
+                      {positive ? '+' : ''}{Math.round(change)}% vs last FY
+                    </span>
+                  )
+                })()}
               </div>
               <p className="mt-1 text-sm text-[#bbcabf]">This financial year</p>
 
@@ -393,6 +410,99 @@ export default function ProfitPage() {
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Insight bento ──────────────────────────────────────── */}
+            {fyCards.length > 0 && (() => {
+              const topCard = [...fyCards].sort((a, b) => (b.bonusAud / Math.max(b.fee, 1)) - (a.bonusAud / Math.max(a.fee, 1)))[0]
+              const potentialSavings = fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee < 1).reduce((s, c) => s + c.fee - c.bonusAud, 0)
+              const avgRoi = fyCards.length > 0
+                ? fyCards.reduce((s, c) => s + c.bonusAud / Math.max(c.fee, 1), 0) / fyCards.length
+                : 0
+
+              return (
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  <div className="glass-panel rounded-2xl p-5">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">Potential Savings</p>
+                    <p className="mt-2 tabular-nums text-2xl font-extrabold text-[#ffb4ab]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      {potentialSavings > 0 ? fmtAud(potentialSavings) : '—'}
+                    </p>
+                    <p className="mt-1 text-xs text-[#bbcabf]">fees exceeding bonus value this FY</p>
+                  </div>
+                  <div className="glass-panel rounded-2xl p-5">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">Next ROI Peak</p>
+                    <p className="mt-2 tabular-nums text-2xl font-extrabold text-[#4edea3]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      {topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
+                    </p>
+                    <p className="mt-1 text-xs text-[#bbcabf]">{topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}</p>
+                  </div>
+                  <div className="glass-panel rounded-2xl p-5">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#86948a]">Wallet Health</p>
+                    <p className="mt-2 tabular-nums text-2xl font-extrabold text-[#4edea3]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      {avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
+                    </p>
+                    <p className="mt-1 text-xs text-[#bbcabf]">avg ROI across {fyCards.length} card{fyCards.length !== 1 ? 's' : ''} this FY</p>
+                  </div>
+                </div>
+              )
+            })()}
+
+            {/* ── High Velocity Assets ────────────────────────────────── */}
+            {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee >= 5).length > 0 && (
+              <div className="rounded-2xl bg-[#1b1f2c] p-6" style={{ border: '1px solid rgba(78,222,163,0.1)' }}>
+                <p className="mb-4 text-sm font-bold text-white" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  ⚡ High Velocity Assets
+                </p>
+                <div className="space-y-3">
+                  {[...fyCards]
+                    .filter(c => c.fee > 0 && c.bonusAud / c.fee >= 5)
+                    .sort((a, b) => b.bonusAud / b.fee - a.bonusAud / a.fee)
+                    .map(c => {
+                      const roi = c.bonusAud / c.fee
+                      return (
+                        <div key={c.id} className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-semibold text-white">{c.bank} {c.name}</p>
+                            <p className="text-xs text-[#86948a]">{fmtAud(c.bonusAud)} bonus · {fmtAud(c.fee)} fee</p>
+                          </div>
+                          <span className="rounded-full bg-[#4edea3]/10 px-3 py-1 text-sm font-bold text-[#4edea3]">
+                            {roi.toFixed(1)}x
+                          </span>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </div>
+            )}
+
+            {/* ── Holding Strategy ────────────────────────────────────── */}
+            {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee < 2).length > 0 && (
+              <div className="rounded-2xl bg-[#1b1f2c] p-6" style={{ border: '1px solid rgba(255,180,171,0.08)' }}>
+                <p className="mb-4 text-sm font-bold text-white" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  ◎ Holding Strategy
+                </p>
+                <div className="space-y-3">
+                  {[...fyCards]
+                    .filter(c => c.fee > 0 && c.bonusAud / c.fee < 2)
+                    .sort((a, b) => a.bonusAud / a.fee - b.bonusAud / b.fee)
+                    .map(c => {
+                      const roi = c.bonusAud / c.fee
+                      return (
+                        <div key={c.id} className="flex items-center justify-between">
+                          <div>
+                            <p className="text-sm font-semibold text-white">{c.bank} {c.name}</p>
+                            <p className="text-xs text-[#86948a]">{fmtAud(c.bonusAud)} bonus · {fmtAud(c.fee)} fee</p>
+                          </div>
+                          <span className="rounded-full bg-[#ffb4ab]/10 px-3 py-1 text-sm font-bold text-[#ffb4ab]">
+                            {roi.toFixed(1)}x
+                          </span>
+                        </div>
+                      )
+                    })
+                  }
                 </div>
               </div>
             )}
