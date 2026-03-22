@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { AlertTriangle, CreditCard, TrendingUp, Star, DollarSign, Zap } from "lucide-react"
+import { AlertTriangle, CreditCard, TrendingUp, Star, DollarSign, Zap, Plane } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { EditCardModal } from "@/components/cards/EditCardModal"
@@ -101,11 +101,13 @@ export default function DashboardPage() {
     let monthlyPoints = 0
     let yearlyFees = 0
     for (const uc of cards) {
-      if (uc.annual_fee) yearlyFees += uc.annual_fee
-      if (!uc.bonus_earned || !uc.card_id) continue
+      // Prefer annual_fee from user_cards; fall back to catalog
+      const fee = uc.annual_fee ?? (uc.card_id ? catalogById.get(uc.card_id)?.annual_fee : null) ?? 0
+      yearlyFees += fee
+      if (!uc.card_id) continue
       const pts = catalogById.get(uc.card_id)?.welcome_bonus_points ?? 0
       totalPoints += pts
-      if (uc.bonus_earned_at && new Date(uc.bonus_earned_at) >= monthStart) {
+      if (uc.bonus_earned && uc.bonus_earned_at && new Date(uc.bonus_earned_at) >= monthStart) {
         monthlyPoints += pts
       }
     }
@@ -118,13 +120,12 @@ export default function DashboardPage() {
   const bonusChasingCards = useMemo(() => {
     const catalogById = new Map(catalogCards.map((c) => [c.id, c]))
     return cards
-      .filter((c) => c.status === "active" && !c.bonus_earned && c.bonus_spend_deadline && c.card_id)
+      .filter((c) => c.status === "active" && !c.bonus_earned)
       .map((c) => ({
         ...c,
-        spendTarget: catalogById.get(c.card_id!)?.bonus_spend_requirement ?? 0,
-        bonusPoints: catalogById.get(c.card_id!)?.welcome_bonus_points ?? 0,
+        spendTarget: (c.card_id ? catalogById.get(c.card_id)?.bonus_spend_requirement : undefined) ?? 0,
+        bonusPoints: (c.card_id ? catalogById.get(c.card_id)?.welcome_bonus_points : undefined) ?? 0,
       }))
-      .filter((c) => c.spendTarget > 0)
   }, [cards, catalogCards])
 
   const recentEarned = useMemo(() => {
@@ -367,6 +368,50 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
+        </section>
+
+        {/* ── Next Flight Opportunity ── */}
+        <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="xl:col-span-2">
+            {/* placeholder for future content */}
+          </div>
+          <div className="xl:col-span-1">
+            <div
+              className="rounded-xl p-6 border border-white/10 relative overflow-hidden flex flex-col gap-4"
+              style={{ background: "linear-gradient(135deg, rgba(78,222,163,0.12) 0%, rgba(16,185,129,0.06) 100%)" }}
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none" />
+              <div className="flex items-center gap-2 relative z-10">
+                <Plane className="h-5 w-5 text-primary" />
+                <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Next Flight Opportunity</span>
+                <span className="ml-auto text-primary text-xs">✦</span>
+              </div>
+              <div className="relative z-10">
+                <div className="text-3xl font-headline font-extrabold text-on-surface tracking-tight">
+                  SYD → LAX
+                </div>
+                <div className="text-sm text-on-surface-variant mt-1">Sydney to Los Angeles</div>
+              </div>
+              <div className="flex gap-4 relative z-10 text-sm">
+                <div className="flex flex-col">
+                  <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Business</span>
+                  <span className="font-bold text-on-surface">~80k pts</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Economy</span>
+                  <span className="font-bold text-on-surface">~45k pts</span>
+                </div>
+              </div>
+              <Link
+                href="/flights"
+                className="relative z-10 mt-2 inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
+                style={{ background: "var(--gradient-cta)" }}
+              >
+                <Plane className="h-4 w-4" />
+                Explore Deals
+              </Link>
+            </div>
+          </div>
         </section>
 
         {/* ── Credit Portfolio (wallet card stack) ── */}
