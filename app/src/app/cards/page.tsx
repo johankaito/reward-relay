@@ -50,6 +50,7 @@ export default function CardsPage() {
   const [bank, setBank] = useState<string | null>(null)
   const [userCardCount, setUserCardCount] = useState<number | null>(null)
   const [selectedCard, setSelectedCard] = useState<CardRecord | null>(null)
+  const [showAddForm, setShowAddForm] = useState(false)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -118,16 +119,26 @@ export default function CardsPage() {
               {userCardCount !== null ? `${userCardCount} Active Lines of Credit` : "Card Catalog"}
             </p>
           </div>
+          <button
+            onClick={() => setShowAddForm((v) => !v)}
+            className="px-5 py-2 rounded-full bg-gradient-to-br from-[#4edea3] to-[#10b981] text-sm font-bold text-black hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
+          >
+            {showAddForm ? "Cancel" : "+ Add Card"}
+          </button>
         </div>
       </header>
 
       {/* ── Value-driven empty state when no cards tracked yet ── */}
       {userCardCount === 0 && <CardsEmptyState />}
 
-      <AddCardForm cards={cards} onCreated={() => {
-        setUserCardCount((c) => (c ?? 0) + 1)
-        window.location.href = '/dashboard';
-      }} />
+      {/* ── Add Card Form — collapsible ── */}
+      {showAddForm && (
+        <AddCardForm cards={cards} onCreated={() => {
+          setUserCardCount((c) => (c ?? 0) + 1)
+          setShowAddForm(false)
+          window.location.href = '/dashboard';
+        }} />
+      )}
 
       <CardFilters
         cards={cards}
