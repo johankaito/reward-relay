@@ -296,6 +296,20 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
+.glass-card {
+  background: rgba(27, 31, 44, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.bg-primary-gradient {
+  background: linear-gradient(135deg, #4edea3 0%, #10b981 100%);
+}
+.text-gradient {
+  background: linear-gradient(135deg, #4edea3 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 .arc-glow {
   filter: drop-shadow(0 0 8px rgba(78, 222, 163, 0.4));
 }
@@ -306,6 +320,12 @@
   border-bottom-left-radius: 4rem;
   border-bottom-right-radius: 4rem;
   background: var(--surface-container);
+}
+.progress-arc-container {
+  transition: transform 300ms ease-out;
+}
+.progress-arc-container:hover {
+  transform: scale(1.02);
 }
 
 /* ─── Page view transitions (progressive enhancement) ─── */
