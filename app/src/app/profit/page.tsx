@@ -246,14 +246,13 @@ export default function ProfitPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6 pb-10">
+      <div className="max-w-[1440px] mx-auto p-6 md:p-12 space-y-12">
         {/* Export buttons row */}
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">Track</p>
             <h1
               className="mt-1 bg-gradient-to-br from-primary to-primary-container bg-clip-text text-2xl font-black text-transparent"
-             
             >
               Profit Dashboard
             </h1>
@@ -319,104 +318,95 @@ export default function ProfitPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
-            {/* ── Left col: chart + bento ───────────────────────────── */}
-            <div className="order-2 space-y-6 md:order-2 md:col-span-7">
-            {/* ── Hero ──────────────────────────────────────────────── */}
-            <div
-              className="relative overflow-hidden rounded-2xl bg-surface-container p-8"
-              style={{ boxShadow: "0 0 40px rgba(78,222,163,0.06)" }}
-            >
-              {/* Decorative glow */}
-              <div
-                className="pointer-events-none absolute right-0 top-0 h-64 w-64 rounded-full blur-3xl"
-                style={{ background: "rgba(78,222,163,0.05)", transform: "translate(30%,-30%)" }}
-              />
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-on-surface-variant">
-                {fy} Net Profit
-              </p>
-              <div className="mt-3 flex flex-wrap items-baseline gap-3">
-                <span
-                  className="tabular-nums text-5xl font-extrabold text-primary md:text-7xl"
-                 
-                >
-                  {fmtAud(fyNet)}
-                </span>
-                {(() => {
-                  const prevFY = fyRows.find((r) => r.fy !== fy)
-                  if (!prevFY || prevFY.netValue === 0) return null
-                  const change = ((fyNet - prevFY.netValue) / Math.abs(prevFY.netValue)) * 100
-                  const positive = change >= 0
-                  return (
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-bold"
-                      style={{
-                        background: positive ? 'rgba(78,222,163,0.12)' : 'rgba(255,180,171,0.12)',
-                        color: positive ? 'var(--primary)' : 'var(--error-container)',
-                      }}
-                    >
-                      {positive ? '+' : ''}{Math.round(change)}% vs last FY
+          <>
+            {/* ── Hero + Chart: 2-col grid ─────────────────────────────── */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+              {/* Hero Metrics Card: col-span-5 */}
+              <div className="lg:col-span-5 flex flex-col justify-between p-10 bg-surface-container rounded-lg relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                <div className="relative z-10 space-y-8">
+                  <div>
+                    <span className="text-xs font-bold tracking-[0.3em] uppercase text-outline opacity-70">
+                      {fy} Net Profit
                     </span>
-                  )
-                })()}
-              </div>
-              <p className="mt-1 text-sm text-on-surface-variant">This financial year</p>
-
-              {/* Stat cards */}
-              <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="rounded-2xl p-5" style={{ backgroundColor: "#171b28", border: "1px solid rgba(78,222,163,0.12)" }}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                    Bonuses Earned
-                  </p>
-                  <p className="mt-2 tabular-nums text-2xl font-bold text-primary">
-                    +{fmtAud(fyBonus)}
-                  </p>
+                    <div className="mt-4 flex items-baseline gap-2">
+                      <span className="text-6xl md:text-7xl font-headline font-extrabold text-primary tabular tracking-tighter">
+                        {fmtAud(fyNet)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-8 pt-8 border-t border-white/5">
+                    <div>
+                      <span className="text-[10px] font-bold tracking-widest uppercase text-outline">Total Bonuses</span>
+                      <p className="text-2xl font-headline font-bold text-on-surface tabular mt-1">+{fmtAud(fyBonus)}</p>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold tracking-widest uppercase text-outline">Gross Fees</span>
+                      <p className="text-2xl font-headline font-bold text-secondary tabular mt-1">-{fmtAud(fyFees)}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded-2xl p-5" style={{ backgroundColor: "#171b28", border: "1px solid rgba(255,255,255,0.05)" }}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-                    Fees Paid
-                  </p>
-                  <p className="mt-2 tabular-nums text-2xl font-bold text-on-surface-variant">
-                    -{fmtAud(fyFees)}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            </div>{/* end right col */}
-
-            {/* ── Left col: chart + bento ───────────────────────────── */}
-            <div className="order-1 space-y-6 md:order-1 md:col-span-5">
-
-            {/* ── Bar chart ──────────────────────────────────────────── */}
-            {chartData.length > 0 && (
-              <div className="rounded-2xl bg-surface-container p-6" style={{ border: "1px solid rgba(255,255,255,0.05)" }}>
-                <p
-                  className="mb-4 text-sm font-bold text-on-surface"
-                 
-                >
-                  Monthly Bonuses vs Fees — {fy}
-                </p>
-                <div className="overflow-x-auto">
-                  <div className="h-48" style={{ minWidth: 480 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={chartData} barGap={2} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                        <XAxis
-                          dataKey="month"
-                          tick={{ fill: 'var(--on-surface-variant)', fontSize: 10, fontFamily: "Inter" }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <YAxis hide />
-                        <Tooltip content={<GlassTooltip />} />
-                        <Bar dataKey="bonuses" fill="#4edea3" radius={[4, 4, 0, 0]} maxBarSize={32} />
-                        <Bar dataKey="fees" fill="#ffb4ab" radius={[4, 4, 0, 0]} maxBarSize={32} />
-                      </BarChart>
-                    </ResponsiveContainer>
+                <div className="relative z-10 mt-12 bg-white/5 p-4 rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    {(() => {
+                      const prevFY = fyRows.find((r) => r.fy !== fy)
+                      if (!prevFY || prevFY.netValue === 0) return (
+                        <span className="text-sm font-semibold text-on-surface-variant">This financial year</span>
+                      )
+                      const change = ((fyNet - prevFY.netValue) / Math.abs(prevFY.netValue)) * 100
+                      const positive = change >= 0
+                      return (
+                        <span className="text-sm font-semibold text-on-surface">
+                          {positive ? "+" : ""}{Math.round(change)}% from last FY
+                        </span>
+                      )
+                    })()}
                   </div>
                 </div>
               </div>
-            )}
+
+              {/* Chart Canvas: col-span-7 */}
+              <div className="lg:col-span-7 bg-surface-container rounded-lg p-8 flex flex-col">
+                <div className="flex items-center justify-between mb-10">
+                  <h3 className="font-headline font-bold text-xl">Bonuses vs Fees per Card</h3>
+                  <div className="flex gap-2">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Bonus</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1 bg-secondary/10 rounded-full">
+                      <div className="w-2 h-2 rounded-full bg-secondary"></div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-secondary">Fee</span>
+                    </div>
+                  </div>
+                </div>
+                {chartData.length > 0 ? (
+                  <div className="flex-1 overflow-x-auto">
+                    <div className="h-48" style={{ minWidth: 480 }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData} barGap={2} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                          <XAxis
+                            dataKey="month"
+                            tick={{ fill: 'var(--on-surface-variant)', fontSize: 10, fontFamily: "Inter" }}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <YAxis hide />
+                          <Tooltip content={<GlassTooltip />} />
+                          <Bar dataKey="bonuses" fill="#4edea3" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                          <Bar dataKey="fees" fill="#ffb4ab" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center text-on-surface-variant text-sm">
+                    No chart data for this FY yet
+                  </div>
+                )}
+              </div>
+            </div>
 
             {/* ── Insight bento ──────────────────────────────────────── */}
             {fyCards.length > 0 && (() => {
@@ -427,27 +417,33 @@ export default function ProfitPage() {
                 : 0
 
               return (
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <StatCard
-                    label="Potential Savings"
-                    value={potentialSavings > 0 ? fmtAud(potentialSavings) : '—'}
-                    sub="fees exceeding bonus value this FY"
-                    className="p-5"
-                  />
-                  <StatCard
-                    label="Next ROI Peak"
-                    value={topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
-                    sub={topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}
-                    accent
-                    className="p-5"
-                  />
-                  <StatCard
-                    label="Wallet Health"
-                    value={avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
-                    sub={`avg ROI across ${fyCards.length} card${fyCards.length !== 1 ? 's' : ''} this FY`}
-                    accent
-                    className="p-5"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
+                    <StatCard
+                      label="Potential Savings"
+                      value={potentialSavings > 0 ? fmtAud(potentialSavings) : '—'}
+                      sub="fees exceeding bonus value this FY"
+                      className="p-0"
+                    />
+                  </div>
+                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
+                    <StatCard
+                      label="Next ROI Peak"
+                      value={topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
+                      sub={topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}
+                      accent
+                      className="p-0"
+                    />
+                  </div>
+                  <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 space-y-4">
+                    <StatCard
+                      label="Wallet Health"
+                      value={avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
+                      sub={`avg ROI across ${fyCards.length} card${fyCards.length !== 1 ? 's' : ''} this FY`}
+                      accent
+                      className="p-0"
+                    />
+                  </div>
                 </div>
               )
             })()}
@@ -465,13 +461,24 @@ export default function ProfitPage() {
                     .map(c => {
                       const roi = c.bonusAud / c.fee
                       return (
-                        <ActivityItem
+                        <div
                           key={c.id}
-                          primary={`${c.bank} ${c.name}`}
-                          secondary={`${fmtAud(c.bonusAud)} bonus · ${fmtAud(c.fee)} fee`}
-                          value={<StatusBadge variant="primary">{roi.toFixed(1)}x</StatusBadge>}
-                          className="px-0 py-0"
-                        />
+                          className="bg-surface-container-low p-6 rounded-lg flex items-center justify-between group hover:bg-surface-container transition-all cursor-pointer"
+                        >
+                          <div className="flex items-center gap-6">
+                            <div className="w-16 h-10 rounded bg-gradient-to-br from-[#d4af37] to-[#8b6b00] shadow-lg flex items-center justify-center text-[8px] font-bold text-white uppercase">
+                              {c.name.split(' ')[0] ?? 'Card'}
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-on-surface">{c.bank} {c.name}</h4>
+                              <p className="text-xs text-outline font-medium">{c.pointsProgram}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-primary font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
+                            <p className="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Efficiency</p>
+                          </div>
+                        </div>
                       )
                     })
                   }
@@ -492,13 +499,24 @@ export default function ProfitPage() {
                     .map(c => {
                       const roi = c.bonusAud / c.fee
                       return (
-                        <ActivityItem
+                        <div
                           key={c.id}
-                          primary={`${c.bank} ${c.name}`}
-                          secondary={`${fmtAud(c.bonusAud)} bonus · ${fmtAud(c.fee)} fee`}
-                          value={<StatusBadge variant="danger">{roi.toFixed(1)}x</StatusBadge>}
-                          className="px-0 py-0"
-                        />
+                          className="bg-surface-container-low p-6 rounded-lg flex items-center justify-between group hover:bg-surface-container transition-all cursor-pointer"
+                        >
+                          <div className="flex items-center gap-6">
+                            <div className="w-16 h-10 rounded bg-gradient-to-br from-slate-500 to-slate-700 shadow-lg flex items-center justify-center text-[8px] font-bold text-white uppercase">
+                              {c.name.split(' ')[0] ?? 'Card'}
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-on-surface">{c.bank} {c.name}</h4>
+                              <p className="text-xs text-outline font-medium">{c.pointsProgram}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-secondary font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
+                            <p className="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Efficiency</p>
+                          </div>
+                        </div>
                       )
                     })
                   }
@@ -568,10 +586,7 @@ export default function ProfitPage() {
                 style={{ border: "1px solid rgba(255,255,255,0.05)" }}
               >
                 <div className="px-6 pt-6 pb-3">
-                  <p
-                    className="text-sm font-bold text-on-surface"
-                   
-                  >
+                  <p className="text-sm font-bold text-on-surface">
                     Per-Card ROI
                   </p>
                 </div>
@@ -627,10 +642,7 @@ export default function ProfitPage() {
                 style={{ border: "1px solid rgba(255,255,255,0.05)" }}
               >
                 <div className="px-6 pt-6 pb-3">
-                  <p
-                    className="text-sm font-bold text-on-surface"
-                   
-                  >
+                  <p className="text-sm font-bold text-on-surface">
                     By Financial Year
                   </p>
                 </div>
@@ -710,8 +722,7 @@ export default function ProfitPage() {
                 </div>
               </div>
             )}
-            </div>
-          </div>
+          </>
         )}
       </div>
     </AppShell>
