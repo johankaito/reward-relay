@@ -344,6 +344,75 @@ export default function SpendingTrackerPage() {
 
             {activeCard && pace && (
               <>
+                {/* ── 4-column glassmorphism stat cards ── */}
+                {(() => {
+                  const daysLeft = activeCard.spend_deadline
+                    ? Math.max(0, Math.ceil((new Date(activeCard.spend_deadline).getTime() - Date.now()) / 86400000))
+                    : null
+                  const remaining = Math.max(0, activeCard.spend_target - activeCard.current_spend)
+                  const dailyPace = daysLeft && daysLeft > 0 ? remaining / daysLeft : null
+                  const pct = activeCard.spend_target > 0
+                    ? Math.min(100, Math.round((activeCard.current_spend / activeCard.spend_target) * 100))
+                    : 0
+                  const bonusPts = activeCard.card.welcome_bonus_points
+
+                  const stats = [
+                    {
+                      label: "Est. Rewards",
+                      value: bonusPts ? `${(bonusPts / 1000).toFixed(0)}k pts` : "—",
+                      sub: "if target hit",
+                      icon: "✦",
+                      accent: true,
+                    },
+                    {
+                      label: "Time Remaining",
+                      value: daysLeft !== null ? `${daysLeft}d` : "—",
+                      sub: "until deadline",
+                      icon: "◷",
+                      accent: daysLeft !== null && daysLeft < 14,
+                    },
+                    {
+                      label: "Daily Pace",
+                      value: dailyPace !== null ? `$${Math.ceil(dailyPace)}/d` : "—",
+                      sub: "needed to hit bonus",
+                      icon: "⚡",
+                      accent: false,
+                    },
+                    {
+                      label: "Bonus Progress",
+                      value: `${pct}%`,
+                      sub: `$${Math.round(activeCard.current_spend).toLocaleString()} of $${Math.round(activeCard.spend_target).toLocaleString()}`,
+                      icon: "◎",
+                      accent: pct >= 100,
+                    },
+                  ]
+
+                  return (
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                      {stats.map((s) => (
+                        <div key={s.label} className="glass-panel rounded-2xl p-4">
+                          <div className="flex items-center justify-between">
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-[#bbcabf]">
+                              {s.label}
+                            </p>
+                            <span className="text-[#4edea3]/40 text-sm">{s.icon}</span>
+                          </div>
+                          <p
+                            className="mt-2 text-2xl font-black tabular-nums"
+                            style={{
+                              fontFamily: "'Plus Jakarta Sans', sans-serif",
+                              color: s.accent ? "#4edea3" : "#dfe2f3",
+                            }}
+                          >
+                            {s.value}
+                          </p>
+                          <p className="mt-0.5 text-[11px] text-[#bbcabf]">{s.sub}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                })()}
+
                 {/* Arc + stats */}
                 <div className="flex flex-col gap-5 rounded-b-[4rem] md:flex-row md:items-center">
                   {/* Arc — 60% width */}

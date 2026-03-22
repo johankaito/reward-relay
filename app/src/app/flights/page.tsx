@@ -250,27 +250,25 @@ export default function FlightsPage() {
 
             {/* Not found fallback */}
             {searchNotFound && (
-              <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-                <CardContent className="py-6 text-center">
-                  <Plane className="mx-auto mb-3 h-7 w-7 text-[var(--text-secondary)]/40" />
-                  <p className="text-sm font-medium text-[var(--text-primary)]">
-                    Route not in our database
-                  </p>
-                  <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                    Check{' '}
-                    <a
-                      href="https://www.qantas.com/us/en/frequent-flyer/use-points/classic-flight-rewards.html"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-0.5 text-[var(--accent)] hover:underline"
-                    >
-                      qantas.com
-                      <ExternalLink className="h-3 w-3" />
-                    </a>{' '}
-                    for the full zone chart.
-                  </p>
-                </CardContent>
-              </Card>
+              <div className="glass-panel rounded-2xl py-6 text-center">
+                <Plane className="mx-auto mb-3 h-7 w-7 text-[var(--text-secondary)]/40" />
+                <p className="text-sm font-medium text-[var(--text-primary)]">
+                  Route not in our database
+                </p>
+                <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                  Check{' '}
+                  <a
+                    href="https://www.qantas.com/us/en/frequent-flyer/use-points/classic-flight-rewards.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-0.5 text-[var(--accent)] hover:underline"
+                  >
+                    qantas.com
+                    <ExternalLink className="h-3 w-3" />
+                  </a>{' '}
+                  for the full zone chart.
+                </p>
+              </div>
             )}
 
             {/* Show all Qantas routes when no search active */}
@@ -297,17 +295,15 @@ export default function FlightsPage() {
 
           {/* No balances empty state */}
           {!hasBalances && (
-            <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-              <CardContent className="py-12 text-center">
-                <Plane className="mx-auto mb-3 h-8 w-8 text-[var(--text-secondary)]" />
-                <p className="text-sm font-medium text-[var(--text-primary)]">
-                  No loyalty balances found
-                </p>
-                <p className="mt-1 text-xs text-[var(--text-secondary)]">
-                  Add your loyalty balances to see what you can book
-                </p>
-              </CardContent>
-            </Card>
+            <div className="glass-panel rounded-2xl py-12 text-center">
+              <Plane className="mx-auto mb-3 h-8 w-8 text-[var(--text-secondary)]" />
+              <p className="text-sm font-medium text-[var(--text-primary)]">
+                No loyalty balances found
+              </p>
+              <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                Add your loyalty balances to see what you can book
+              </p>
+            </div>
           )}
 
           {/* Filters + Amex toggle */}
@@ -352,7 +348,7 @@ export default function FlightsPage() {
               </Select>
 
               {/* Amex MR toggle */}
-              <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border-default)] bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
+              <label className="ml-auto flex cursor-pointer items-center gap-2 rounded-lg border border-white/5 bg-[var(--surface)] px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-[var(--surface-subtle)]">
                 <input
                   type="checkbox"
                   checked={includeAmexTransfers}
@@ -410,13 +406,11 @@ export default function FlightsPage() {
 
           {/* Empty filtered state */}
           {filtered.length === 0 && hasBalances && (
-            <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-              <CardContent className="py-12 text-center">
-                <p className="text-sm text-[var(--text-secondary)]">
-                  No routes match your filters.
-                </p>
-              </CardContent>
-            </Card>
+            <div className="glass-panel rounded-2xl py-12 text-center">
+              <p className="text-sm text-[var(--text-secondary)]">
+                No routes match your filters.
+              </p>
+            </div>
           )}
         </section>
       </div>
