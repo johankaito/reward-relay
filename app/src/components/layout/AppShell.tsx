@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Home, CreditCard, Wallet, Plane, User, LogOut, Sparkles } from "lucide-react"
+import { Home, CreditCard, BarChart2, Plane, Settings, LogOut, Sparkles } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -16,11 +16,11 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { label: "Home",    href: "/dashboard", icon: Home       },
+  { label: "Home",    href: "/dashboard", icon: Home      },
   { label: "Cards",   href: "/cards",     icon: CreditCard },
-  { label: "Track",   href: "/spending",  icon: Wallet     },
+  { label: "Track",   href: "/spending",  icon: BarChart2  },
   { label: "Redeem",  href: "/flights",   icon: Plane      },
-  { label: "Account", href: "/settings",  icon: User       },
+  { label: "Account", href: "/settings",  icon: Settings   },
 ]
 
 type AppShellProps = {
@@ -55,7 +55,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
       {/* ── Desktop fixed sidebar ── */}
-      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 font-['Plus_Jakarta_Sans'] antialiased tracking-tight">
+      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-[#171b28] z-40 flex-col overflow-y-auto font-['Plus_Jakarta_Sans'] antialiased tracking-tight">
         <div className="p-8 flex flex-col h-full">
           {/* Logo */}
           <div className="mb-10">
@@ -73,8 +73,8 @@ export function AppShell({ children }: AppShellProps) {
                   href={href}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     active
-                      ? "bg-[#1b1f2c] text-[#4edea3]"
-                      : "text-slate-400 hover:text-white hover:bg-[#313442] transition-colors"
+                      ? "bg-surface-container text-primary rounded-lg"
+                      : "text-slate-400 hover:bg-surface-container-highest hover:text-on-surface rounded-lg"
                   }`}
                 >
                   <Icon className="h-4 w-4 flex-shrink-0" />
@@ -85,18 +85,18 @@ export function AppShell({ children }: AppShellProps) {
           </nav>
 
           {/* Sidebar footer */}
-          <div className="mt-auto pt-10">
-            {/* Add New Card pill */}
-            <button
-              onClick={() => router.push("/cards")}
-              className="w-full py-4 rounded-full bg-gradient-to-br from-[#4edea3] to-[#10b981] text-on-primary font-bold transition-transform active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-primary/10"
+          <div className="mt-auto p-4">
+            <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-3">The Financial Luminary</p>
+            <Link
+              href="/cards"
+              className="block bg-gradient-to-r from-[#4edea3] to-[#10b981] text-black rounded-full px-4 py-2 text-sm font-semibold w-full text-center"
             >
               Add New Card
-            </button>
+            </Link>
 
             {/* User info */}
             {userEmail && (
-              <div className="mt-8 flex items-center gap-3 px-2">
+              <div className="mt-6 flex items-center gap-3 px-2">
                 <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
                   <span className="text-sm font-bold text-on-surface">{userEmail[0].toUpperCase()}</span>
                 </div>
