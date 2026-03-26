@@ -399,9 +399,9 @@ export default function SpendingTrackerPage() {
   return (
     <AppShell>
       {/* ── Sticky header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+      <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center justify-between px-10 h-16 w-full max-w-[1440px] mx-auto">
-          <h1 className="text-lg font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent font-headline">Spend Tracker</h1>
+          <h1 className="text-lg font-black bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent font-headline">Spend Tracker</h1>
           {/* Period selector chips */}
           <div className="flex items-center gap-1 bg-surface-container rounded-xl p-1">
             {(["monthly", "quarterly", "annual"] as SpendPeriod[]).map((p) => (
@@ -410,7 +410,7 @@ export default function SpendingTrackerPage() {
                 onClick={() => setPeriod(p)}
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${
                   period === p
-                    ? "bg-primary text-[#003824] shadow-sm"
+                    ? "bg-primary text-on-primary shadow-sm"
                     : "text-slate-400 hover:text-on-surface hover:bg-white/5"
                 }`}
               >

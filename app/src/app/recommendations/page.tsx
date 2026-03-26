@@ -30,10 +30,10 @@ const SORT_CHIPS: { value: SortType; label: string }[] = [
 ]
 
 const CARD_GRADIENTS = [
-  "from-[#1c2235] to-[#0a0e1a]",
-  "from-[#1a1f2c] to-[#252c3e]",
-  "from-[#0f131f] to-[#171b28]",
-  "from-[#141928] to-[#000000]",
+  "from-surface-container-high to-background",
+  "from-surface-container to-surface-container-high",
+  "from-background to-surface-container-low",
+  "from-background to-background",
 ]
 
 function getBadgeLabel(index: number, rec: Recommendation): string {

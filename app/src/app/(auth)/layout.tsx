@@ -8,7 +8,7 @@ export default function AuthLayout({
   return (
     <div className="relative flex flex-col h-full text-white">
       {/* Fixed gradient background covering full viewport */}
-      <div className="pointer-events-none fixed inset-0 -z-20 bg-gradient-to-br from-[#0a0e1a] via-[#0f1419] to-[#050810]"></div>
+      <div className="pointer-events-none fixed inset-0 -z-20 bg-gradient-to-br from-background via-background to-background"></div>
 
       {/* Subtle gradient orbs for depth */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">

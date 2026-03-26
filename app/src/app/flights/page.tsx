@@ -130,7 +130,7 @@ export default function FlightsPage() {
   return (
     <AppShell>
       {/* ── Sticky header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/60 backdrop-blur-xl border-b border-white/5 h-20 flex items-center justify-between px-8">
+      <header className="sticky top-0 w-full z-40 bg-background/60 backdrop-blur-xl border-b border-white/5 h-20 flex items-center justify-between px-8">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">Reward Flights</h2>
           <div className="h-4 w-[1px] bg-white/10 hidden md:block mx-2" />
@@ -155,7 +155,7 @@ export default function FlightsPage() {
             <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e2640 0%, #111827 60%, #0a0e1a 100%)' }} />
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0f131f]/80 via-[#0f131f]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent" />
           </div>
 
           <div className="relative z-10 w-full">
@@ -220,7 +220,7 @@ export default function FlightsPage() {
                   </div>
                 </div>
               </div>
-              <button className="bg-primary text-[#003824] font-black px-12 rounded-xl hover:shadow-[0_0_20px_rgba(78,222,163,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap">
+              <button className="bg-primary text-on-primary font-black px-12 rounded-xl hover:shadow-[0_0_20px_rgba(78,222,163,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap">
                 <Search className="w-4 h-4" />
                 <span className="tracking-widest text-sm uppercase">Find Rewards</span>
               </button>
@@ -229,7 +229,7 @@ export default function FlightsPage() {
         </div>
 
         {/* ── Active Redemption Goal ── */}
-        <div className="bg-[#171b28]/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden group shadow-xl">
+        <div className="bg-surface-container-low/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden group shadow-xl">
           <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10 relative z-10">
             <div className="space-y-4">
@@ -356,15 +356,15 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
             <span className="text-4xl font-headline font-extrabold text-white tabular-nums tracking-tighter">
               {card.points.toLocaleString()}
             </span>
-            <span className={`text-[11px] font-bold uppercase ml-2 tracking-widest ${isEmiratesFirst ? 'text-[#c3c0ff]' : 'text-primary'}`}>
+            <span className={`text-[11px] font-bold uppercase ml-2 tracking-widest ${isEmiratesFirst ? 'text-tertiary' : 'text-primary'}`}>
               Points
             </span>
           </div>
           <span className={`px-3 py-1 text-[10px] font-black rounded border uppercase tracking-widest ${
             isSingapore
-              ? 'bg-primary text-[#003824] border-transparent'
+              ? 'bg-primary text-on-primary border-transparent'
               : isEmiratesFirst
-              ? 'bg-[#c3c0ff]/10 text-[#c3c0ff] border-[#c3c0ff]/20'
+              ? 'bg-tertiary/10 text-tertiary border-tertiary/20'
               : 'bg-white/10 backdrop-blur-md text-white border-white/20'
           }`}>
             {card.cabin}
@@ -382,7 +382,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
                 <span key={i}>
                   {seg}
                   {i < arr.length - 1 && (
-                    <span className={`mx-1 ${isEmiratesFirst ? 'text-[#c3c0ff]' : 'text-primary'}`}>→</span>
+                    <span className={`mx-1 ${isEmiratesFirst ? 'text-tertiary' : 'text-primary'}`}>→</span>
                   )}
                 </span>
               ))}
@@ -409,7 +409,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
                   </span>
                 </div>
               </div>
-              <button className="w-full py-4 bg-gradient-to-br from-primary to-primary-container rounded-2xl text-sm font-black text-[#003824] hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-primary/20">
+              <button className="w-full py-4 bg-gradient-to-br from-primary to-primary-container rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-primary/20">
                 Book with Points
               </button>
             </>
