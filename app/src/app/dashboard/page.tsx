@@ -213,63 +213,87 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* ── Hero Metric + Stats Row ── */}
-        <section className="space-y-6">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-on-surface-variant text-sm font-semibold uppercase tracking-widest">
-              Total Valuation (AUD)
-            </h2>
-            <div className="flex items-baseline gap-4 flex-wrap">
-              <span
-                className="font-headline font-extrabold tabular-nums tracking-tighter text-on-surface"
-                style={{ fontSize: "clamp(2.5rem, 6vw, 4rem)" }}
-              >
-                ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span>
-              {stats.totalPoints > 0 && (
-                <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20 flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3" />
-                  {stats.totalPoints.toLocaleString()} pts
+        {/* ── Hero Metric + Stats Row + Flight Card ── */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left: hero value + quick stats */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-on-surface-variant text-sm font-semibold uppercase tracking-widest">
+                Total Valuation (AUD)
+              </h2>
+              <div className="flex items-baseline gap-4 flex-wrap">
+                <span className="font-headline font-extrabold tabular-nums tracking-tighter text-on-surface text-5xl md:text-6xl lg:text-[64px]">
+                  ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
-              )}
+                {stats.totalPoints > 0 && (
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20 flex items-center gap-1">
+                    <TrendingUp className="h-3 w-3" />
+                    {stats.totalPoints.toLocaleString()} pts
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Quick Stats Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Points Sum</span>
+                <div className="text-xl font-bold tabular-nums text-on-surface">
+                  {stats.totalPoints >= 1000 ? `${(stats.totalPoints / 1000).toFixed(0)}k` : stats.totalPoints.toLocaleString()}
+                </div>
+              </div>
+              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Active Cards</span>
+                <div className="text-xl font-bold tabular-nums text-on-surface">{stats.active}</div>
+              </div>
+              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Yearly Fees</span>
+                <div className="text-xl font-bold tabular-nums text-on-surface">
+                  ${stats.yearlyFees > 0 ? stats.yearlyFees.toLocaleString() : "0"}
+                </div>
+              </div>
+              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Saved (YTD)</span>
+                <div className="text-xl font-bold tabular-nums text-primary">
+                  ${Math.max(0, stats.valueSavedYTD).toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Stats row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
-              <div className="flex items-center gap-2">
-                <Star className="h-3.5 w-3.5 text-on-surface-variant" />
-                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Points Sum</span>
+          {/* Right: Next Flight Opportunity */}
+          <div className="lg:col-span-1">
+            <div
+              className="rounded-xl p-6 border border-white/10 relative overflow-hidden flex flex-col gap-4 h-full"
+              style={{ background: "linear-gradient(135deg, rgba(78,222,163,0.12) 0%, rgba(16,185,129,0.06) 100%)" }}
+            >
+              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none" />
+              <div className="flex items-center gap-2 relative z-10">
+                <Plane className="h-5 w-5 text-primary" />
+                <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Next Flight Opportunity</span>
               </div>
-              <div className="text-xl font-bold tabular-nums text-on-surface">
-                {stats.totalPoints >= 1000 ? `${(stats.totalPoints / 1000).toFixed(0)}k` : stats.totalPoints.toLocaleString()}
+              <div className="relative z-10 flex-1">
+                <div className="text-3xl font-headline font-extrabold text-on-surface tracking-tight">SYD → LAX</div>
+                <div className="text-sm text-on-surface-variant mt-1">Sydney to Los Angeles</div>
+                <div className="flex gap-6 mt-4 text-sm">
+                  <div className="flex flex-col">
+                    <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Business</span>
+                    <span className="font-bold text-on-surface">~80k pts</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Economy</span>
+                    <span className="font-bold text-on-surface">~45k pts</span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-3.5 w-3.5 text-on-surface-variant" />
-                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Active Cards</span>
-              </div>
-              <div className="text-xl font-bold tabular-nums text-on-surface">{stats.active}</div>
-            </div>
-            <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
-              <div className="flex items-center gap-2">
-                <DollarSign className="h-3.5 w-3.5 text-on-surface-variant" />
-                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Yearly Fees</span>
-              </div>
-              <div className="text-xl font-bold tabular-nums text-on-surface">
-                ${stats.yearlyFees > 0 ? stats.yearlyFees.toLocaleString() : "0"}
-              </div>
-            </div>
-            <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
-              <div className="flex items-center gap-2">
-                <Zap className="h-3.5 w-3.5 text-primary" />
-                <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Saved (YTD)</span>
-              </div>
-              <div className="text-xl font-bold tabular-nums text-primary">
-                ${Math.max(0, stats.valueSavedYTD).toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-              </div>
+              <Link
+                href="/flights"
+                className="relative z-10 inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
+                style={{ background: "var(--gradient-cta)" }}
+              >
+                <Plane className="h-4 w-4" />
+                Explore Deals
+              </Link>
             </div>
           </div>
         </section>
@@ -370,50 +394,6 @@ export default function DashboardPage() {
           )}
         </section>
 
-        {/* ── Next Flight Opportunity ── */}
-        <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          <div className="xl:col-span-2">
-            {/* placeholder for future content */}
-          </div>
-          <div className="xl:col-span-1">
-            <div
-              className="rounded-xl p-6 border border-white/10 relative overflow-hidden flex flex-col gap-4"
-              style={{ background: "linear-gradient(135deg, rgba(78,222,163,0.12) 0%, rgba(16,185,129,0.06) 100%)" }}
-            >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none" />
-              <div className="flex items-center gap-2 relative z-10">
-                <Plane className="h-5 w-5 text-primary" />
-                <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Next Flight Opportunity</span>
-                <span className="ml-auto text-primary text-xs">✦</span>
-              </div>
-              <div className="relative z-10">
-                <div className="text-3xl font-headline font-extrabold text-on-surface tracking-tight">
-                  SYD → LAX
-                </div>
-                <div className="text-sm text-on-surface-variant mt-1">Sydney to Los Angeles</div>
-              </div>
-              <div className="flex gap-4 relative z-10 text-sm">
-                <div className="flex flex-col">
-                  <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Business</span>
-                  <span className="font-bold text-on-surface">~80k pts</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Economy</span>
-                  <span className="font-bold text-on-surface">~45k pts</span>
-                </div>
-              </div>
-              <Link
-                href="/flights"
-                className="relative z-10 mt-2 inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
-                style={{ background: "var(--gradient-cta)" }}
-              >
-                <Plane className="h-4 w-4" />
-                Explore Deals
-              </Link>
-            </div>
-          </div>
-        </section>
-
         {/* ── Credit Portfolio (wallet card stack) ── */}
         <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           <div className="xl:col-span-2 space-y-6">
@@ -500,24 +480,20 @@ export default function DashboardPage() {
                   const earnedDate = card.bonus_earned_at
                     ? new Date(card.bonus_earned_at).toLocaleDateString("en-AU", { day: "numeric", month: "short" })
                     : null
-                  const gradient = getBankGradient(card.bank ?? "")
                   return (
                     <div
                       key={card.id}
                       className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                          style={{ background: gradient }}
-                        >
-                          {(card.bank ?? "?").slice(0, 2).toUpperCase()}
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                          <Star className="h-4 w-4 text-primary" />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-on-surface">
                             {card.bank} {card.name}
                           </span>
-                          <span className="text-[10px] text-on-surface-variant uppercase font-bold">Welcome Bonus</span>
+                          <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Welcome Bonus</span>
                         </div>
                       </div>
                       <div className="text-right">
@@ -530,7 +506,7 @@ export default function DashboardPage() {
                   )
                 })}
                 <div className="p-4 text-center">
-                  <Link href="/spending" className="text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors">
+                  <Link href="/profit" className="text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors">
                     View All Activity
                   </Link>
                 </div>

@@ -50,6 +50,10 @@
   --shadow-ambient: 0px 24px 48px -12px rgba(0, 0, 0, 0.4);
   --shadow-card: 0px 8px 24px -8px rgba(0, 0, 0, 0.3);
 
+  /* ─── Typography ─── */
+  /* --font-headline and --font-body are injected at runtime by next/font */
+  /* Fallback stacks used when CSS variables are not yet resolved */
+
   /* ─── Border radius ─── */
   --radius: 1rem;
   --radius-lg: 2rem;
