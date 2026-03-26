@@ -55,12 +55,12 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
       {/* ── Desktop fixed sidebar ── */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-[#171b28] z-40 flex-col overflow-y-auto font-['Plus_Jakarta_Sans'] antialiased tracking-tight">
+      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-surface-container-low z-40 flex-col overflow-y-auto font-headline antialiased tracking-tight">
         <div className="p-8 flex flex-col h-full">
           {/* Logo */}
           <div className="mb-10">
-            <h1 className="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</h1>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 mt-1">The Financial Luminary</p>
+            <h1 className="text-xl font-bold tracking-tighter text-primary">Reward Relay</h1>
+            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mt-1">The Financial Luminary</p>
           </div>
 
           {/* Nav */}
@@ -74,7 +74,7 @@ export function AppShell({ children }: AppShellProps) {
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     active
                       ? "bg-surface-container text-primary rounded-lg"
-                      : "text-slate-400 hover:bg-surface-container-highest hover:text-on-surface rounded-lg"
+                      : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface rounded-lg"
                   }`}
                 >
                   <Icon className="h-4 w-4 flex-shrink-0" />
@@ -86,10 +86,11 @@ export function AppShell({ children }: AppShellProps) {
 
           {/* Sidebar footer */}
           <div className="mt-auto p-4">
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-3">The Financial Luminary</p>
+            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mb-3">The Financial Luminary</p>
             <Link
               href="/cards"
-              className="block bg-gradient-to-r from-[#4edea3] to-[#10b981] text-black rounded-full px-4 py-2 text-sm font-semibold w-full text-center"
+              className="block text-on-primary rounded-full px-4 py-2 text-sm font-semibold w-full text-center"
+              style={{ background: "var(--gradient-cta)" }}
             >
               Add New Card
             </Link>
@@ -102,7 +103,7 @@ export function AppShell({ children }: AppShellProps) {
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-bold text-on-surface truncate">{userEmail.split("@")[0]}</span>
-                  <span className="text-xs text-slate-500">Elite Tier</span>
+                  <span className="text-xs text-on-surface-variant">Elite Tier</span>
                 </div>
               </div>
             )}
@@ -111,7 +112,7 @@ export function AppShell({ children }: AppShellProps) {
             <button
               onClick={handleSignOut}
               disabled={signingOut}
-              className="mt-4 flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-lg transition-colors hover:bg-white/5 disabled:opacity-50 text-slate-500"
+              className="mt-4 flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-lg transition-colors hover:bg-white/5 disabled:opacity-50 text-on-surface-variant"
             >
               <LogOut className="h-4 w-4 flex-shrink-0" />
               {signingOut ? "Signing out…" : "Sign out"}
@@ -124,7 +125,7 @@ export function AppShell({ children }: AppShellProps) {
       <header
         className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 md:hidden"
         style={{
-          background: "rgba(23,27,40,0.95)",
+          background: "color-mix(in srgb, var(--surface-container-low) 95%, transparent)",
           backdropFilter: "blur(12px)",
           borderBottom: "1px solid rgba(255,255,255,0.05)",
         }}
@@ -159,7 +160,7 @@ export function AppShell({ children }: AppShellProps) {
       <nav
         className="fixed inset-x-0 bottom-0 z-20 md:hidden"
         style={{
-          background: "rgba(23,27,40,0.97)",
+          background: "color-mix(in srgb, var(--surface-container-low) 97%, transparent)",
           backdropFilter: "blur(12px)",
           borderTop: "1px solid rgba(255,255,255,0.05)",
           boxShadow: "0 -8px 32px rgba(0,0,0,0.5)",
