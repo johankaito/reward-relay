@@ -135,10 +135,10 @@ export default function CardsPage() {
   return (
     <AppShell>
       {/* ── Header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5 -mx-4 md:-mx-8 px-4 md:px-0 mb-8">
+      <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5 -mx-4 md:-mx-8 px-4 md:px-0 mb-8">
         <div className="flex items-center justify-between px-4 md:px-8 h-20 w-full max-w-[1440px] mx-auto">
           <div>
-            <h1 className="font-headline text-2xl font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent">
+            <h1 className="font-headline text-2xl font-black bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">
               Card Portfolio
             </h1>
             <p className="text-xs text-on-surface-variant font-medium">
@@ -254,7 +254,8 @@ export default function CardsPage() {
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
             {/* Left: card grid xl:col-span-8 */}
             <div className="xl:col-span-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6">
+              {/* Mobile: snap-scroll horizontal carousel; md+: grid */}
+              <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none md:grid-cols-2 2xl:grid-cols-3 gap-4 md:gap-6 pb-3 md:pb-0 -mx-4 md:mx-0 px-4 md:px-0">
                 {userCards.map((uc) => {
                   const cc = getCatalogCard(uc)
                   const gradient = getBankGradient(uc.bank ?? "")
@@ -271,7 +272,7 @@ export default function CardsPage() {
                   return (
                     <div
                       key={uc.id}
-                      className={`group cursor-pointer${isSelected ? " ring-2 ring-primary rounded-xl" : ""}`}
+                      className={`snap-start shrink-0 w-[80vw] md:w-auto max-w-[320px] md:max-w-none group cursor-pointer${isSelected ? " ring-2 ring-primary rounded-xl" : ""}`}
                       onClick={() => setSelectedCard(uc)}
                     >
                       {/* Card artwork tile */}
@@ -332,7 +333,7 @@ export default function CardsPage() {
 
                 {/* Add another card */}
                 <div
-                  className="border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center justify-center p-8 cursor-pointer hover:bg-white/[0.02] transition-colors group"
+                  className="snap-start shrink-0 w-[80vw] md:w-auto max-w-[320px] md:max-w-none border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center justify-center p-8 cursor-pointer hover:bg-white/[0.02] transition-colors group"
                   style={{ aspectRatio: "1.586/1" }}
                   onClick={() => setShowAddForm(true)}
                 >
