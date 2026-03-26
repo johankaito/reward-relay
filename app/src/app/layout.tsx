@@ -1,13 +1,19 @@
 import type { Metadata, Viewport } from "next"
-import { IBM_Plex_Mono, Plus_Jakarta_Sans } from "next/font/google"
+import { IBM_Plex_Mono, Inter, Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
 import { Footer } from "@/components/Footer"
 
 const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-grotesk",
+  variable: "--font-headline",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+})
+
+const inter = Inter({
+  variable: "--font-body",
+  subsets: ["latin"],
   display: "swap",
 })
 
@@ -71,7 +77,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${plusJakartaSans.variable} ${plexMono.variable} antialiased flex flex-col min-h-screen`}
+        className={`${plusJakartaSans.variable} ${inter.variable} ${plexMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <Providers>
           <div className="flex-1">{children}</div>
