@@ -246,9 +246,9 @@ export default function ProfitPage() {
   return (
     <AppShell>
       {/* ── Sticky header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+      <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
-          <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent">Profit Dashboard</h2>
+          <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">Profit Dashboard</h2>
         </div>
       </header>
 
@@ -390,7 +390,7 @@ export default function ProfitPage() {
                     <div className="bg-secondary h-full" style={{ width: fyBonus > 0 ? `${Math.min((fyFees / fyBonus) * 100, 100)}%` : "0%" }} />
                   </div>
                 </div>
-                <div className="col-span-2 p-6 rounded-2xl bg-[#1b1f2c] border border-white/5 flex items-center justify-between">
+                <div className="col-span-2 p-6 rounded-2xl bg-surface-container border border-white/5 flex items-center justify-between">
                   <div className="flex flex-col gap-1">
                     <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Average ROI</span>
                     <span className="text-3xl font-headline font-bold tabular-nums" style={{ color: "#50e3c2" }}>

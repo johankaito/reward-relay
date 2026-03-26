@@ -988,7 +988,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-slate-800/20 bg-[#0f131f] py-16">
+      <footer className="w-full border-t border-white/5 bg-background py-16">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-8 text-center">
           <div className="flex flex-col items-center gap-2">
             <div className="font-headline text-2xl font-bold tracking-tighter text-primary">

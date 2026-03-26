@@ -75,7 +75,7 @@ export default function SettingsPage() {
   return (
     <AppShell>
       {/* ── Sticky header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+      <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center px-6 h-16 max-w-5xl mx-auto">
           <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">
             Account Settings

@@ -164,7 +164,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading || !email || !password}
-              className="w-full h-14 mt-4 bg-gradient-to-br from-[#4edea3] to-[#10b981] text-[#00432c] font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
+              className="w-full h-14 mt-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
             >
               {isLoading ? "Signing in…" : "Sign in"}
               {!isLoading && (
@@ -212,7 +212,7 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={betaLoading}
-                    className="flex-1 h-12 bg-gradient-to-br from-[#4edea3] to-[#10b981] text-[#00432c] font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all"
+                    className="flex-1 h-12 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all"
                   >
                     {betaLoading ? "Submitting…" : "Request Access"}
                   </button>

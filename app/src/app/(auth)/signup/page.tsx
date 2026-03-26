@@ -196,7 +196,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading || !email || !password || !confirmPassword}
-              className="w-full h-14 mt-4 bg-gradient-to-br from-[#4edea3] to-[#10b981] text-[#00432c] font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-primary/20"
+              className="w-full h-14 mt-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-primary/20"
             >
               {isLoading ? "Creating account…" : "Create account"}
               {!isLoading && (
