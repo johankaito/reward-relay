@@ -217,7 +217,7 @@ function MobileSpendArc({
       {/* 2-col glass stat cards */}
       <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto relative z-10">
         <div className="glass-card p-5 rounded-2xl text-left">
-          <p className="text-slate-400 text-xs font-semibold mb-2">Projected Points</p>
+          <p className="text-on-surface-variant text-xs font-semibold mb-2">Projected Points</p>
           <div className="flex items-baseline gap-1.5">
             <span className="text-on-surface font-bold text-2xl tabular-nums">
               {bonusPts ? `${(bonusPts / 1000).toFixed(0)}k` : "—"}
@@ -226,7 +226,7 @@ function MobileSpendArc({
           </div>
         </div>
         <div className="glass-card p-5 rounded-2xl text-left">
-          <p className="text-slate-400 text-xs font-semibold mb-2">Progress</p>
+          <p className="text-on-surface-variant text-xs font-semibold mb-2">Progress</p>
           <div className="flex items-baseline gap-1.5">
             <span className="text-on-surface font-bold text-2xl tabular-nums">
               {target > 0 ? `${Math.round(pct * 100)}%` : "—"}
@@ -411,7 +411,7 @@ export default function SpendingTrackerPage() {
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${
                   period === p
                     ? "bg-primary text-on-primary shadow-sm"
-                    : "text-slate-400 hover:text-on-surface hover:bg-white/5"
+                    : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
                 }`}
               >
                 {p === "monthly" ? "Mo" : p === "quarterly" ? "Qtr" : "Ann"}
@@ -469,36 +469,36 @@ export default function SpendingTrackerPage() {
             <section className="max-w-[1440px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
-                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Est. Rewards</span>
+                  <span className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.2em]">Est. Rewards</span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-headline font-bold text-tertiary tabular-nums tracking-tighter">
                       {bonusPts ? `${(bonusPts / 1000).toFixed(0)}k` : "—"}
                     </span>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">
+                    <span className="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">
                       {bonusPts ? "pts" : "if target hit"}
                     </span>
                   </div>
                 </div>
                 <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
-                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Time Remaining</span>
+                  <span className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.2em]">Time Remaining</span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-headline font-bold text-white tabular-nums tracking-tighter">
                       {daysLeft !== null ? daysLeft : "—"}
                     </span>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Days</span>
+                    <span className="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">Days</span>
                   </div>
                 </div>
                 <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
-                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Daily Pace</span>
+                  <span className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.2em]">Daily Pace</span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-headline font-bold text-white tabular-nums tracking-tighter">
                       {dailyPace !== null ? `$${Math.ceil(dailyPace)}` : "—"}
                     </span>
-                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">/day</span>
+                    <span className="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">/day</span>
                   </div>
                 </div>
                 <div className="glass-panel rounded-2xl p-6 flex flex-col gap-3 group transition-all hover:bg-white/[0.05]">
-                  <span className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Bonus Progress</span>
+                  <span className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.2em]">Bonus Progress</span>
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-headline font-bold text-white tabular-nums tracking-tighter">{pct}%</span>
                   </div>
@@ -568,7 +568,7 @@ export default function SpendingTrackerPage() {
                   <div className="bg-surface-container-low rounded-2xl p-10 relative overflow-hidden flex flex-col items-center text-center border border-white/5 h-full">
                     <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full" />
                     <div className="relative w-full">
-                      <h2 className="text-slate-500 text-[11px] uppercase tracking-[0.2em] font-bold mb-10">
+                      <h2 className="text-on-surface-variant text-[11px] uppercase tracking-[0.2em] font-bold mb-10">
                         {activeCard.card.bank} {activeCard.card.name} Bonus Progress
                       </h2>
 
@@ -622,7 +622,7 @@ export default function SpendingTrackerPage() {
                           <span className="text-5xl font-headline font-extrabold tabular-nums tracking-tight text-white">
                             {formatCurrencyCompact(activeCard.current_spend)}
                           </span>
-                          <span className="text-slate-500 text-[10px] uppercase tracking-[0.15em] font-bold mt-2">
+                          <span className="text-on-surface-variant text-[10px] uppercase tracking-[0.15em] font-bold mt-2">
                             of {formatCurrencyCompact(activeCard.spend_target)} Goal
                           </span>
                         </div>
@@ -640,7 +640,7 @@ export default function SpendingTrackerPage() {
                         if (daysLeft <= 0) return null
                         const dailyAmt = (activeCard.spend_target - activeCard.current_spend) / daysLeft
                         return (
-                          <p className="text-slate-400 text-sm max-w-[300px] leading-relaxed">
+                          <p className="text-on-surface-variant text-sm max-w-[300px] leading-relaxed">
                             Spend{" "}
                             <span className="text-on-surface font-semibold tabular-nums">
                               {formatCurrency(dailyAmt)}
@@ -660,7 +660,7 @@ export default function SpendingTrackerPage() {
                   <div className="flex items-center justify-between mb-8">
                     <div>
                       <h3 className="text-2xl font-headline font-bold tracking-tight">Recent Activity</h3>
-                      <p className="text-slate-500 text-sm mt-1.5 font-medium">
+                      <p className="text-on-surface-variant text-sm mt-1.5 font-medium">
                         Spend transactions for {activeCard.card.bank} {activeCard.card.name}
                       </p>
                     </div>
@@ -757,7 +757,7 @@ export default function SpendingTrackerPage() {
                               </div>
                               <div>
                                 <h4 className="font-bold text-on-surface text-base">{txn.description}</h4>
-                                <p className="text-slate-500 text-xs mt-0.5 font-medium">{txn.category}</p>
+                                <p className="text-on-surface-variant text-xs mt-0.5 font-medium">{txn.category}</p>
                               </div>
                             </div>
                             <div className="text-right">
@@ -772,13 +772,13 @@ export default function SpendingTrackerPage() {
                           </div>
                         ))
                       ) : (
-                        <div className="p-6 text-center text-slate-500 text-sm">
+                        <div className="p-6 text-center text-on-surface-variant text-sm">
                           No transactions yet. Add one to start tracking.
                         </div>
                       )}
                     </div>
                     <div className="p-5 bg-surface-container-high/30 border-t border-white/5 flex justify-center">
-                      <button className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-primary transition-colors py-2 px-8">
+                      <button className="text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors py-2 px-8">
                         Load More Activity
                       </button>
                     </div>
@@ -799,18 +799,18 @@ export default function SpendingTrackerPage() {
                 return (
                   <section className="-mx-4 px-4 -mt-10 grid grid-cols-2 gap-5">
                     <div className="bg-surface-container/80 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-xl transition-transform active:scale-95">
-                      <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">Spend Progress</p>
+                      <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">Spend Progress</p>
                       <p className="text-2xl font-bold font-headline tabular-nums">{formatCurrencyCompact(activeCard.current_spend)}</p>
-                      <p className="text-slate-500 text-xs mt-1">of {formatCurrencyCompact(activeCard.spend_target)} goal</p>
+                      <p className="text-on-surface-variant text-xs mt-1">of {formatCurrencyCompact(activeCard.spend_target)} goal</p>
                     </div>
                     <div className="bg-surface-container/80 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-xl transition-transform active:scale-95">
-                      <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">
+                      <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">
                         {daysLeft !== null ? "Days Left" : "Daily Pace"}
                       </p>
                       <p className="text-2xl font-bold font-headline tabular-nums">
                         {daysLeft !== null ? daysLeft : dailyPaceMobile !== null ? `$${Math.ceil(dailyPaceMobile)}` : "—"}
                       </p>
-                      <p className="text-slate-500 text-xs mt-1">
+                      <p className="text-on-surface-variant text-xs mt-1">
                         {daysLeft !== null ? "until deadline" : "per day needed"}
                       </p>
                     </div>
@@ -823,7 +823,7 @@ export default function SpendingTrackerPage() {
                 <div className="flex items-center justify-between mb-8 px-1">
                   <div>
                     <h3 className="text-2xl font-bold font-headline tracking-tight">Recent Activity</h3>
-                    <p className="text-slate-500 text-xs mt-1">Spend tracking for {activeCard.card.name}</p>
+                    <p className="text-on-surface-variant text-xs mt-1">Spend tracking for {activeCard.card.name}</p>
                   </div>
                   <button
                     onClick={() => setIsDialogOpen(true)}
@@ -847,7 +847,7 @@ export default function SpendingTrackerPage() {
                           </div>
                           <div>
                             <p className="font-bold text-on-surface text-base leading-tight">{txn.description}</p>
-                            <p className="text-slate-500 text-xs mt-0.5">{txn.category}</p>
+                            <p className="text-on-surface-variant text-xs mt-0.5">{txn.category}</p>
                           </div>
                         </div>
                         <div className="text-right">
@@ -861,7 +861,7 @@ export default function SpendingTrackerPage() {
                     ))
                   ) : (
                     <div className="p-8 text-center rounded-2xl bg-surface-container/30 border border-white/5">
-                      <p className="text-slate-500 text-sm">No transactions recorded yet.</p>
+                      <p className="text-on-surface-variant text-sm">No transactions recorded yet.</p>
                       <button
                         onClick={() => setIsDialogOpen(true)}
                         className="mt-3 text-primary text-sm font-bold bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors"
@@ -883,10 +883,10 @@ export default function SpendingTrackerPage() {
           onClick={() => setIsDialogOpen(true)}
           className="fixed bottom-28 right-6 w-16 h-16 rounded-2xl z-50 flex items-center justify-center active:scale-90 transition-all md:hidden overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
+            background: "var(--gradient-cta)",
             boxShadow: "0 12px 40px rgba(78,222,163,0.4)",
             border: "1px solid rgba(255,255,255,0.2)",
-            color: "#003824",
+            color: "var(--on-primary)",
           }}
         >
           <span className="text-3xl font-bold leading-none">+</span>

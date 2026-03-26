@@ -281,7 +281,7 @@ export default function ProjectionsPage() {
                 ) : (
                   <>
                     You need{" "}
-                    <span className="font-bold text-white underline decoration-[#4edea3]/40 underline-offset-4">
+                    <span className="font-bold text-white underline decoration-primary/40 underline-offset-4">
                       {gap.toLocaleString()} more points
                     </span>{" "}
                     to book a{" "}
@@ -317,7 +317,7 @@ export default function ProjectionsPage() {
                 <span
                   className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
                     isSufficient
-                      ? "border-[#4edea3]/20 bg-primary/10 text-primary"
+                      ? "border-primary/20 bg-primary/10 text-primary"
                       : "border-white/10 bg-white/5 text-on-surface"
                   }`}
                 >
@@ -331,8 +331,7 @@ export default function ProjectionsPage() {
                   className="h-full rounded-full transition-all duration-1000 ease-out"
                   style={{
                     width: `${percentage}%`,
-                    background:
-                      "linear-gradient(to right, #4edea3, #6ffbbe, #10b981)",
+                    background: "var(--gradient-cta)",
                   }}
                 >
                   <div className="absolute right-0 top-0 h-full w-8 bg-gradient-to-r from-transparent to-white/20" />
@@ -415,10 +414,10 @@ export default function ProjectionsPage() {
                         style={{
                           background: `linear-gradient(135deg, ${
                             idx === 0
-                              ? "#003824, #005236"
+                              ? "var(--on-primary), color-mix(in srgb, var(--on-primary) 70%, transparent)"
                               : idx === 1
-                              ? "#1b1f2c, #262a37"
-                              : "#171b28, #1b1f2c"
+                              ? "var(--surface-container), var(--surface-container-high)"
+                              : "var(--surface-container-low), var(--surface-container)"
                           })`,
                         }}
                       />
@@ -509,9 +508,10 @@ export default function ProjectionsPage() {
                           href="/cards"
                           className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold uppercase tracking-widest transition-all ${
                             isHighlighted
-                              ? "bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20 hover:opacity-90 hover:scale-[1.02]"
+                              ? "text-on-primary shadow-lg shadow-primary/20 hover:opacity-90 hover:scale-[1.02]"
                               : "border border-white/10 bg-white/5 text-on-surface hover:bg-white/10 hover:text-on-surface"
                           }`}
+                          style={isHighlighted ? { background: "var(--gradient-cta)" } : undefined}
                         >
                           <CreditCard className="h-4 w-4" />
                           View Card Details
