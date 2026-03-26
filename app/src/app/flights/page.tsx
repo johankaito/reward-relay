@@ -130,7 +130,7 @@ export default function FlightsPage() {
   return (
     <AppShell>
       {/* ── Sticky header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/60 backdrop-blur-xl border-b border-white/5 h-20 flex items-center justify-between px-8">
+      <header className="sticky top-0 w-full z-40 bg-background/60 backdrop-blur-xl border-b border-white/5 h-20 flex items-center justify-between px-8">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">Reward Flights</h2>
           <div className="h-4 w-[1px] bg-white/10 hidden md:block mx-2" />
@@ -140,7 +140,7 @@ export default function FlightsPage() {
         {totalPoints > 0 && (
           <div className="hidden md:flex items-center gap-6 text-right">
             <div>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Total Points Pool</p>
+              <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-0.5">Total Points Pool</p>
               <p className="text-lg font-headline font-bold text-on-surface tabular-nums">{totalPoints.toLocaleString()} pts</p>
             </div>
           </div>
@@ -152,10 +152,10 @@ export default function FlightsPage() {
         {/* ── Hero Search ── */}
         <div className="relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-end p-10 shadow-2xl border border-white/5">
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e2640 0%, #111827 60%, #0a0e1a 100%)' }} />
+            <div className="absolute inset-0 bg-surface-container-low" />
             <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0f131f]/80 via-[#0f131f]/40 to-transparent" />
+            <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-tertiary/5 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent" />
           </div>
 
           <div className="relative z-10 w-full">
@@ -163,7 +163,7 @@ export default function FlightsPage() {
               <h3 className="text-5xl font-headline font-extrabold tracking-tight text-white mb-4 leading-tight">
                 Target Your Next Cabin.
               </h3>
-              <p className="text-slate-300 font-medium text-lg leading-relaxed">
+              <p className="text-on-surface font-medium text-lg leading-relaxed">
                 Instantly check reward availability across premium partner airlines and bridge the point gap.
               </p>
             </div>
@@ -179,48 +179,51 @@ export default function FlightsPage() {
                     <input
                       value={origin}
                       onChange={(e) => setOrigin(e.target.value)}
-                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-on-surface-variant/30 focus:outline-none w-full truncate"
                     />
                   </div>
                 </div>
                 {/* Destination */}
                 <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
-                  <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Destination</label>
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-1.5">Destination</label>
                   <div className="flex items-center gap-3">
-                    <PlaneLanding className="w-5 h-5 text-slate-500 shrink-0" />
+                    <PlaneLanding className="w-5 h-5 text-on-surface-variant shrink-0" />
                     <input
                       value={destination}
                       onChange={(e) => setDestination(e.target.value)}
-                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-on-surface-variant/30 focus:outline-none w-full truncate"
                     />
                   </div>
                 </div>
                 {/* Cabin Class */}
                 <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
-                  <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Cabin Class</label>
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-1.5">Cabin Class</label>
                   <div className="flex items-center gap-3">
-                    <Plane className="w-5 h-5 text-slate-500 shrink-0" />
+                    <Plane className="w-5 h-5 text-on-surface-variant shrink-0" />
                     <input
                       value={cabinClass}
                       onChange={(e) => setCabinClass(e.target.value)}
-                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-on-surface-variant/30 focus:outline-none w-full truncate"
                     />
                   </div>
                 </div>
                 {/* Departure */}
                 <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
-                  <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Departure</label>
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-1.5">Departure</label>
                   <div className="flex items-center gap-3">
-                    <span className="text-slate-500 text-lg shrink-0">📅</span>
+                    <span className="text-on-surface-variant text-lg shrink-0">📅</span>
                     <input
                       value={departure}
                       onChange={(e) => setDeparture(e.target.value)}
-                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-on-surface-variant/30 focus:outline-none w-full truncate"
                     />
                   </div>
                 </div>
               </div>
-              <button className="bg-primary text-[#003824] font-black px-12 rounded-xl hover:shadow-[0_0_20px_rgba(78,222,163,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap">
+              <button
+                className="text-on-primary font-black px-12 rounded-xl hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap"
+                style={{ background: 'var(--gradient-cta)' }}
+              >
                 <Search className="w-4 h-4" />
                 <span className="tracking-widest text-sm uppercase">Find Rewards</span>
               </button>
@@ -229,7 +232,7 @@ export default function FlightsPage() {
         </div>
 
         {/* ── Active Redemption Goal ── */}
-        <div className="bg-[#171b28]/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden group shadow-xl">
+        <div className="bg-surface-container-low/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden group shadow-xl">
           <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10 relative z-10">
             <div className="space-y-4">
@@ -243,7 +246,7 @@ export default function FlightsPage() {
               <h4 className="text-4xl font-headline font-extrabold tabular-nums tracking-tighter">
                 {goalPct}% to Business SYD → LHR
               </h4>
-              <p className="text-slate-400 max-w-lg text-lg leading-relaxed font-medium">
+              <p className="text-on-surface-variant max-w-lg text-lg leading-relaxed font-medium">
                 {pointsGap > 0
                   ? <>You&apos;re closing in on your goal. Secure <span className="text-white font-bold underline decoration-primary/40 underline-offset-4">{pointsGap.toLocaleString()} more points</span> to book via Qatar Airways.</>
                   : <>You have enough points to book this redemption. Book via <span className="text-white font-bold">Singapore Airlines</span> now.</>
@@ -253,7 +256,7 @@ export default function FlightsPage() {
             <div className="w-full lg:w-[420px] bg-background/40 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
               <div className="flex justify-between items-end mb-4">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Current Points Pool</span>
+                  <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Current Points Pool</span>
                   <span className="text-xl font-bold text-white tracking-tight tabular-nums">
                     {currentPool > 0 ? currentPool.toLocaleString() : '121,500'} / {GOAL_POINTS.toLocaleString()}
                   </span>
@@ -275,19 +278,19 @@ export default function FlightsPage() {
                 <div className="mt-6 space-y-2">
                   {qffBalance > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-slate-500 font-medium">Qantas FF</span>
+                      <span className="text-on-surface-variant font-medium">Qantas FF</span>
                       <span className="text-on-surface font-bold tabular-nums">{qffBalance.toLocaleString()} pts</span>
                     </div>
                   )}
                   {velocityBalance > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-slate-500 font-medium">Velocity</span>
+                      <span className="text-on-surface-variant font-medium">Velocity</span>
                       <span className="text-on-surface font-bold tabular-nums">{velocityBalance.toLocaleString()} pts</span>
                     </div>
                   )}
                   {amexBalance > 0 && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-slate-500 font-medium">Amex MR</span>
+                      <span className="text-on-surface-variant font-medium">Amex MR</span>
                       <span className="text-on-surface font-bold tabular-nums">{amexBalance.toLocaleString()} pts</span>
                     </div>
                   )}
@@ -302,13 +305,13 @@ export default function FlightsPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h3 className="text-3xl font-headline font-bold tracking-tight">Top Redemption Matches</h3>
-              <p className="text-slate-400 text-base font-medium mt-1">Real-time availability based on your point balance.</p>
+              <p className="text-on-surface-variant text-base font-medium mt-1">Real-time availability based on your point balance.</p>
             </div>
             <div className="hidden md:flex gap-3">
-              <button className="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-slate-200 border border-white/10 hover:bg-surface-bright transition-all">
+              <button className="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-on-surface border border-white/10 hover:bg-surface-bright transition-all">
                 Sort by Value
               </button>
-              <button className="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-slate-200 border border-white/10 hover:bg-surface-bright transition-all">
+              <button className="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-on-surface border border-white/10 hover:bg-surface-bright transition-all">
                 Filter Airlines
               </button>
             </div>
@@ -356,15 +359,15 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
             <span className="text-4xl font-headline font-extrabold text-white tabular-nums tracking-tighter">
               {card.points.toLocaleString()}
             </span>
-            <span className={`text-[11px] font-bold uppercase ml-2 tracking-widest ${isEmiratesFirst ? 'text-[#c3c0ff]' : 'text-primary'}`}>
+            <span className={`text-[11px] font-bold uppercase ml-2 tracking-widest ${isEmiratesFirst ? 'text-tertiary' : 'text-primary'}`}>
               Points
             </span>
           </div>
           <span className={`px-3 py-1 text-[10px] font-black rounded border uppercase tracking-widest ${
             isSingapore
-              ? 'bg-primary text-[#003824] border-transparent'
+              ? 'bg-primary text-on-primary border-transparent'
               : isEmiratesFirst
-              ? 'bg-[#c3c0ff]/10 text-[#c3c0ff] border-[#c3c0ff]/20'
+              ? 'bg-tertiary/10 text-tertiary border-tertiary/20'
               : 'bg-white/10 backdrop-blur-md text-white border-white/20'
           }`}>
             {card.cabin}
@@ -376,24 +379,24 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
       <div className="p-8 flex-1 flex flex-col">
         <div className="space-y-5 mb-8">
           <div className="flex justify-between items-center pb-3 border-b border-white/5">
-            <span className="text-sm font-semibold text-slate-400">Route Path</span>
+            <span className="text-sm font-semibold text-on-surface-variant">Route Path</span>
             <span className="text-sm font-bold text-on-surface tracking-tight">
               {card.route.split(' → ').map((seg, i, arr) => (
                 <span key={i}>
                   {seg}
                   {i < arr.length - 1 && (
-                    <span className={`mx-1 ${isEmiratesFirst ? 'text-[#c3c0ff]' : 'text-primary'}`}>→</span>
+                    <span className={`mx-1 ${isEmiratesFirst ? 'text-tertiary' : 'text-primary'}`}>→</span>
                   )}
                 </span>
               ))}
             </span>
           </div>
           <div className="flex justify-between items-center pb-3 border-b border-white/5">
-            <span className="text-sm font-semibold text-slate-400">Cabin Class</span>
+            <span className="text-sm font-semibold text-on-surface-variant">Cabin Class</span>
             <span className="text-sm font-bold text-on-surface">{card.cabinLabel}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm font-semibold text-slate-400">Total Taxes</span>
+            <span className="text-sm font-semibold text-on-surface-variant">Total Taxes</span>
             <span className="text-sm font-bold text-on-surface tabular-nums">${card.taxes} AUD</span>
           </div>
         </div>
@@ -409,7 +412,10 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
                   </span>
                 </div>
               </div>
-              <button className="w-full py-4 bg-gradient-to-br from-primary to-primary-container rounded-2xl text-sm font-black text-[#003824] hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-primary/20">
+              <button
+                className="w-full py-4 rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-primary/20"
+                style={{ background: 'var(--gradient-cta)' }}
+              >
                 Book with Points
               </button>
             </>
@@ -417,7 +423,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
             <>
               <div className={`p-4 rounded-2xl border ${isEmiratesFirst ? 'bg-surface-container-highest/30 border-white/5' : 'bg-error/5 border-error/10'}`}>
                 <div className="flex justify-between items-center">
-                  <span className={`text-xs font-bold uppercase tracking-widest ${isEmiratesFirst ? 'text-slate-500' : 'text-error'}`}>
+                  <span className={`text-xs font-bold uppercase tracking-widest ${isEmiratesFirst ? 'text-on-surface-variant' : 'text-error'}`}>
                     Gap to target
                   </span>
                   <span className="text-lg font-extrabold text-white tabular-nums">
@@ -425,7 +431,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
                   </span>
                 </div>
               </div>
-              <button className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-slate-200 hover:text-white transition-all uppercase tracking-widest shadow-lg">
+              <button className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-on-surface hover:text-white transition-all uppercase tracking-widest shadow-lg">
                 {isEmiratesFirst ? 'Analyze Transfers' : 'View Availability'}
               </button>
             </>

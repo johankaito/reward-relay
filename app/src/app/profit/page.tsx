@@ -246,9 +246,9 @@ export default function ProfitPage() {
   return (
     <AppShell>
       {/* ── Sticky header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5">
+      <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
-          <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent">Profit Dashboard</h2>
+          <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">Profit Dashboard</h2>
         </div>
       </header>
 
@@ -329,7 +329,7 @@ export default function ProfitPage() {
                     </div>
                   )}
                 </div>
-                <p className="text-slate-500 text-sm mt-1">
+                <p className="text-on-surface-variant text-sm mt-1">
                   Across {fyCards.length} active card{fyCards.length !== 1 ? "s" : ""} this FY
                 </p>
               </section>
@@ -339,7 +339,7 @@ export default function ProfitPage() {
                 <section className="flex flex-col gap-5">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xl font-headline font-bold">Monthly Yield</h3>
-                    <span className="px-3 py-1 bg-surface-container-highest/50 rounded-full text-[10px] font-extrabold text-slate-400 tracking-wider">
+                    <span className="px-3 py-1 bg-surface-container-highest/50 rounded-full text-[10px] font-extrabold text-on-surface-variant tracking-wider">
                       {chartData.length} MONTHS
                     </span>
                   </div>
@@ -362,7 +362,7 @@ export default function ProfitPage() {
                                   style={{ height: `${bonusPct * 66}%` }}
                                 />
                               </div>
-                              <span className={`text-[10px] font-bold ${isActive ? "text-primary" : "text-slate-500"}`}>
+                              <span className={`text-[10px] font-bold ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
                                 {d.month.toUpperCase()}
                               </span>
                             </div>
@@ -377,22 +377,22 @@ export default function ProfitPage() {
               {/* Bento grid: Points Val / Fees / ROI */}
               <section className="grid grid-cols-2 gap-4">
                 <div className="col-span-1 p-6 rounded-2xl bg-surface-container/60 border border-white/5 flex flex-col gap-2">
-                  <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Points Val</span>
+                  <span className="text-on-surface-variant text-[10px] font-bold tracking-widest uppercase">Points Val</span>
                   <span className="text-2xl font-headline font-bold tabular-nums">{fmtAud(fyBonus)}</span>
                   <div className="mt-2 w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
                     <div className="bg-[#50e3c2] h-full" style={{ width: fyNet > 0 ? "66%" : "0%" }} />
                   </div>
                 </div>
                 <div className="col-span-1 p-6 rounded-2xl bg-surface-container/60 border border-white/5 flex flex-col gap-2">
-                  <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Fees Paid</span>
+                  <span className="text-on-surface-variant text-[10px] font-bold tracking-widest uppercase">Fees Paid</span>
                   <span className="text-2xl font-headline font-bold tabular-nums">{fmtAud(fyFees)}</span>
                   <div className="mt-2 w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
                     <div className="bg-secondary h-full" style={{ width: fyBonus > 0 ? `${Math.min((fyFees / fyBonus) * 100, 100)}%` : "0%" }} />
                   </div>
                 </div>
-                <div className="col-span-2 p-6 rounded-2xl bg-[#1b1f2c] border border-white/5 flex items-center justify-between">
+                <div className="col-span-2 p-6 rounded-2xl bg-surface-container border border-white/5 flex items-center justify-between">
                   <div className="flex flex-col gap-1">
-                    <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">Average ROI</span>
+                    <span className="text-on-surface-variant text-[10px] font-bold tracking-widest uppercase">Average ROI</span>
                     <span className="text-3xl font-headline font-bold tabular-nums" style={{ color: "#50e3c2" }}>
                       {fyCards.length > 0
                         ? `${(fyCards.reduce((s, c) => s + c.bonusAud / Math.max(c.fee, 1), 0) / fyCards.length).toFixed(1)}x`
@@ -422,7 +422,7 @@ export default function ProfitPage() {
                                 <div className="w-10 h-6 bg-gradient-to-r from-[#d4af37] to-[#8b6b00] rounded-sm" />
                                 <div>
                                   <p className="text-[15px] font-bold font-headline">{c.name}</p>
-                                  <p className="text-[10px] text-slate-500 tracking-wide uppercase">{c.bank}</p>
+                                  <p className="text-[10px] text-on-surface-variant tracking-wide uppercase">{c.bank}</p>
                                 </div>
                               </div>
                               <div className="flex flex-col items-end">
@@ -438,7 +438,7 @@ export default function ProfitPage() {
                               </div>
                             </div>
                             <div className="space-y-2">
-                              <div className="flex justify-between text-[11px] font-bold text-slate-400">
+                              <div className="flex justify-between text-[11px] font-bold text-on-surface-variant">
                                 <span className="tracking-wide">ROI</span>
                                 <span className="tabular-nums">{roi.toFixed(1)}x return</span>
                               </div>

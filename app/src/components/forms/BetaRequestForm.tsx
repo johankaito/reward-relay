@@ -85,7 +85,7 @@ export function BetaRequestForm({
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder="you@example.com"
-          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-400 backdrop-blur-sm transition-colors focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-on-surface-variant backdrop-blur-sm transition-colors focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
 
@@ -99,7 +99,7 @@ export function BetaRequestForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Your name"
-          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-slate-400 backdrop-blur-sm transition-colors focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className="mt-2 w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder-on-surface-variant backdrop-blur-sm transition-colors focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
 
