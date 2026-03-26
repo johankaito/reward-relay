@@ -21,53 +21,175 @@ if (fs.existsSync(envLocal)) {
   }
 }
 
-const DESIGN_DIR = path.resolve(__dirname, "../../design/stitch_profit_dashboard_v1")
 const OUTPUT_DIR = path.resolve(__dirname, "visual-diff-output")
 const LIVE_BASE =
   process.env.LIVE_URL ??
   (process.env.NEXT_PUBLIC_APP_ENV === "production"
     ? "https://www.rewardrelay.app"
     : "https://reward-relay-staging.vercel.app")
-const VIEWPORT = { width: 1440, height: 900 }
+const VIEWPORTS = {
+  desktop: { width: 1440, height: 900 },
+  mobile: { width: 390, height: 844 },
+}
+
+const DESKTOP_DESIGN_DIR = path.resolve(__dirname, "../../design/stitch_profit_dashboard_v1")
+const GAP_DESIGN_DIR = path.resolve(__dirname, "../../design/gap")
 
 const PAGES = [
+  // ── Core desktop pages ──────────────────────────────────────────────────
   {
     name: "landing",
-    stitch: "reward_relay_landing_page_desktop_updated_portfolio/code.html",
+    stitch: path.join(DESKTOP_DESIGN_DIR, "reward_relay_landing_page_desktop_updated_portfolio/code.html"),
     live: "/",
     auth: false,
+    viewport: "desktop",
   },
   {
     name: "dashboard",
-    stitch: "dashboard_desktop/code.html",
+    stitch: path.join(DESKTOP_DESIGN_DIR, "dashboard_desktop/code.html"),
     live: "/dashboard",
     auth: true,
+    viewport: "desktop",
   },
   {
     name: "cards",
-    stitch: "card_portfolio_desktop/code.html",
+    stitch: path.join(DESKTOP_DESIGN_DIR, "card_portfolio_desktop/code.html"),
     live: "/cards",
     auth: true,
+    viewport: "desktop",
   },
   {
     name: "spending",
-    stitch: "spend_tracker_interactive_arc/code.html",
+    stitch: path.join(DESKTOP_DESIGN_DIR, "spend_tracker_interactive_arc/code.html"),
     live: "/spending",
     auth: true,
+    viewport: "desktop",
   },
   {
     name: "profit",
-    stitch: "profit_dashboard_desktop/code.html",
+    stitch: path.join(DESKTOP_DESIGN_DIR, "profit_dashboard_desktop/code.html"),
     live: "/profit",
     auth: true,
+    viewport: "desktop",
   },
   {
     name: "flights",
-    stitch: "flights_desktop_refined/code.html",
+    stitch: path.join(DESKTOP_DESIGN_DIR, "flights_desktop_refined/code.html"),
     live: "/flights",
     auth: true,
+    viewport: "desktop",
+  },
+  // ── Gap screens — desktop ────────────────────────────────────────────────
+  {
+    name: "login",
+    stitch: path.join(GAP_DESIGN_DIR, "login_desktop/code.html"),
+    live: "/login",
+    auth: false,
+    viewport: "desktop",
+  },
+  {
+    name: "signup",
+    stitch: path.join(GAP_DESIGN_DIR, "sign_up_desktop/code.html"),
+    live: "/signup",
+    auth: false,
+    viewport: "desktop",
+  },
+  {
+    name: "tracker",
+    stitch: path.join(GAP_DESIGN_DIR, "tracker_desktop/code.html"),
+    live: "/tracker",
+    auth: true,
+    viewport: "desktop",
+  },
+  {
+    name: "card-detail",
+    stitch: path.join(GAP_DESIGN_DIR, "card_detail_desktop/code.html"),
+    live: "/cards/detail",
+    auth: true,
+    viewport: "desktop",
+  },
+  {
+    name: "recommendations",
+    stitch: path.join(GAP_DESIGN_DIR, "recommendations_desktop/code.html"),
+    live: "/recommendations",
+    auth: true,
+    viewport: "desktop",
+  },
+  {
+    name: "settings",
+    stitch: path.join(GAP_DESIGN_DIR, "settings_desktop/code.html"),
+    live: "/settings",
+    auth: true,
+    viewport: "desktop",
+  },
+  // ── Gap screens — mobile ─────────────────────────────────────────────────
+  {
+    name: "login-mobile",
+    stitch: path.join(GAP_DESIGN_DIR, "login_mobile/code.html"),
+    live: "/login",
+    auth: false,
+    viewport: "mobile",
+  },
+  {
+    name: "signup-mobile",
+    stitch: path.join(GAP_DESIGN_DIR, "sign_up_mobile/code.html"),
+    live: "/signup",
+    auth: false,
+    viewport: "mobile",
+  },
+  {
+    name: "tracker-mobile",
+    stitch: path.join(GAP_DESIGN_DIR, "tracker_mobile/code.html"),
+    live: "/tracker",
+    auth: true,
+    viewport: "mobile",
+  },
+  {
+    name: "card-detail-mobile",
+    stitch: path.join(GAP_DESIGN_DIR, "card_detail_mobile/code.html"),
+    live: "/cards/detail",
+    auth: true,
+    viewport: "mobile",
+  },
+  {
+    name: "recommendations-mobile",
+    stitch: path.join(GAP_DESIGN_DIR, "recommendations_mobile/code.html"),
+    live: "/recommendations",
+    auth: true,
+    viewport: "mobile",
+  },
+  {
+    name: "settings-mobile",
+    stitch: path.join(GAP_DESIGN_DIR, "settings_mobile/code.html"),
+    live: "/settings",
+    auth: true,
+    viewport: "mobile",
+  },
+  // ── Core pages — mobile ──────────────────────────────────────────────────
+  {
+    name: "dashboard-mobile",
+    stitch: "",
+    live: "/dashboard",
+    auth: true,
+    viewport: "mobile",
+  },
+  {
+    name: "cards-mobile",
+    stitch: "",
+    live: "/cards",
+    auth: true,
+    viewport: "mobile",
+  },
+  {
+    name: "spending-mobile",
+    stitch: "",
+    live: "/spending",
+    auth: true,
+    viewport: "mobile",
   },
 ] as const
+
+type PageEntry = (typeof PAGES)[number]
 
 async function login(browser: Browser): Promise<void> {
   const email = process.env.TEST_EMAIL
@@ -79,7 +201,7 @@ async function login(browser: Browser): Promise<void> {
 
   console.log(`  🔐 Logging in as ${email}...`)
   const page = await browser.newPage()
-  await page.setViewport(VIEWPORT)
+  await page.setViewport(VIEWPORTS.desktop)
   await page.goto(`${LIVE_BASE}/login`, { waitUntil: "networkidle0", timeout: 30000 })
 
   // Fill email + password and submit
@@ -99,9 +221,14 @@ async function login(browser: Browser): Promise<void> {
   await page.close()
 }
 
-async function screenshotPage(browser: Browser, url: string, outputPath: string): Promise<void> {
+async function screenshotPage(
+  browser: Browser,
+  url: string,
+  outputPath: string,
+  viewport: { width: number; height: number }
+): Promise<void> {
   const page: Page = await browser.newPage()
-  await page.setViewport(VIEWPORT)
+  await page.setViewport(viewport)
 
   try {
     await page.goto(url, { waitUntil: "networkidle0", timeout: 30000 })
@@ -139,26 +266,28 @@ async function main() {
     await login(browser)
   }
 
-  const results: Array<{ name: string; stitch: string; live: string }> = []
+  const results: Array<{ name: string; stitch: string; live: string; viewport: string }> = []
 
   for (const target of targets) {
     console.log(`\n📸  ${target.name.toUpperCase()}`)
 
+    const vp = VIEWPORTS[target.viewport as keyof typeof VIEWPORTS] ?? VIEWPORTS.desktop
     const stitchOut = path.join(OUTPUT_DIR, `${target.name}-stitch.png`)
     const liveOut = path.join(OUTPUT_DIR, `${target.name}-live.png`)
 
-    // Stitch HTML export (file://)
-    const stitchFile = path.join(DESIGN_DIR, target.stitch)
-    if (fs.existsSync(stitchFile)) {
-      await screenshotPage(browser, `file://${stitchFile}`, stitchOut)
+    // Stitch HTML export (file://) — skip if no stitch path defined
+    if (target.stitch && fs.existsSync(target.stitch)) {
+      await screenshotPage(browser, `file://${target.stitch}`, stitchOut, vp)
+    } else if (target.stitch) {
+      console.warn(`  ⚠  Stitch export not found: ${target.stitch}`)
     } else {
-      console.warn(`  ⚠  Stitch export not found: ${stitchFile}`)
+      console.warn(`  ⚠  No Stitch export configured for ${target.name} — live only`)
     }
 
     // Live dev server
-    await screenshotPage(browser, `${LIVE_BASE}${target.live}`, liveOut)
+    await screenshotPage(browser, `${LIVE_BASE}${target.live}`, liveOut, vp)
 
-    results.push({ name: target.name, stitch: stitchOut, live: liveOut })
+    results.push({ name: target.name, stitch: stitchOut, live: liveOut, viewport: target.viewport })
   }
 
   await browser.close()

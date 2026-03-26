@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recommendations - Reward Relay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-dim": "#55e4a9",
+                        "surface-container-low": "#0e1320",
+                        "tertiary-fixed": "#00dcfd",
+                        "on-secondary-fixed": "#3a2a62",
+                        "on-surface-variant": "#a7aabb",
+                        "secondary-container": "#4d3d76",
+                        "error-dim": "#d7383b",
+                        "surface-container-high": "#1a1f2f",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary": "#005360",
+                        "primary-fixed-dim": "#55e4a9",
+                        "on-primary-fixed-variant": "#006343",
+                        "surface-dim": "#0a0e1a",
+                        "error": "#ff716c",
+                        "on-surface": "#e8eafc",
+                        "surface-tint": "#65f3b6",
+                        "surface-variant": "#202537",
+                        "on-error-container": "#ffa8a3",
+                        "on-secondary": "#47366f",
+                        "secondary": "#d0bcff",
+                        "inverse-surface": "#faf8ff",
+                        "primary-container": "#07b77f",
+                        "surface-bright": "#252c3e",
+                        "background": "#0a0e1a",
+                        "tertiary-dim": "#00cdec",
+                        "surface": "#0a0e1a",
+                        "on-tertiary-fixed-variant": "#005360",
+                        "surface-container": "#141928",
+                        "on-tertiary-fixed": "#00343d",
+                        "on-error": "#490006",
+                        "tertiary-fixed-dim": "#00cdec",
+                        "error-container": "#9f0519",
+                        "tertiary": "#78e6ff",
+                        "on-primary": "#00583b",
+                        "primary-fixed": "#65f3b6",
+                        "secondary-fixed-dim": "#cdb9fc",
+                        "on-secondary-fixed-variant": "#584781",
+                        "on-tertiary-container": "#004955",
+                        "on-primary-container": "#002919",
+                        "secondary-fixed": "#dac9ff",
+                        "primary": "#65f3b6",
+                        "outline": "#717584",
+                        "on-primary-fixed": "#00432c",
+                        "on-secondary-container": "#d9c8ff",
+                        "tertiary-container": "#00dcfd",
+                        "on-background": "#e8eafc",
+                        "secondary-dim": "#c2aff1",
+                        "inverse-on-surface": "#515563",
+                        "outline-variant": "#444755",
+                        "inverse-primary": "#006d4a",
+                        "surface-container-highest": "#202537"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        .bg-emerald-gradient { background: linear-gradient(135deg, #4EDEA3 0%, #10B981 100%); }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- Desktop Side Navigation -->
+<aside class="hidden lg:flex flex-col py-8 fixed left-0 top-0 h-full w-[256px] bg-[#171B28] dark:bg-[#171B28] font-['Plus_Jakarta_Sans'] text-sm tracking-wide">
+<div class="px-8 mb-12">
+<h1 class="text-2xl font-extrabold text-[#4edea3] dark:text-[#4edea3] tracking-tighter">Reward Relay</h1>
+<p class="text-[10px] text-slate-500 mt-1 uppercase tracking-widest">Velocity 'R' Monogram</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4edea3]">home</span>
+<span>Home</span>
+</a>
+<a class="flex items-center gap-4 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4edea3]">credit_card</span>
+<span>Cards</span>
+</a>
+<a class="flex items-center gap-4 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4edea3]">monitoring</span>
+<span>Track</span>
+</a>
+<a class="flex items-center gap-4 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-[#4edea3] dark:text-[#4edea3] font-bold border-l-4 border-[#4edea3] pl-4" href="#">
+<span class="material-symbols-outlined">redeem</span>
+<span>Redeem</span>
+</a>
+<a class="flex items-center gap-4 py-3 hover:bg-[#313442] hover:scale-[1.02] transition-all text-slate-400 dark:text-slate-500 pl-5 group" href="#">
+<span class="material-symbols-outlined group-hover:text-[#4edea3]">person</span>
+<span>Account</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="bg-surface-container rounded-xl p-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="User profile photo of a professional man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0mHyZxxfzO1jQBm7pR0_DePlqLIuLKX3oPdznp1i9c-CDKnDI3zjX99WgA0AHV798q40IWyQTaluBv1Ei1oU0pIG6I2VoA0j15Hg5VATGrVAJcexx9MOsha6ks4DRDlUXwJjbMZRrudykQ_-uIDqHa3PGqR2mg0l-0wD1WoeLo1I0_XcMqpv0kiV2pAfh5gJ4oBoorOE9evOG1kxrn0f4b7PUxWW38s7Ihp0cFk0bGJbLvKnwq0xLoKj7OWI2Si08iptvOSFcgk20"/>
+</div>
+<div>
+<p class="text-xs font-bold">Alex Sterling</p>
+<p class="text-[10px] text-slate-500 uppercase">Platinum Member</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Mobile Top Bar -->
+<header class="fixed top-0 w-full z-40 lg:hidden flex justify-between items-center h-16 px-6 bg-[#171B28] dark:bg-[#171B28]">
+<div class="text-xl font-black text-[#4edea3] dark:text-[#4edea3] font-['Plus_Jakarta_Sans'] font-extrabold">Reward Relay</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400">notifications</span>
+<span class="material-symbols-outlined text-slate-400">settings</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="lg:ml-[256px] min-h-screen pt-24 lg:pt-16 pb-24 px-6 lg:px-12">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface mb-2">Cards Matched for You</h1>
+<p class="font-body text-on-surface-variant text-lg max-w-2xl leading-relaxed">Based on your spending profile and churning history, these assets maximize your velocity and yield.</p>
+</div>
+<div class="flex flex-wrap gap-2 pb-2 overflow-x-auto whitespace-nowrap">
+<button class="px-5 py-2 rounded-full text-sm font-medium bg-primary-container text-on-primary-container">All</button>
+<button class="px-5 py-2 rounded-full text-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors">Travel</button>
+<button class="px-5 py-2 rounded-full text-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors">Cashback</button>
+<button class="px-5 py-2 rounded-full text-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors">Dining</button>
+<button class="px-5 py-2 rounded-full text-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors">No Annual Fee</button>
+</div>
+</div>
+</section>
+<!-- Recommendation Grid -->
+<section class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1: Best Match -->
+<div class="relative group">
+<!-- Glow Effect -->
+<div class="absolute -inset-1 bg-emerald-gradient rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-500"></div>
+<div class="relative bg-surface-container border border-primary/20 rounded-xl p-6 flex flex-col h-full shadow-lg">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-primary-container/20 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Best Match</span>
+<span class="material-symbols-outlined text-primary" data-weight="fill">verified</span>
+</div>
+<div class="aspect-[1.58/1] w-full rounded-lg mb-6 overflow-hidden relative shadow-inner">
+<div class="absolute inset-0 bg-gradient-to-br from-[#1c2235] to-[#0a0e1a]"></div>
+<img class="w-full h-full object-cover mix-blend-overlay" data-alt="Abstract dark credit card design with glowing green accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWfc7QxoIzoD0y_jct0e2RejWHjrGNpYIqz5g6PyEBYnaPTXw3ZxCeTZ4FXLlU2I7TEDnwuetI8oNROs5_qQYX02HqQvz520kEC1DJ6q9SCqiRbwmYfr9YS1sJy_Ne5x3arRglubKUE4iR36XxUOLNW6ZEvGCszAKuylBpkcHevKqEz8psbtgHGpTD9kWZ3ktmJEYciN72_MHzA_vM3Hodh6ftb27pak_C8V31x_0PV-XKQJQlMaIFprzKl0MK5G0MfKeDoSjAr37W"/>
+<div class="absolute bottom-4 left-4">
+<p class="text-white/40 text-[8px] tracking-[0.2em] uppercase">Apex Reserve</p>
+<p class="text-white text-xs font-medium tracking-widest">•••• 4829</p>
+</div>
+</div>
+<div class="mb-auto">
+<h3 class="text-lg font-bold text-on-surface mb-1">Chase Sapphire Reserve</h3>
+<p class="text-on-surface-variant text-sm mb-4">Ultimate Rewards Network</p>
+<div class="bg-surface-container-high/50 rounded-lg p-4 mb-6">
+<p class="text-primary text-xl font-extrabold tabular-nums">75,000 pts</p>
+<p class="text-xs text-on-surface-variant">after $4k spend in 3 months</p>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm mb-6">
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Annual Fee</p>
+<p class="text-on-surface font-medium tabular-nums">$550</p>
+</div>
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Eligibility</p>
+<p class="text-primary-dim font-medium">94% Fit</p>
+</div>
+</div>
+</div>
+<button class="w-full py-3 bg-emerald-gradient text-on-primary-container rounded-full font-bold text-sm hover:scale-[1.02] transition-transform shadow-lg">View Details</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container rounded-xl p-6 flex flex-col h-full border border-outline-variant/10 hover:border-outline-variant/30 transition-colors">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">High Yield</span>
+</div>
+<div class="aspect-[1.58/1] w-full rounded-lg mb-6 overflow-hidden relative grayscale opacity-70">
+<div class="absolute inset-0 bg-gradient-to-br from-[#1a1f2f] to-[#141928]"></div>
+<img class="w-full h-full object-cover mix-blend-overlay" data-alt="Minimalist dark credit card with subtle geometric patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWWTEf1KslLXLKy1E5GoWzo_rAbjTPLSNu4rtQMU4wNmuZBAvtkLY4GeN5aGFG22PMl712WHeCFhBXujlew9rE4q7EU1v1lC-XdsuONpAZj9BqemEkTaX1_YCUUdAg_xfU9oOB_yzCWbLBsFwPxrVeO7CCXSAwzurH9fLAY1YypB7tz8rfI8O-GIPHRNV_5jdBqt4SDYe4qIWmkFzwkFEwk_JiDUW6t-A27kTAxgy7_omshv8uy-AddTYqV1NSjq_1Vk_ylhoxZxWs"/>
+<div class="absolute bottom-4 left-4">
+<p class="text-white/30 text-[8px] tracking-[0.2em] uppercase">Gold Portfolio</p>
+</div>
+</div>
+<div class="mb-auto">
+<h3 class="text-lg font-bold text-on-surface mb-1">Amex Gold Card</h3>
+<p class="text-on-surface-variant text-sm mb-4">Membership Rewards</p>
+<div class="bg-surface-container-high/50 rounded-lg p-4 mb-6">
+<p class="text-secondary text-xl font-extrabold tabular-nums">60,000 pts</p>
+<p class="text-xs text-on-surface-variant">after $6k spend in 6 months</p>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm mb-6">
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Annual Fee</p>
+<p class="text-on-surface font-medium tabular-nums">$250</p>
+</div>
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Eligibility</p>
+<p class="text-primary-dim font-medium">82% Fit</p>
+</div>
+</div>
+</div>
+<button class="w-full py-3 border border-outline-variant/30 text-primary-dim rounded-full font-bold text-sm hover:bg-primary-dim/5 transition-colors">View Details</button>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container rounded-xl p-6 flex flex-col h-full border border-outline-variant/10 hover:border-outline-variant/30 transition-colors">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Churning Pick</span>
+</div>
+<div class="aspect-[1.58/1] w-full rounded-lg mb-6 overflow-hidden relative grayscale opacity-70">
+<div class="absolute inset-0 bg-gradient-to-br from-[#141928] to-[#000000]"></div>
+<img class="w-full h-full object-cover mix-blend-overlay" data-alt="Sleek black credit card against a dark textured background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWtPeTbAImiSYRYJX9FeGisexKrtJe0H_8nMrYqT2lXgAvsqcfbdKcvLB7jaWyt5fDsUkDfeyDsV0-nZAAUnhJOsnH9feunuc2PqCGbqYrj8Q2fNc3pcNxQgClqdvjTF1av_-ijqtda6IKrIztjaQmpf0TPPoB7xDDnbqqfNx9dU_OclWspFG7vEDU8Dklwhdsbf50KVhYliZesyLLkMup8b-HDAafllE_nUzMCmjLTPjF3hNuM4EOMGz9WgJ85NcqdQ0YbLjv0EGb"/>
+</div>
+<div class="mb-auto">
+<h3 class="text-lg font-bold text-on-surface mb-1">Capital One Venture X</h3>
+<p class="text-on-surface-variant text-sm mb-4">Venture Rewards</p>
+<div class="bg-surface-container-high/50 rounded-lg p-4 mb-6">
+<p class="text-on-surface text-xl font-extrabold tabular-nums">75,000 Miles</p>
+<p class="text-xs text-on-surface-variant">after $4k spend in 3 months</p>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm mb-6">
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Annual Fee</p>
+<p class="text-on-surface font-medium tabular-nums">$395</p>
+</div>
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Eligibility</p>
+<p class="text-error-dim font-medium">Likely (75%)</p>
+</div>
+</div>
+</div>
+<button class="w-full py-3 border border-outline-variant/30 text-primary-dim rounded-full font-bold text-sm hover:bg-primary-dim/5 transition-colors">View Details</button>
+</div>
+<!-- Card 4 (New) -->
+<div class="bg-surface-container rounded-xl p-6 flex flex-col h-full border border-outline-variant/10 hover:border-outline-variant/30 transition-colors">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-container-highest text-on-surface-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Zero Fee</span>
+</div>
+<div class="aspect-[1.58/1] w-full rounded-lg mb-6 overflow-hidden relative grayscale opacity-70">
+<div class="absolute inset-0 bg-gradient-to-br from-[#1c2235] to-[#141928]"></div>
+<img class="w-full h-full object-cover mix-blend-overlay" data-alt="Clean blue and dark grey credit card visual" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAApmRytzZHQu_SEKdfNzX7k1Xva2BntBS1vHtlO2891YOdnYBqAlucOupRLKpMH8jm3QU78dw0vFjSZKmxMvUY5mWXis5qKiOOdgHTc5pwMjk5QTF8piH7pJEWGOL_pqNPVGJMz05bj17Rz1M3tOJNKaOUq1BLM-LXSLbbROBsIHSitfHEebfoh9L8PO_D5GjT07J5IgqLQUq8azAT0QouZ8lbl8MeQ6vXSNhue8PlvwIjw0bpelvYMl3Mh1_KuHz9aY-q_oYdKo_i"/>
+</div>
+<div class="mb-auto">
+<h3 class="text-lg font-bold text-on-surface mb-1">Citi Custom Cash</h3>
+<p class="text-on-surface-variant text-sm mb-4">ThankYou Rewards</p>
+<div class="bg-surface-container-high/50 rounded-lg p-4 mb-6">
+<p class="text-on-surface text-xl font-extrabold tabular-nums">$200 Bonus</p>
+<p class="text-xs text-on-surface-variant">after $1.5k spend in 6 months</p>
+</div>
+<div class="grid grid-cols-2 gap-4 text-sm mb-6">
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Annual Fee</p>
+<p class="text-on-surface font-medium tabular-nums">$0</p>
+</div>
+<div>
+<p class="text-slate-500 text-[10px] uppercase font-bold tracking-tighter">Eligibility</p>
+<p class="text-primary-dim font-medium">Pre-Approved</p>
+</div>
+</div>
+</div>
+<button class="w-full py-3 border border-outline-variant/30 text-primary-dim rounded-full font-bold text-sm hover:bg-primary-dim/5 transition-colors">View Details</button>
+</div>
+<!-- Bento Info Card -->
+<div class="lg:col-span-2 bg-surface-container-low rounded-xl p-8 flex flex-col md:flex-row gap-8 items-center justify-between border border-primary/5">
+<div class="flex-1">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary text-3xl">insights</span>
+</div>
+<h3 class="font-headline text-2xl font-extrabold mb-4">Precision Analysis Active</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">We've cross-referenced your current 5/24 status with recent DP (Data Point) trends. Your current credit utilization (12%) suggests a high probability of approval for premium tier cards.</p>
+<div class="flex gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface">Live Data</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-on-surface">5/24 Tracker: 2/24</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-64 aspect-square bg-surface-container-highest rounded-2xl overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-60 mix-blend-lighten" data-alt="Data visualization dashboard with glowing neon charts" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVFVEZWM7H_DxHfIWPEitzM2tZ4OOa-Wou5KyELdNwM1ejihf7kRvBbuE-6YaMg8wkRvLWhVvwM6K-GHghWciT9mtIvlD5shZEvMJPuN9_ncARDqwWy7wOI34DIQKtF1-aQygmjRfkpyAIK8Z9EVUS1AnhBUZcnNBY_Owdq6h0gATkmv_cNXxAp8w7-jXUGeJBh9DqE2_99_Z9-xSVxMWAxxbOZB0-SKiHvDVe3h9fj-J2YWddDFTPP1tsdPhAMiXgACmrPcIhSaWc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-transparent to-transparent"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Mobile Bottom Navigation -->
+<nav class="lg:hidden fixed bottom-0 w-full h-20 pb-safe z-50 bg-[#0F131F]/80 dark:bg-[#0F131F]/80 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-4 shadow-[0px_-24px_48px_-12px_rgba(0,0,0,0.4)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 font-['Inter'] text-[10px] uppercase tracking-[0.05em] active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span>Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 font-['Inter'] text-[10px] uppercase tracking-[0.05em] active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">credit_card</span>
+<span>Cards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 font-['Inter'] text-[10px] uppercase tracking-[0.05em] active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">monitoring</span>
+<span>Track</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#4edea3] dark:text-[#4edea3] font-['Inter'] text-[10px] uppercase tracking-[0.05em] active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">redeem</span>
+<span>Redeem</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 font-['Inter'] text-[10px] uppercase tracking-[0.05em] active:opacity-80 scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span>Account</span>
+</a>
+</nav>
+</body></html>

@@ -1,417 +1,484 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Wifi } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { CreditCard, Plus } from "lucide-react"
 
 import { AddCardForm } from "@/components/cards/AddCardForm"
-import { CardFilters } from "@/components/cards/CardFilters"
-import { type CardRecord } from "@/components/cards/CardGrid"
-import { CardsEmptyState } from "@/components/cards/CardsEmptyState"
+import type { CardRecord } from "@/components/cards/CardGrid"
 import { AppShell } from "@/components/layout/AppShell"
 import { useCatalog } from "@/contexts/CatalogContext"
 import { getBankGradient } from "@/lib/bank-gradients"
 import { supabase } from "@/lib/supabase/client"
+import type { Database } from "@/types/database.types"
 
-function CatalogCardThumb({ card, selected, onClick }: { card: CardRecord; selected: boolean; onClick: () => void }) {
-  const gradient = getBankGradient(card.bank)
-  const isLight = card.bank === "CommBank"
-  const textColor = isLight ? "text-black/80" : "text-white"
-  const textMuted = isLight ? "text-black/50" : "text-white/60"
+type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
+type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
-  return (
-    <div className="group cursor-pointer" onClick={onClick}>
-      <div
-        className={`relative aspect-[1.586/1] w-full rounded-xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-primary/10 overflow-hidden${selected ? " ring-2 ring-primary" : ""}`}
-        style={{ background: gradient }}
-      >
-        <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
-        <div className={`flex justify-between items-start relative z-10 ${textColor}`}>
-          <div className="text-xs font-bold tracking-[0.2em] text-white/80">{card.bank}</div>
-          <Wifi className="h-4 w-4 rotate-90 opacity-40 text-white" />
-        </div>
-        <div className="flex justify-between items-end relative z-10">
-          <div className={`text-sm font-headline font-bold tracking-widest ${textColor}`}>{card.name}</div>
-          {card.welcome_bonus_points ? (
-            <div className={`text-[10px] tabular-nums ${textMuted}`}>
-              {card.welcome_bonus_points.toLocaleString()} {card.points_currency ?? "pts"}
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </div>
-  )
+// UserCard enriched with joined catalog card data
+type UserCardWithCatalog = UserCard & { card: CatalogCard | null }
+
+function getCardStatus(card: UserCard): "ACTIVE" | "BEHIND" | "CANCEL SOON" {
+  if (card.cancellation_date) {
+    const daysLeft = (new Date(card.cancellation_date).getTime() - Date.now()) / 86_400_000
+    if (daysLeft >= 0 && daysLeft <= 30) return "CANCEL SOON"
+  }
+  if (!card.bonus_earned && card.bonus_spend_deadline && card.application_date) {
+    const total = new Date(card.bonus_spend_deadline).getTime() - new Date(card.application_date).getTime()
+    const elapsed = Date.now() - new Date(card.application_date).getTime()
+    const expectedPct = total > 0 ? Math.min(100, (elapsed / total) * 100) : 0
+    // We don't know the target here without catalog, so just use deadline proximity
+    const daysLeft = (new Date(card.bonus_spend_deadline).getTime() - Date.now()) / 86_400_000
+    if (daysLeft < 14 && daysLeft >= 0) return "BEHIND"
+  }
+  return "ACTIVE"
+}
+
+function statusColor(status: string) {
+  if (status === "CANCEL SOON") return "text-error"
+  if (status === "BEHIND") return "text-yellow-400"
+  return "text-primary"
+}
+
+function statusDot(status: string) {
+  if (status === "CANCEL SOON") return "bg-error"
+  if (status === "BEHIND") return "bg-yellow-400"
+  return "bg-primary"
 }
 
 export default function CardsPage() {
-  const { catalogCards: allCards, loading: catalogLoading } = useCatalog()
-  const [cards, setCards] = useState<CardRecord[]>([])
+  const router = useRouter()
+  const { catalogCards } = useCatalog()
+  const [userCards, setUserCards] = useState<UserCardWithCatalog[]>([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState("")
-  const [bank, setBank] = useState<string | null>(null)
-  const [userCardCount, setUserCardCount] = useState<number | null>(null)
-  const [selectedCard, setSelectedCard] = useState<CardRecord | null>(null)
+  const [showAddForm, setShowAddForm] = useState(false)
+  const [selectedCard, setSelectedCard] = useState<UserCardWithCatalog | null>(null)
+  const [catalogMap, setCatalogMap] = useState<Map<string, CatalogCard>>(new Map())
 
   useEffect(() => {
-    const checkAuth = async () => {
+    if (catalogCards.length > 0) {
+      setCatalogMap(new Map(catalogCards.map((c) => [c.id, c])))
+    }
+  }, [catalogCards])
+
+  useEffect(() => {
+    const load = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession()
+
       if (!session) {
-        window.location.href = `/login?redirect=${encodeURIComponent("/cards")}`
+        router.replace(`/login?redirect=${encodeURIComponent("/cards")}`)
         return
       }
 
-      // Check if user has any tracked cards for empty state
-      const { count } = await supabase
+      const { data, error } = await supabase
         .from("user_cards")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", session.user.id)
-      setUserCardCount(count ?? 0)
+        .select(
+          "id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, bonus_earned_at, annual_fee, status, card_id, created_at, user_id, notes, approval_date, next_eligible_date, spend_updated_at, alert_enabled, bonus_earned_suggested, is_business, card:cards(id, name, bank, bonus_spend_requirement, welcome_bonus_points, points_currency, annual_fee)"
+        )
+        .order("created_at", { ascending: false })
+
+      if (error) {
+        toast.error(error.message || "Unable to load cards")
+        setLoading(false)
+        return
+      }
+
+      const rows = (data ?? []) as unknown as UserCardWithCatalog[]
+      setUserCards(rows)
+      if (rows.length > 0) {
+        setSelectedCard(rows[0])
+      }
       setLoading(false)
     }
-    checkAuth()
-  }, [])
+    load()
+  }, [router])
 
-  useEffect(() => {
-    // Map catalog cards to the CardRecord format
-    if (allCards.length > 0) {
-      const mapped = allCards.map(card => ({
-        id: card.id,
-        bank: card.bank,
-        name: card.name,
-        annual_fee: card.annual_fee,
-        welcome_bonus_points: card.welcome_bonus_points,
-        points_currency: card.points_currency,
-        min_income: card.min_income
-      }))
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setCards(mapped)
+  // Derived catalog card info — prefer joined card data, fall back to catalogMap
+  const getCatalogCard = (uc: UserCardWithCatalog) => uc.card ?? (uc.card_id ? catalogMap.get(uc.card_id) : undefined)
+
+  // Stats
+  const stats = useMemo(() => {
+    let totalLimit = 0
+    let totalSpend = 0
+    let totalPoints = 0
+    for (const uc of userCards) {
+      totalSpend += uc.current_spend ?? 0
+      const cc = getCatalogCard(uc)
+      if (cc?.welcome_bonus_points) totalPoints += cc.welcome_bonus_points
     }
-  }, [allCards])
+    return { totalLimit, totalSpend, totalPoints, count: userCards.length }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userCards, catalogMap])
 
-  const filtered = useMemo(() => {
-    return cards.filter((card) => {
-      const matchesBank = bank ? card.bank === bank : true
-      const matchesSearch =
-        !search ||
-        card.name.toLowerCase().includes(search.toLowerCase()) ||
-        card.bank.toLowerCase().includes(search.toLowerCase())
-      return matchesBank && matchesSearch
-    })
-  }, [cards, bank, search])
+  const activeCount = userCards.filter((c) => c.status === "active").length
 
-  const uniqueBanks = useMemo(
-    () => new Set(filtered.map((c) => c.bank)).size,
-    [filtered],
-  )
+  if (loading) {
+    return (
+      <AppShell>
+        <div className="space-y-5">
+          <div className="h-20 animate-pulse rounded-xl bg-surface-container" />
+          <div className="grid grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => <div key={i} className="h-24 animate-pulse rounded-xl bg-surface-container" />)}
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map((i) => <div key={i} className="h-40 animate-pulse rounded-xl bg-surface-container" />)}
+          </div>
+        </div>
+      </AppShell>
+    )
+  }
 
   return (
     <AppShell>
       {/* ── Header ── */}
-      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5 -mx-4 md:-mx-8 px-4 md:px-0">
-        <div className="flex items-center justify-between px-8 h-20 w-full max-w-[1440px] mx-auto">
+      <header className="sticky top-0 w-full z-40 bg-[#0f131f]/50 backdrop-blur-md border-b border-white/5 -mx-4 md:-mx-8 px-4 md:px-0 mb-8">
+        <div className="flex items-center justify-between px-4 md:px-8 h-20 w-full max-w-[1440px] mx-auto">
           <div>
             <h1 className="font-headline text-2xl font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent">
               Card Portfolio
             </h1>
             <p className="text-xs text-on-surface-variant font-medium">
-              {userCardCount !== null ? `${userCardCount} Active Lines of Credit` : "Card Catalog"}
+              {activeCount} Active Line{activeCount !== 1 ? "s" : ""} of Credit
             </p>
           </div>
+          <button
+            onClick={() => setShowAddForm((v) => !v)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-black shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
+            style={{ background: "var(--gradient-cta)" }}
+          >
+            <Plus className="h-4 w-4" />
+            {showAddForm ? "Cancel" : "Add Card"}
+          </button>
         </div>
       </header>
 
-      {/* ── Value-driven empty state when no cards tracked yet ── */}
-      {userCardCount === 0 && <CardsEmptyState />}
-
-      <AddCardForm cards={cards} onCreated={() => {
-        setUserCardCount((c) => (c ?? 0) + 1)
-        window.location.href = '/dashboard';
-      }} />
-
-      <CardFilters
-        cards={cards}
-        onFilter={({ search, bank }) => {
-          setSearch(search)
-          setBank(bank)
-        }}
-      />
-
-      {/* ── Mobile Layout (Stitch design) ── */}
-      {!loading && (
-        <div className="md:hidden space-y-8 pb-4">
-          {/* Page header */}
-          <div className="pt-2">
-            <h2 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface">
-              Card Portfolio
-            </h2>
-            <p className="text-on-surface-variant text-sm font-medium mt-1">
-              {cards.length} Cards Available
-              {filtered.length < cards.length ? ` • ${filtered.length} shown` : ""}
-            </p>
-          </div>
-
-          {/* Horizontal wallet carousel */}
-          <div className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory gap-6 -mx-4 px-4 pb-2">
-            {filtered.slice(0, 8).map((card) => {
-              const gradient = getBankGradient(card.bank)
-              const isLight = card.bank === "CommBank"
-              const textMuted = isLight ? "text-black/50" : "text-white/70"
-              const bonusPts = card.welcome_bonus_points ?? 0
-              const feeLabel = card.annual_fee != null ? `$${card.annual_fee.toLocaleString()} annual fee` : "No annual fee"
-
-              return (
-                <button
-                  key={card.id}
-                  className={`snap-center shrink-0 w-[310px] aspect-[1.58/1] rounded-xl relative overflow-hidden shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6)] p-6 flex flex-col justify-between text-left transition-all duration-200 ${
-                    selectedCard?.id === card.id ? "ring-2 ring-primary" : ""
-                  }`}
-                  style={{ background: gradient }}
-                  onClick={() => setSelectedCard(card)}
-                >
-                  <div className="absolute inset-0 bg-white/5 mix-blend-overlay pointer-events-none" />
-                  {/* Card top row */}
-                  <div className="relative z-10 flex justify-between items-start">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-white/80">
-                        {card.bank}
-                      </p>
-                      <p className="text-xs font-medium text-white/60 mt-0.5">{card.name}</p>
-                    </div>
-                    <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full uppercase tracking-tighter">
-                      Active
-                    </span>
-                  </div>
-                  {/* Card bottom row */}
-                  <div className="relative z-10 flex flex-col gap-2">
-                    <div className="flex justify-between items-end">
-                      <span className="text-2xl font-bold font-headline text-white tabular-nums">
-                        {bonusPts > 0 ? bonusPts.toLocaleString() : "—"}
-                      </span>
-                      {bonusPts > 0 && (
-                        <span className="text-[10px] font-bold text-primary">
-                          {card.points_currency ?? "pts"}
-                        </span>
-                      )}
-                    </div>
-                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-primary h-full" style={{ width: bonusPts > 0 ? "75%" : "0%" }} />
-                    </div>
-                    <p className={`text-[10px] ${textMuted}`}>{feeLabel}</p>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Selected card detail (if selected) */}
-          {selectedCard && (
-            <div className="bg-surface-container rounded-xl p-4 border border-white/5">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <p className="text-sm font-bold text-on-surface">{selectedCard.name}</p>
-                  <p className="text-xs text-on-surface-variant">{selectedCard.bank}</p>
-                </div>
-                <button
-                  className="text-[10px] text-on-surface-variant hover:text-on-surface"
-                  onClick={() => setSelectedCard(null)}
-                >
-                  ✕
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {selectedCard.welcome_bonus_points != null && (
-                  <div className="bg-surface-container-high rounded-lg p-3">
-                    <p className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Welcome Bonus</p>
-                    <p className="text-base font-bold text-primary tabular-nums mt-1">
-                      {selectedCard.welcome_bonus_points.toLocaleString()} {selectedCard.points_currency ?? "pts"}
-                    </p>
-                  </div>
-                )}
-                {selectedCard.annual_fee != null && (
-                  <div className="bg-surface-container-high rounded-lg p-3">
-                    <p className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">Annual Fee</p>
-                    <p className="text-base font-bold text-on-surface tabular-nums mt-1">
-                      ${selectedCard.annual_fee.toLocaleString()}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Next Rewards — top cards by bonus */}
-          <section>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-primary font-headline">
-                Top Bonuses
-              </h3>
-              <span className="text-[10px] font-semibold text-on-surface-variant">
-                {filtered.length} cards
-              </span>
-            </div>
-            <div className="space-y-3">
-              {filtered
-                .filter((c) => c.welcome_bonus_points != null)
-                .sort((a, b) => (b.welcome_bonus_points ?? 0) - (a.welcome_bonus_points ?? 0))
-                .slice(0, 3)
-                .map((card) => {
-                  const gradient = getBankGradient(card.bank)
-                  return (
-                    <button
-                      key={card.id}
-                      className="w-full bg-surface-container rounded-xl p-4 flex items-center justify-between text-left active:bg-surface-container-high transition-colors"
-                      onClick={() => setSelectedCard(card)}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                          style={{ background: gradient }}
-                        >
-                          {card.bank.slice(0, 2).toUpperCase()}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-on-surface">{card.name}</p>
-                          <p className="text-xs text-on-surface-variant">{card.bank}</p>
-                        </div>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <p className="text-xs font-bold text-primary">
-                          {(card.welcome_bonus_points ?? 0).toLocaleString()} pts
-                        </p>
-                        {card.annual_fee != null && (
-                          <p className="text-[10px] text-on-surface-variant">${card.annual_fee.toLocaleString()} fee</p>
-                        )}
-                      </div>
-                    </button>
-                  )
-                })}
-            </div>
-          </section>
-
-          {/* Insights Bento */}
-          <section>
-            <h3 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant font-headline mb-4">
-              Portfolio Insights
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-surface-container-low p-4 rounded-xl flex flex-col gap-3">
-                <p className="text-primary text-xl font-bold">↑</p>
-                <div>
-                  <p className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">
-                    Highest Bonus
-                  </p>
-                  <p className="text-lg font-bold text-on-surface tabular-nums">
-                    {filtered.length > 0
-                      ? `${Math.round(Math.max(...filtered.map((c) => c.welcome_bonus_points ?? 0)) / 1000)}k pts`
-                      : "—"}
-                  </p>
-                </div>
-              </div>
-              <div className="bg-surface-container-low p-4 rounded-xl flex flex-col gap-3">
-                <p className="text-on-surface-variant text-xl font-bold">$</p>
-                <div>
-                  <p className="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider">
-                    Banks Available
-                  </p>
-                  <p className="text-lg font-bold text-on-surface">{uniqueBanks}</p>
-                </div>
-              </div>
-            </div>
-          </section>
+      {/* ── Add Card Form ── */}
+      {showAddForm && (
+        <div className="mb-8">
+          <AddCardForm
+            cards={catalogCards.map((c) => ({
+              id: c.id,
+              bank: c.bank,
+              name: c.name,
+              annual_fee: c.annual_fee,
+              welcome_bonus_points: c.welcome_bonus_points,
+              points_currency: c.points_currency,
+              min_income: c.min_income,
+            }))}
+            onCreated={() => {
+              setShowAddForm(false)
+              // Reload user cards
+              supabase
+                .from("user_cards")
+                .select(
+                  "id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, bonus_earned_at, annual_fee, status, card_id, created_at, user_id, notes, approval_date, next_eligible_date, spend_updated_at, alert_enabled, bonus_earned_suggested, is_business, card:cards(id, name, bank, bonus_spend_requirement, welcome_bonus_points, points_currency, annual_fee)"
+                )
+                .order("created_at", { ascending: false })
+                .then(({ data }) => {
+                  if (data) {
+                    const rows = data as unknown as UserCardWithCatalog[]
+                    setUserCards(rows)
+                    if (rows.length > 0) setSelectedCard(rows[0])
+                  }
+                })
+            }}
+          />
         </div>
       )}
 
-      {/* ── Desktop: Stitch xl:col-span-8/4 grid ── */}
-      <div className="hidden md:block">
-        {loading ? (
-          <div className="space-y-5">
-            <div className="h-14 animate-pulse rounded-xl bg-surface-container" />
-            <div className="h-48 animate-pulse rounded-xl bg-surface-container" />
+      {/* ── Empty state ── */}
+      {userCards.length === 0 && !showAddForm && (
+        <div className="flex flex-col items-center justify-center py-20 text-center gap-6">
+          <div className="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center">
+            <CreditCard className="h-10 w-10 text-on-surface-variant" />
           </div>
-        ) : (
-          <div className="p-8 flex-1 grid grid-cols-1 xl:grid-cols-12 gap-8 max-w-[1440px] mx-auto w-full -mx-8">
-            {/* Left col: xl:col-span-8 */}
-            <div className="xl:col-span-8 space-y-10">
-              {/* Stats row */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
-                  <div className="relative z-10">
-                    <div className="text-on-surface-variant text-xs font-semibold uppercase tracking-widest mb-2">Total Cards</div>
-                    <div className="text-3xl font-headline font-bold tabular-nums text-on-surface">{cards.length}</div>
-                  </div>
-                </div>
-                <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
-                  <div className="relative z-10">
-                    <div className="text-on-surface-variant text-xs font-semibold uppercase tracking-widest mb-2">Showing</div>
-                    <div className="text-3xl font-headline font-bold tabular-nums text-primary">{filtered.length}</div>
-                  </div>
-                </div>
-                <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
-                  <div className="relative z-10">
-                    <div className="text-on-surface-variant text-xs font-semibold uppercase tracking-widest mb-2">Banks</div>
-                    <div className="text-3xl font-headline font-bold tabular-nums text-on-surface">{uniqueBanks}</div>
-                  </div>
+          <div>
+            <h2 className="text-xl font-bold text-on-surface mb-2">Add your first card</h2>
+            <p className="text-on-surface-variant text-sm max-w-sm">
+              Track your credit cards, monitor bonus spend progress, and see your points portfolio at a glance.
+            </p>
+          </div>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="px-6 py-3 rounded-full font-bold text-sm text-black shadow-lg shadow-primary/20"
+            style={{ background: "var(--gradient-cta)" }}
+          >
+            + Add your first card
+          </button>
+        </div>
+      )}
+
+      {/* ── Main portfolio grid ── */}
+      {userCards.length > 0 && (
+        <>
+          {/* Stats bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
+              <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <CreditCard className="h-24 w-24" />
+              </div>
+              <div className="relative z-10">
+                <div className="text-on-surface-variant text-xs font-semibold uppercase tracking-widest mb-2">Total Cards</div>
+                <div className="text-3xl font-headline font-bold tabular-nums text-on-surface">{userCards.length}</div>
+              </div>
+            </div>
+            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
+              <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-primary">
+                <span className="text-8xl font-bold">$</span>
+              </div>
+              <div className="relative z-10">
+                <div className="text-on-surface-variant text-xs font-semibold uppercase tracking-widest mb-2">Monthly Spend</div>
+                <div className="text-3xl font-headline font-bold tabular-nums text-primary">
+                  ${stats.totalSpend.toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </div>
               </div>
+            </div>
+            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
+              <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-tertiary">
+                <span className="text-8xl font-bold">✦</span>
+              </div>
+              <div className="relative z-10">
+                <div className="text-on-surface-variant text-xs font-semibold uppercase tracking-widest mb-2">Points Potential</div>
+                <div className="text-3xl font-headline font-bold tabular-nums text-tertiary">
+                  {stats.totalPoints >= 1000 ? `${(stats.totalPoints / 1000).toFixed(0)}k` : stats.totalPoints.toLocaleString()}
+                </div>
+              </div>
+            </div>
+          </div>
 
-              {/* Cards bento grid */}
+          {/* xl: two-column grid layout */}
+          <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            {/* Left: card grid xl:col-span-8 */}
+            <div className="xl:col-span-8">
               <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-6">
-                {filtered.map((card) => (
-                  <CatalogCardThumb
-                    key={card.id}
-                    card={card}
-                    selected={selectedCard?.id === card.id}
-                    onClick={() => setSelectedCard(card)}
-                  />
-                ))}
+                {userCards.map((uc) => {
+                  const cc = getCatalogCard(uc)
+                  const gradient = getBankGradient(uc.bank ?? "")
+                  const isLight = uc.bank === "CommBank"
+                  const textColor = isLight ? "rgba(0,0,0,0.9)" : "white"
+                  const textMuted = isLight ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.6)"
+                  const spendTarget = cc?.bonus_spend_requirement ?? 0
+                  const currentSpend = uc.current_spend ?? 0
+                  const pct = spendTarget > 0 ? Math.min(100, Math.round((currentSpend / spendTarget) * 100)) : 0
+                  const hasBonus = spendTarget > 0 && !uc.bonus_earned
+                  const cardStatus = getCardStatus(uc)
+                  const isSelected = selectedCard?.id === uc.id
+
+                  return (
+                    <div
+                      key={uc.id}
+                      className={`group cursor-pointer${isSelected ? " ring-2 ring-primary rounded-xl" : ""}`}
+                      onClick={() => setSelectedCard(uc)}
+                    >
+                      {/* Card artwork tile */}
+                      <div
+                        className="relative w-full rounded-xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-primary/10 overflow-hidden"
+                        style={{ background: gradient, aspectRatio: "1.586/1" }}
+                      >
+                        <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
+                        <div className="flex justify-between items-start relative z-10">
+                          <div className="text-xs font-bold tracking-[0.2em]" style={{ color: textMuted }}>
+                            {(uc.bank ?? "").toUpperCase()}
+                          </div>
+                          <span style={{ color: textMuted, fontSize: "1rem" }}>◎</span>
+                        </div>
+                        <div className="flex justify-between items-end relative z-10">
+                          <div className="text-sm font-headline font-bold tracking-widest" style={{ color: textColor }}>
+                            •••• •••• •••• ––––
+                          </div>
+                          <div className="text-[10px] font-bold italic" style={{ color: textColor }}>
+                            {uc.bank}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Card meta row below artwork */}
+                      <div className="mt-4 px-2 flex justify-between items-start">
+                        <div>
+                          <h3 className="text-sm font-bold text-on-surface">{uc.bank} {uc.name}</h3>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className={`w-2 h-2 rounded-full ${statusDot(cardStatus)}`} />
+                            <span className={`text-[10px] font-semibold uppercase ${statusColor(cardStatus)}`}>
+                              {uc.bonus_earned ? "Bonus Earned" : cardStatus}
+                            </span>
+                          </div>
+                        </div>
+                        {hasBonus && (
+                          <div className="text-right">
+                            <div className="text-xs font-bold text-primary tabular-nums">
+                              ${currentSpend.toLocaleString()} / ${spendTarget.toLocaleString()}
+                            </div>
+                            <div className="w-24 h-1 bg-surface-container-highest rounded-full mt-1 overflow-hidden">
+                              <div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} />
+                            </div>
+                          </div>
+                        )}
+                        {uc.bonus_earned && cc?.welcome_bonus_points && (
+                          <div className="text-right">
+                            <div className="text-xs font-bold text-primary tabular-nums">
+                              {(cc.welcome_bonus_points / 1000).toFixed(0)}k pts
+                            </div>
+                            <div className="text-[10px] text-on-surface-variant">Earned</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {/* Add another card */}
+                <div
+                  className="border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center justify-center p-8 cursor-pointer hover:bg-white/[0.02] transition-colors group"
+                  style={{ aspectRatio: "1.586/1" }}
+                  onClick={() => setShowAddForm(true)}
+                >
+                  <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <Plus className="h-5 w-5 text-on-surface-variant" />
+                  </div>
+                  <span className="text-sm font-bold text-on-surface-variant">Add Another Card</span>
+                </div>
               </div>
             </div>
 
-            {/* Right col: xl:col-span-4 detail panel */}
+            {/* Right: detail panel xl:col-span-4 */}
             <aside className="xl:col-span-4 space-y-8">
               <section className="bg-surface-container rounded-lg p-8 border border-white/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[80px] rounded-full" />
-                <h2 className="font-headline text-lg font-bold mb-6 flex items-center gap-2">Card Details</h2>
+                <h2 className="font-headline text-lg font-bold mb-6 flex items-center gap-2 text-on-surface">
+                  <CreditCard className="h-5 w-5 text-primary" />
+                  Card Details
+                </h2>
+
                 {selectedCard ? (
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                      <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Bank</span>
-                      <span className="text-sm font-bold">{selectedCard.bank}</span>
+                  <div className="space-y-5">
+                    {/* Card preview mini */}
+                    <div
+                      className="w-full rounded-xl p-5 relative overflow-hidden"
+                      style={{ background: getBankGradient(selectedCard.bank ?? ""), aspectRatio: "1.586/1" }}
+                    >
+                      <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
+                      <div className="relative z-10 flex justify-between items-start">
+                        <span className="text-xs font-bold text-white/80 tracking-widest uppercase">{selectedCard.bank}</span>
+                        <span className="text-white/40">◎</span>
+                      </div>
+                      <div className="relative z-10 absolute bottom-5 left-5 right-5">
+                        <div className="text-sm font-bold text-white tracking-widest">•••• •••• •••• ––––</div>
+                        <div className="text-[10px] text-white/60 mt-1 uppercase tracking-wider">
+                          {selectedCard.bank} {selectedCard.name}
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                      <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Card</span>
-                      <span className="text-sm font-bold">{selectedCard.name}</span>
+
+                    <div className="space-y-4">
+                      {selectedCard.annual_fee != null && (
+                        <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                          <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Annual Fee</span>
+                          <span className="text-sm font-bold tabular-nums text-on-surface">${selectedCard.annual_fee.toLocaleString()}</span>
+                        </div>
+                      )}
+                      {selectedCard.application_date && (
+                        <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                          <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Applied</span>
+                          <span className="text-sm font-bold tabular-nums text-on-surface">
+                            {new Date(selectedCard.application_date).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}
+                          </span>
+                        </div>
+                      )}
+                      {selectedCard.bonus_spend_deadline && (
+                        <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                          <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Bonus Deadline</span>
+                          <span className="text-sm font-bold tabular-nums text-on-surface">
+                            {new Date(selectedCard.bonus_spend_deadline).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}
+                          </span>
+                        </div>
+                      )}
+                      {selectedCard.cancellation_date && (
+                        <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                          <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Cancel By</span>
+                          <span className="text-sm font-bold tabular-nums text-error">
+                            {new Date(selectedCard.cancellation_date).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}
+                          </span>
+                        </div>
+                      )}
+                      {selectedCard.status && (
+                        <div className="flex justify-between items-center pb-2">
+                          <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Status</span>
+                          <span className="text-sm font-bold capitalize text-on-surface">{selectedCard.status}</span>
+                        </div>
+                      )}
                     </div>
-                    {selectedCard.annual_fee != null && (
-                      <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                        <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Annual Fee</span>
-                        <span className="text-sm font-bold tabular-nums">${selectedCard.annual_fee.toLocaleString()}</span>
-                      </div>
-                    )}
-                    {selectedCard.welcome_bonus_points != null && (
-                      <div className="flex justify-between items-center border-b border-white/5 pb-4">
-                        <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Welcome Bonus</span>
-                        <span className="text-sm font-bold text-primary tabular-nums">
-                          {selectedCard.welcome_bonus_points.toLocaleString()} {selectedCard.points_currency ?? "pts"}
-                        </span>
-                      </div>
-                    )}
-                    {selectedCard.min_income != null && (
-                      <div className="flex justify-between items-center pb-4">
-                        <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Min Income</span>
-                        <span className="text-sm font-bold tabular-nums">${selectedCard.min_income.toLocaleString()}</span>
-                      </div>
-                    )}
+
+                    {/* Bonus progress */}
+                    {(() => {
+                      const cc = getCatalogCard(selectedCard)
+                      const target = cc?.bonus_spend_requirement ?? 0
+                      const current = selectedCard.current_spend ?? 0
+                      const bonusPts = cc?.welcome_bonus_points ?? 0
+                      const pct = target > 0 ? Math.min(100, Math.round((current / target) * 100)) : 0
+                      const daysLeft = selectedCard.bonus_spend_deadline
+                        ? Math.max(0, Math.ceil((new Date(selectedCard.bonus_spend_deadline).getTime() - Date.now()) / 86400000))
+                        : null
+
+                      if (!selectedCard.bonus_earned && target > 0) {
+                        return (
+                          <div className="bg-surface-container-low p-4 rounded-xl border border-white/5 mt-4">
+                            <div className="text-xs font-bold mb-3 flex items-center gap-2 text-on-surface">
+                              ✦ Bonus Progress
+                            </div>
+                            <div className="flex justify-between text-[10px] text-on-surface-variant mb-2 uppercase tracking-tighter">
+                              <span>${current.toLocaleString()} Spent</span>
+                              <span>${target.toLocaleString()} Target</span>
+                            </div>
+                            <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full"
+                                style={{ width: `${pct}%`, background: "linear-gradient(to right, var(--primary-container), var(--primary))" }}
+                              />
+                            </div>
+                            {daysLeft !== null && bonusPts > 0 && (
+                              <div className="mt-3 text-[10px] text-center text-on-surface-variant italic">
+                                Spend ${(target - current).toLocaleString()} more by {daysLeft}d to unlock {(bonusPts / 1000).toFixed(0)}k points
+                              </div>
+                            )}
+                          </div>
+                        )
+                      }
+
+                      if (selectedCard.bonus_earned && bonusPts > 0) {
+                        return (
+                          <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl mt-4 text-center">
+                            <div className="text-primary font-bold text-sm">
+                              {(bonusPts / 1000).toFixed(0)}k bonus points earned!
+                            </div>
+                          </div>
+                        )
+                      }
+
+                      return null
+                    })()}
                   </div>
                 ) : (
-                  <p className="text-sm text-on-surface-variant mt-4">Select a card to view details</p>
+                  <p className="text-sm text-on-surface-variant">Select a card to view details</p>
                 )}
               </section>
+
+              {/* Browse catalog link */}
+              <div className="text-center">
+                <Link
+                  href="/cards/catalog"
+                  className="text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors uppercase tracking-widest"
+                >
+                  Browse Card Catalog →
+                </Link>
+              </div>
             </aside>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </AppShell>
   )
 }

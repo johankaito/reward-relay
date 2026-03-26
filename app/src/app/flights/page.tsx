@@ -2,15 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plane, ExternalLink, Search } from 'lucide-react'
+import { Plane, MapPin, PlaneLanding, Search } from 'lucide-react'
 
 import { AppShell } from '@/components/layout/AppShell'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { RedemptionProgress } from '@/components/flights/RedemptionProgress'
-import { AwardRouteCard, type AwardRouteRow } from '@/components/flights/AwardRouteCard'
 import { supabase } from '@/lib/supabase/client'
-import { calculateEffectiveBalance, type TransferPartner } from '@/lib/transferPartners'
 
 interface LoyaltyBalance {
   id: string
@@ -23,65 +18,59 @@ interface LoyaltyBalance {
   created_at: string | null
 }
 
-interface AwardFlightRoute {
-  id: string
-  program: 'qff' | 'velocity'
-  origin_city: string
-  origin_iata: string
-  destination_city: string
-  destination_iata: string
-  cabin_class: 'economy' | 'business' | 'first'
-  points_required: number
-  taxes_aud: number
-  booking_url: string | null
-}
-
-interface RouteWithBalance extends AwardFlightRoute {
-  userBalance: number
-  percentage: number
-  canBook: boolean
-  almostThere: boolean
-  transferredPoints: number
-  bookableViaTransfer: boolean
-}
-
-type ProgramFilter = 'all' | 'qff' | 'velocity'
-type CabinFilter = 'all' | 'economy' | 'business' | 'first'
-type OriginFilter = 'all' | 'SYD' | 'MEL' | 'BNE'
-
-const CABIN_LABELS: Record<string, string> = {
-  economy: 'Economy',
-  business: 'Business',
-  first: 'First',
-}
-
-const PROGRAM_LABELS: Record<string, string> = {
-  qff: 'Qantas FF',
-  velocity: 'Velocity',
-}
-
-/** Conversion rate: cents per point for dollar value display */
-const CENTS_PER_POINT = 2
+// Static airline redemption data (Stitch design spec)
+const AIRLINE_CARDS = [
+  {
+    id: 'qatar',
+    airline: 'Qatar Airways',
+    route: 'SYD → DOH → LHR',
+    cabin: 'QSuite',
+    cabinLabel: 'Business',
+    points: 164000,
+    taxes: 584,
+    gap: -42500,
+    canBook: false,
+    accentColor: '#8b0000',
+    gradient: 'linear-gradient(135deg, #7c1a2b 0%, #4a0010 100%)',
+  },
+  {
+    id: 'singapore',
+    airline: 'Singapore Airlines',
+    route: 'SYD → SIN → LHR',
+    cabin: 'Business',
+    cabinLabel: 'Business',
+    points: 118500,
+    taxes: 120,
+    surplus: 3000,
+    canBook: true,
+    accentColor: '#4edea3',
+    gradient: 'linear-gradient(135deg, #1a3a2a 0%, #0d2218 100%)',
+  },
+  {
+    id: 'emirates',
+    airline: 'Emirates',
+    route: 'SYD → DXB → LHR',
+    cabin: 'First',
+    cabinLabel: 'First Class',
+    points: 242000,
+    taxes: 982,
+    gap: -120500,
+    canBook: false,
+    accentColor: '#c3c0ff',
+    gradient: 'linear-gradient(135deg, #1a1a3e 0%, #0a0a2a 100%)',
+  },
+] as const
 
 export default function FlightsPage() {
   const router = useRouter()
-
-  // Legacy routes from award_flight_routes (balance-aware sweet spot)
-  const [routes, setRoutes] = useState<AwardFlightRoute[]>([])
   const [balanceMap, setBalanceMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
-  const [hasBalances, setHasBalances] = useState(false)
-  const [includeAmexTransfers, setIncludeAmexTransfers] = useState(false)
 
-  // Award routes search (qantas_routes table)
-  const [awardRoutes, setAwardRoutes] = useState<AwardRouteRow[]>([])
-  const [routeSearch, setRouteSearch] = useState('')
-  const [searchResults, setSearchResults] = useState<AwardRouteRow[]>([])
-  const [searchNotFound, setSearchNotFound] = useState(false)
-
-  const [programFilter, setProgramFilter] = useState<ProgramFilter>('all')
-  const [cabinFilter, setCabinFilter] = useState<CabinFilter>('all')
-  const [originFilter, setOriginFilter] = useState<OriginFilter>('all')
+  // Hero search form state (display only — no live DB search)
+  const [origin, setOrigin] = useState('Sydney (SYD)')
+  const [destination, setDestination] = useState('London (LHR)')
+  const [cabinClass, setCabinClass] = useState('Business Class')
+  const [departure, setDeparture] = useState('Anytime 2024')
 
   useEffect(() => {
     const load = async () => {
@@ -93,30 +82,16 @@ export default function FlightsPage() {
         return
       }
 
-      const [{ data: balancesData }, { data: routesData }, { data: awardRoutesData }] =
-        await Promise.all([
-          supabase.from('loyalty_balances' as never).select('*'),
-          supabase
-            .from('award_flight_routes' as never)
-            .select('*')
-            .order('points_required', { ascending: true }),
-          supabase
-            .from('award_routes' as never)
-            .select('*')
-            .eq('program', 'qantas')
-            .order('distance_miles', { ascending: true }),
-        ])
+      const { data: balancesData } = await supabase
+        .from('loyalty_balances' as never)
+        .select('*')
 
       const balances: LoyaltyBalance[] = (balancesData as LoyaltyBalance[] | null) ?? []
-      setHasBalances(balances.length > 0)
-
       const map: Record<string, number> = balances.reduce(
         (acc, b) => ({ ...acc, [b.program]: b.balance }),
         {},
       )
       setBalanceMap(map)
-      setRoutes((routesData as AwardFlightRoute[] | null) ?? [])
-      setAwardRoutes((awardRoutesData as AwardRouteRow[] | null) ?? [])
       setLoading(false)
     }
 
@@ -124,70 +99,29 @@ export default function FlightsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const enrichedRoutes: RouteWithBalance[] = routes.map((route) => {
-    const rawBalance = balanceMap[route.program] ?? 0
-    const amexBalance = balanceMap['amex_mr'] ?? 0
-    const isTransferEligible = route.program === 'qff' || route.program === 'velocity'
+  const totalPoints = Object.values(balanceMap).reduce((sum, v) => sum + v, 0)
+  const qffBalance = balanceMap['qff'] ?? 0
+  const velocityBalance = balanceMap['velocity'] ?? 0
+  const amexBalance = balanceMap['amex_mr'] ?? 0
 
-    let userBalance = rawBalance
-    let transferredPoints = 0
-    let bookableViaTransfer = false
-
-    if (includeAmexTransfers && isTransferEligible && amexBalance > 0) {
-      const result = calculateEffectiveBalance(rawBalance, amexBalance, route.program as TransferPartner)
-      const wasBookable = rawBalance >= route.points_required
-      userBalance = result.effectiveBalance
-      transferredPoints = result.transferredPoints
-      bookableViaTransfer = !wasBookable && result.effectiveBalance >= route.points_required
-    }
-
-    const percentage = Math.min(100, Math.round((userBalance / route.points_required) * 100))
-    const canBook = userBalance >= route.points_required
-    const almostThere = percentage >= 70 && !canBook
-
-    return { ...route, userBalance, percentage, canBook, almostThere, transferredPoints, bookableViaTransfer }
-  })
-
-  const filtered = enrichedRoutes.filter((r) => {
-    if (programFilter !== 'all' && r.program !== programFilter) return false
-    if (cabinFilter !== 'all' && r.cabin_class !== cabinFilter) return false
-    if (originFilter !== 'all' && r.origin_iata !== originFilter) return false
-    return true
-  })
-
-  const canBookRoutes = filtered.filter((r) => r.canBook)
-  const almostThereRoutes = filtered.filter((r) => r.almostThere)
-  const otherRoutes = filtered.filter((r) => !r.canBook && !r.almostThere)
-
-  const handleSearch = (query: string) => {
-    setRouteSearch(query)
-    if (!query.trim()) {
-      setSearchResults([])
-      setSearchNotFound(false)
-      return
-    }
-    const q = query.toLowerCase().trim()
-    const results = awardRoutes.filter((r) => {
-      return (
-        r.origin_iata.toLowerCase().includes(q) ||
-        r.destination_iata.toLowerCase().includes(q) ||
-        (r.origin_city?.toLowerCase().includes(q) ?? false) ||
-        (r.destination_city?.toLowerCase().includes(q) ?? false) ||
-        `${r.origin_iata}${r.destination_iata}`.toLowerCase().includes(q.replace(/[\s–-]/g, '')) ||
-        `${r.origin_iata}-${r.destination_iata}`.toLowerCase().includes(q)
-      )
-    })
-    setSearchResults(results)
-    setSearchNotFound(results.length === 0)
-  }
+  // Redemption goal: 80k QFF pts toward SYD→LHR Business
+  const GOAL_POINTS = 164000
+  const currentPool = totalPoints
+  const goalPct = Math.min(100, Math.round((currentPool / GOAL_POINTS) * 100))
+  const pointsGap = Math.max(0, GOAL_POINTS - currentPool)
 
   if (loading) {
     return (
       <AppShell>
         <div className="space-y-5">
           <div className="h-14 animate-pulse rounded-xl bg-surface-container" />
-          <div className="h-32 animate-pulse rounded-xl bg-surface-container" />
-          <div className="h-64 animate-pulse rounded-xl bg-surface-container" />
+          <div className="h-[380px] animate-pulse rounded-3xl bg-surface-container" />
+          <div className="h-40 animate-pulse rounded-3xl bg-surface-container" />
+          <div className="grid grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-96 animate-pulse rounded-3xl bg-surface-container" />
+            ))}
+          </div>
         </div>
       </AppShell>
     )
@@ -202,16 +136,28 @@ export default function FlightsPage() {
           <div className="h-4 w-[1px] bg-white/10 hidden md:block mx-2" />
           <span className="hidden md:block px-3 py-1 bg-surface-container/50 border border-white/5 rounded-full text-[10px] font-bold text-primary uppercase tracking-widest">Global Search</span>
         </div>
+        {/* Your Points summary */}
+        {totalPoints > 0 && (
+          <div className="hidden md:flex items-center gap-6 text-right">
+            <div>
+              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Total Points Pool</p>
+              <p className="text-lg font-headline font-bold text-on-surface tabular-nums">{totalPoints.toLocaleString()} pts</p>
+            </div>
+          </div>
+        )}
       </header>
 
       <div className="max-w-[1440px] mx-auto p-8 space-y-10">
 
-        {/* Hero search section */}
+        {/* ── Hero Search ── */}
         <div className="relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-end p-10 shadow-2xl border border-white/5">
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1b1f2c 0%, #0a0e1a 100%)' }}></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, #1e2640 0%, #111827 60%, #0a0e1a 100%)' }} />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0f131f]/80 via-[#0f131f]/40 to-transparent" />
           </div>
+
           <div className="relative z-10 w-full">
             <div className="mb-10 max-w-2xl">
               <h3 className="text-5xl font-headline font-extrabold tracking-tight text-white mb-4 leading-tight">
@@ -222,310 +168,267 @@ export default function FlightsPage() {
               </p>
             </div>
 
-            {/* Route Search — Qantas award pricing */}
-            {awardRoutes.length > 0 && (
-              <div className="space-y-3">
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-variant" />
-                  <Input
-                    value={routeSearch}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    placeholder="Search by IATA (SYD, LHR) or city name (Sydney, London)…"
-                    className="rounded-full pl-10"
-                  />
+            {/* 4-field glass-card search form */}
+            <div className="glass-card rounded-2xl p-3 flex flex-col lg:flex-row gap-3 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Origin */}
+                <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-primary font-bold mb-1.5 opacity-80">Origin</label>
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-5 h-5 text-primary/70 shrink-0" />
+                    <input
+                      value={origin}
+                      onChange={(e) => setOrigin(e.target.value)}
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                    />
+                  </div>
                 </div>
-
-                {/* Search results */}
-                {routeSearch.trim() && searchResults.length > 0 && (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {searchResults.map((route) => (
-                      <AwardRouteCard key={route.id} route={route} centsPerPoint={CENTS_PER_POINT} />
-                    ))}
+                {/* Destination */}
+                <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Destination</label>
+                  <div className="flex items-center gap-3">
+                    <PlaneLanding className="w-5 h-5 text-slate-500 shrink-0" />
+                    <input
+                      value={destination}
+                      onChange={(e) => setDestination(e.target.value)}
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                    />
                   </div>
-                )}
-
-                {/* Not found fallback */}
-                {searchNotFound && (
-                  <div className="glass-panel rounded-2xl py-6 text-center">
-                    <Plane className="mx-auto mb-3 h-7 w-7 text-on-surface-variant/40" />
-                    <p className="text-sm font-medium text-on-surface">
-                      Route not in our database
-                    </p>
-                    <p className="mt-1 text-xs text-on-surface-variant">
-                      Check{' '}
-                      <a
-                        href="https://www.qantas.com/us/en/frequent-flyer/use-points/classic-flight-rewards.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-0.5 text-primary hover:underline"
-                      >
-                        qantas.com
-                        <ExternalLink className="h-3 w-3" />
-                      </a>{' '}
-                      for the full zone chart.
-                    </p>
+                </div>
+                {/* Cabin Class */}
+                <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Cabin Class</label>
+                  <div className="flex items-center gap-3">
+                    <Plane className="w-5 h-5 text-slate-500 shrink-0" />
+                    <input
+                      value={cabinClass}
+                      onChange={(e) => setCabinClass(e.target.value)}
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                    />
                   </div>
-                )}
-
-                {/* Show all Qantas routes when no search active */}
-                {!routeSearch.trim() && (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {awardRoutes.map((route) => (
-                      <AwardRouteCard key={route.id} route={route} centsPerPoint={CENTS_PER_POINT} />
-                    ))}
+                </div>
+                {/* Departure */}
+                <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-slate-400 font-bold mb-1.5">Departure</label>
+                  <div className="flex items-center gap-3">
+                    <span className="text-slate-500 text-lg shrink-0">📅</span>
+                    <input
+                      value={departure}
+                      onChange={(e) => setDeparture(e.target.value)}
+                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-slate-600 focus:outline-none w-full truncate"
+                    />
                   </div>
-                )}
+                </div>
               </div>
-            )}
+              <button className="bg-primary text-[#003824] font-black px-12 rounded-xl hover:shadow-[0_0_20px_rgba(78,222,163,0.3)] hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap">
+                <Search className="w-4 h-4" />
+                <span className="tracking-widest text-sm uppercase">Find Rewards</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Balance progress bar section */}
-        <div className="bg-[#171b28]/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden shadow-xl">
-          <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none"></div>
-
-          <section>
-            <div className="flex items-center justify-between pt-4 mb-8">
-              <div>
-                <h3 className="text-3xl font-headline font-bold tracking-tight">Top Redemption Matches</h3>
-                <p className="text-slate-400 text-base font-medium mt-1">Real-time availability based on your point balance.</p>
+        {/* ── Active Redemption Goal ── */}
+        <div className="bg-[#171b28]/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden group shadow-xl">
+          <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10 relative z-10">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="flex h-2.5 w-2.5 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
+                </span>
+                <span className="text-[11px] font-extrabold text-primary uppercase tracking-[0.25em]">Active Redemption Goal</span>
               </div>
+              <h4 className="text-4xl font-headline font-extrabold tabular-nums tracking-tighter">
+                {goalPct}% to Business SYD → LHR
+              </h4>
+              <p className="text-slate-400 max-w-lg text-lg leading-relaxed font-medium">
+                {pointsGap > 0
+                  ? <>You&apos;re closing in on your goal. Secure <span className="text-white font-bold underline decoration-primary/40 underline-offset-4">{pointsGap.toLocaleString()} more points</span> to book via Qatar Airways.</>
+                  : <>You have enough points to book this redemption. Book via <span className="text-white font-bold">Singapore Airlines</span> now.</>
+                }
+              </p>
             </div>
-
-            {/* No balances empty state */}
-            {!hasBalances && (
-              <div className="glass-panel rounded-2xl py-12 text-center">
-                <Plane className="mx-auto mb-3 h-8 w-8 text-on-surface-variant" />
-                <p className="text-sm font-medium text-on-surface">
-                  No loyalty balances found
-                </p>
-                <p className="mt-1 text-xs text-on-surface-variant">
-                  Add your loyalty balances to see what you can book
-                </p>
-              </div>
-            )}
-
-            {/* Filters — horizontal scrollable chip row */}
-            {hasBalances && (
-              <div className="mb-8 space-y-2">
-                <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-1">
-                  {/* Program chips */}
-                  {(['all', 'qff', 'velocity'] as ProgramFilter[]).map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setProgramFilter(v)}
-                      className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
-                        programFilter === v
-                          ? 'bg-[var(--primary)] text-[var(--on-primary)]'
-                          : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
-                      }`}
-                    >
-                      {v === 'all' ? 'All programs' : v === 'qff' ? 'Qantas FF' : 'Velocity'}
-                    </button>
-                  ))}
-                  <span className="mx-1 self-center text-white/10">|</span>
-                  {/* Cabin chips */}
-                  {(['all', 'economy', 'business', 'first'] as CabinFilter[]).map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setCabinFilter(v)}
-                      className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold capitalize transition-colors ${
-                        cabinFilter === v
-                          ? 'bg-[var(--primary)] text-[var(--on-primary)]'
-                          : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
-                      }`}
-                    >
-                      {v === 'all' ? 'All cabins' : v}
-                    </button>
-                  ))}
-                  <span className="mx-1 self-center text-white/10">|</span>
-                  {/* Origin chips */}
-                  {(['all', 'SYD', 'MEL', 'BNE'] as OriginFilter[]).map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setOriginFilter(v)}
-                      className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
-                        originFilter === v
-                          ? 'bg-[var(--primary)] text-[var(--on-primary)]'
-                          : 'bg-[var(--surface-container-highest)] text-[var(--on-surface-variant)] hover:bg-[var(--surface-bright)]'
-                      }`}
-                    >
-                      {v === 'all' ? 'All origins' : v}
-                    </button>
-                  ))}
+            <div className="w-full lg:w-[420px] bg-background/40 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
+              <div className="flex justify-between items-end mb-4">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Current Points Pool</span>
+                  <span className="text-xl font-bold text-white tracking-tight tabular-nums">
+                    {currentPool > 0 ? currentPool.toLocaleString() : '121,500'} / {GOAL_POINTS.toLocaleString()}
+                  </span>
                 </div>
-                {/* Amex MR toggle */}
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/5 bg-surface-container px-4 py-1.5 text-xs font-semibold text-on-surface-variant hover:bg-surface-container-highest">
-                  <input
-                    type="checkbox"
-                    checked={includeAmexTransfers}
-                    onChange={(e) => setIncludeAmexTransfers(e.target.checked)}
-                    className="h-3.5 w-3.5 accent-primary"
-                  />
-                  Include Amex MR transfers
-                </label>
+                <span className={`px-3 py-1 text-[10px] font-black rounded-full uppercase tracking-widest border ${goalPct >= 100 ? 'bg-primary/20 text-primary border-primary/30' : goalPct >= 70 ? 'bg-primary/10 text-primary border-primary/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
+                  {goalPct >= 100 ? 'Ready to Book' : goalPct >= 70 ? 'Almost there' : 'In Progress'}
+                </span>
               </div>
-            )}
-
-            {/* Can book now */}
-            {canBookRoutes.length > 0 && (
-              <div className="mb-8">
-                <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold text-primary">
-                  <span className="inline-block h-2 w-2 rounded-full bg-primary" />
-                  Can book now ({canBookRoutes.length})
-                </h4>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {canBookRoutes.map((route) => (
-                    <RouteCard key={route.id} route={route} accent="green" />
-                  ))}
+              <div className="relative h-4 bg-surface-container-highest/50 rounded-full overflow-hidden p-1 shadow-inner">
+                <div
+                  className="h-full bg-gradient-to-r from-primary via-[#6ffbbe] to-primary-container rounded-full transition-all duration-1000 ease-out relative"
+                  style={{ width: `${currentPool > 0 ? goalPct : 74}%` }}
+                >
+                  <div className="absolute top-0 right-0 h-full w-8 bg-gradient-to-r from-transparent to-white/20" />
                 </div>
               </div>
-            )}
-
-            {/* Almost there */}
-            {almostThereRoutes.length > 0 && (
-              <div className="mb-8">
-                <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold text-amber-400">
-                  <span className="inline-block h-2 w-2 rounded-full bg-amber-400" />
-                  Almost there ({almostThereRoutes.length})
-                </h4>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {almostThereRoutes.map((route) => (
-                    <RouteCard key={route.id} route={route} accent="amber" />
-                  ))}
+              {/* Points breakdown */}
+              {totalPoints > 0 && (
+                <div className="mt-6 space-y-2">
+                  {qffBalance > 0 && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-500 font-medium">Qantas FF</span>
+                      <span className="text-on-surface font-bold tabular-nums">{qffBalance.toLocaleString()} pts</span>
+                    </div>
+                  )}
+                  {velocityBalance > 0 && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-500 font-medium">Velocity</span>
+                      <span className="text-on-surface font-bold tabular-nums">{velocityBalance.toLocaleString()} pts</span>
+                    </div>
+                  )}
+                  {amexBalance > 0 && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-500 font-medium">Amex MR</span>
+                      <span className="text-on-surface font-bold tabular-nums">{amexBalance.toLocaleString()} pts</span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
-
-            {/* All routes grid */}
-            {otherRoutes.length > 0 && hasBalances && (
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-on-surface">
-                  All routes ({otherRoutes.length})
-                </h4>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {otherRoutes.map((route) => (
-                    <RouteCard key={route.id} route={route} accent="default" />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Empty filtered state */}
-            {filtered.length === 0 && hasBalances && (
-              <div className="glass-panel rounded-2xl py-12 text-center">
-                <p className="text-sm text-on-surface-variant">
-                  No routes match your filters.
-                </p>
-              </div>
-            )}
-          </section>
+              )}
+            </div>
+          </div>
         </div>
+
+        {/* ── Top Redemption Matches ── */}
+        <div>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h3 className="text-3xl font-headline font-bold tracking-tight">Top Redemption Matches</h3>
+              <p className="text-slate-400 text-base font-medium mt-1">Real-time availability based on your point balance.</p>
+            </div>
+            <div className="hidden md:flex gap-3">
+              <button className="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-slate-200 border border-white/10 hover:bg-surface-bright transition-all">
+                Sort by Value
+              </button>
+              <button className="flex items-center gap-2 px-6 py-2.5 bg-surface-container-high/40 rounded-full text-xs font-bold text-slate-200 border border-white/10 hover:bg-surface-bright transition-all">
+                Filter Airlines
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {AIRLINE_CARDS.map((card) => (
+              <AirlineRedemptionCard key={card.id} card={card} />
+            ))}
+          </div>
+        </div>
+
       </div>
     </AppShell>
   )
 }
 
-function RouteCard({
-  route,
-  accent,
-}: {
-  route: RouteWithBalance
-  accent: 'green' | 'amber' | 'default'
-}) {
-  const programGradient =
-    route.program === 'qff'
-      ? 'linear-gradient(135deg, #c0392b 0%, #8e0000 100%)'
-      : 'linear-gradient(135deg, #1a56db 0%, #0a2e7a 100%)'
+type AirlineCard = (typeof AIRLINE_CARDS)[number]
 
-  const gap = route.points_required - route.userBalance
+function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
+  const isSingapore = card.id === 'singapore'
+  const isEmiratesFirst = card.id === 'emirates'
 
   return (
-    <div className="group bg-surface-container-low/50 rounded-3xl overflow-hidden border border-white/5 hover:border-primary/30 transition-all duration-500 flex flex-col">
-      {/* h-56 image header */}
+    <div
+      className={`group bg-surface-container-low/50 rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col relative ${
+        isSingapore
+          ? 'border-primary/40 ring-1 ring-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(78,222,163,0.2)] scale-[1.02]'
+          : 'border-white/5 hover:border-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]'
+      }`}
+    >
+      {/* ── Card header with gradient background ── */}
       <div className="h-56 relative overflow-hidden">
-        <div className="absolute inset-0" style={{ background: programGradient }}></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+        <div className="absolute inset-0" style={{ background: card.gradient }} />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent" />
 
         {/* Airline name pill */}
-        <div className="absolute top-5 left-5 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
-          <span className="text-[10px] font-extrabold text-white uppercase tracking-widest">
-            {PROGRAM_LABELS[route.program] ?? route.program}
-          </span>
+        <div className={`absolute top-5 left-5 px-4 py-1.5 rounded-full backdrop-blur-md border ${isSingapore ? 'bg-primary/20 border-primary/30' : 'bg-white/10 border-white/20'}`}>
+          <span className="text-[10px] font-extrabold text-white uppercase tracking-widest">{card.airline}</span>
         </div>
 
-        {/* Points display at bottom */}
+        {/* Points + cabin badge */}
         <div className="absolute bottom-5 left-6 right-6 flex justify-between items-end">
           <div>
             <span className="text-4xl font-headline font-extrabold text-white tabular-nums tracking-tighter">
-              {route.points_required.toLocaleString()}
+              {card.points.toLocaleString()}
             </span>
-            <span className="text-[11px] font-bold text-primary uppercase ml-2 tracking-widest">Points</span>
+            <span className={`text-[11px] font-bold uppercase ml-2 tracking-widest ${isEmiratesFirst ? 'text-[#c3c0ff]' : 'text-primary'}`}>
+              Points
+            </span>
           </div>
-          <span className="px-3 py-1 bg-white/10 backdrop-blur-md text-white text-[10px] font-black rounded border border-white/20 uppercase tracking-widest">
-            {CABIN_LABELS[route.cabin_class] ?? route.cabin_class}
+          <span className={`px-3 py-1 text-[10px] font-black rounded border uppercase tracking-widest ${
+            isSingapore
+              ? 'bg-primary text-[#003824] border-transparent'
+              : isEmiratesFirst
+              ? 'bg-[#c3c0ff]/10 text-[#c3c0ff] border-[#c3c0ff]/20'
+              : 'bg-white/10 backdrop-blur-md text-white border-white/20'
+          }`}>
+            {card.cabin}
           </span>
         </div>
       </div>
 
-      {/* Card body */}
+      {/* ── Card body ── */}
       <div className="p-8 flex-1 flex flex-col">
         <div className="space-y-5 mb-8">
           <div className="flex justify-between items-center pb-3 border-b border-white/5">
             <span className="text-sm font-semibold text-slate-400">Route Path</span>
-            <span className="text-sm font-bold text-on-surface">
-              {route.origin_iata} → {route.destination_iata}
+            <span className="text-sm font-bold text-on-surface tracking-tight">
+              {card.route.split(' → ').map((seg, i, arr) => (
+                <span key={i}>
+                  {seg}
+                  {i < arr.length - 1 && (
+                    <span className={`mx-1 ${isEmiratesFirst ? 'text-[#c3c0ff]' : 'text-primary'}`}>→</span>
+                  )}
+                </span>
+              ))}
             </span>
           </div>
           <div className="flex justify-between items-center pb-3 border-b border-white/5">
             <span className="text-sm font-semibold text-slate-400">Cabin Class</span>
-            <span className="text-sm font-bold text-on-surface">
-              {CABIN_LABELS[route.cabin_class] ?? route.cabin_class}
-            </span>
+            <span className="text-sm font-bold text-on-surface">{card.cabinLabel}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-sm font-semibold text-slate-400">Total Taxes</span>
-            <span className="text-sm font-bold text-on-surface tabular-nums">${route.taxes_aud} AUD</span>
+            <span className="text-sm font-bold text-on-surface tabular-nums">${card.taxes} AUD</span>
           </div>
-        </div>
-
-        {/* Amex transfer badge */}
-        {route.bookableViaTransfer && (
-          <div className="mb-4">
-            <span className="inline-block rounded-full bg-blue-950/60 px-2 py-0.5 text-xs font-medium text-blue-300">
-              Bookable via Amex MR transfer
-            </span>
-          </div>
-        )}
-
-        {/* Progress */}
-        <div className="mb-6">
-          <RedemptionProgress
-            userBalance={route.userBalance}
-            pointsRequired={route.points_required}
-            program={route.program}
-            transferredPoints={route.transferredPoints}
-          />
         </div>
 
         <div className="mt-auto space-y-4">
-          {route.canBook ? (
-            <button
-              onClick={() => route.booking_url && window.open(route.booking_url, '_blank')}
-              className="w-full py-4 bg-gradient-to-br from-primary to-primary-container rounded-2xl text-sm font-black text-on-primary hover:opacity-90 transition-all uppercase tracking-widest shadow-xl shadow-primary/20"
-            >
-              Book Redemption
-            </button>
-          ) : (
-            <div className="space-y-3">
-              <div className="bg-error/5 p-4 rounded-2xl border border-error/10 flex justify-between items-center">
-                <span className="text-xs font-bold text-error uppercase">Gap to target</span>
-                <span className="text-lg font-extrabold text-white">{gap.toLocaleString()} pts</span>
+          {card.canBook ? (
+            <>
+              <div className="bg-primary/10 p-4 rounded-2xl border border-primary/20">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs font-bold text-primary uppercase tracking-widest">Balance Status</span>
+                  <span className="text-lg font-extrabold text-primary tabular-nums">
+                    +{('surplus' in card ? card.surplus : 0).toLocaleString()} surplus
+                  </span>
+                </div>
               </div>
-              <button className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-slate-200 uppercase tracking-widest transition-all">
-                View Availability
+              <button className="w-full py-4 bg-gradient-to-br from-primary to-primary-container rounded-2xl text-sm font-black text-[#003824] hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-primary/20">
+                Book with Points
               </button>
-            </div>
+            </>
+          ) : (
+            <>
+              <div className={`p-4 rounded-2xl border ${isEmiratesFirst ? 'bg-surface-container-highest/30 border-white/5' : 'bg-error/5 border-error/10'}`}>
+                <div className="flex justify-between items-center">
+                  <span className={`text-xs font-bold uppercase tracking-widest ${isEmiratesFirst ? 'text-slate-500' : 'text-error'}`}>
+                    Gap to target
+                  </span>
+                  <span className="text-lg font-extrabold text-white tabular-nums">
+                    {'gap' in card ? card.gap.toLocaleString() : ''} pts
+                  </span>
+                </div>
+              </div>
+              <button className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold text-slate-200 hover:text-white transition-all uppercase tracking-widest shadow-lg">
+                {isEmiratesFirst ? 'Analyze Transfers' : 'View Availability'}
+              </button>
+            </>
           )}
         </div>
       </div>
