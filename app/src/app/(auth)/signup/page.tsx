@@ -116,9 +116,8 @@ export default function SignupPage() {
               <h2 className="font-headline text-2xl font-bold text-on-surface mb-2">Create Account</h2>
               <p className="text-on-surface-variant text-sm">Join the elite network of value seekers.</p>
             </div>
-            <div className="bg-[#4edea3]/10 border border-[#4edea3]/20 px-3 py-2 rounded-xl ml-4 text-center flex-shrink-0">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3] leading-snug block">Private Beta —</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3] leading-snug block">Invite Only</span>
+            <div className="bg-[#4edea3]/10 border border-[#4edea3]/20 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3] whitespace-nowrap">Private Beta — Invite Only</span>
             </div>
           </div>
 
