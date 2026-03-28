@@ -100,25 +100,23 @@ export default function Home() {
               </a>
             </div>
 
-          </div>
-        </section>
-
-        {/* Trusted By strip */}
-        <section className="border-y border-white/5 py-10" style={{ backgroundColor: "var(--surface-container)" }}>
-          <div className="mx-auto max-w-4xl px-6">
-            <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-              Trusted by Aussie Points Hackers
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-6">
-              {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((label) => (
-                <span
-                  key={label}
-                  className="text-[11px] font-bold tracking-[0.15em] text-on-surface-variant"
-                >
-                  {label}
-                </span>
-              ))}
+            {/* Trusted By strip — inside hero, below CTAs */}
+            <div className="mt-10 border-t border-white/5 pt-8">
+              <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
+                Trusted by Aussie Points Hackers
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-6">
+                {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((label) => (
+                  <span
+                    key={label}
+                    className="text-[11px] font-bold tracking-[0.15em] text-on-surface-variant"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
             </div>
+
           </div>
         </section>
 
