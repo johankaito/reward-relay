@@ -456,7 +456,7 @@ export default function DashboardPage() {
                         onClick={() => handleEditCard(card)}
                       >
                         <div
-                          className="w-full md:w-[420px] rounded-xl p-8 border border-white/10 shadow-2xl relative overflow-hidden"
+                          className="w-full max-w-[420px] rounded-xl p-8 border border-white/10 shadow-2xl relative overflow-hidden"
                           style={{ background: gradient, aspectRatio: "1.58/1" }}
                         >
                           <div className="flex justify-between items-start">
