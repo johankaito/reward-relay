@@ -239,6 +239,21 @@ async function screenshotPage(
 
   // Let fonts, animations, and data settle
   await new Promise((r) => setTimeout(r, 1500))
+
+  // Hide PostHog debug overlays (exception badge, toolbar) that pollute screenshots
+  await page.evaluate(() => {
+    // Check for shadow DOM hosts (PostHog mounts toolbar in shadow DOM)
+    document.querySelectorAll('*').forEach((el) => {
+      if ((el as Element & { shadowRoot?: ShadowRoot }).shadowRoot) {
+        ;(el as HTMLElement).style.display = 'none'
+      }
+    })
+    // Also hide any iframes injected by analytics tools
+    document.querySelectorAll('iframe[src*="posthog"], iframe[src*="ph-"]').forEach((el) => {
+      ;(el as HTMLElement).style.display = 'none'
+    })
+  }).catch(() => {/* ignore */})
+
   await page.screenshot({ path: outputPath as `${string}.png`, fullPage: true })
   await page.close()
   console.log(`  ✓ ${path.basename(outputPath)}`)
