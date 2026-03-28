@@ -77,7 +77,7 @@ export default function SettingsPage() {
       {/* ── Sticky header ── */}
       <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center px-6 h-16 max-w-7xl mx-auto">
-          <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">
+          <h2 className="font-headline font-bold text-lg text-on-surface">
             Account Settings
           </h2>
         </div>
@@ -89,87 +89,69 @@ export default function SettingsPage() {
             Account Settings
           </h1>
           <p className="text-on-surface-variant mt-2 text-lg">
-            Manage your profile, preferences and subscription.
+            Manage your sovereign profile and ledger preferences.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* ── Main settings column ── */}
-          <div className="lg:col-span-8 space-y-8">
+          <div className="lg:col-span-8 space-y-12">
 
             {/* Profile Section */}
-            <section className="bg-surface-container rounded-2xl p-6 lg:p-8 border border-white/5">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+            <section className="bg-surface-container rounded-lg p-6 border border-white/5">
+              <div className="flex items-center gap-6 mb-10">
+                <div className="w-24 h-24 rounded-full bg-surface-container-highest border-2 border-[#4edea3]/20 flex items-center justify-center text-3xl font-extrabold text-[#4edea3] font-headline flex-shrink-0">
+                  {initials}
                 </div>
-                <h3 className="text-xl font-bold font-headline">Profile</h3>
+                <div>
+                  <h2 className="text-2xl font-extrabold font-headline mb-1">Personal Identity</h2>
+                  <p className="text-sm text-on-surface-variant">The core details associated with your ledger account.</p>
+                </div>
               </div>
 
-              <div className="flex flex-col md:flex-row items-center gap-8">
-                {/* Avatar */}
-                <div className="relative flex-shrink-0">
-                  <div className="w-24 h-24 rounded-full bg-surface-container-highest border-4 border-surface-container-low flex items-center justify-center text-3xl font-extrabold text-primary font-headline">
-                    {initials}
-                  </div>
-                  <div className="absolute bottom-0 right-0 p-1.5 bg-primary-container rounded-full">
-                    <svg className="w-3.5 h-3.5 text-on-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <label className="block text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium mb-2">
+                    Display Name
+                  </label>
+                  <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium">
+                    {displayName || "—"}
                   </div>
                 </div>
-
-                {/* Fields */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 w-full">
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">
-                      Display Name
-                    </label>
-                    <div className="bg-surface-container-low px-4 py-3 rounded-xl text-on-surface font-medium border border-white/5">
-                      {displayName || "—"}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">
-                      Email Address
-                    </label>
-                    <div className="bg-surface-container-low px-4 py-3 rounded-xl text-on-surface font-medium border border-white/5">
-                      {userEmail || "—"}
-                    </div>
+                <div>
+                  <label className="block text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium mb-2">
+                    Primary Email
+                  </label>
+                  <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium">
+                    {userEmail || "—"}
                   </div>
                 </div>
               </div>
             </section>
 
             {/* Notifications Section */}
-            <section className="bg-surface-container rounded-2xl p-6 lg:p-8 border border-white/5">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold font-headline">Notifications</h3>
+            <section className="bg-surface-container rounded-lg p-6 border border-white/5">
+              <div className="mb-10">
+                <h2 className="text-2xl font-extrabold font-headline mb-1">Notification Protocol</h2>
+                <p className="text-sm text-on-surface-variant">Configure how you receive alert transmissions.</p>
               </div>
 
               <div className="space-y-8">
                 {[
                   {
                     key: "thirtyDay" as const,
-                    label: "30-Day Reminder",
-                    sub: "Get notified a month before points expire.",
+                    label: "30-Day Outlook",
+                    sub: "Receive an email summary of upcoming points expirations.",
                   },
                   {
                     key: "fourteenDay" as const,
-                    label: "14-Day Reminder",
-                    sub: "Critical alert two weeks prior to expiry.",
+                    label: "14-Day Critical Alert",
+                    sub: "High-priority reminder for urgent reward redemptions.",
                   },
                   {
                     key: "sevenDay" as const,
-                    label: "7-Day Final Alert",
-                    sub: "Last call notifications for all active rewards.",
+                    label: "7-Day Final Call",
+                    sub: "Daily countdown for assets approaching final settlement.",
                   },
                 ].map(({ key, label, sub }) => (
                   <div key={key} className="flex items-center justify-between">
@@ -180,7 +162,7 @@ export default function SettingsPage() {
                     <button
                       onClick={() => toggleNotif(key)}
                       className={`w-12 h-6 rounded-full relative transition-colors duration-200 focus:outline-none ${
-                        notifs[key] ? "bg-primary-container" : "bg-surface-container-highest"
+                        notifs[key] ? "bg-[#07b77f]" : "bg-surface-container-highest"
                       }`}
                       aria-label={label}
                     >
@@ -198,34 +180,26 @@ export default function SettingsPage() {
             </section>
 
             {/* Billing Section */}
-            <section className="bg-surface-container rounded-2xl p-6 lg:p-8 border border-white/5">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold font-headline">Billing</h3>
+            <section className="bg-surface-container rounded-lg p-6 border border-white/5">
+              <div className="mb-10">
+                <h2 className="text-2xl font-extrabold font-headline mb-1">Billing &amp; Tier Status</h2>
+                <p className="text-sm text-on-surface-variant">Manage your subscription level and payment methods.</p>
               </div>
 
-              <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="bg-surface-container-low p-8 rounded-lg mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border border-white/5">
                 <div className="flex items-center gap-6">
-                  <div className="bg-surface-container-low p-6 rounded-xl border border-white/5 text-center min-w-[140px]">
-                    <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Current Plan</p>
-                    <span className="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs font-bold uppercase tracking-tighter">
-                      Free
-                    </span>
+                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#4d3d76] to-[#d0bcff] flex items-center justify-center text-[#3a2a62]">
+                    <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>diamond</span>
                   </div>
-                  <div className="hidden sm:block">
-                    <p className="text-on-surface font-medium">
-                      $0 <span className="text-on-surface-variant font-normal">/ month</span>
-                    </p>
-                    <p className="text-xs text-on-surface-variant mt-1">Upgrade to unlock all features</p>
+                  <div>
+                    <p className="text-[0.6875rem] uppercase tracking-[0.05em] text-[#d0bcff] font-bold">Current Tier</p>
+                    <p className="text-xl font-extrabold font-headline">Velocity Elite</p>
+                    <p className="text-xs text-on-surface-variant tabular-nums">Next billing cycle: Oct 24, 2024</p>
                   </div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    className="px-8 py-3 text-black font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg shadow-primary/10 text-sm"
+                    className="px-8 py-3 text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg text-sm"
                     style={{ background: "var(--gradient-cta)" }}
                   >
                     Upgrade Plan
@@ -233,10 +207,9 @@ export default function SettingsPage() {
                   <button
                     onClick={handleSignOut}
                     disabled={signingOut}
-                    className="px-8 py-3 border border-white/10 text-on-surface font-medium rounded-full hover:bg-surface-container-high transition-colors duration-200 text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="px-8 py-3 border border-white/10 text-on-surface font-medium rounded-full hover:bg-surface-container-high transition-colors duration-200 text-sm disabled:opacity-50"
                   >
-                    <LogOut className="h-4 w-4" />
-                    {signingOut ? "Signing out…" : "Sign Out"}
+                    {signingOut ? "Signing out…" : "Cancel Plan"}
                   </button>
                 </div>
               </div>
@@ -269,12 +242,12 @@ export default function SettingsPage() {
             <div className="sticky top-24 space-y-6">
               {/* Data protection */}
               <div className="bg-gradient-to-br from-surface-container to-surface-container-low p-6 rounded-lg border border-white/5">
-                <Shield className="h-6 w-6 text-primary mb-4" />
+                <Shield className="h-6 w-6 text-[#4edea3] mb-4" />
                 <h3 className="font-bold text-lg mb-2">Data Protection</h3>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
                   Your sovereign ledger is protected by AES-256 encryption. We never share your transactional data with third-party aggregators.
                 </p>
-                <a href="#" className="inline-block mt-4 text-primary text-xs font-bold hover:underline">
+                <a href="#" className="inline-block mt-4 text-[#4edea3] text-xs font-bold hover:underline">
                   View Privacy Policy
                 </a>
               </div>
