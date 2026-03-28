@@ -94,7 +94,7 @@ export default function SignupPage() {
         style={{ background: "rgba(208,188,255,0.05)" }}
       />
 
-      <div className="relative z-10 w-full max-w-md px-6">
+      <div className="relative z-10 w-full max-w-md">
         {/* Brand header */}
         <div className="flex flex-col items-center mb-10">
           <div className="mb-4">
