@@ -103,7 +103,7 @@ export default function TrackerDetailPage() {
         {/* Back button */}
         <button
           onClick={() => router.push("/tracker")}
-          className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+          className="flex items-center gap-1.5 text-sm text-[var(--text-secondary)] hover:text-[var(--text-[#4edea3])]"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to tracker
@@ -112,7 +112,7 @@ export default function TrackerDetailPage() {
         {/* Card header */}
         <div className="flex items-start justify-between rounded-xl border border-[var(--border-default)] bg-[var(--surface)] p-4">
           <div>
-            <p className="text-lg font-bold text-[var(--text-primary)]">{cardName}</p>
+            <p className="text-lg font-bold text-[var(--text-[#4edea3])]">{cardName}</p>
             <p className="text-sm text-[var(--text-secondary)]">{bank}</p>
           </div>
           <span className={`rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${badgeClass}`}>
@@ -143,8 +143,8 @@ export default function TrackerDetailPage() {
                   onClick={() => setAddTab(tab)}
                   className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                     addTab === tab
-                      ? "bg-[var(--surface-strong)] text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                      ? "bg-[var(--surface-strong)] text-[var(--text-[#4edea3])]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-[#4edea3])]"
                   }`}
                 >
                   {tab === "manual" ? "Manual entry" : "Upload statement"}
@@ -169,7 +169,7 @@ export default function TrackerDetailPage() {
 
         {/* Transaction history */}
         <div className="rounded-xl border border-[var(--border-default)] bg-[var(--surface)] p-4">
-          <h2 className="mb-3 font-semibold text-[var(--text-primary)]">Transaction History</h2>
+          <h2 className="mb-3 font-semibold text-[var(--text-[#4edea3])]">Transaction History</h2>
           <TransactionList
             key={refreshKey}
             userCardId={card.id}

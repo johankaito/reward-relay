@@ -282,7 +282,7 @@ export default function ProfitPage() {
                   onClick={() => setActiveTab(tab)}
                   className={`flex-1 rounded-lg px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
                     activeTab === tab
-                      ? "bg-primary text-on-primary"
+                      ? "bg-[#4edea3] text-on-primary"
                       : "text-on-surface-variant hover:text-on-surface"
                   }`}
                 >
@@ -307,11 +307,11 @@ export default function ProfitPage() {
             <div className="md:hidden space-y-8">
               {/* Mobile Hero */}
               <section className="flex flex-col gap-1">
-                <span className="text-primary text-[11px] uppercase tracking-[0.2em] font-bold">Total Net Profit</span>
+                <span className="text-[#4edea3] text-[11px] uppercase tracking-[0.2em] font-bold">Total Net Profit</span>
                 <div className="flex items-end gap-3 mt-1">
                   <h2 className="text-5xl font-headline font-extrabold tracking-tight tabular-nums">{fmtAud(fyNet)}</h2>
                   {fyNet > 0 && (
-                    <div className="flex items-center mb-1 text-primary">
+                    <div className="flex items-center mb-1 text-[#4edea3]">
                       <TrendingUp className="h-4 w-4" />
                       <span className="text-sm font-bold ml-0.5">{fy}</span>
                     </div>
@@ -342,15 +342,15 @@ export default function ProfitPage() {
                           return (
                             <div key={d.month} className="flex-1 flex flex-col items-center gap-3">
                               <div
-                                className={`w-full rounded-t-xl relative ${isActive ? "bg-primary/5 ring-1 ring-primary/30" : "bg-surface-container-high/40"}`}
+                                className={`w-full rounded-t-xl relative ${isActive ? "bg-[#4edea3]/5 ring-1 ring-[#4edea3]/30" : "bg-surface-container-high/40"}`}
                                 style={{ height: `${Math.max(bonusPct * 144, 20)}px` }}
                               >
                                 <div
-                                  className={`absolute bottom-0 w-full rounded-t-xl ${isActive ? "bg-primary shadow-[0_0_25px_rgba(78,222,163,0.3)]" : "bg-primary/80"}`}
+                                  className={`absolute bottom-0 w-full rounded-t-xl ${isActive ? "bg-[#4edea3] shadow-[0_0_25px_rgba(78,222,163,0.3)]" : "bg-[#4edea3]/80"}`}
                                   style={{ height: `${bonusPct * 66}%` }}
                                 />
                               </div>
-                              <span className={`text-[10px] font-bold ${isActive ? "text-primary" : "text-on-surface-variant"}`}>
+                              <span className={`text-[10px] font-bold ${isActive ? "text-[#4edea3]" : "text-on-surface-variant"}`}>
                                 {d.month.toUpperCase()}
                               </span>
                             </div>
@@ -388,7 +388,7 @@ export default function ProfitPage() {
                     </span>
                   </div>
                   <div className="h-12 w-12 rounded-full bg-surface-container-highest flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-primary" />
+                    <TrendingUp className="h-5 w-5 text-[#4edea3]" />
                   </div>
                 </div>
               </section>
@@ -453,14 +453,14 @@ export default function ProfitPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
               {/* Hero Metrics Card: col-span-5 */}
               <div className="lg:col-span-5 flex flex-col justify-between p-10 bg-surface-container rounded-lg relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#4edea3]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
                 <div className="relative z-10 space-y-8">
                   <div>
                     <span className="text-xs font-bold tracking-[0.3em] uppercase text-outline opacity-70">
                       {fy} Net Profit
                     </span>
                     <div className="mt-4 flex items-baseline gap-2">
-                      <span className="text-6xl md:text-7xl font-headline font-extrabold text-primary tabular tracking-tighter">
+                      <span className="text-6xl md:text-7xl font-headline font-extrabold text-[#4edea3] tabular tracking-tighter">
                         {fmtAud(fyNet)}
                       </span>
                     </div>
@@ -478,7 +478,7 @@ export default function ProfitPage() {
                 </div>
                 <div className="relative z-10 mt-12 bg-white/5 p-4 rounded-xl flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <TrendingUp className="h-5 w-5 text-primary" />
+                    <TrendingUp className="h-5 w-5 text-[#4edea3]" />
                     {(() => {
                       const prevFY = fyRows.find((r) => r.fy !== fy)
                       if (!prevFY || prevFY.netValue === 0) return (
@@ -501,9 +501,9 @@ export default function ProfitPage() {
                 <div className="flex items-center justify-between mb-10">
                   <h3 className="font-headline font-bold text-xl">Bonuses vs Fees per Card</h3>
                   <div className="flex gap-2">
-                    <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-                      <div className="w-2 h-2 rounded-full bg-primary"></div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Bonus</span>
+                    <div className="flex items-center gap-2 px-3 py-1 bg-[#4edea3]/10 rounded-full">
+                      <div className="w-2 h-2 rounded-full bg-[#4edea3]"></div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#4edea3]">Bonus</span>
                     </div>
                     <div className="flex items-center gap-2 px-3 py-1 bg-secondary/10 rounded-full">
                       <div className="w-2 h-2 rounded-full bg-secondary"></div>
@@ -558,14 +558,14 @@ export default function ProfitPage() {
                   </div>
                   <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 flex flex-col gap-3">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-outline">Next ROI Peak</span>
-                    <h4 className="font-headline font-bold text-lg tabular-nums text-primary">
+                    <h4 className="font-headline font-bold text-lg tabular-nums text-[#4edea3]">
                       {topCard ? `${(topCard.bonusAud / Math.max(topCard.fee, 1)).toFixed(1)}x` : '—'}
                     </h4>
                     <p className="text-xs text-on-surface-variant">{topCard ? `${topCard.bank} ${topCard.name}` : 'no data'}</p>
                   </div>
                   <div className="bg-surface-container-highest/30 border border-white/5 rounded-lg p-8 flex flex-col gap-3">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-outline">Wallet Health</span>
-                    <h4 className="font-headline font-bold text-lg tabular-nums text-primary">
+                    <h4 className="font-headline font-bold text-lg tabular-nums text-[#4edea3]">
                       {avgRoi > 0 ? `${avgRoi.toFixed(1)}x` : '—'}
                     </h4>
                     <p className="text-xs text-on-surface-variant">{`avg ROI across ${fyCards.length} card${fyCards.length !== 1 ? 's' : ''} this FY`}</p>
@@ -578,7 +578,7 @@ export default function ProfitPage() {
             {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee >= 5).length > 0 && (
               <div className="rounded-2xl bg-surface-container p-6" style={{ border: '1px solid rgba(78,222,163,0.1)' }}>
                 <div className="flex items-center gap-3 mb-6">
-                  <Sparkles className="h-7 w-7 text-primary" />
+                  <Sparkles className="h-7 w-7 text-[#4edea3]" />
                   <h3 className="font-headline font-bold text-2xl">High Velocity Assets</h3>
                 </div>
                 <div className="space-y-3">
@@ -602,7 +602,7 @@ export default function ProfitPage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-primary font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
+                            <p className="text-[#4edea3] font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
                             <p className="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Efficiency</p>
                           </div>
                         </div>
@@ -662,14 +662,14 @@ export default function ProfitPage() {
                       className={`rounded-xl border p-4 ${
                         result.thresholdExceeded
                           ? "border-yellow-500/40 bg-yellow-500/10"
-                          : "border-primary/20 bg-primary/5"
+                          : "border-[#4edea3]/20 bg-[#4edea3]/5"
                       }`}
                     >
                       <div className="flex items-start gap-3">
                         {result.thresholdExceeded ? (
                           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-yellow-400" />
                         ) : (
-                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#4edea3]" />
                         )}
                         <div className="space-y-1 text-sm">
                           {result.thresholdExceeded ? (
@@ -689,7 +689,7 @@ export default function ProfitPage() {
                             </>
                           ) : (
                             <>
-                              <p className="font-semibold text-primary">
+                              <p className="font-semibold text-[#4edea3]">
                                 Under FBT threshold — {result.fbtYear}
                               </p>
                               <p className="text-on-surface-variant">
@@ -750,7 +750,7 @@ export default function ProfitPage() {
                           </td>
                           <td
                             className={`px-6 py-3.5 text-right tabular-nums font-bold ${
-                              card.netValue >= 0 ? "text-primary" : "text-destructive"
+                              card.netValue >= 0 ? "text-[#4edea3]" : "text-destructive"
                             }`}
                           >
                             {fmtAud(card.netValue)}
@@ -804,7 +804,7 @@ export default function ProfitPage() {
                           </td>
                           <td
                             className={`px-6 py-3.5 text-right tabular-nums font-bold ${
-                              row.netValue >= 0 ? "text-primary" : "text-destructive"
+                              row.netValue >= 0 ? "text-[#4edea3]" : "text-destructive"
                             }`}
                           >
                             {fmtAud(row.netValue)}
@@ -842,7 +842,7 @@ export default function ProfitPage() {
                   <div>
                     <p className="text-xs text-on-surface-variant">Net profit</p>
                     <p
-                      className={`mt-1 tabular-nums text-2xl font-bold ${netProfit >= 0 ? "text-primary" : "text-destructive"}`}
+                      className={`mt-1 tabular-nums text-2xl font-bold ${netProfit >= 0 ? "text-[#4edea3]" : "text-destructive"}`}
                     >
                       {fmtAud(netProfit)}
                     </p>

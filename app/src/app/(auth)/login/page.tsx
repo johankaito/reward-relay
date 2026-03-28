@@ -132,7 +132,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@luxury.com"
-                  className="w-full h-14 pl-12 pr-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                  className="w-full h-14 pl-12 pr-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function LoginPage() {
                 </label>
                 <Link
                   href="/reset-password"
-                  className="text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant hover:text-primary transition-colors"
+                  className="text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant hover:text-[#4edea3] transition-colors"
                 >
                   Forgot Password?
                 </Link>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-14 pl-12 pr-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all font-medium"
+                  className="w-full h-14 pl-12 pr-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
                 />
               </div>
             </div>
@@ -206,20 +206,20 @@ export default function LoginPage() {
                   onChange={(e) => setBetaEmail(e.target.value)}
                   required
                   placeholder="you@example.com"
-                  className="w-full h-12 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full h-12 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all"
                 />
                 <input
                   type="text"
                   value={betaName}
                   onChange={(e) => setBetaName(e.target.value)}
                   placeholder="Your name (optional)"
-                  className="w-full h-12 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full h-12 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all"
                 />
                 <div className="flex gap-3">
                   <button
                     type="submit"
                     disabled={betaLoading}
-                    className="flex-1 h-12 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all shadow-lg shadow-primary/20"
+                    className="flex-1 h-12 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all shadow-lg shadow-[#4edea3]/20"
                     style={{ background: "var(--gradient-cta)" }}
                   >
                     {betaLoading ? "Submitting…" : "Request Access"}

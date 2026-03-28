@@ -51,7 +51,7 @@ function formatBonus(rec: Recommendation): string {
 }
 
 function formatEligibility(rec: Recommendation): { label: string; color: string } {
-  if (rec.eligibleNow) return { label: "Eligible", color: "text-primary" }
+  if (rec.eligibleNow) return { label: "Eligible", color: "text-[#4edea3]" }
   if (rec.eligibleAt) {
     const days = Math.max(0, Math.ceil((rec.eligibleAt.getTime() - Date.now()) / 86400000))
     if (days <= 90) return { label: `${days}d`, color: "text-secondary" }
@@ -171,7 +171,7 @@ export default function RecommendationsPage() {
                 onClick={() => setSort(chip.value)}
                 className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-colors ${
                   sort === chip.value
-                    ? "bg-surface-container-highest text-primary border border-primary/20"
+                    ? "bg-surface-container-highest text-[#4edea3] border border-[#4edea3]/20"
                     : "bg-surface-container text-on-surface-variant border border-white/5 hover:text-on-surface"
                 }`}
               >
@@ -195,7 +195,7 @@ export default function RecommendationsPage() {
             >
               {chip.label}
               {chip.value === "eligible" && stats.eligible > 0 && (
-                <span className="ml-2 text-[10px] bg-primary/20 text-primary rounded-full px-1.5 py-0.5">
+                <span className="ml-2 text-[10px] bg-[#4edea3]/20 text-[#4edea3] rounded-full px-1.5 py-0.5">
                   {stats.eligible}
                 </span>
               )}
@@ -234,7 +234,7 @@ export default function RecommendationsPage() {
                   <div
                     className={`relative bg-surface-container rounded-2xl p-6 flex flex-col h-full border transition-all ${
                       isBestMatch
-                        ? "border-primary/20 shadow-lg"
+                        ? "border-[#4edea3]/20 shadow-lg"
                         : "border-white/5 hover:border-white/10 hover:bg-surface-container-high"
                     }`}
                   >
@@ -243,7 +243,7 @@ export default function RecommendationsPage() {
                       <span
                         className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
                           isBestMatch
-                            ? "bg-primary/20 text-primary border-primary/30"
+                            ? "bg-[#4edea3]/20 text-[#4edea3] border-[#4edea3]/30"
                             : "bg-surface-container-highest text-on-surface-variant border-white/5"
                         }`}
                       >
@@ -262,13 +262,13 @@ export default function RecommendationsPage() {
                     >
                       <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
                       <div className="relative z-10 flex justify-between items-start">
-                        <div className="w-8 h-8 bg-primary/20 rounded-full border border-primary/30 flex items-center justify-center">
-                          <span className="text-primary text-xs font-bold">
+                        <div className="w-8 h-8 bg-[#4edea3]/20 rounded-full border border-[#4edea3]/30 flex items-center justify-center">
+                          <span className="text-[#4edea3] text-xs font-bold">
                             {rec.card.bank?.charAt(0)?.toUpperCase() ?? "R"}
                           </span>
                         </div>
                         {isBestMatch && (
-                          <div className="w-8 h-1 bg-primary rounded-full" />
+                          <div className="w-8 h-1 bg-[#4edea3] rounded-full" />
                         )}
                       </div>
                       <div className="relative z-10">
@@ -279,7 +279,7 @@ export default function RecommendationsPage() {
                           {rec.card.bank?.toUpperCase() ?? "CARD"}
                         </p>
                       </div>
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 blur-3xl rounded-full -mr-8 -mt-8" />
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-[#4edea3]/10 blur-3xl rounded-full -mr-8 -mt-8" />
                     </div>
 
                     {/* Card info */}
@@ -291,7 +291,7 @@ export default function RecommendationsPage() {
                       <div className="bg-surface-container-low rounded-xl p-4 mb-6 border border-white/5">
                         <p
                           className={`font-black text-lg tabular-nums ${
-                            isBestMatch ? "text-primary" : "text-on-surface"
+                            isBestMatch ? "text-[#4edea3]" : "text-on-surface"
                           }`}
                         >
                           {bonus}
@@ -325,7 +325,7 @@ export default function RecommendationsPage() {
                     {/* CTA */}
                     {isBestMatch ? (
                       <button
-                        className="w-full py-4 rounded-full font-bold text-sm text-black transition-all hover:scale-[1.02] shadow-lg shadow-primary/20"
+                        className="w-full py-4 rounded-full font-bold text-sm text-black transition-all hover:scale-[1.02] shadow-lg shadow-[#4edea3]/20"
                         style={{ background: "var(--gradient-cta)" }}
                       >
                         View Details
@@ -342,10 +342,10 @@ export default function RecommendationsPage() {
 
             {/* Insights bento card */}
             {filteredRecommendations.length > 0 && filter === "all" && (
-              <div className="lg:col-span-2 bg-surface-container-low rounded-2xl p-8 flex flex-col md:flex-row gap-8 items-center justify-between border border-primary/5">
+              <div className="lg:col-span-2 bg-surface-container-low rounded-2xl p-8 flex flex-col md:flex-row gap-8 items-center justify-between border border-[#4edea3]/5">
                 <div className="flex-1">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6">
-                    <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <div className="w-12 h-12 rounded-full bg-[#4edea3]/10 flex items-center justify-center mb-6">
+                    <svg className="w-6 h-6 text-[#4edea3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </div>
@@ -355,7 +355,7 @@ export default function RecommendationsPage() {
                   </p>
                   <div className="flex gap-6">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-[#4edea3] animate-pulse" />
                       <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface">Live Data</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -367,15 +367,15 @@ export default function RecommendationsPage() {
                   </div>
                 </div>
                 <div className="w-full md:w-56 bg-surface-container-highest rounded-2xl p-8 flex flex-col items-center justify-center gap-3">
-                  <p className="text-4xl font-headline font-extrabold text-primary tabular-nums">{stats.total}</p>
+                  <p className="text-4xl font-headline font-extrabold text-[#4edea3] tabular-nums">{stats.total}</p>
                   <p className="text-[10px] uppercase tracking-widest text-on-surface-variant text-center">Matched Cards</p>
                   <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden mt-2">
                     <div
-                      className="h-full bg-primary rounded-full transition-all"
+                      className="h-full bg-[#4edea3] rounded-full transition-all"
                       style={{ width: stats.total > 0 ? `${Math.min((stats.eligible / stats.total) * 100, 100)}%` : "0%" }}
                     />
                   </div>
-                  <p className="text-[10px] text-primary font-bold">
+                  <p className="text-[10px] text-[#4edea3] font-bold">
                     {stats.total > 0 ? Math.round((stats.eligible / stats.total) * 100) : 0}% eligible
                   </p>
                 </div>
@@ -386,10 +386,10 @@ export default function RecommendationsPage() {
 
         {/* ── Strategy banner ── */}
         {filteredRecommendations.length > 0 && (
-          <section className="bg-gradient-to-r from-surface-container to-surface-container-high rounded-2xl p-8 border-l-4 border-primary">
+          <section className="bg-gradient-to-r from-surface-container to-surface-container-high rounded-2xl p-8 border-l-4 border-[#4edea3]">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-              <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg className="w-7 h-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <div className="w-14 h-14 bg-[#4edea3]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg className="w-7 h-7 text-[#4edea3]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
               </div>
@@ -397,7 +397,7 @@ export default function RecommendationsPage() {
                 <h4 className="text-lg font-bold text-on-surface mb-1">Churning Strategy Analysis</h4>
                 <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl">
                   You currently have{" "}
-                  <span className="text-primary font-bold">{stats.eligible} eligible</span>{" "}
+                  <span className="text-[#4edea3] font-bold">{stats.eligible} eligible</span>{" "}
                   card{stats.eligible !== 1 ? "s" : ""} ready to apply for.
                   {stats.comingSoon > 0 && (
                     <> {stats.comingSoon} more become eligible as your waiting periods expire.</>

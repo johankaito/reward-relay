@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { AlertTriangle, CreditCard, TrendingUp, Star, DollarSign, Zap, Plane } from "lucide-react"
+import { CreditCard } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { EditCardModal } from "@/components/cards/EditCardModal"
@@ -182,7 +182,7 @@ export default function DashboardPage() {
       {/* ── Header breadcrumb (desktop) ── */}
       <div className="hidden md:flex items-center gap-2 text-on-surface-variant font-medium text-sm mb-2">
         <span>Dashboard</span>
-        <span className="text-on-surface-variant">›</span>
+        <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: "14px" }}>chevron_right</span>
         <span className="text-on-surface">Overview</span>
       </div>
 
@@ -224,21 +224,21 @@ export default function DashboardPage() {
         {(cancelAlerts.length > 0 || behindPaceCards.length > 0) && (
           <div
             className="flex items-center justify-between gap-4 rounded-r-xl border-l-4 px-4 py-3"
-            style={{ borderColor: "var(--primary)", background: "rgba(78,222,163,0.06)" }}
+            style={{ borderColor: "#4edea3", background: "rgba(78,222,163,0.06)" }}
           >
             <div className="flex items-center gap-3">
-              <AlertTriangle className="h-4 w-4 shrink-0 text-primary" />
+              <span className="material-symbols-outlined text-[#4edea3] shrink-0" style={{ fontSize: "18px" }}>priority_high</span>
               <p className="text-sm font-medium text-on-surface">
                 {cancelAlerts.length > 0 ? (
                   <>
-                    <span className="font-semibold text-primary">{cancelAlerts[0].name}</span>
+                    <span className="font-semibold text-[#4edea3]">{cancelAlerts[0].name}</span>
                     {" "}cancels {cancelAlerts[0].cancellation_date} — take action before the date.
                   </>
                 ) : (
                   <>
-                    <span className="font-semibold text-primary">{behindPaceCards.length} card{behindPaceCards.length !== 1 ? "s" : ""}</span>
+                    <span className="font-semibold text-[#4edea3]">{behindPaceCards.length} card{behindPaceCards.length !== 1 ? "s" : ""}</span>
                     {" "}need attention — behind bonus spend pace.{" "}
-                    <Link href="/spending" className="text-primary hover:underline">Check spend now.</Link>
+                    <Link href="/spending" className="text-[#4edea3] hover:underline">Check spend now.</Link>
                   </>
                 )}
               </p>
@@ -259,8 +259,8 @@ export default function DashboardPage() {
                   ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
                 {stats.totalPoints > 0 && (
-                  <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20 flex items-center gap-1">
-                    <TrendingUp className="h-3 w-3" />
+                  <span className="px-3 py-1 bg-[#4edea3]/10 text-[#4edea3] text-xs font-bold rounded-full border border-[#4edea3]/20 flex items-center gap-1">
+                    <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>trending_up</span>
                     {stats.totalPoints.toLocaleString()} pts
                   </span>
                 )}
@@ -287,7 +287,7 @@ export default function DashboardPage() {
               </div>
               <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
                 <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Saved (YTD)</span>
-                <div className="text-xl font-bold tabular-nums text-primary">
+                <div className="text-xl font-bold tabular-nums text-[#4edea3]">
                   ${Math.max(0, stats.valueSavedYTD).toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </div>
               </div>
@@ -297,36 +297,23 @@ export default function DashboardPage() {
           {/* Right: Next Flight Opportunity */}
           <div className="lg:col-span-1">
             <div
-              className="rounded-xl p-6 border border-white/10 relative overflow-hidden flex flex-col gap-4 h-full"
-              style={{ background: "linear-gradient(135deg, rgba(78,222,163,0.12) 0%, rgba(16,185,129,0.06) 100%)" }}
+              className="rounded-xl p-8 border border-white/5 relative overflow-hidden flex flex-col justify-end h-full gap-4"
+              style={{ background: "linear-gradient(135deg, #1b1f2c 0%, #0a0e1a 100%)" }}
             >
-              <div className="absolute top-0 right-0 w-40 h-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none" />
-              <div className="flex items-center gap-2 relative z-10">
-                <Plane className="h-5 w-5 text-primary" />
-                <span className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Next Flight Opportunity</span>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#4edea3]/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
+              <span className="material-symbols-outlined text-[#4edea3] text-4xl relative z-10" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>auto_awesome</span>
+              <div className="relative z-10">
+                <h3 className="text-xl font-bold mb-2">Next Flight Opportunity</h3>
+                <p className="text-on-surface-variant text-sm leading-relaxed mb-6">
+                  You have enough points for a Business Class return trip to Tokyo via Qantas.
+                </p>
+                <Link
+                  href="/flights"
+                  className="inline-block bg-white/5 hover:bg-white/10 text-on-surface px-6 py-2.5 rounded-full text-sm font-bold transition-all border border-white/10"
+                >
+                  Explore Deals
+                </Link>
               </div>
-              <div className="relative z-10 flex-1">
-                <div className="text-3xl font-headline font-extrabold text-on-surface tracking-tight">SYD → LAX</div>
-                <div className="text-sm text-on-surface-variant mt-1">Sydney to Los Angeles</div>
-                <div className="flex gap-6 mt-4 text-sm">
-                  <div className="flex flex-col">
-                    <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Business</span>
-                    <span className="font-bold text-on-surface">~80k pts</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Economy</span>
-                    <span className="font-bold text-on-surface">~45k pts</span>
-                  </div>
-                </div>
-              </div>
-              <Link
-                href="/flights"
-                className="relative z-10 inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-black shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
-                style={{ background: "var(--gradient-cta)" }}
-              >
-                <Plane className="h-4 w-4" />
-                Explore Deals
-              </Link>
             </div>
           </div>
         </section>
@@ -337,9 +324,10 @@ export default function DashboardPage() {
             <h2 className="text-2xl font-bold font-headline text-on-surface">Active Bonus Trackers</h2>
             <Link
               href="/spending"
-              className="text-primary text-sm font-bold hover:underline flex items-center gap-1"
+              className="text-[#4edea3] text-sm font-bold hover:underline flex items-center gap-1"
             >
-              View All Cards →
+              View All Cards
+              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
             </Link>
           </div>
 
@@ -371,7 +359,7 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={card.id}
-                    className="bg-surface-container p-8 rounded-xl border border-white/5 flex flex-col justify-between group hover:border-primary/30 transition-all duration-300 cursor-pointer"
+                    className="bg-surface-container p-8 rounded-xl border border-white/5 flex flex-col justify-between group hover:border-[#4edea3]/30 transition-all duration-300 cursor-pointer"
                     onClick={() => handleEditCard(card)}
                   >
                     <div className="flex justify-between items-start mb-12">
@@ -404,7 +392,7 @@ export default function DashboardPage() {
                         <span className="text-[11px] text-on-surface-variant font-bold uppercase tracking-wider">
                           {daysLeft !== null ? `${daysLeft}d remaining` : card.bonus_spend_deadline ?? ""}
                         </span>
-                        <span className="text-primary text-xs font-bold">
+                        <span className="text-[#4edea3] text-xs font-bold">
                           {pct >= 95 ? "Almost There!" : `${pct}% Done`}
                         </span>
                       </div>
@@ -433,11 +421,11 @@ export default function DashboardPage() {
             <h2 className="text-2xl font-bold font-headline text-on-surface">Credit Portfolio</h2>
 
             {cards.length === 0 ? (
-              <div className="flex aspect-[2/1] w-full items-center justify-center rounded-xl border border-dashed border-primary/20 p-6">
+              <div className="flex aspect-[2/1] w-full items-center justify-center rounded-xl border border-dashed border-[#4edea3]/20 p-6">
                 <div className="text-center">
                   <CreditCard className="mx-auto h-10 w-10 text-on-surface-variant mb-3" />
                   <p className="text-on-surface-variant font-semibold">No cards tracked yet</p>
-                  <Link href="/cards" className="mt-2 inline-block text-primary text-sm font-bold hover:underline">
+                  <Link href="/cards" className="mt-2 inline-block text-[#4edea3] text-sm font-bold hover:underline">
                     Add your first card →
                   </Link>
                 </div>
@@ -519,8 +507,8 @@ export default function DashboardPage() {
                       className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                          <Star className="h-4 w-4 text-primary" />
+                        <div className="w-10 h-10 rounded-full bg-[#4edea3]/10 flex items-center justify-center shrink-0">
+                          <span className="material-symbols-outlined text-[#4edea3]" style={{ fontSize: "20px", fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>star</span>
                         </div>
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-on-surface">
@@ -530,7 +518,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-bold text-primary tabular-nums">
+                        <div className="text-sm font-bold text-[#4edea3] tabular-nums">
                           {card.bonusPoints > 0 ? `+${card.bonusPoints.toLocaleString()}` : "Earned"}
                         </div>
                         <div className="text-[10px] text-on-surface-variant">{earnedDate ?? ""}</div>

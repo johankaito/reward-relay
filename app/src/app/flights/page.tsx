@@ -134,7 +134,7 @@ export default function FlightsPage() {
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-headline font-bold text-on-surface tracking-tight">Reward Flights</h2>
           <div className="h-4 w-[1px] bg-white/10 hidden md:block mx-2" />
-          <span className="hidden md:block px-3 py-1 bg-surface-container/50 border border-white/5 rounded-full text-[10px] font-bold text-primary uppercase tracking-widest">Global Search</span>
+          <span className="hidden md:block px-3 py-1 bg-surface-container/50 border border-white/5 rounded-full text-[10px] font-bold text-[#4edea3] uppercase tracking-widest">Global Search</span>
         </div>
         {/* Your Points summary */}
         {totalPoints > 0 && (
@@ -153,7 +153,7 @@ export default function FlightsPage() {
         <div className="relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-end p-10 shadow-2xl border border-white/5">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-surface-container-low" />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#4edea3]/10 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 left-1/3 w-64 h-64 bg-tertiary/5 blur-[100px] rounded-full pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent" />
           </div>
@@ -173,9 +173,9 @@ export default function FlightsPage() {
               <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Origin */}
                 <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
-                  <label className="block text-[10px] uppercase tracking-[0.15em] text-primary font-bold mb-1.5 opacity-80">Origin</label>
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-[#4edea3] font-bold mb-1.5 opacity-80">Origin</label>
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-primary/70 shrink-0" />
+                    <MapPin className="w-5 h-5 text-[#4edea3]/70 shrink-0" />
                     <input
                       value={origin}
                       onChange={(e) => setOrigin(e.target.value)}
@@ -238,10 +238,10 @@ export default function FlightsPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-3 mb-2">
                 <span className="flex h-2.5 w-2.5 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4edea3] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#4edea3]" />
                 </span>
-                <span className="text-[11px] font-extrabold text-primary uppercase tracking-[0.25em]">Active Redemption Goal</span>
+                <span className="text-[11px] font-extrabold text-[#4edea3] uppercase tracking-[0.25em]">Active Redemption Goal</span>
               </div>
               <h4 className="text-4xl font-headline font-extrabold tabular-nums tracking-tighter">
                 {goalPct}% to Business SYD → LHR
@@ -261,7 +261,7 @@ export default function FlightsPage() {
                     {currentPool > 0 ? currentPool.toLocaleString() : '121,500'} / {GOAL_POINTS.toLocaleString()}
                   </span>
                 </div>
-                <span className={`px-3 py-1 text-[10px] font-black rounded-full uppercase tracking-widest border ${goalPct >= 100 ? 'bg-primary/20 text-primary border-primary/30' : goalPct >= 70 ? 'bg-primary/10 text-primary border-primary/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
+                <span className={`px-3 py-1 text-[10px] font-black rounded-full uppercase tracking-widest border ${goalPct >= 100 ? 'bg-[#4edea3]/20 text-[#4edea3] border-[#4edea3]/30' : goalPct >= 70 ? 'bg-[#4edea3]/10 text-[#4edea3] border-[#4edea3]/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
                   {goalPct >= 100 ? 'Ready to Book' : goalPct >= 70 ? 'Almost there' : 'In Progress'}
                 </span>
               </div>
@@ -339,8 +339,8 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
     <div
       className={`group rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col relative ${
         isSingapore
-          ? 'border-primary/40 ring-1 ring-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(78,222,163,0.2)] scale-[1.02]'
-          : 'border-white/10 hover:border-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]'
+          ? 'border-[#4edea3]/40 ring-1 ring-[#4edea3]/20 hover:shadow-[0_24px_48px_-12px_rgba(78,222,163,0.2)] scale-[1.02]'
+          : 'border-white/10 hover:border-[#4edea3]/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]'
       }`}
       style={{
         background: 'rgba(255,255,255,0.05)',
@@ -372,13 +372,13 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
             <span className="text-4xl font-headline font-extrabold text-white tabular-nums tracking-tighter">
               {card.points.toLocaleString()}
             </span>
-            <span className={`text-[11px] font-bold uppercase ml-2 tracking-widest ${isEmiratesFirst ? 'text-tertiary' : 'text-primary'}`}>
+            <span className={`text-[11px] font-bold uppercase ml-2 tracking-widest ${isEmiratesFirst ? 'text-tertiary' : 'text-[#4edea3]'}`}>
               Points
             </span>
           </div>
           <span className={`px-3 py-1 text-[10px] font-black rounded border uppercase tracking-widest ${
             isSingapore
-              ? 'bg-primary text-on-primary border-transparent'
+              ? 'bg-[#4edea3] text-on-primary border-transparent'
               : isEmiratesFirst
               ? 'bg-tertiary/10 text-tertiary border-tertiary/20'
               : 'bg-white/10 backdrop-blur-md text-white border-white/20'
@@ -398,7 +398,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
                 <span key={i}>
                   {seg}
                   {i < arr.length - 1 && (
-                    <span className={`mx-1 ${isEmiratesFirst ? 'text-tertiary' : 'text-primary'}`}>→</span>
+                    <span className={`mx-1 ${isEmiratesFirst ? 'text-tertiary' : 'text-[#4edea3]'}`}>→</span>
                   )}
                 </span>
               ))}
@@ -417,16 +417,16 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
         <div className="mt-auto space-y-4">
           {card.canBook ? (
             <>
-              <div className="bg-primary/10 p-4 rounded-2xl border border-primary/20">
+              <div className="bg-[#4edea3]/10 p-4 rounded-2xl border border-[#4edea3]/20">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-primary uppercase tracking-widest">Balance Status</span>
-                  <span className="text-lg font-extrabold text-primary tabular-nums">
+                  <span className="text-xs font-bold text-[#4edea3] uppercase tracking-widest">Balance Status</span>
+                  <span className="text-lg font-extrabold text-[#4edea3] tabular-nums">
                     +{('surplus' in card ? card.surplus : 0).toLocaleString()} surplus
                   </span>
                 </div>
               </div>
               <button
-                className="w-full py-4 rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-primary/20"
+                className="w-full py-4 rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-[#4edea3]/20"
                 style={{ background: 'var(--gradient-cta)' }}
               >
                 Book with Points

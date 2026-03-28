@@ -70,8 +70,8 @@ export function AppShell({ children }: AppShellProps) {
         <div className="p-8 flex flex-col h-full">
           {/* Logo */}
           <div className="mb-10">
-            <h1 className="text-2xl font-extrabold tracking-tighter text-[#4edea3]">Reward Relay</h1>
-            <p className="text-sm tracking-wide text-slate-500 mt-1">The Financial Luminary</p>
+            <h1 className="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</h1>
+            <p className="text-[10px] uppercase tracking-widest text-slate-500 mt-1">The Financial Luminary</p>
           </div>
 
           {/* Nav */}
@@ -82,13 +82,13 @@ export function AppShell({ children }: AppShellProps) {
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center py-3 transition-all text-sm ${
+                  className={`flex items-center gap-3 px-4 py-3 transition-all text-sm rounded-lg ${
                     active
-                      ? "text-[#4edea3] font-bold border-l-4 border-[#4edea3] pl-4"
-                      : "text-slate-400 hover:text-white hover:bg-[#313442] pl-5 rounded-lg"
+                      ? "bg-[#1b1f2c] text-[#4edea3] font-bold"
+                      : "text-slate-400 hover:text-white hover:bg-[#313442]"
                   }`}
                 >
-                  <span className="material-symbols-outlined mr-4" style={{ fontSize: "22px" }}>{materialIcon}</span>
+                  <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>{materialIcon}</span>
                   <span className="font-medium">{label}</span>
                 </Link>
               )

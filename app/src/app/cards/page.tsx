@@ -39,13 +39,13 @@ function getCardStatus(card: UserCard): "ACTIVE" | "BEHIND" | "CANCEL SOON" {
 function statusColor(status: string) {
   if (status === "CANCEL SOON") return "text-[#ffb4ab]"
   if (status === "BEHIND") return "text-yellow-400"
-  return "text-primary"
+  return "text-[#4edea3]"
 }
 
 function statusDot(status: string) {
-  if (status === "CANCEL SOON") return "bg-error"
+  if (status === "CANCEL SOON") return "bg-[#ffb4ab]"
   if (status === "BEHIND") return "bg-yellow-400"
-  return "bg-primary"
+  return "bg-[#4edea3]"
 }
 
 export default function CardsPage() {
@@ -147,7 +147,7 @@ export default function CardsPage() {
           </div>
           <button
             onClick={() => setShowAddForm((v) => !v)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-black shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-black shadow-lg shadow-[#4edea3]/20 hover:opacity-90 transition-opacity"
             style={{ background: "var(--gradient-cta)" }}
           >
             <Plus className="h-4 w-4" />
@@ -204,7 +204,7 @@ export default function CardsPage() {
           </div>
           <button
             onClick={() => setShowAddForm(true)}
-            className="px-6 py-3 rounded-full font-bold text-sm text-black shadow-lg shadow-primary/20"
+            className="px-6 py-3 rounded-full font-bold text-sm text-black shadow-lg shadow-[#4edea3]/20"
             style={{ background: "var(--gradient-cta)" }}
           >
             + Add your first card
@@ -227,12 +227,12 @@ export default function CardsPage() {
               </div>
             </div>
             <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
-              <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-primary">
+              <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-[#4edea3]">
                 <span className="text-8xl font-bold">$</span>
               </div>
               <div className="relative z-10">
                 <div className="text-on-surface-variant text-xs font-semibold uppercase tracking-widest mb-2">Monthly Spend</div>
-                <div className="text-3xl font-headline font-bold tabular-nums text-primary">
+                <div className="text-3xl font-headline font-bold tabular-nums text-[#4edea3]">
                   ${stats.totalSpend.toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                 </div>
               </div>
@@ -277,7 +277,7 @@ export default function CardsPage() {
                     >
                       {/* Card artwork tile */}
                       <div
-                        className="relative w-full rounded-xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-primary/10 overflow-hidden"
+                        className="relative w-full rounded-xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[#4edea3]/10 overflow-hidden"
                         style={{ background: gradient, aspectRatio: "1.586/1" }}
                       >
                         <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
@@ -310,17 +310,17 @@ export default function CardsPage() {
                         </div>
                         {hasBonus && (
                           <div className="text-right">
-                            <div className="text-xs font-bold text-primary tabular-nums">
+                            <div className="text-xs font-bold text-[#4edea3] tabular-nums">
                               ${currentSpend.toLocaleString()} / ${spendTarget.toLocaleString()}
                             </div>
                             <div className="w-24 h-1 bg-surface-container-highest rounded-full mt-1 overflow-hidden">
-                              <div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} />
+                              <div className="h-full bg-[#4edea3] rounded-full" style={{ width: `${pct}%` }} />
                             </div>
                           </div>
                         )}
                         {uc.bonus_earned && cc?.welcome_bonus_points && (
                           <div className="text-right">
-                            <div className="text-xs font-bold text-primary tabular-nums">
+                            <div className="text-xs font-bold text-[#4edea3] tabular-nums">
                               {(cc.welcome_bonus_points / 1000).toFixed(0)}k pts
                             </div>
                             <div className="text-[10px] text-on-surface-variant">Earned</div>
@@ -348,9 +348,9 @@ export default function CardsPage() {
             {/* Right: detail panel xl:col-span-4 */}
             <aside className="xl:col-span-4 space-y-8">
               <section className="bg-surface-container rounded-lg p-8 border border-white/5 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[80px] rounded-full" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#4edea3]/10 blur-[80px] rounded-full" />
                 <h2 className="font-headline text-lg font-bold mb-6 flex items-center gap-2 text-on-surface">
-                  <CreditCard className="h-5 w-5 text-primary" />
+                  <CreditCard className="h-5 w-5 text-[#4edea3]" />
                   Card Details
                 </h2>
 
@@ -451,8 +451,8 @@ export default function CardsPage() {
 
                       if (selectedCard.bonus_earned && bonusPts > 0) {
                         return (
-                          <div className="bg-primary/10 border border-primary/20 p-4 rounded-xl mt-4 text-center">
-                            <div className="text-primary font-bold text-sm">
+                          <div className="bg-[#4edea3]/10 border border-[#4edea3]/20 p-4 rounded-xl mt-4 text-center">
+                            <div className="text-[#4edea3] font-bold text-sm">
                               {(bonusPts / 1000).toFixed(0)}k bonus points earned!
                             </div>
                           </div>

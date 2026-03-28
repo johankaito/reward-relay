@@ -118,7 +118,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
         {/* Back button */}
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group"
+          className="flex items-center gap-2 text-on-surface-variant hover:text-[#4edea3] transition-colors group"
         >
           <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
           <span className="text-xs font-bold uppercase tracking-widest">Back</span>
@@ -142,7 +142,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
                 }}
               />
               {/* Glow overlays */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] -mr-32 -mt-32" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-[#4edea3]/10 blur-[80px] -mr-32 -mt-32" />
               <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 blur-[60px] -ml-24 -mb-24" />
               <div className={`relative h-full p-8 flex flex-col justify-between ${textColor}`}>
                 <div className="flex justify-between items-start">
@@ -189,7 +189,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
               </div>
               <div className="bg-surface-container-highest p-4 lg:p-6 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center lg:block lg:text-left">
                 <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Re-Eligible</span>
-                <p className="font-headline font-bold text-sm lg:text-lg tabular-nums text-primary">{reEligible}</p>
+                <p className="font-headline font-bold text-sm lg:text-lg tabular-nums text-[#4edea3]">{reEligible}</p>
               </div>
             </section>
 
@@ -201,7 +201,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
             {/* Bonus progress bento card (arc + bar) */}
             {requirement > 0 ? (
               <section className="bg-surface-container p-8 rounded-xl space-y-10 border border-white/5 shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#4edea3]/5 rounded-full blur-[100px] -mr-32 -mt-32" />
                 <div className="flex flex-col items-center">
                   <h2 className="font-headline font-extrabold text-xl mb-8">Bonus Progress</h2>
                   {/* Full-circle arc, clipped to top half */}
@@ -251,7 +251,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
                         </p>
                       )}
                     </div>
-                    <p className="text-sm font-headline font-black text-primary tabular-nums">{spentPct}%</p>
+                    <p className="text-sm font-headline font-black text-[#4edea3] tabular-nums">{spentPct}%</p>
                   </div>
                   <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
                     <div
@@ -265,7 +265,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
                     </p>
                   )}
                   {remaining === 0 && (
-                    <p className="text-xs text-primary font-bold text-center">Bonus spend target reached!</p>
+                    <p className="text-xs text-[#4edea3] font-bold text-center">Bonus spend target reached!</p>
                   )}
                 </div>
               </section>

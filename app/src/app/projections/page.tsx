@@ -140,14 +140,14 @@ export default function ProjectionsPage() {
         {/* Page header */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-primary">
+            <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#4edea3]">
               Plan
             </p>
             <h1 className="mt-1 font-[var(--font-grotesk)] text-2xl font-bold tracking-tight text-white">
               Reward Flights
             </h1>
           </div>
-          <span className="rounded-full border border-white/10 bg-surface-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary">
+          <span className="rounded-full border border-white/10 bg-surface-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#4edea3]">
             Gap Analysis
           </span>
         </div>
@@ -164,11 +164,11 @@ export default function ProjectionsPage() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {/* Origin */}
             <div className="flex cursor-pointer flex-col gap-1.5 rounded-2xl border border-white/5 bg-surface-container/60 p-4 transition-colors hover:bg-surface-container-high">
-              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary">
+              <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#4edea3]">
                 Origin
               </label>
               <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-primary/70" />
+                <MapPin className="h-5 w-5 text-[#4edea3]/70" />
                 <input
                   className="w-full bg-transparent text-lg font-bold text-white outline-none placeholder:text-white/40"
                   value={origin}
@@ -208,7 +208,7 @@ export default function ProjectionsPage() {
                     onClick={() => setCabinClass(c.id)}
                     className={`flex-1 rounded-lg py-1.5 text-xs font-bold uppercase tracking-wider transition-all ${
                       cabinClass === c.id
-                        ? "bg-primary text-on-primary"
+                        ? "bg-[#4edea3] text-on-primary"
                         : "bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-on-surface"
                     }`}
                   >
@@ -231,7 +231,7 @@ export default function ProjectionsPage() {
                       setOrigin(r.origin)
                       setDestination(r.destination)
                     }}
-                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-on-surface transition-all hover:border-primary/30 hover:text-primary"
+                    className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-bold text-on-surface transition-all hover:border-[#4edea3]/30 hover:text-[#4edea3]"
                   >
                     {r.label}
                   </button>
@@ -254,16 +254,16 @@ export default function ProjectionsPage() {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#4edea3] opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#4edea3]" />
                 </span>
-                <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-primary">
+                <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-[#4edea3]">
                   Active Redemption Goal
                 </span>
               </div>
               <h2 className="font-[var(--font-grotesk)] text-3xl font-extrabold tracking-tight text-white">
                 {percentage}% to {selectedCabin.label}{" "}
-                <span className="text-primary">
+                <span className="text-[#4edea3]">
                   {origin} → {destination}
                 </span>
               </h2>
@@ -273,7 +273,7 @@ export default function ProjectionsPage() {
                     You have enough points for a{" "}
                     <span className="font-bold text-white">{selectedCabin.label}</span> redemption.
                     You have a surplus of{" "}
-                    <span className="font-bold text-primary">
+                    <span className="font-bold text-[#4edea3]">
                       {Math.abs(gap).toLocaleString()} pts
                     </span>
                     .
@@ -317,7 +317,7 @@ export default function ProjectionsPage() {
                 <span
                   className={`rounded-full border px-3 py-1 text-[10px] font-black uppercase tracking-widest ${
                     isSufficient
-                      ? "border-primary/20 bg-primary/10 text-primary"
+                      ? "border-[#4edea3]/20 bg-[#4edea3]/10 text-[#4edea3]"
                       : "border-white/10 bg-white/5 text-on-surface"
                   }`}
                 >
@@ -342,20 +342,20 @@ export default function ProjectionsPage() {
               <div
                 className={`mt-4 flex items-center justify-between rounded-2xl border p-3 ${
                   isSufficient
-                    ? "border-primary/20 bg-primary/10"
+                    ? "border-[#4edea3]/20 bg-[#4edea3]/10"
                     : "border-red-500/10 bg-red-500/5"
                 }`}
               >
                 <span
                   className={`text-xs font-bold uppercase tracking-widest ${
-                    isSufficient ? "text-primary" : "text-red-400"
+                    isSufficient ? "text-[#4edea3]" : "text-red-400"
                   }`}
                 >
                   {isSufficient ? "Balance Status" : "Gap to target"}
                 </span>
                 <span
                   className={`font-[var(--font-grotesk)] text-lg font-extrabold tabular-nums ${
-                    isSufficient ? "text-primary" : "text-white"
+                    isSufficient ? "text-[#4edea3]" : "text-white"
                   }`}
                 >
                   {isSufficient
@@ -402,8 +402,8 @@ export default function ProjectionsPage() {
                     key={card.id}
                     className={`flex flex-col overflow-hidden rounded-3xl border transition-all duration-500 ${
                       isHighlighted
-                        ? "border-primary/40 ring-1 ring-primary/20 scale-[1.02] shadow-[0_24px_48px_-12px_rgba(78,222,163,0.15)]"
-                        : "border-white/5 hover:border-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]"
+                        ? "border-[#4edea3]/40 ring-1 ring-[#4edea3]/20 scale-[1.02] shadow-[0_24px_48px_-12px_rgba(78,222,163,0.15)]"
+                        : "border-white/5 hover:border-[#4edea3]/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]"
                     }`}
                     style={{ background: "rgba(23, 27, 40, 0.5)" }}
                   >
@@ -442,12 +442,12 @@ export default function ProjectionsPage() {
                           <span className="font-[var(--font-grotesk)] text-4xl font-extrabold tabular-nums tracking-tighter text-white">
                             {bonusPoints.toLocaleString()}
                           </span>
-                          <span className="ml-2 text-[11px] font-bold uppercase tracking-widest text-primary">
+                          <span className="ml-2 text-[11px] font-bold uppercase tracking-widest text-[#4edea3]">
                             Bonus pts
                           </span>
                         </div>
                         {isHighlighted && (
-                          <span className="rounded bg-primary px-2 py-1 text-[10px] font-black uppercase tracking-widest text-on-primary">
+                          <span className="rounded bg-[#4edea3] px-2 py-1 text-[10px] font-black uppercase tracking-widest text-on-primary">
                             Best
                           </span>
                         )}
@@ -480,21 +480,21 @@ export default function ProjectionsPage() {
                         <div
                           className={`rounded-2xl border p-3 ${
                             wouldSuffice
-                              ? "border-primary/20 bg-primary/10"
+                              ? "border-[#4edea3]/20 bg-[#4edea3]/10"
                               : "border-white/5 bg-surface-container/30"
                           }`}
                         >
                           <div className="flex items-center justify-between">
                             <span
                               className={`text-xs font-bold uppercase tracking-widest ${
-                                wouldSuffice ? "text-primary" : "text-on-surface-variant"
+                                wouldSuffice ? "text-[#4edea3]" : "text-on-surface-variant"
                               }`}
                             >
                               {wouldSuffice ? "Would cover goal" : "Remaining gap"}
                             </span>
                             <span
                               className={`font-[var(--font-grotesk)] text-base font-extrabold tabular-nums ${
-                                wouldSuffice ? "text-primary" : "text-white"
+                                wouldSuffice ? "text-[#4edea3]" : "text-white"
                               }`}
                             >
                               {wouldSuffice
@@ -508,7 +508,7 @@ export default function ProjectionsPage() {
                           href="/cards"
                           className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold uppercase tracking-widest transition-all ${
                             isHighlighted
-                              ? "text-on-primary shadow-lg shadow-primary/20 hover:opacity-90 hover:scale-[1.02]"
+                              ? "text-on-primary shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]"
                               : "border border-white/10 bg-white/5 text-on-surface hover:bg-white/10 hover:text-on-surface"
                           }`}
                           style={isHighlighted ? { background: "var(--gradient-cta)" } : undefined}

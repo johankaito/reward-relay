@@ -163,7 +163,7 @@ function MobileSpendArc({
     <section className="arc-hero-bg -mx-4 pt-10 pb-20 px-6 text-center relative overflow-hidden rounded-b-[4rem] bg-surface-container">
       {/* Header */}
       <header className="mb-10 relative z-10">
-        <p className="text-primary text-[11px] uppercase tracking-[0.2em] font-bold mb-3 opacity-90">
+        <p className="text-[#4edea3] text-[11px] uppercase tracking-[0.2em] font-bold mb-3 opacity-90">
           Current Statement Balance
         </p>
         <h1 className="text-6xl font-extrabold font-headline tracking-tighter tabular-nums text-on-surface">
@@ -207,9 +207,9 @@ function MobileSpendArc({
         </svg>
         {/* Pace badge */}
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-            <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{paceLabel}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-[#4edea3]/10 border border-[#4edea3]/20 rounded-full">
+            <span className="w-2 h-2 bg-[#4edea3] rounded-full animate-pulse" />
+            <span className="text-[10px] font-bold text-[#4edea3] uppercase tracking-wider">{paceLabel}</span>
           </div>
         </div>
       </div>
@@ -222,7 +222,7 @@ function MobileSpendArc({
             <span className="text-on-surface font-bold text-2xl tabular-nums">
               {bonusPts ? `${(bonusPts / 1000).toFixed(0)}k` : "—"}
             </span>
-            {bonusPts ? <span className="text-primary text-xs font-bold">pts</span> : null}
+            {bonusPts ? <span className="text-[#4edea3] text-xs font-bold">pts</span> : null}
           </div>
         </div>
         <div className="glass-card p-5 rounded-2xl text-left">
@@ -248,10 +248,10 @@ function formatCurrency(amount: number): string {
 }
 
 function getPaceStatus(card: UserCard): { label: string; color: string } {
-  if (!card.spend_deadline || !card.spend_target) return { label: "On Track", color: "text-primary" }
+  if (!card.spend_deadline || !card.spend_target) return { label: "On Track", color: "text-[#4edea3]" }
 
   const remaining = card.spend_target - card.current_spend
-  if (remaining <= 0) return { label: "Bonus Earned", color: "text-primary" }
+  if (remaining <= 0) return { label: "Bonus Earned", color: "text-[#4edea3]" }
 
   const daysLeft = Math.ceil(
     (new Date(card.spend_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
@@ -261,7 +261,7 @@ function getPaceStatus(card: UserCard): { label: string; color: string } {
   const dailyNeeded = remaining / daysLeft
   if (dailyNeeded > 100) return { label: "Will Miss Bonus", color: "text-[#ffb4ab]" }
   if (dailyNeeded > 50) return { label: "Behind Pace", color: "text-amber-400" }
-  return { label: "On Track", color: "text-primary" }
+  return { label: "On Track", color: "text-[#4edea3]" }
 }
 
 type SpendPeriod = "monthly" | "quarterly" | "annual"
@@ -411,7 +411,7 @@ export default function SpendingTrackerPage() {
                 onClick={() => setPeriod(p)}
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all ${
                   period === p
-                    ? "bg-primary text-on-primary shadow-sm"
+                    ? "bg-[#4edea3] text-on-primary shadow-sm"
                     : "text-on-surface-variant hover:text-on-surface hover:bg-white/5"
                 }`}
               >
@@ -518,7 +518,7 @@ export default function SpendingTrackerPage() {
             <select
               value={selectedCardId ?? ""}
               onChange={(e) => setSelectedCardId(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-surface-container px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary/40"
+              className="w-full rounded-xl border border-white/10 bg-surface-container px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-[#4edea3]/40"
             >
               {userCards.map((c) => (
                 <option key={c.id} value={c.id}>
@@ -567,7 +567,7 @@ export default function SpendingTrackerPage() {
                 {/* Arc panel: col-span-5 */}
                 <div className="col-span-12 lg:col-span-5">
                   <div className="bg-surface-container-low rounded-2xl p-10 relative overflow-hidden flex flex-col items-center text-center border border-white/5 h-full">
-                    <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full" />
+                    <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#4edea3]/10 blur-[100px] rounded-full" />
                     <div className="relative w-full">
                       <h2 className="text-on-surface-variant text-[11px] uppercase tracking-[0.2em] font-bold mb-10">
                         {activeCard.card.bank} {activeCard.card.name} Bonus Progress
@@ -631,7 +631,7 @@ export default function SpendingTrackerPage() {
                     </div>
 
                     <div className="mt-12 flex flex-col items-center gap-6">
-                      <div className={`flex items-center gap-2.5 bg-primary/10 px-5 py-2 rounded-full border border-primary/30 premium-glow`}>
+                      <div className={`flex items-center gap-2.5 bg-[#4edea3]/10 px-5 py-2 rounded-full border border-[#4edea3]/30 premium-glow`}>
                         <span className={`text-xs font-bold uppercase tracking-widest ${pace.color}`}>{pace.label}</span>
                       </div>
                       {activeCard.spend_deadline && activeCard.spend_target > activeCard.current_spend && (() => {
@@ -751,8 +751,8 @@ export default function SpendingTrackerPage() {
                             className="p-6 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group"
                           >
                             <div className="flex items-center gap-5">
-                              <div className="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-primary">
-                                <span className="text-lg font-bold text-primary">
+                              <div className="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center text-[#4edea3]">
+                                <span className="text-lg font-bold text-[#4edea3]">
                                   {txn.description?.charAt(0)?.toUpperCase() ?? "·"}
                                 </span>
                               </div>
@@ -766,8 +766,8 @@ export default function SpendingTrackerPage() {
                                 {formatCurrency(txn.amount)}
                               </span>
                               <div className="flex items-center justify-end gap-2 mt-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                <span className="text-[10px] uppercase font-bold tracking-widest text-primary">Qualified</span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#4edea3]" />
+                                <span className="text-[10px] uppercase font-bold tracking-widest text-[#4edea3]">Qualified</span>
                               </div>
                             </div>
                           </div>
@@ -779,7 +779,7 @@ export default function SpendingTrackerPage() {
                       )}
                     </div>
                     <div className="p-5 bg-surface-container-high/30 border-t border-white/5 flex justify-center">
-                      <button className="text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors py-2 px-8">
+                      <button className="text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant hover:text-[#4edea3] transition-colors py-2 px-8">
                         Load More Activity
                       </button>
                     </div>
@@ -828,7 +828,7 @@ export default function SpendingTrackerPage() {
                   </div>
                   <button
                     onClick={() => setIsDialogOpen(true)}
-                    className="text-primary text-sm font-bold bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors"
+                    className="text-[#4edea3] text-sm font-bold bg-[#4edea3]/10 px-4 py-2 rounded-full hover:bg-[#4edea3]/20 transition-colors"
                   >
                     Add
                   </button>
@@ -854,8 +854,8 @@ export default function SpendingTrackerPage() {
                         <div className="text-right">
                           <p className="font-bold font-headline text-base tabular-nums">-{formatCurrency(txn.amount)}</p>
                           <div className="flex items-center justify-end gap-1 mt-1">
-                            <span className="w-1 h-1 bg-primary rounded-full" />
-                            <span className="text-primary text-[9px] font-extrabold uppercase tracking-widest">Qualified</span>
+                            <span className="w-1 h-1 bg-[#4edea3] rounded-full" />
+                            <span className="text-[#4edea3] text-[9px] font-extrabold uppercase tracking-widest">Qualified</span>
                           </div>
                         </div>
                       </div>
@@ -865,7 +865,7 @@ export default function SpendingTrackerPage() {
                       <p className="text-on-surface-variant text-sm">No transactions recorded yet.</p>
                       <button
                         onClick={() => setIsDialogOpen(true)}
-                        className="mt-3 text-primary text-sm font-bold bg-primary/10 px-4 py-2 rounded-full hover:bg-primary/20 transition-colors"
+                        className="mt-3 text-[#4edea3] text-sm font-bold bg-[#4edea3]/10 px-4 py-2 rounded-full hover:bg-[#4edea3]/20 transition-colors"
                       >
                         + Add Transaction
                       </button>

@@ -62,7 +62,7 @@ export default function Home() {
             {/* Headline */}
             <h1 className="mb-6 font-headline text-5xl font-extrabold leading-[1.1] tracking-tight text-on-surface md:text-7xl">
               Master the{" "}
-              <span className="text-primary">Churn</span>
+              <span className="text-[#4edea3]">Churn</span>
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
@@ -75,14 +75,14 @@ export default function Home() {
               {isLoggedIn ? (
                 <a
                   href="/dashboard"
-                  className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform hover:scale-105 md:w-auto"
+                  className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-[#4edea3]/20 transition-transform hover:scale-105 md:w-auto"
                 >
                   Go to Dashboard →
                 </a>
               ) : (
                 <a
                   href="/signup"
-                  className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform hover:scale-105 md:w-auto"
+                  className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-[#4edea3]/20 transition-transform hover:scale-105 md:w-auto"
                 >
                   Get Started Free
                 </a>
@@ -121,7 +121,7 @@ export default function Home() {
               </div>
               <p className="text-sm font-semibold text-on-surface-variant">
                 Join{" "}
-                <span className="font-bold text-primary">2,400+</span>{" "}
+                <span className="font-bold text-[#4edea3]">2,400+</span>{" "}
                 points optimisers
               </p>
             </div>
@@ -135,7 +135,7 @@ export default function Home() {
               <h2 className="font-headline mb-4 text-4xl font-extrabold text-on-surface">
                 How it Works
               </h2>
-              <div className="mx-auto h-1.5 w-16 rounded-full bg-primary" />
+              <div className="mx-auto h-1.5 w-16 rounded-full bg-[#4edea3]" />
             </div>
             <div className="grid gap-6 md:grid-cols-3">
               {[
@@ -164,7 +164,7 @@ export default function Home() {
                     backdropFilter: "blur(12px)",
                   }}
                 >
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-2xl font-headline font-bold text-primary">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#4edea3]/20 bg-[#4edea3]/10 text-2xl font-headline font-bold text-[#4edea3]">
                     {step.num}
                   </div>
                   <div>
@@ -897,7 +897,7 @@ export default function Home() {
             <BetaOnly>
               <BetaRequestForm
                 buttonText="Get Early Access"
-                buttonClassName="px-12 py-4 bg-primary-gradient text-on-primary font-headline font-bold rounded-full hover:scale-105 transition-transform shadow-lg shadow-primary/20"
+                buttonClassName="px-12 py-4 bg-primary-gradient text-on-primary font-headline font-bold rounded-full hover:scale-105 transition-transform shadow-lg shadow-[#4edea3]/20"
                 variant="inline"
               />
             </BetaOnly>
@@ -998,7 +998,7 @@ export default function Home() {
       <footer className="w-full border-t border-white/5 bg-background py-16">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-10 px-8 text-center">
           <div className="flex flex-col items-center gap-2">
-            <div className="font-headline text-2xl font-bold tracking-tighter text-primary">
+            <div className="font-headline text-2xl font-bold tracking-tighter text-[#4edea3]">
               Reward Relay
             </div>
             <p className="max-w-md text-sm" style={{ color: "var(--on-surface-variant)" }}>
