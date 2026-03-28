@@ -68,13 +68,13 @@ function statusBadge(status: CardStatus) {
       )
     case "eligible":
       return (
-        <span className="px-4 py-2 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold tracking-[0.08em] uppercase border border-secondary/20">
+        <span className="px-4 py-2 rounded-full bg-[#d0bcff]/10 text-[#d0bcff] text-[10px] font-bold tracking-[0.08em] uppercase border border-[#d0bcff]/20">
           Eligible
         </span>
       )
     default:
       return (
-        <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-[0.08em] uppercase border border-primary/20">
+        <span className="px-4 py-2 rounded-full bg-[#4edea3]/10 text-[#4edea3] text-[10px] font-bold tracking-[0.08em] uppercase border border-[#4edea3]/20">
           Active
         </span>
       )
@@ -155,7 +155,7 @@ export default function TrackerPage() {
         <section className="mt-12 mb-4">
           <h1 className="font-headline text-5xl lg:text-6xl font-extrabold tracking-tight text-on-surface mb-4">
             Your Churn{" "}
-            <span className="text-primary">Command Centre</span>
+            <span className="text-[#4edea3]">Command Centre</span>
           </h1>
           <p className="text-on-surface-variant text-lg max-w-2xl">
             {activeCount > 0 ? (
@@ -181,7 +181,7 @@ export default function TrackerPage() {
             </p>
             <Link
               href="/cards"
-              className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/20 transition-colors"
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#4edea3]/10 px-4 py-2 text-sm font-bold text-[#4edea3] hover:bg-[#4edea3]/20 transition-colors"
             >
               <CreditCard className="h-4 w-4" />
               Browse cards
@@ -227,7 +227,7 @@ export default function TrackerPage() {
                 status === "cancel_soon" ? "bg-destructive/60"
                 : status === "behind" ? "bg-amber-400/60"
                 : status === "eligible" ? "bg-secondary/40"
-                : "bg-primary/40"
+                : "bg-[#4edea3]/40"
 
               const deadlineLabelColor =
                 status === "cancel_soon" ? "text-destructive" : "text-on-surface-variant"
@@ -265,10 +265,10 @@ export default function TrackerPage() {
                         style={{ width: `${progressPct}%` }}
                       />
                       {/* Applied marker */}
-                      <div className="absolute left-0 top-0 h-full w-2 bg-primary rounded-l-full" />
+                      <div className="absolute left-0 top-0 h-full w-2 bg-[#4edea3] rounded-l-full" />
                       {/* Eligibility marker */}
                       <div
-                        className="absolute top-0 h-full w-2 bg-secondary"
+                        className="absolute top-0 h-full w-2 bg-[#d0bcff]"
                         style={{ left: `${eligibilityPct}%` }}
                       />
                       {/* Deadline marker */}
@@ -281,7 +281,7 @@ export default function TrackerPage() {
                       </div>
                       <div className="flex flex-col items-center">
                         <span>Eligible</span>
-                        <span className={`tabular-nums mt-1 ${progressPct >= eligibilityPct ? "text-secondary" : "text-on-surface-variant"}`}>
+                        <span className={`tabular-nums mt-1 ${progressPct >= eligibilityPct ? "text-[#d0bcff]" : "text-on-surface-variant"}`}>
                           {progressPct >= eligibilityPct ? "✓ Met" : "Pending"}
                         </span>
                       </div>
