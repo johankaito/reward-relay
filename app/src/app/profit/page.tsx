@@ -236,7 +236,7 @@ export default function ProfitPage() {
       {/* ── Sticky header ── */}
       <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
-          <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">Profit Dashboard</h2>
+          <h2 className="font-headline font-bold text-lg text-on-surface">Profit Dashboard</h2>
         </div>
       </header>
 
@@ -375,7 +375,7 @@ export default function ProfitPage() {
                   <span className="text-on-surface-variant text-[10px] font-bold tracking-widest uppercase">Fees Paid</span>
                   <span className="text-2xl font-headline font-bold tabular-nums">{fmtAud(fyFees)}</span>
                   <div className="mt-2 w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
-                    <div className="bg-secondary h-full" style={{ width: fyBonus > 0 ? `${Math.min((fyFees / fyBonus) * 100, 100)}%` : "0%" }} />
+                    <div className="bg-[#d0bcff] h-full" style={{ width: fyBonus > 0 ? `${Math.min((fyFees / fyBonus) * 100, 100)}%` : "0%" }} />
                   </div>
                 </div>
                 <div className="col-span-2 p-6 rounded-2xl bg-surface-container border border-white/5 flex items-center justify-between">
@@ -472,7 +472,7 @@ export default function ProfitPage() {
                     </div>
                     <div>
                       <span className="text-[10px] font-bold tracking-widest uppercase text-outline">Gross Fees</span>
-                      <p className="text-2xl font-headline font-bold text-secondary tabular mt-1">-{fmtAud(fyFees)}</p>
+                      <p className="text-2xl font-headline font-bold text-[#d0bcff] tabular mt-1">-{fmtAud(fyFees)}</p>
                     </div>
                   </div>
                 </div>
@@ -505,9 +505,9 @@ export default function ProfitPage() {
                       <div className="w-2 h-2 rounded-full bg-[#4edea3]"></div>
                       <span className="text-[10px] font-bold uppercase tracking-wider text-[#4edea3]">Bonus</span>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1 bg-secondary/10 rounded-full">
-                      <div className="w-2 h-2 rounded-full bg-secondary"></div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-secondary">Fee</span>
+                    <div className="flex items-center gap-2 px-3 py-1 bg-[#d0bcff]/10 rounded-full">
+                      <div className="w-2 h-2 rounded-full bg-[#d0bcff]"></div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#d0bcff]">Fee</span>
                     </div>
                   </div>
                 </div>
@@ -617,7 +617,7 @@ export default function ProfitPage() {
             {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee < 2).length > 0 && (
               <div className="rounded-2xl bg-surface-container p-6" style={{ border: '1px solid rgba(255,180,171,0.08)' }}>
                 <div className="flex items-center gap-3 mb-6">
-                  <Activity className="h-7 w-7 text-secondary" />
+                  <Activity className="h-7 w-7 text-[#d0bcff]" />
                   <h3 className="font-headline font-bold text-2xl">Holding Strategy</h3>
                 </div>
                 <div className="space-y-3">
@@ -641,7 +641,7 @@ export default function ProfitPage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-secondary font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
+                            <p className="text-[#d0bcff] font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
                             <p className="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Maintenance</p>
                           </div>
                         </div>
