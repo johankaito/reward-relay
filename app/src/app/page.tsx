@@ -81,10 +81,10 @@ export default function Home() {
                 </a>
               ) : (
                 <a
-                  href="/login"
+                  href="/signup"
                   className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-primary/20 transition-transform hover:scale-105 md:w-auto"
                 >
-                  Join the Elite
+                  Get Started Free
                 </a>
               )}
               <a
@@ -97,22 +97,33 @@ export default function Home() {
                   color: "var(--on-surface)",
                 }}
               >
-                View Live Dashboard
+                See How It Works
               </a>
             </div>
 
-            {/* Brand logos row */}
-            <div className="mt-20 border-t pt-10" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-              <p className="mb-6 text-sm font-medium uppercase tracking-widest" style={{ color: "#64748b" }}>
-                Trusted by 5,000+ Aussie Points Hackers
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-12 opacity-40 grayscale transition-all duration-500 hover:opacity-100 hover:grayscale-0">
-                {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((brand) => (
-                  <div key={brand} className="text-2xl font-bold" style={{ fontFamily: "var(--font-grotesk)" }}>
-                    {brand}
+            {/* Social proof — avatar stack */}
+            <div className="mt-16 flex flex-col items-center gap-4">
+              <div className="flex items-center -space-x-3">
+                {[
+                  { bg: "from-emerald-500 to-teal-600", label: "A" },
+                  { bg: "from-violet-500 to-purple-600", label: "B" },
+                  { bg: "from-blue-500 to-indigo-600", label: "C" },
+                  { bg: "from-rose-500 to-pink-600", label: "D" },
+                  { bg: "from-amber-500 to-orange-600", label: "E" },
+                ].map(({ bg, label }) => (
+                  <div
+                    key={label}
+                    className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${bg} ring-2 ring-surface text-xs font-bold text-white`}
+                  >
+                    {label}
                   </div>
                 ))}
               </div>
+              <p className="text-sm font-semibold text-on-surface-variant">
+                Join{" "}
+                <span className="font-bold text-primary">2,400+</span>{" "}
+                points optimisers
+              </p>
             </div>
           </div>
         </section>
@@ -121,15 +132,12 @@ export default function Home() {
         <section id="how-it-works" className="bg-surface-container-low px-6 py-24 md:px-20">
           <div className="mx-auto max-w-4xl">
             <div className="mb-16 text-center">
-              <h2
-                className="mb-4 text-4xl font-extrabold"
-                style={{ fontFamily: "var(--font-grotesk)" }}
-              >
+              <h2 className="font-headline mb-4 text-4xl font-extrabold text-on-surface">
                 How it Works
               </h2>
-              <div className="mx-auto h-1.5 w-16 rounded-full" style={{ backgroundColor: "#4edea3" }} />
+              <div className="mx-auto h-1.5 w-16 rounded-full bg-primary" />
             </div>
-            <div className="space-y-16">
+            <div className="grid gap-6 md:grid-cols-3">
               {[
                 {
                   num: "1",
@@ -147,23 +155,23 @@ export default function Home() {
                   body: "Receive real-time notifications on when to spend, when to apply, and when to close to keep your credit score pristine.",
                 },
               ].map((step) => (
-                <div key={step.num} className="flex flex-col gap-8 md:flex-row md:items-start">
-                  <div
-                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border text-2xl font-bold"
-                    style={{
-                      background: "rgba(78,222,163,0.1)",
-                      borderColor: "rgba(78,222,163,0.2)",
-                      color: "#4edea3",
-                      fontFamily: "var(--font-grotesk)",
-                    }}
-                  >
+                <div
+                  key={step.num}
+                  className="flex flex-col gap-6 rounded-2xl border p-8"
+                  style={{
+                    background: "rgba(27,31,44,0.6)",
+                    borderColor: "rgba(255,255,255,0.06)",
+                    backdropFilter: "blur(12px)",
+                  }}
+                >
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-2xl font-headline font-bold text-primary">
                     {step.num}
                   </div>
                   <div>
-                    <h3 className="mb-3 text-2xl font-bold" style={{ fontFamily: "var(--font-grotesk)" }}>
+                    <h3 className="font-headline mb-3 text-xl font-bold text-on-surface">
                       {step.title}
                     </h3>
-                    <p className="text-lg leading-relaxed" style={{ color: "#bbcabf" }}>
+                    <p className="leading-relaxed text-on-surface-variant">
                       {step.body}
                     </p>
                   </div>
@@ -189,13 +197,13 @@ export default function Home() {
               </h3>
               <div className="relative h-64 w-64">
                 <svg className="h-full w-full -rotate-90">
-                  <circle cx="128" cy="128" r="110" fill="transparent" stroke="#313442" strokeWidth="16" />
+                  <circle cx="128" cy="128" r="110" fill="transparent" stroke="var(--surface-container-highest)" strokeWidth="16" />
                   <circle
                     cx="128"
                     cy="128"
                     r="110"
                     fill="transparent"
-                    stroke="#4edea3"
+                    stroke="var(--primary)"
                     strokeWidth="16"
                     strokeDasharray="691"
                     strokeDashoffset="103"
@@ -690,16 +698,15 @@ export default function Home() {
                 <div
                   className="relative flex flex-col overflow-hidden rounded-2xl p-10 shadow-2xl"
                   style={{
-                    backgroundColor: "#313442",
-                    border: "2px solid #4edea3",
+                    backgroundColor: "var(--surface-container-highest)",
+                    border: "2px solid var(--primary)",
                     boxShadow: "0 0 40px rgba(78,222,163,0.1)",
                   }}
                 >
                   <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl"
                     style={{ background: "rgba(78,222,163,0.1)" }} />
                   <div
-                    className="absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest"
-                    style={{ background: "#4edea3", color: "#003824" }}
+                    className="absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-primary-gradient text-on-primary"
                   >
                     Most Popular
                   </div>
@@ -852,7 +859,7 @@ export default function Home() {
                 <div className="flex items-center gap-4 not-italic">
                   <div
                     className="flex h-12 w-12 items-center justify-center rounded-full font-bold text-white"
-                    style={{ backgroundColor: "#313442", border: "1px solid rgba(78,222,163,0.2)" }}
+                    style={{ backgroundColor: "var(--surface-container-highest)", border: "1px solid rgba(78,222,163,0.2)" }}
                   >
                     {t.name[0]}
                   </div>
@@ -994,7 +1001,7 @@ export default function Home() {
             <div className="font-headline text-2xl font-bold tracking-tighter text-primary">
               Reward Relay
             </div>
-            <p className="max-w-md text-sm" style={{ color: "#64748b" }}>
+            <p className="max-w-md text-sm" style={{ color: "var(--on-surface-variant)" }}>
               The Financial Luminary Command Center. Elevating credit reward management to high-stakes precision.
             </p>
           </div>
