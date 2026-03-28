@@ -97,7 +97,7 @@ export default function LoginPage() {
 
           {/* Brand section */}
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl mb-4" style={{ background: "#1a1e2e", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full mb-4" style={{ background: "#1a1e2e", border: "1px solid rgba(255,255,255,0.08)" }}>
               <span
                 className="material-symbols-outlined text-[#4edea3] text-3xl"
                 style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
@@ -172,7 +172,7 @@ export default function LoginPage() {
               type="submit"
               disabled={isLoading || !email || !password}
               className="w-full h-14 mt-4 text-black font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
-              style={{ background: "var(--gradient-cta)" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
             >
               {isLoading ? "Signing in…" : "Sign in"}
             </button>

@@ -91,7 +91,7 @@ export default function SettingsPage() {
             {/* Profile Section */}
             <section className="bg-surface-container rounded-lg p-6 border border-white/5">
               <div className="flex items-center gap-6 mb-10">
-                <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-extrabold text-white font-headline flex-shrink-0" style={{ background: "linear-gradient(135deg, #2DD4BF 0%, #059669 100%)" }}>
+                <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-extrabold text-white font-headline flex-shrink-0 ring-2 ring-white/15" style={{ background: "linear-gradient(135deg, #2DD4BF 0%, #059669 100%)" }}>
                   {initials}
                 </div>
                 <div>
@@ -179,7 +179,7 @@ export default function SettingsPage() {
 
               <div className="bg-surface-container-low p-8 rounded-lg mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border border-white/5">
                 <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#4d3d76] to-[#d0bcff] flex items-center justify-center text-[#3a2a62]">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#4d3d76] to-[#d0bcff] flex items-center justify-center text-[#3a2a62]">
                     <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>diamond</span>
                   </div>
                   <div>

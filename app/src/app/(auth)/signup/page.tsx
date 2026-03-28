@@ -94,7 +94,7 @@ export default function SignupPage() {
         style={{ background: "rgba(208,188,255,0.05)" }}
       />
 
-      <div className="relative z-10 w-full max-w-sm">
+      <div className="relative z-10 w-full max-w-[360px]">
         {/* Brand header */}
         <div className="flex flex-col items-center mb-10">
           <div className="mb-4">
@@ -197,7 +197,7 @@ export default function SignupPage() {
               type="submit"
               disabled={isLoading || !email || !password || !confirmPassword}
               className="w-full h-14 mt-4 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-[#4edea3]/20"
-              style={{ background: "var(--gradient-cta)" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
             >
               {isLoading ? "Creating account…" : "Create account"}
               {!isLoading && (
