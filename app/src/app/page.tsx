@@ -92,7 +92,7 @@ export default function Home() {
                   href="/signup"
                   className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-[#4edea3]/20 transition-transform hover:scale-105 md:w-auto"
                 >
-                  Get Started Free
+                  Join the Elite
                 </a>
               )}
               <a
@@ -105,7 +105,7 @@ export default function Home() {
                   color: "var(--on-surface)",
                 }}
               >
-                See How It Works
+                View Live Dashboard
               </a>
             </div>
 
