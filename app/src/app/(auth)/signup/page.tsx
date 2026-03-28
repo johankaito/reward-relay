@@ -250,14 +250,26 @@ export default function SignupPage() {
         <div className="mt-10 text-center">
           <p className="text-on-surface-variant text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="text-[#4edea3] font-bold ml-1 hover:underline underline-offset-4">
+            {/* Desktop: "Log in" per design; Mobile: "Sign In" */}
+            <Link href="/login" className="text-[#4edea3] font-bold ml-1 hover:underline underline-offset-4 hidden md:inline">
+              Log in
+            </Link>
+            <Link href="/login" className="text-[#4edea3] font-bold ml-1 hover:underline underline-offset-4 md:hidden">
               Sign In
             </Link>
           </p>
         </div>
 
-        <div className="mt-12 text-center text-[10px] text-outline uppercase tracking-widest font-medium">
+        {/* Mobile footer */}
+        <div className="mt-12 text-center text-[10px] text-outline uppercase tracking-widest font-medium md:hidden">
           © 2024 Reward Relay • Secure Sovereign Ledger • All Rights Reserved
+        </div>
+
+        {/* Desktop decorative footer */}
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 hidden md:flex items-center gap-8 opacity-20 pointer-events-none">
+          <div className="h-px w-24 bg-outline-variant" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant whitespace-nowrap">Sovereign Financial Protocol v1.4</span>
+          <div className="h-px w-24 bg-outline-variant" />
         </div>
       </div>
     </>
