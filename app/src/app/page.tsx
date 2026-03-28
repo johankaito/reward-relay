@@ -354,8 +354,8 @@ export default function Home() {
                   className="relative flex flex-col overflow-hidden rounded-2xl p-10 shadow-2xl"
                   style={{
                     backgroundColor: "var(--surface-container-highest)",
-                    border: "2px solid var(--primary)",
-                    boxShadow: "0 0 40px rgba(78,222,163,0.1)",
+                    border: "2px solid #4edea3",
+                    boxShadow: "0 0 0 1px rgba(78,222,163,0.3), 0 0 40px rgba(78,222,163,0.25), 0 24px 48px rgba(0,0,0,0.4)",
                   }}
                 >
                   <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl"
@@ -492,13 +492,14 @@ export default function Home() {
                 key={t.name}
                 className="relative rounded-2xl p-8 italic"
                 style={{
-                  border: "1px solid rgba(60, 74, 66, 0.1)",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(78,222,163,0.1)",
                   color: "var(--on-surface-variant)",
                 }}
               >
                 <span
-                  className="absolute -top-4 left-6 text-5xl"
-                  style={{ color: "rgba(78,222,163,0.15)" }}
+                  className="absolute -top-4 left-6 text-6xl font-bold leading-none"
+                  style={{ color: "#4edea3" }}
                 >
                   &ldquo;
                 </span>
@@ -529,7 +530,7 @@ export default function Home() {
 
         {/* CTA Section */}
         <section className="px-8 py-24 text-center">
-          <div className="glass-card relative mx-auto max-w-4xl overflow-hidden rounded-lg p-16 border border-outline-variant/10">
+          <div className="relative mx-auto max-w-4xl overflow-hidden rounded-lg p-16">
             <div
               className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full blur-[100px]"
               style={{ background: "rgba(78,222,163,0.05)" }}
