@@ -160,7 +160,7 @@ function MobileSpendArc({
   const TOTAL_LEN = Math.PI * 80 // semicircle path ≈ 251.3
   const filled = TOTAL_LEN * pct
   return (
-    <section className="arc-hero-bg -mx-4 pt-10 pb-20 px-6 text-center relative overflow-hidden">
+    <section className="arc-hero-bg -mx-4 pt-10 pb-20 px-6 text-center relative overflow-hidden rounded-b-[4rem] bg-surface-container">
       {/* Header */}
       <header className="mb-10 relative z-10">
         <p className="text-primary text-[11px] uppercase tracking-[0.2em] font-bold mb-3 opacity-90">

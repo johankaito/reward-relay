@@ -157,34 +157,27 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       {/* ── Mobile bottom nav ── */}
-      <nav
-        className="fixed inset-x-0 bottom-0 z-20 md:hidden"
-        style={{
-          background: "color-mix(in srgb, var(--surface-container-low) 97%, transparent)",
-          backdropFilter: "blur(12px)",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-          boxShadow: "0 -8px 32px rgba(0,0,0,0.5)",
-        }}
+      {/* ── Mobile bottom nav ── */}
+      <nav className="fixed bottom-0 w-full bg-surface-container border-t border-white/5 flex justify-around py-2 z-50 md:hidden"
+        style={{ boxShadow: "0 -8px 32px rgba(0,0,0,0.5)" }}
       >
-        <div className="grid grid-cols-5 h-20 pb-safe" style={{ minHeight: 80 }}>
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const active = isActive(href)
-            return (
-              <button
-                key={href}
-                onClick={() => router.push(href)}
-                className={`flex flex-col items-center gap-1 py-2 px-1 transition-colors active:bg-white/5 ${
-                  active ? "text-primary" : "text-on-surface-variant"
-                }`}
-              >
-                <Icon className={`h-5 w-5 flex-shrink-0 transition-transform ${active ? "scale-110" : ""}`} />
-                <span className="text-[9px] font-semibold tracking-widest uppercase leading-tight">
-                  {label}
-                </span>
-              </button>
-            )
-          })}
-        </div>
+        {navItems.map(({ href, label, icon: Icon }) => {
+          const active = isActive(href)
+          return (
+            <button
+              key={href}
+              onClick={() => router.push(href)}
+              className={`flex flex-col items-center gap-1 py-1 px-2 transition-colors active:bg-white/5 ${
+                active ? "text-primary" : "text-on-surface-variant"
+              }`}
+            >
+              <Icon className={`h-6 w-6 flex-shrink-0 transition-transform ${active ? "scale-110" : ""}`} />
+              <span className="text-[10px] font-semibold tracking-wide leading-tight">
+                {label}
+              </span>
+            </button>
+          )
+        })}
       </nav>
     </div>
   )
