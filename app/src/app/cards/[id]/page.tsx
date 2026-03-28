@@ -103,10 +103,6 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
     ? calculatePace(currentSpend, requirement, card.application_date, card.bonus_spend_deadline)
     : null
 
-  // Arc: half-circle SVG, stroke-dasharray 125.6 for r=40 half arc
-  const arcTotal = 125.6
-  const arcOffset = arcTotal * (1 - spentPct / 100)
-
   // Re-eligibility: ~18 months after application
   const reEligible = card.application_date
     ? (() => {
@@ -129,14 +125,22 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
         </button>
 
         {/* Main grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
-          {/* LEFT: Card visual + key dates + bonus tracker */}
-          <div className="lg:col-span-7 space-y-8">
+          {/* LEFT: Card visual + key dates */}
+          <div className="space-y-8">
 
             {/* Wallet card */}
             <section className="relative aspect-[1.58/1] w-full rounded-xl overflow-hidden shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.6)] group">
               <div className="absolute inset-0" style={{ background: gradient }} />
+              {/* Dot-grid pattern overlay */}
+              <div
+                className="absolute inset-0 opacity-20 pointer-events-none"
+                style={{
+                  backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)",
+                  backgroundSize: "24px 24px",
+                }}
+              />
               {/* Glow overlays */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] -mr-32 -mt-32" />
               <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 blur-[60px] -ml-24 -mb-24" />
@@ -170,44 +174,84 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
             </section>
 
             {/* Key dates grid */}
-            <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-surface-container-highest p-4 rounded-lg flex flex-col items-center justify-center text-center">
-                <span className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Applied</span>
-                <p className="font-headline font-extrabold text-sm tabular-nums">{fmtDate(card.application_date)}</p>
+            <section className="grid grid-cols-2 gap-4">
+              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+                <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Applied</span>
+                <p className="font-headline font-bold text-lg tabular-nums">{fmtDate(card.application_date)}</p>
               </div>
-              <div className="bg-surface-container-highest p-4 rounded-lg flex flex-col items-center justify-center text-center border-b-2 border-primary/30">
-                <span className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Annual Fee</span>
-                <p className="font-headline font-extrabold text-sm tabular-nums">{card.card?.annual_fee != null ? fmt(card.card.annual_fee) : "—"}</p>
+              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+                <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Annual Fee Due</span>
+                <p className="font-headline font-bold text-lg tabular-nums">{card.card?.annual_fee != null ? fmt(card.card.annual_fee) : "—"}</p>
               </div>
-              <div className="bg-surface-container-highest p-4 rounded-lg flex flex-col items-center justify-center text-center">
-                <span className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Cancel By</span>
-                <p className="font-headline font-extrabold text-sm tabular-nums text-destructive">{fmtDate(card.cancellation_date)}</p>
+              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+                <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Cancel By</span>
+                <p className="font-headline font-bold text-lg tabular-nums text-destructive">{fmtDate(card.cancellation_date)}</p>
               </div>
-              <div className="bg-surface-container-highest p-4 rounded-lg flex flex-col items-center justify-center text-center">
-                <span className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-2">Re-Eligible</span>
-                <p className="font-headline font-extrabold text-sm tabular-nums text-primary">{reEligible}</p>
+              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+                <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Re-Eligible</span>
+                <p className="font-headline font-bold text-lg tabular-nums text-primary">{reEligible}</p>
               </div>
             </section>
 
-            {/* Bonus tracker progress bar */}
+          </div>
+
+          {/* RIGHT: Bonus progress bento + Recent activity */}
+          <div className="space-y-8">
+
+            {/* Bonus progress bento card (arc + bar) */}
             {requirement > 0 ? (
-              <section className="bg-surface-container p-8 rounded-lg border border-white/5">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-headline text-lg font-extrabold">Welcome Bonus Progress</h3>
-                  {card.card?.welcome_bonus_points ? (
-                    <div className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-full uppercase">
-                      {card.card.welcome_bonus_points.toLocaleString()} {card.card.points_currency ?? "pts"}
+              <section className="bg-surface-container p-8 rounded-xl space-y-10 border border-white/5 shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
+                <div className="flex flex-col items-center">
+                  <h2 className="font-headline font-extrabold text-xl mb-8">Bonus Progress</h2>
+                  {/* Full-circle arc, clipped to top half */}
+                  <div className="relative w-64 h-40 flex justify-center overflow-hidden">
+                    <svg className="w-64 h-64 -rotate-180" viewBox="0 0 100 100">
+                      <circle
+                        className="text-surface-container-highest"
+                        cx="50" cy="50" r="45"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="8"
+                        strokeDasharray="141.37"
+                        strokeDashoffset="0"
+                      />
+                      <circle
+                        cx="50" cy="50" r="45"
+                        fill="none"
+                        stroke="url(#arcGradientCircle)"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        strokeDasharray="141.37"
+                        strokeDashoffset={141.37 * (1 - spentPct / 100)}
+                      />
+                      <defs>
+                        <linearGradient id="arcGradientCircle" x1="0%" x2="100%" y1="0%" y2="0%">
+                          <stop offset="0%" stopColor="#4edea3" />
+                          <stop offset="100%" stopColor="#10b981" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div className="absolute bottom-4 text-center">
+                      <span className="block text-4xl font-headline font-black tabular-nums">{fmt(currentSpend)}</span>
+                      <span className="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">
+                        of {fmt(requirement)}
+                      </span>
                     </div>
-                  ) : null}
+                  </div>
                 </div>
+                {/* Progress bar detail */}
                 <div className="space-y-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-on-surface-variant">
-                      Spent: <strong className="text-on-surface tabular-nums">{fmt(currentSpend)}</strong>
-                    </span>
-                    <span className="text-on-surface-variant">
-                      Target: <strong className="text-on-surface tabular-nums">{fmt(requirement)}</strong>
-                    </span>
+                  <div className="flex justify-between items-end">
+                    <div>
+                      <p className="text-sm font-bold text-on-surface">Sign-up Bonus Goal</p>
+                      {card.card?.welcome_bonus_points && (
+                        <p className="text-xs text-on-surface-variant">
+                          {card.card.welcome_bonus_points.toLocaleString()} {card.card.points_currency ?? "pts"}
+                        </p>
+                      )}
+                    </div>
+                    <p className="text-sm font-headline font-black text-primary tabular-nums">{spentPct}%</p>
                   </div>
                   <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
                     <div
@@ -215,103 +259,45 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
                       style={{ width: `${spentPct}%`, background: "var(--gradient-cta)" }}
                     />
                   </div>
-                  {pace && (
-                    <p className="text-xs text-on-surface-variant text-center">
-                      {remaining > 0
-                        ? `${fmt(remaining)} remaining · ${pace.daysRemaining} day${pace.daysRemaining !== 1 ? "s" : ""} left`
-                        : "Bonus spend target reached!"}
+                  {pace && remaining > 0 && (
+                    <p className="text-xs text-on-surface-variant italic text-center">
+                      Remaining: {fmt(remaining)} due in {pace.daysRemaining} day{pace.daysRemaining !== 1 ? "s" : ""}
                     </p>
+                  )}
+                  {remaining === 0 && (
+                    <p className="text-xs text-primary font-bold text-center">Bonus spend target reached!</p>
                   )}
                 </div>
               </section>
             ) : null}
-          </div>
 
-          {/* RIGHT: Arc + Recent activity */}
-          <div className="lg:col-span-5 space-y-8">
-
-            {/* Spend arc */}
-            {requirement > 0 ? (
-              <section className="bg-surface-container p-8 rounded-lg flex flex-col items-center justify-center text-center relative overflow-hidden border border-white/5">
-                <div className="absolute top-0 left-0 w-full h-1 bg-primary/20" />
-                <h3 className="font-headline text-sm font-extrabold text-on-surface-variant uppercase tracking-widest mb-8">
-                  Bonus Spend Progress
-                </h3>
-                <div className="relative w-48 h-32">
-                  <svg className="w-full h-full" viewBox="0 0 100 60">
-                    <path
-                      className="text-surface-container-highest"
-                      d="M 10 50 A 40 40 0 0 1 90 50"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeWidth="8"
-                    />
-                    <path
-                      d="M 10 50 A 40 40 0 0 1 90 50"
-                      fill="none"
-                      stroke="url(#arcGradient)"
-                      strokeDasharray={arcTotal}
-                      strokeDashoffset={arcOffset}
-                      strokeLinecap="round"
-                      strokeWidth="8"
-                    />
-                    <defs>
-                      <linearGradient id="arcGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-                        <stop offset="0%" stopColor="#4edea3" />
-                        <stop offset="100%" stopColor="#10b981" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-                    <span className="text-3xl font-headline font-extrabold tabular-nums">{fmt(currentSpend)}</span>
-                    <span className="text-[10px] text-on-surface-variant uppercase font-bold">
-                      of {fmt(requirement)}
-                    </span>
-                  </div>
-                </div>
-                <div className="mt-4 flex gap-8">
-                  <div className="text-center">
-                    <p className="text-[10px] text-on-surface-variant uppercase mb-1">Progress</p>
-                    <p className="font-bold tabular-nums">{spentPct}%</p>
-                  </div>
-                  <div className="w-px h-8 bg-white/10" />
-                  <div className="text-center">
-                    <p className="text-[10px] text-on-surface-variant uppercase mb-1">Remaining</p>
-                    <p className="font-bold tabular-nums">{fmt(remaining)}</p>
-                  </div>
-                </div>
-              </section>
-            ) : null}
-
-            {/* Recent activity placeholder */}
-            <section className="bg-surface-container rounded-lg border border-white/5 overflow-hidden">
-              <div className="p-6 flex justify-between items-center border-b border-white/5">
-                <h3 className="font-headline text-lg font-extrabold">Recent Activity</h3>
+            {/* Card activity */}
+            <section className="bg-surface-container rounded-xl border border-white/5 overflow-hidden shadow-xl">
+              <div className="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-surface-container-low/50">
+                <h3 className="font-headline font-bold text-lg">Card Activity</h3>
               </div>
-              <div className="space-y-1 p-4">
-                {/* Activity items — static placeholder since transaction data isn't in scope */}
+              <div className="divide-y divide-white/5">
                 {[
-                  { icon: ShoppingBag, label: "Shopping", amount: null },
-                  { icon: Utensils, label: "Dining", amount: null },
-                  { icon: Plane, label: "Travel", amount: null },
-                ].map(({ icon: Icon, label }) => (
+                  { Icon: Utensils, label: "Dining", sub: "Spend tracked here", color: "text-tertiary" },
+                  { Icon: Plane, label: "Travel", sub: "Spend tracked here", color: "text-secondary" },
+                  { Icon: ShoppingBag, label: "Shopping", sub: "Spend tracked here", color: "text-on-surface-variant" },
+                ].map(({ Icon, label, sub, color }) => (
                   <div
                     key={label}
-                    className="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-high transition-colors"
+                    className="px-8 py-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
-                        <Icon className="h-4 w-4 text-primary" />
+                        <Icon className={`h-4 w-4 ${color}`} />
                       </div>
                       <div>
-                        <p className="text-sm font-bold">{label}</p>
-                        <p className="text-[10px] text-on-surface-variant">No transactions yet</p>
+                        <p className="text-sm font-bold text-on-surface">{label}</p>
+                        <p className="text-xs text-on-surface-variant">{sub}</p>
                       </div>
                     </div>
                   </div>
                 ))}
-                <p className="text-center text-xs text-on-surface-variant py-4">
+                <p className="text-center text-xs text-on-surface-variant py-4 px-8 italic">
                   Transaction history coming soon
                 </p>
               </div>
