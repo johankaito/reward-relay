@@ -126,8 +126,12 @@ async function main() {
   run(`git push origin ${branch} --quiet`, { cwd: REPO_ROOT, silent: true })
   console.log("  ✓ Pushed to remote\n")
 
+  // Use commit SHA (not branch) so URLs survive after branch deletion
+  const sha = run("git rev-parse HEAD", { silent: true, cwd: REPO_ROOT })
+  console.log(`  📌 Commit SHA: ${sha}\n`)
+
   // Generate PR markdown
-  const rawBase = `https://raw.githubusercontent.com/${repo}/${branch}/screenshots/${branchSlug}`
+  const rawBase = `https://raw.githubusercontent.com/${repo}/${sha}/screenshots/${branchSlug}`
 
   const markdownLines: string[] = [
     `## Visual Review`,
