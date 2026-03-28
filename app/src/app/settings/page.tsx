@@ -76,14 +76,14 @@ export default function SettingsPage() {
     <AppShell>
       {/* ── Sticky header ── */}
       <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
-        <div className="flex items-center px-6 h-16 max-w-5xl mx-auto">
+        <div className="flex items-center px-6 h-16 max-w-7xl mx-auto">
           <h2 className="font-headline font-bold text-lg bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">
             Account Settings
           </h2>
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-6 md:px-12 pt-8 pb-16">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-16">
         <div className="mb-12">
           <h1 className="text-3xl md:text-[3.5rem] font-extrabold font-headline leading-tight tracking-tight text-on-surface">
             Account Settings
