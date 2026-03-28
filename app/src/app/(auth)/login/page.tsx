@@ -85,9 +85,9 @@ export default function LoginPage() {
         style={{ background: "radial-gradient(circle, rgba(208,188,255,0.10) 0%, rgba(208,188,255,0) 70%)" }}
       />
 
-      <div className="relative z-10 w-full max-w-md px-4">
+      <div className="relative z-10 w-full max-w-md">
         {/* Glass card */}
-        <div className="glass-card rounded-2xl p-8 md:p-12 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
+        <div className="glass-card rounded-2xl p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
 
           {/* Brand section */}
           <div className="mb-10 text-center">
