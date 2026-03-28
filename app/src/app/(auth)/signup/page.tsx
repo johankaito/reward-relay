@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
-import { Mail, Lock, ShieldCheck } from "lucide-react"
 
 import { supabase } from "@/lib/supabase/client"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
@@ -97,25 +96,27 @@ export default function SignupPage() {
       <div className="relative z-10 w-full max-w-[360px]">
         {/* Brand header */}
         <div className="flex flex-col items-center mb-10">
-          <div className="mb-4">
-            <span className="text-4xl font-extrabold text-[#4edea3] tracking-tighter font-headline">R</span>
+          <div className="text-[#4edea3] mb-3">
+            <span className="material-symbols-outlined" style={{ fontSize: "48px", fontVariationSettings: "'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>rocket_launch</span>
           </div>
-          <h1 className="font-headline text-3xl font-extrabold tracking-tight text-center text-on-surface">
+          <h1 className="font-headline text-3xl font-extrabold tracking-tighter text-center text-on-surface">
             Reward Relay
           </h1>
-          <p className="text-on-surface-variant mt-2 text-sm font-medium">
-            Join the Sovereign Ledger
+          <p className="text-on-surface-variant mt-1 text-sm tracking-wide">
+            The Sovereign Ledger for Premium Rewards
           </p>
         </div>
 
         {/* Glass card */}
-        <div className="glass-panel rounded-[2rem] p-8 md:p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]">
-          {/* Beta badge */}
-          <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#4edea3]/10 border border-[#4edea3]/20">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3]">
-                Private Beta — Invite Only
-              </span>
+        <div className="glass-panel rounded-lg p-8 md:p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]">
+          {/* Card heading + beta badge */}
+          <div className="flex justify-between items-start mb-8">
+            <div>
+              <h2 className="font-headline text-2xl font-bold text-on-surface mb-2">Create Account</h2>
+              <p className="text-on-surface-variant text-sm">Join the elite network of value seekers.</p>
+            </div>
+            <div className="bg-[#4edea3]/10 border border-[#4edea3]/20 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3]">Private Beta — Invite Only</span>
             </div>
           </div>
 
@@ -129,7 +130,7 @@ export default function SignupPage() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-outline pointer-events-none" />
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none" style={{ fontSize: "20px" }}>mail</span>
                 <input
                   id="email"
                   name="email"
@@ -138,8 +139,8 @@ export default function SignupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="name@company.com"
-                  className="w-full h-12 pl-12 pr-4 bg-surface-container-highest/50 border-none rounded-2xl text-on-surface placeholder:text-outline/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+                  placeholder="name@domain.com"
+                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
               </div>
             </div>
@@ -153,7 +154,7 @@ export default function SignupPage() {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-outline pointer-events-none" />
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none" style={{ fontSize: "20px" }}>lock</span>
                 <input
                   id="password"
                   name="password"
@@ -163,7 +164,7 @@ export default function SignupPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-12 pl-12 pr-4 bg-surface-container-highest/50 border-none rounded-2xl text-on-surface placeholder:text-outline/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
               </div>
             </div>
@@ -177,7 +178,7 @@ export default function SignupPage() {
                 Confirm Password
               </label>
               <div className="relative">
-                <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-outline pointer-events-none" />
+                <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none" style={{ fontSize: "20px" }}>verified_user</span>
                 <input
                   id="confirm-password"
                   name="confirm-password"
@@ -187,7 +188,7 @@ export default function SignupPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-12 pl-12 pr-4 bg-surface-container-highest/50 border-none rounded-2xl text-on-surface placeholder:text-outline/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
               </div>
             </div>
@@ -196,8 +197,8 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading || !email || !password || !confirmPassword}
-              className="w-full h-14 mt-4 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-[#4edea3]/20"
-              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+              className="w-full mt-4 py-4 font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg"
+              style={{ background: "linear-gradient(135deg, #4EDEA3 0%, #10B981 100%)", color: "#00583b" }}
             >
               {isLoading ? "Creating account…" : "Create account"}
               {!isLoading && (
@@ -231,9 +232,9 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <p className="mt-8 text-center font-label text-[10px] uppercase tracking-[0.2em] text-outline-variant">
-          Sovereign Financial Protocol V1.4
-        </p>
+        <div className="mt-12 text-center text-[10px] text-outline uppercase tracking-widest font-medium">
+          © 2024 Reward Relay • Secure Sovereign Ledger • All Rights Reserved
+        </div>
       </div>
     </>
   )

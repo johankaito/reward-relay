@@ -97,17 +97,13 @@ export default function LoginPage() {
 
           {/* Brand section */}
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full mb-4" style={{ background: "#1a1e2e", border: "1px solid rgba(255,255,255,0.08)" }}>
-              <span
-                className="material-symbols-outlined text-[#4edea3] text-3xl"
-                style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
-              >bolt</span>
+            <div className="inline-block mb-4">
+              <h1 className="font-headline text-3xl font-extrabold tracking-tighter text-[#65f3b6]">
+                Reward Relay
+              </h1>
             </div>
-            <h1 className="font-headline text-3xl font-extrabold tracking-tighter text-on-surface">
-              Reward Relay
-            </h1>
-            <p className="text-on-surface-variant text-sm font-medium mt-1 tracking-wide">
-              The Sovereign Ledger of Prestige
+            <p className="text-on-surface-variant text-sm font-medium tracking-wide">
+              Elevate your wealth. Velocity &apos;R&apos; Monogram.
             </p>
           </div>
 
@@ -117,11 +113,14 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="block text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant px-1"
+                className="block text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant ml-1"
               >
                 Email Address
               </label>
-              <div className="relative">
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-outline">
+                  <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>mail</span>
+                </div>
                 <input
                   id="email"
                   name="email"
@@ -130,29 +129,24 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="name@luxury.com"
-                  className="w-full h-14 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
+                  placeholder="name@company.com"
+                  className="w-full bg-surface-container-highest border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all"
                 />
               </div>
             </div>
 
             {/* Password */}
             <div className="space-y-2">
-              <div className="flex justify-between items-center px-1">
-                <label
-                  htmlFor="password"
-                  className="block text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant"
-                >
-                  Password
-                </label>
-                <Link
-                  href="/reset-password"
-                  className="text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant hover:text-[#4edea3] transition-colors"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-              <div className="relative">
+              <label
+                htmlFor="password"
+                className="block text-[10px] uppercase tracking-[0.05em] font-bold text-on-surface-variant ml-1"
+              >
+                Password
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-outline">
+                  <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>lock</span>
+                </div>
                 <input
                   id="password"
                   name="password"
@@ -162,20 +156,63 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-14 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
+                  className="w-full bg-surface-container-highest border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all"
                 />
               </div>
+            </div>
+
+            {/* Keep signed in + Forgot password */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center space-x-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  className="rounded-sm border-none bg-surface-container-highest text-[#4edea3] focus:ring-[#4edea3]/20 transition-all"
+                />
+                <span className="text-xs text-on-surface-variant group-hover:text-on-surface transition-colors">Keep me signed in</span>
+              </label>
+              <Link
+                href="/reset-password"
+                className="text-xs text-on-surface-variant hover:text-[#4edea3] transition-colors font-medium"
+              >
+                Forgot password?
+              </Link>
             </div>
 
             {/* CTA */}
             <button
               type="submit"
               disabled={isLoading || !email || !password}
-              className="w-full h-14 mt-4 text-black font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
-              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+              className="w-full py-4 mt-2 font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg flex items-center justify-center gap-2 group"
+              style={{ background: "linear-gradient(135deg, #4EDEA3 0%, #10B981 100%)", color: "#00583b" }}
             >
-              {isLoading ? "Signing in…" : "Sign in"}
+              {isLoading ? "Signing in…" : (
+                <>
+                  Sign in
+                  <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform" style={{ fontSize: "18px" }}>arrow_forward</span>
+                </>
+              )}
             </button>
+
+            {/* Or continue with */}
+            <div className="mt-4 pt-6 border-t border-white/5">
+              <p className="text-center text-xs text-on-surface-variant mb-6">Or continue with</p>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 bg-surface-container-high py-3 rounded-2xl hover:bg-surface-container-highest transition-colors group"
+                >
+                  <span className="material-symbols-outlined text-on-surface group-hover:text-[#4edea3] transition-colors" style={{ fontSize: "20px" }}>account_balance</span>
+                  <span className="text-xs font-medium">Wallet</span>
+                </button>
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 bg-surface-container-high py-3 rounded-2xl hover:bg-surface-container-highest transition-colors group"
+                >
+                  <span className="material-symbols-outlined text-on-surface group-hover:text-[#4edea3] transition-colors" style={{ fontSize: "20px" }}>fingerprint</span>
+                  <span className="text-xs font-medium">Passkey</span>
+                </button>
+              </div>
+            </div>
           </form>
 
           {/* Footer — sign up or beta request form */}
@@ -239,10 +276,6 @@ export default function LoginPage() {
           )}
         </div>
 
-        {/* Footer identity anchor */}
-        <p className="mt-8 text-center font-headline text-[10px] uppercase tracking-[0.2em] text-outline-variant">
-          Authorized Access Only
-        </p>
       </div>
     </>
   )
