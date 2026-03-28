@@ -182,18 +182,12 @@ export default function SettingsPage() {
                 <h3 className="text-xl font-bold font-headline">Billing</h3>
               </div>
 
-              <div className="bg-surface-container-low p-8 rounded-lg mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border border-white/5">
-                <div className="flex items-center gap-6">
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#4d3d76] to-[#d0bcff] flex items-center justify-center text-[#3a2a62]">
-                    <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>diamond</span>
-                  </div>
-                  <div>
-                    <p className="text-[0.6875rem] uppercase tracking-[0.05em] text-[#d0bcff] font-bold">Current Tier</p>
-                    <p className="text-xl font-extrabold font-headline">Velocity Elite</p>
-                    <p className="text-xs text-on-surface-variant tabular-nums">Next billing cycle: Oct 24, 2024</p>
-                  </div>
+              <div className="bg-surface-container-low p-6 rounded-lg mb-6 flex flex-col items-center gap-4 border border-white/5">
+                <p className="text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-bold">Current Plan</p>
+                <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-[#4edea3]/40">
+                  <span className="text-[#4edea3] font-bold text-sm tracking-wider">ELITE PLUS</span>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex gap-4 mt-2">
                   <button
                     className="px-8 py-3 text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg text-sm"
                     style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
@@ -203,7 +197,7 @@ export default function SettingsPage() {
                   <button
                     onClick={handleSignOut}
                     disabled={signingOut}
-                    className="text-[#4edea3] font-bold text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
+                    className="text-white font-medium text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
                   >
                     {signingOut ? "Signing out…" : "Cancel Subscription"}
                   </button>
@@ -212,7 +206,7 @@ export default function SettingsPage() {
             </section>
 
             {/* Danger Zone */}
-            <section className="bg-surface-container/30 p-6 rounded-lg border border-[#ffb4ab]/20">
+            <section className="p-6">
               <div className="mb-6">
                 <h2 className="text-2xl font-extrabold font-headline text-[#ffb4ab] mb-1">⚠ Danger Zone</h2>
                 <p className="text-sm text-on-surface-variant">Once you delete your account, there is no going back. Please be certain.</p>
@@ -220,8 +214,9 @@ export default function SettingsPage() {
               <button
                 onClick={handleDeleteAccount}
                 disabled={deletingAccount}
-                className="w-full p-4 rounded-lg border border-[#ffb4ab]/30 text-[#ffb4ab] text-sm text-center hover:bg-[#ffb4ab]/10 transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 text-[#ffb4ab] text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
               >
+                <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>delete_forever</span>
                 Delete account and all associated data
               </button>
             </section>
