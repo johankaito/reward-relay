@@ -243,26 +243,24 @@ export default function SettingsPage() {
             </section>
 
             {/* Danger Zone */}
-            <section className="bg-surface-container-low rounded-2xl p-6 lg:p-8 border border-error/20">
-              <div className="flex items-center gap-4 mb-4">
-                <svg className="w-5 h-5 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <h3 className="text-xl font-bold font-headline text-error">Danger Zone</h3>
+            <section className="bg-surface-container/30 p-6 rounded-lg border border-error/20">
+              <div className="mb-6">
+                <h2 className="text-2xl font-extrabold font-headline text-error mb-1">Danger Zone</h2>
+                <p className="text-sm text-on-surface-variant">Irreversible actions regarding your digital footprint.</p>
               </div>
-              <p className="text-on-surface-variant text-sm mb-8">
-                Once you delete your account, there is no going back. Please be certain.
-              </p>
-              <button
-                onClick={handleDeleteAccount}
-                disabled={deletingAccount}
-                className="flex items-center gap-2 text-error font-bold hover:opacity-80 transition-opacity disabled:opacity-50 text-sm"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                Delete account and all associated data
-              </button>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-on-surface">Delete Account</p>
+                  <p className="text-xs text-on-surface-variant">Permanently remove all data and forfeit earned rewards.</p>
+                </div>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deletingAccount}
+                  className="text-error font-bold text-sm px-4 py-2 rounded-lg hover:bg-error/10 transition-colors disabled:opacity-50 ml-6 flex-shrink-0"
+                >
+                  Delete Account
+                </button>
+              </div>
             </section>
           </div>
 
@@ -270,27 +268,32 @@ export default function SettingsPage() {
           <div className="lg:col-span-4 hidden lg:block">
             <div className="sticky top-24 space-y-6">
               {/* Data protection */}
-              <div className="bg-gradient-to-br from-surface-container to-surface-container-low p-6 rounded-2xl border border-white/5">
+              <div className="bg-gradient-to-br from-surface-container to-surface-container-low p-6 rounded-lg border border-white/5">
                 <Shield className="h-6 w-6 text-primary mb-4" />
                 <h3 className="font-bold text-lg mb-2">Data Protection</h3>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
-                  Your data is protected end-to-end. We never share your transactional data with third-party aggregators.
+                  Your sovereign ledger is protected by AES-256 encryption. We never share your transactional data with third-party aggregators.
                 </p>
+                <a href="#" className="inline-block mt-4 text-primary text-xs font-bold hover:underline">
+                  View Privacy Policy
+                </a>
               </div>
 
               {/* Account metadata */}
               <div className="p-6">
-                <p className="text-[10px] uppercase tracking-widest text-outline mb-4">Account Info</p>
+                <p className="text-[0.6875rem] uppercase tracking-widest text-outline mb-4">Account Metadata</p>
                 <div className="space-y-3">
                   <div className="flex justify-between text-xs">
-                    <span className="text-on-surface-variant">Email</span>
-                    <span className="text-on-surface tabular-nums truncate ml-4 max-w-[140px]">
-                      {userEmail ?? "—"}
-                    </span>
+                    <span className="text-on-surface-variant">Member Since</span>
+                    <span className="text-on-surface tabular-nums">Jan 2022</span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-on-surface-variant">Plan</span>
-                    <span className="text-primary font-bold">Free</span>
+                    <span className="text-on-surface-variant">Last Security Audit</span>
+                    <span className="text-on-surface tabular-nums">2 days ago</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-on-surface-variant">Device Authorization</span>
+                    <span className="text-on-surface">3 Active</span>
                   </div>
                 </div>
               </div>
