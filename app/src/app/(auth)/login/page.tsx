@@ -201,7 +201,7 @@ export default function LoginPage() {
               type="submit"
               disabled={isLoading || !email || !password}
               className="w-full h-14 mt-4 font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg flex items-center justify-center gap-2 group"
-              style={{ background: "linear-gradient(135deg, #00FF7A 0%, #00E060 100%)", color: "#003824" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)", color: "#003824" }}
             >
               {isLoading ? "Signing in…" : (
                 <>
