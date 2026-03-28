@@ -92,10 +92,10 @@ export default function SignupPage() {
         className="pointer-events-none fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] z-0 md:hidden"
         style={{ background: "radial-gradient(circle at center, rgba(208,188,255,0.05) 0%, rgba(10,14,26,0) 70%)" }}
       />
-      <div className="pointer-events-none fixed -top-24 -left-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0 hidden md:block"
-        style={{ background: "rgba(78,222,163,0.20)" }} />
-      <div className="pointer-events-none fixed -bottom-24 -right-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0 hidden md:block"
-        style={{ background: "rgba(208,188,255,0.05)" }} />
+      <div className="pointer-events-none fixed -top-24 -left-24 w-[700px] h-[700px] rounded-full blur-[180px] z-0 hidden md:block"
+        style={{ background: "rgba(78,222,163,0.10)" }} />
+      <div className="pointer-events-none fixed -bottom-24 -right-24 w-[700px] h-[700px] rounded-full blur-[180px] z-0 hidden md:block"
+        style={{ background: "rgba(208,188,255,0.04)" }} />
 
       <div className="relative z-10 w-full max-w-[360px] md:max-w-md md:px-6">
         {/* Brand header */}
