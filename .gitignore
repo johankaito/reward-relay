@@ -1,2 +1,7 @@
 .vercel
 .env*.local
+
+# Visual diff screenshots
+app/tests/visual-diff-output/*.png
+app/tests/visual-diff-output/report-*.md
+app/tests/visual-diff-output/manifest.json
