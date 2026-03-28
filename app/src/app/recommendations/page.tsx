@@ -30,10 +30,10 @@ const SORT_CHIPS: { value: SortType; label: string }[] = [
 ]
 
 const CARD_GRADIENTS = [
-  "from-surface-container-high to-background",
-  "from-surface-container to-surface-container-high",
+  "from-surface-container to-background",
+  "from-surface-container-high to-surface-container",
   "from-background to-surface-container-low",
-  "from-background to-background",
+  "from-surface-container-low to-background",
 ]
 
 function getBadgeLabel(index: number, rec: Recommendation): string {
@@ -310,13 +310,13 @@ export default function RecommendationsPage() {
                       {/* Fee + Status row */}
                       <div className="flex justify-between items-center mb-6 px-1">
                         <div>
-                          <p className="text-[10px] text-slate-500 uppercase tracking-widest">Annual Fee</p>
+                          <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">Annual Fee</p>
                           <p className="text-sm font-bold tabular-nums">
                             {rec.card.annual_fee ? `$${rec.card.annual_fee}` : "$0"}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-widest">Status</p>
+                          <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">Status</p>
                           <p className={`text-xs font-bold ${elig.color}`}>{elig.label}</p>
                         </div>
                       </div>
