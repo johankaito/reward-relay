@@ -85,12 +85,12 @@ export default function SignupPage() {
     <>
       {/* Ambient glow blobs */}
       <div
-        className="pointer-events-none fixed -top-24 -left-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0"
-        style={{ background: "rgba(78,222,163,0.20)" }}
+        className="pointer-events-none fixed top-[-10%] left-[-10%] w-[60%] h-[60%] z-0"
+        style={{ background: "radial-gradient(circle at center, rgba(101,243,182,0.08) 0%, rgba(10,14,26,0) 70%)" }}
       />
       <div
-        className="pointer-events-none fixed -bottom-24 -right-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0"
-        style={{ background: "rgba(208,188,255,0.05)" }}
+        className="pointer-events-none fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] z-0"
+        style={{ background: "radial-gradient(circle at center, rgba(208,188,255,0.05) 0%, rgba(10,14,26,0) 70%)" }}
       />
 
       <div className="relative z-10 w-full max-w-[360px]">
@@ -109,7 +109,7 @@ export default function SignupPage() {
 
         {/* Glass card */}
         <div className="rounded-lg p-8 md:p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]"
-          style={{ background: "rgba(20, 25, 40, 0.6)", backdropFilter: "blur(20px)", border: "1px solid rgba(255,255,255,0.08)" }}>
+          style={{ background: "rgba(20, 25, 40, 0.6)", backdropFilter: "blur(20px)", border: "1px solid rgba(68,71,85,0.15)" }}>
           {/* Card heading + beta badge */}
           <div className="flex justify-between items-start mb-8">
             <div>
@@ -141,7 +141,7 @@ export default function SignupPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@domain.com"
-                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                  className="w-full bg-surface-container border-none rounded pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@ export default function SignupPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-12 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                  className="w-full bg-surface-container border-none rounded pl-12 pr-12 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline cursor-pointer hover:text-on-surface" style={{ fontSize: "20px" }}>visibility</span>
               </div>
@@ -190,7 +190,7 @@ export default function SignupPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                  className="w-full bg-surface-container border-none rounded pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
               </div>
             </div>

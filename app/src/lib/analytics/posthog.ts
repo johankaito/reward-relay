@@ -21,7 +21,7 @@ export function initPostHog() {
         session_recording: {
           recordCrossOriginIframes: true,
         },
-        persistence: "localStorage", // Persist UTM params and user data
+        persistence: process.env.NEXT_PUBLIC_APP_ENV === "production" ? "localStorage" : "memory", // localStorage in prod, memory in staging/dev to avoid stale exception badges
         loaded: (posthog) => {
           // Set environment as super property (included in all events)
           const environment = process.env.NEXT_PUBLIC_APP_ENV || "development"
