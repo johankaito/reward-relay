@@ -44,7 +44,7 @@ const AIRLINE_CARDS = [
     surplus: 3000,
     canBook: true,
     accentColor: '#4edea3',
-    gradient: 'linear-gradient(135deg, #1a3a2a 0%, #0d2218 100%)',
+    gradient: 'linear-gradient(135deg, #003366 0%, #006672 100%)',
   },
   {
     id: 'emirates',
@@ -57,7 +57,7 @@ const AIRLINE_CARDS = [
     gap: -120500,
     canBook: false,
     accentColor: '#c3c0ff',
-    gradient: 'linear-gradient(135deg, #1a1a3e 0%, #0a0a2a 100%)',
+    gradient: 'linear-gradient(135deg, #b8870a 0%, #6b4c08 100%)',
   },
 ] as const
 
@@ -337,19 +337,32 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
 
   return (
     <div
-      className={`group bg-surface-container-low/50 rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col relative ${
+      className={`group rounded-3xl overflow-hidden border transition-all duration-500 flex flex-col relative ${
         isSingapore
           ? 'border-primary/40 ring-1 ring-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(78,222,163,0.2)] scale-[1.02]'
-          : 'border-white/5 hover:border-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]'
+          : 'border-white/10 hover:border-primary/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]'
       }`}
+      style={{
+        background: 'rgba(255,255,255,0.05)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+      }}
     >
       {/* ── Card header with gradient background ── */}
       <div className="h-56 relative overflow-hidden">
         <div className="absolute inset-0" style={{ background: card.gradient }} />
         <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent" />
 
-        {/* Airline name pill */}
-        <div className={`absolute top-5 left-5 px-4 py-1.5 rounded-full backdrop-blur-md border ${isSingapore ? 'bg-primary/20 border-primary/30' : 'bg-white/10 border-white/20'}`}>
+        {/* Airline name pill — glass card style */}
+        <div
+          className="absolute top-5 left-5 px-4 py-1.5 rounded-full"
+          style={{
+            background: 'rgba(27,31,44,0.6)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255,255,255,0.12)',
+          }}
+        >
           <span className="text-[10px] font-extrabold text-white uppercase tracking-widest">{card.airline}</span>
         </div>
 
