@@ -160,8 +160,37 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </header>
 
+      {/* Desktop top-right header bar */}
+      <header className="hidden md:flex fixed top-0 right-0 z-40 items-center gap-3 px-6 h-16" style={{ left: 256 }}>
+        <div className="flex-1">
+          <div className="relative max-w-xs">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" style={{ fontSize: "18px" }}>search</span>
+            <input
+              type="text"
+              placeholder="Search rewards..."
+              className="w-full h-9 pl-9 pr-4 rounded-full bg-[#1b1f2c] border border-white/5 text-sm text-on-surface placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-[#4edea3]/30"
+            />
+          </div>
+        </div>
+        <button aria-label="Notifications" className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors">
+          <span className="material-symbols-outlined text-slate-400" style={{ fontSize: "22px" }}>notifications</span>
+        </button>
+        <button aria-label="Settings" onClick={() => router.push("/settings")} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors">
+          <span className="material-symbols-outlined text-slate-400" style={{ fontSize: "22px" }}>settings</span>
+        </button>
+        <div className="w-9 h-9 rounded-full overflow-hidden border border-white/10 shrink-0">
+          {avatarUrl ? (
+            <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)", color: "#0f131f" }}>
+              {displayInitials}
+            </div>
+          )}
+        </div>
+      </header>
+
       {/* Page content */}
-      <div className="pt-16 md:pt-0 md:pl-64 pb-24 md:pb-6 min-w-0">
+      <div className="pt-16 md:pl-64 pb-24 md:pb-6 min-w-0">
         <main className="min-w-0 overflow-x-hidden">{children}</main>
       </div>
 
