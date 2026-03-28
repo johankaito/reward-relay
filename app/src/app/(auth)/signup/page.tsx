@@ -115,8 +115,8 @@ export default function SignupPage() {
               <h2 className="font-headline text-2xl font-bold text-on-surface mb-2">Create Account</h2>
               <p className="text-on-surface-variant text-sm">Join the elite network of value seekers.</p>
             </div>
-            <div className="bg-[#4edea3]/10 border border-[#4edea3]/20 px-3 py-1.5 rounded-full flex-shrink-0 ml-4">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3]">Private Beta — Invite Only</span>
+            <div className="bg-[#4edea3]/10 border border-[#4edea3]/20 px-3 py-1.5 rounded-full flex-shrink-0 ml-4" style={{ maxWidth: "120px" }}>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3] text-center block">Private Beta — Invite Only</span>
             </div>
           </div>
 
@@ -164,8 +164,9 @@ export default function SignupPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-4 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                  className="w-full bg-surface-container border-none rounded-2xl pl-12 pr-12 py-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
                 />
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline cursor-pointer hover:text-on-surface" style={{ fontSize: "20px" }}>visibility</span>
               </div>
             </div>
 
@@ -198,7 +199,7 @@ export default function SignupPage() {
               type="submit"
               disabled={isLoading || !email || !password || !confirmPassword}
               className="w-full mt-4 py-4 font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg"
-              style={{ background: "linear-gradient(135deg, #4EDEA3 0%, #10B981 100%)", color: "#00583b" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)", color: "#003824" }}
             >
               {isLoading ? "Creating account…" : "Create account"}
               {!isLoading && (
@@ -208,11 +209,11 @@ export default function SignupPage() {
 
             {/* Terms */}
             <p className="text-center text-[11px] text-on-surface-variant leading-relaxed mt-6 px-4">
-              By clicking Create account, you agree to our{" "}
+              By clicking &ldquo;Create account&rdquo;, you agree to our{" "}
               <Link href="/terms" className="text-[#4edea3] hover:underline underline-offset-2">
                 Terms of Service
               </Link>{" "}
-              and acknowledge our{" "}
+              and{" "}
               <Link href="/privacy" className="text-[#4edea3] hover:underline underline-offset-2">
                 Privacy Policy
               </Link>
@@ -227,7 +228,7 @@ export default function SignupPage() {
           <p className="text-on-surface-variant text-sm">
             Already have an account?{" "}
             <Link href="/login" className="text-[#4edea3] font-bold ml-1 hover:underline underline-offset-4">
-              Log in
+              Sign In
             </Link>
           </p>
         </div>

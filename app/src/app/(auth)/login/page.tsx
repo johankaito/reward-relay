@@ -93,7 +93,7 @@ export default function LoginPage() {
         </div>
 
         {/* Glass card */}
-        <div className="glass-card rounded-[2rem] px-10 pt-14 pb-12 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
+        <div className="glass-card rounded-[2rem] px-10 pt-10 pb-8 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
 
           {/* Brand section */}
           <div className="mb-10 text-center">
@@ -183,7 +183,7 @@ export default function LoginPage() {
               type="submit"
               disabled={isLoading || !email || !password}
               className="w-full py-4 mt-2 font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg flex items-center justify-center gap-2 group"
-              style={{ background: "linear-gradient(135deg, #4EDEA3 0%, #10B981 100%)", color: "#00583b" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00E87A 100%)", color: "#003824" }}
             >
               {isLoading ? "Signing in…" : (
                 <>
@@ -194,7 +194,7 @@ export default function LoginPage() {
             </button>
 
             {/* Or continue with */}
-            <div className="mt-4 pt-6 border-t border-white/5">
+            <div className="mt-2 pt-6 border-t border-white/5">
               <p className="text-center text-xs text-on-surface-variant mb-6">Or continue with</p>
               <div className="grid grid-cols-2 gap-4">
                 <button
