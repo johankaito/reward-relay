@@ -119,7 +119,7 @@ export default function LoginPage() {
           </div>
 
           {/* Login form */}
-          <form onSubmit={handleLogin} name="login" className="space-y-6">
+          <form onSubmit={handleLogin} name="login" className={`space-y-6${showBetaForm ? " hidden" : ""}`}>
             {/* Email */}
             <div className="space-y-2">
               <label
