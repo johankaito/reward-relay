@@ -142,7 +142,6 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Deploy to production
-        working-directory: app
         run: |
           vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
           echo "✅ Deployed to production"
