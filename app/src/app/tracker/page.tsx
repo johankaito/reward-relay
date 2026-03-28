@@ -309,6 +309,7 @@ export default function TrackerPage() {
             <Plus className="h-6 w-6 lg:h-7 lg:w-7" />
           </Link>
         </div>
+      </div>
     </AppShell>
   )
 }
