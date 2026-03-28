@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
-import { Mail, Lock } from "lucide-react"
+import type { FormEvent } from "react"
 
 import { supabase } from "@/lib/supabase/client"
 
@@ -18,7 +18,7 @@ export default function LoginPage() {
   const [betaName, setBetaName] = useState("")
   const [betaLoading, setBetaLoading] = useState(false)
 
-  const handleLogin = async (event: React.FormEvent) => {
+  const handleLogin = async (event: FormEvent) => {
     event.preventDefault()
     if (!email || !password) {
       toast.error("Email and password are required")
@@ -43,7 +43,7 @@ export default function LoginPage() {
     }
   }
 
-  const handleBetaRequest = async (e: React.FormEvent) => {
+  const handleBetaRequest = async (e: FormEvent) => {
     e.preventDefault()
 
     if (!betaEmail || !betaEmail.includes("@")) {
@@ -122,7 +122,6 @@ export default function LoginPage() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-outline pointer-events-none" />
                 <input
                   id="email"
                   name="email"
@@ -132,7 +131,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@luxury.com"
-                  className="w-full h-14 pl-12 pr-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
+                  className="w-full h-14 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
                 />
               </div>
             </div>
@@ -154,7 +153,6 @@ export default function LoginPage() {
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-outline pointer-events-none" />
                 <input
                   id="password"
                   name="password"
@@ -164,7 +162,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-14 pl-12 pr-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
+                  className="w-full h-14 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
                 />
               </div>
             </div>

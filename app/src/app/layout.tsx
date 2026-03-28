@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { IBM_Plex_Mono, Inter, Plus_Jakarta_Sans } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
-import { Footer } from "@/components/Footer"
+import { ConditionalFooter } from "@/components/ConditionalFooter"
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-headline",
@@ -85,7 +85,7 @@ export default function RootLayout({
       >
         <Providers>
           <div className="flex-1">{children}</div>
-          <Footer />
+          <ConditionalFooter />
         </Providers>
       </body>
     </html>

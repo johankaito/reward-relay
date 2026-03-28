@@ -230,6 +230,10 @@ export default function SignupPage() {
             </Link>
           </p>
         </div>
+
+        <p className="mt-8 text-center font-label text-[10px] uppercase tracking-[0.2em] text-outline-variant">
+          Sovereign Financial Protocol V1.4
+        </p>
       </div>
     </>
   )
