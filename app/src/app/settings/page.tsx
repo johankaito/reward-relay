@@ -74,18 +74,9 @@ export default function SettingsPage() {
 
   return (
     <AppShell>
-      {/* ── Sticky header ── */}
-      <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
-        <div className="flex items-center px-6 h-16 max-w-7xl mx-auto">
-          <h2 className="font-headline font-bold text-lg text-on-surface">
-            Account Settings
-          </h2>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-16">
         <div className="mb-12">
-          <h1 className="text-3xl md:text-[3.5rem] font-extrabold font-headline leading-tight tracking-tight text-on-surface">
+          <h1 className="text-[60px] font-extrabold font-headline leading-tight tracking-tight text-on-surface">
             Account Settings
           </h1>
           <p className="text-on-surface-variant mt-2 text-lg">
@@ -100,7 +91,7 @@ export default function SettingsPage() {
             {/* Profile Section */}
             <section className="bg-surface-container rounded-lg p-6 border border-white/5">
               <div className="flex items-center gap-6 mb-10">
-                <div className="w-24 h-24 rounded-full bg-surface-container-highest border-2 border-[#4edea3]/20 flex items-center justify-center text-3xl font-extrabold text-[#4edea3] font-headline flex-shrink-0">
+                <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-extrabold text-white font-headline flex-shrink-0" style={{ background: "linear-gradient(135deg, #2DD4BF 0%, #059669 100%)" }}>
                   {initials}
                 </div>
                 <div>
@@ -122,7 +113,7 @@ export default function SettingsPage() {
                   <label className="block text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium mb-2">
                     Primary Email
                   </label>
-                  <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium">
+                  <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium overflow-hidden text-ellipsis whitespace-nowrap">
                     {userEmail || "—"}
                   </div>
                 </div>
@@ -207,7 +198,7 @@ export default function SettingsPage() {
                   <button
                     onClick={handleSignOut}
                     disabled={signingOut}
-                    className="px-8 py-3 border border-white/10 text-on-surface font-medium rounded-full hover:bg-surface-container-high transition-colors duration-200 text-sm disabled:opacity-50"
+                    className="text-[#4edea3] font-bold text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
                   >
                     {signingOut ? "Signing out…" : "Cancel Plan"}
                   </button>
