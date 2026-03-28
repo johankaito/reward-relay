@@ -17,7 +17,7 @@ import {
 } from "lucide-react"
 import Header from "@/components/layout/Header"
 import { supabase } from "@/lib/supabase/client"
-import { getBankGradient } from "@/lib/bank-gradients"
+
 import { BetaGate } from "@/components/ui/BetaGate"
 import { BetaOnly } from "@/components/ui/BetaOnly"
 import { BetaRequestForm } from "@/components/forms/BetaRequestForm"
@@ -109,28 +109,12 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Social proof — avatar stack */}
-            <div className="mt-16 flex flex-col items-center gap-4">
-              <div className="flex items-center -space-x-3">
-                {[
-                  { bg: "from-emerald-500 to-teal-600", label: "A" },
-                  { bg: "from-violet-500 to-purple-600", label: "B" },
-                  { bg: "from-blue-500 to-indigo-600", label: "C" },
-                  { bg: "from-rose-500 to-pink-600", label: "D" },
-                  { bg: "from-amber-500 to-orange-600", label: "E" },
-                ].map(({ bg, label }) => (
-                  <div
-                    key={label}
-                    className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${bg} ring-2 ring-surface text-xs font-bold text-white`}
-                  >
-                    {label}
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm font-semibold text-on-surface-variant">
-                Join{" "}
-                <span className="font-bold text-[#4edea3]">2,400+</span>{" "}
-                points optimisers
+            {/* Social proof text */}
+            <div className="mt-16 text-center">
+              <p className="text-sm font-semibold text-on-surface-variant tracking-wide">
+                Trusted by{" "}
+                <span className="font-bold text-[#4edea3]">5,000+</span>{" "}
+                Aussie Points Hackers
               </p>
             </div>
           </div>
@@ -142,34 +126,15 @@ export default function Home() {
             <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
               Trusted by 5,000+ Aussie Points Hackers
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              {[
-                { bank: "Amex", label: "AMEX" },
-                { bank: "ANZ", label: "ANZ" },
-                { bank: "CommBank", label: "COMMBANK" },
-                { bank: "Westpac", label: "WESTPAC" },
-                { bank: "NAB", label: "NAB" },
-              ].map(({ bank, label }) => (
-                <div
-                  key={bank}
-                  className="rounded-md px-4 py-2 text-[11px] font-extrabold tracking-widest text-white shadow-sm"
-                  style={{ background: getBankGradient(bank) }}
+            <div className="flex flex-wrap items-center justify-center gap-6">
+              {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((label) => (
+                <span
+                  key={label}
+                  className="text-[11px] font-bold tracking-[0.15em] text-on-surface-variant"
                 >
                   {label}
-                </div>
+                </span>
               ))}
-              <div
-                className="rounded-md px-4 py-2 text-[11px] font-extrabold tracking-widest text-white shadow-sm"
-                style={{ background: "linear-gradient(135deg, #c00 0%, #8b0000 100%)" }}
-              >
-                QANTAS
-              </div>
-              <div
-                className="rounded-md px-4 py-2 text-[11px] font-extrabold tracking-widest text-white shadow-sm"
-                style={{ background: "linear-gradient(135deg, #e85d04 0%, #b44000 100%)" }}
-              >
-                VELOCITY
-              </div>
             </div>
           </div>
         </section>
