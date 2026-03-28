@@ -93,7 +93,8 @@ export default function LoginPage() {
         </div>
 
         {/* Glass card */}
-        <div className="glass-card rounded-[2rem] px-10 pt-10 pb-8 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]">
+        <div className="rounded-lg px-10 pt-10 pb-8 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]"
+          style={{ background: "rgba(20, 25, 40, 0.6)", backdropFilter: "blur(20px)", border: "1px solid rgba(68, 71, 85, 0.15)" }}>
 
           {/* Brand section */}
           <div className="mb-10 text-center">
@@ -137,7 +138,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="name@luxury.com"
-                  className="w-full h-14 bg-surface-container-highest border-none rounded-2xl pl-12 md:pl-5 pr-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
+                  className="w-full h-14 bg-surface-container-highest border-none rounded-2xl md:rounded-lg pl-12 md:pl-5 pr-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
                 />
               </div>
             </div>
@@ -174,7 +175,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-14 bg-surface-container-highest border-none rounded-2xl pl-12 md:pl-5 pr-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
+                  className="w-full h-14 bg-surface-container-highest border-none rounded-2xl md:rounded-lg pl-12 md:pl-5 pr-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
                 />
               </div>
             </div>
