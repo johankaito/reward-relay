@@ -109,7 +109,7 @@ export default function SignupPage() {
         </div>
 
         {/* Glass card */}
-        <div className="glass-card rounded-2xl p-8 md:p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]">
+        <div className="glass-card rounded-2xl p-8 md:p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
           {/* Beta badge */}
           <div className="flex justify-center mb-8">
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
@@ -196,7 +196,8 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading || !email || !password || !confirmPassword}
-              className="w-full h-14 mt-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-primary/20"
+              className="w-full h-14 mt-4 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-primary/20"
+              style={{ background: "var(--gradient-cta)" }}
             >
               {isLoading ? "Creating account…" : "Create account"}
               {!isLoading && (
