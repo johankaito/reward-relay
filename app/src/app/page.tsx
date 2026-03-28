@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import Header from "@/components/layout/Header"
 import { supabase } from "@/lib/supabase/client"
+import { getBankGradient } from "@/lib/bank-gradients"
 import { BetaGate } from "@/components/ui/BetaGate"
 import { BetaOnly } from "@/components/ui/BetaOnly"
 import { BetaRequestForm } from "@/components/forms/BetaRequestForm"
@@ -51,7 +52,14 @@ export default function Home() {
 
       <main className="relative z-10 flex-1">
         {/* Hero Section */}
-        <section className="flex min-h-[800px] items-center justify-center overflow-hidden px-6 py-20 md:px-20 md:py-28">
+        <section className="relative flex min-h-[800px] items-center justify-center overflow-hidden px-6 py-20 md:px-20 md:py-28">
+          {/* Ambient green glow — left edge bleeds to right */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div
+              className="absolute -left-40 top-1/2 h-[700px] w-[700px] -translate-y-1/2 rounded-full blur-[130px]"
+              style={{ background: "rgba(78, 222, 163, 0.07)" }}
+            />
+          </div>
           <div className="relative z-10 mx-auto max-w-5xl text-center">
             {/* Badge */}
             <div className="mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest"
@@ -124,6 +132,44 @@ export default function Home() {
                 <span className="font-bold text-[#4edea3]">2,400+</span>{" "}
                 points optimisers
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Trusted By strip */}
+        <section className="border-y border-white/5 py-10" style={{ backgroundColor: "var(--surface-container)" }}>
+          <div className="mx-auto max-w-4xl px-6">
+            <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
+              Trusted by 5,000+ Aussie Points Hackers
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {[
+                { bank: "Amex", label: "AMEX" },
+                { bank: "ANZ", label: "ANZ" },
+                { bank: "CommBank", label: "COMMBANK" },
+                { bank: "Westpac", label: "WESTPAC" },
+                { bank: "NAB", label: "NAB" },
+              ].map(({ bank, label }) => (
+                <div
+                  key={bank}
+                  className="rounded-md px-4 py-2 text-[11px] font-extrabold tracking-widest text-white shadow-sm"
+                  style={{ background: getBankGradient(bank) }}
+                >
+                  {label}
+                </div>
+              ))}
+              <div
+                className="rounded-md px-4 py-2 text-[11px] font-extrabold tracking-widest text-white shadow-sm"
+                style={{ background: "linear-gradient(135deg, #c00 0%, #8b0000 100%)" }}
+              >
+                QANTAS
+              </div>
+              <div
+                className="rounded-md px-4 py-2 text-[11px] font-extrabold tracking-widest text-white shadow-sm"
+                style={{ background: "linear-gradient(135deg, #e85d04 0%, #b44000 100%)" }}
+              >
+                VELOCITY
+              </div>
             </div>
           </div>
         </section>
