@@ -256,10 +256,10 @@ function getPaceStatus(card: UserCard): { label: string; color: string } {
   const daysLeft = Math.ceil(
     (new Date(card.spend_deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24),
   )
-  if (daysLeft <= 0) return { label: "Will Miss Bonus", color: "text-destructive" }
+  if (daysLeft <= 0) return { label: "Will Miss Bonus", color: "text-error" }
 
   const dailyNeeded = remaining / daysLeft
-  if (dailyNeeded > 100) return { label: "Will Miss Bonus", color: "text-destructive" }
+  if (dailyNeeded > 100) return { label: "Will Miss Bonus", color: "text-error" }
   if (dailyNeeded > 50) return { label: "Behind Pace", color: "text-amber-400" }
   return { label: "On Track", color: "text-primary" }
 }

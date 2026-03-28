@@ -224,7 +224,10 @@ export default function SettingsPage() {
                   </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                  <button className="px-8 py-3 bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg shadow-primary/10 text-sm">
+                  <button
+                    className="px-8 py-3 text-black font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg shadow-primary/10 text-sm"
+                    style={{ background: "var(--gradient-cta)" }}
+                  >
                     Upgrade Plan
                   </button>
                   <button
@@ -240,12 +243,12 @@ export default function SettingsPage() {
             </section>
 
             {/* Danger Zone */}
-            <section className="bg-surface-container-low rounded-2xl p-6 lg:p-8 border border-destructive/10">
+            <section className="bg-surface-container-low rounded-2xl p-6 lg:p-8 border border-error/20">
               <div className="flex items-center gap-4 mb-4">
-                <svg className="w-5 h-5 text-destructive" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-5 h-5 text-error" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
-                <h3 className="text-xl font-bold font-headline text-destructive">Danger Zone</h3>
+                <h3 className="text-xl font-bold font-headline text-error">Danger Zone</h3>
               </div>
               <p className="text-on-surface-variant text-sm mb-8">
                 Once you delete your account, there is no going back. Please be certain.
@@ -253,7 +256,7 @@ export default function SettingsPage() {
               <button
                 onClick={handleDeleteAccount}
                 disabled={deletingAccount}
-                className="flex items-center gap-2 text-destructive font-bold hover:opacity-80 transition-opacity disabled:opacity-50 text-sm"
+                className="flex items-center gap-2 text-error font-bold hover:opacity-80 transition-opacity disabled:opacity-50 text-sm"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

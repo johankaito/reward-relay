@@ -642,7 +642,7 @@ export default function ProfitPage() {
                           className="bg-surface-container-low p-6 rounded-lg flex items-center justify-between group hover:bg-surface-container transition-all cursor-pointer"
                         >
                           <div className="flex items-center gap-6">
-                            <div className="w-16 h-10 rounded bg-gradient-to-br from-slate-500 to-slate-700 shadow-lg flex items-center justify-center text-[8px] font-bold text-white uppercase">
+                            <div className="w-16 h-10 rounded bg-surface-container-highest border border-white/10 shadow-lg flex items-center justify-center text-[8px] font-bold text-on-surface uppercase">
                               {c.name.split(' ')[0] ?? 'Card'}
                             </div>
                             <div>

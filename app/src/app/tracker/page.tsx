@@ -56,7 +56,7 @@ function statusBadge(status: CardStatus) {
   switch (status) {
     case "cancel_soon":
       return (
-        <span className="px-3 py-1 rounded-full bg-destructive/10 text-destructive text-[10px] font-bold tracking-[0.08em] uppercase border border-destructive/20">
+        <span className="px-3 py-1 rounded-full bg-error/10 text-error text-[10px] font-bold tracking-[0.08em] uppercase border border-error/20">
           Cancel Soon
         </span>
       )
@@ -224,13 +224,13 @@ export default function TrackerPage() {
               }).toUpperCase()
 
               const progressBarColor =
-                status === "cancel_soon" ? "bg-destructive/60"
+                status === "cancel_soon" ? "bg-error/60"
                 : status === "behind" ? "bg-amber-400/60"
                 : status === "eligible" ? "bg-secondary/40"
                 : "bg-primary/40"
 
               const deadlineLabelColor =
-                status === "cancel_soon" ? "text-destructive" : "text-on-surface-variant"
+                status === "cancel_soon" ? "text-error" : "text-on-surface-variant"
 
               return (
                 <Link
@@ -267,7 +267,7 @@ export default function TrackerPage() {
                         style={{ left: `${eligibilityPct}%` }}
                       />
                       {/* Deadline marker */}
-                      <div className="absolute right-0 top-0 h-full w-1.5 bg-destructive rounded-r-full" />
+                      <div className="absolute right-0 top-0 h-full w-1.5 bg-error rounded-r-full" />
                     </div>
                     <div className="flex justify-between mt-3 text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">
                       <div className="flex flex-col">
