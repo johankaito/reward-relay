@@ -402,7 +402,7 @@ export default function SpendingTrackerPage() {
       {/* ── Sticky header ── */}
       <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center justify-between px-10 h-16 w-full max-w-[1440px] mx-auto">
-          <h1 className="text-lg font-black text-on-surface font-headline">Spend Tracker</h1>
+          <h1 className="text-lg font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent font-headline">Spend Tracker</h1>
           {/* Period selector chips */}
           <div className="flex items-center gap-1 bg-surface-container rounded-xl p-1">
             {(["monthly", "quarterly", "annual"] as SpendPeriod[]).map((p) => (

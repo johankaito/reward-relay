@@ -138,7 +138,7 @@ export default function CardsPage() {
       <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5 -mx-4 md:-mx-8 px-4 md:px-0 mb-8">
         <div className="flex items-center justify-between px-4 md:px-8 h-20 w-full max-w-[1440px] mx-auto">
           <div>
-            <h1 className="font-headline text-2xl font-black text-on-surface">
+            <h1 className="font-headline text-2xl font-black bg-gradient-to-br from-[#4edea3] to-[#10b981] bg-clip-text text-transparent">
               Card Portfolio
             </h1>
             <p className="text-xs text-on-surface-variant font-medium">
