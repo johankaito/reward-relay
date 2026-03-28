@@ -22,6 +22,7 @@
     "test:extraction": "tsx tests/card-extraction.test.ts",
     "visual-diff": "tsx tests/visual-diff.ts",
     "visual-diff:report": "tsx tests/visual-diff-report.ts",
+    "pr-screenshot": "tsx tests/pr-screenshot.ts",
     "precommit": "pnpm test:smoke"
   },
   "dependencies": {
