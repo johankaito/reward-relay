@@ -116,7 +116,7 @@ export default function SignupPage() {
               <p className="text-on-surface-variant text-sm">Join the elite network of value seekers.</p>
             </div>
             <div className="bg-[#4edea3]/10 border border-[#4edea3]/20 px-3 py-1.5 rounded-full flex-shrink-0 ml-4" style={{ maxWidth: "120px" }}>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3] text-center block">Private Beta — Invite Only</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3] text-center block">Private Beta —<br />Invite Only</span>
             </div>
           </div>
 
@@ -199,7 +199,7 @@ export default function SignupPage() {
               type="submit"
               disabled={isLoading || !email || !password || !confirmPassword}
               className="w-full mt-4 py-4 font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg"
-              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)", color: "#003824" }}
+              style={{ background: "linear-gradient(135deg, #00FF7A 0%, #00E060 100%)", color: "#003824" }}
             >
               {isLoading ? "Creating account…" : "Create account"}
               {!isLoading && (
