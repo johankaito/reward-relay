@@ -258,7 +258,7 @@ export default function RecommendationsPage() {
 
                     {/* Card visual */}
                     <div
-                      className={`aspect-[1.58/1] w-full mb-6 rounded-xl overflow-hidden bg-gradient-to-br ${gradient} p-4 flex flex-col justify-between relative shadow-xl`}
+                      className={`aspect-[1.58/1] w-full mb-6 rounded-xl overflow-hidden bg-gradient-to-br ${gradient} p-4 flex flex-col justify-between relative shadow-xl transition-all duration-300 ${!isBestMatch ? "grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100" : ""}`}
                     >
                       <div className="absolute inset-0 bg-gradient-to-tr from-black/40 to-transparent" />
                       <div className="relative z-10 flex justify-between items-start">
