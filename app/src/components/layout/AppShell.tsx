@@ -71,7 +71,7 @@ export function AppShell({ children }: AppShellProps) {
           {/* Logo */}
           <div className="mb-10">
             <h1 className="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</h1>
-            <p className="text-[10px] uppercase tracking-widest text-slate-500 mt-1">The Financial Luminary</p>
+            <p className="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Velocity &apos;R&apos; Monogram</p>
           </div>
 
           {/* Nav */}
