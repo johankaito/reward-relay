@@ -329,16 +329,12 @@ export default function Home() {
                   <ul className="mb-10 flex-grow space-y-4">
                     {["Up to 2 Bank Syncs", "Basic Point Dashboard"].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: "rgba(78,222,163,0.15)", border: "1px solid rgba(78,222,163,0.3)" }}>
-                          <Check className="h-3 w-3" style={{ color: "#4edea3" }} />
-                        </span>
+                        <span className="material-symbols-outlined text-[#4edea3] text-lg shrink-0" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>check_circle</span>
                         {f}
                       </li>
                     ))}
                     <li className="flex items-center gap-3 text-sm opacity-40">
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: "rgba(78,222,163,0.08)", border: "1px solid rgba(78,222,163,0.15)" }}>
-                        <Check className="h-3 w-3 text-outline" />
-                      </span>
+                      <span className="material-symbols-outlined text-outline text-lg shrink-0">check_circle</span>
                       No Churn Strategy
                     </li>
                   </ul>
@@ -356,8 +352,8 @@ export default function Home() {
                   className="relative flex flex-col overflow-hidden rounded-2xl p-10 shadow-2xl"
                   style={{
                     backgroundColor: "var(--surface-container-highest)",
-                    border: "2px solid #4edea3",
-                    boxShadow: "0 0 0 1px rgba(78,222,163,0.3), 0 0 40px rgba(78,222,163,0.25), 0 24px 48px rgba(0,0,0,0.4)",
+                    border: "1px solid rgba(78,222,163,0.45)",
+                    boxShadow: "0 0 20px rgba(78,222,163,0.15), 0 24px 48px rgba(0,0,0,0.4)",
                   }}
                 >
                   <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl"
@@ -385,9 +381,7 @@ export default function Home() {
                       "Priority Concierge Support",
                     ].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: "rgba(78,222,163,0.2)", border: "1px solid rgba(78,222,163,0.4)" }}>
-                          <Check className="h-3 w-3" style={{ color: "#4edea3" }} />
-                        </span>
+                        <span className="material-symbols-outlined text-[#4edea3] text-lg shrink-0" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>check_circle</span>
                         <strong>{f}</strong>
                       </li>
                     ))}
@@ -488,7 +482,7 @@ export default function Home() {
               },
               {
                 quote:
-                  '"The only platform that understands the nuance of the 12-month rule perfectly. A must-have for serious collectors."',
+                  '"The only platform that understands the nuance of the 5/24 rule perfectly. A must-have for serious collectors."',
                 name: "Sarah Jenkins",
                 role: "Venture Capitalist",
               },
