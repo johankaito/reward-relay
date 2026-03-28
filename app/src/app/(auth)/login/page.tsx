@@ -93,12 +93,12 @@ export default function LoginPage() {
         </div>
 
         {/* Glass card */}
-        <div className="glass-card rounded-[2rem] px-10 pt-10 pb-8 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
+        <div className="glass-card rounded-[2rem] px-10 pt-10 pb-8 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]">
 
           {/* Brand section */}
           <div className="mb-10 text-center">
             {/* Desktop: bolt icon in rounded-xl box */}
-            <div className="hidden md:inline-flex items-center justify-center w-14 h-14 rounded-xl mb-4" style={{ background: "rgba(32,37,55,1)", border: "1px solid rgba(68,71,85,0.15)" }}>
+            <div className="hidden md:inline-flex items-center justify-center w-14 h-14 rounded-full mb-4" style={{ background: "rgba(32,37,55,1)", border: "1px solid rgba(68,71,85,0.15)" }}>
               <span className="material-symbols-outlined text-[#4edea3] text-3xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>bolt</span>
             </div>
             {/* Title: green on mobile, white on desktop */}
@@ -201,7 +201,7 @@ export default function LoginPage() {
               type="submit"
               disabled={isLoading || !email || !password}
               className="w-full h-14 mt-4 font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg flex items-center justify-center gap-2 group"
-              style={{ background: "linear-gradient(135deg, #4EDEA3 0%, #10B981 100%)", color: "#00583b" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)", color: "#003824" }}
             >
               {isLoading ? "Signing in…" : (
                 <>

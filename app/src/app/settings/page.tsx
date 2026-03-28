@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Shield, LogOut } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { supabase } from "@/lib/supabase/client"
@@ -157,18 +156,18 @@ export default function SettingsPage() {
                 {[
                   {
                     key: "thirtyDay" as const,
-                    label: "30-Day Reminder",
-                    sub: "Get notified a month before points expire.",
+                    label: "30-Day Outlook",
+                    sub: "Receive an email summary of upcoming points expirations.",
                   },
                   {
                     key: "fourteenDay" as const,
-                    label: "14-Day Reminder",
-                    sub: "Critical alert two weeks prior to expiry.",
+                    label: "14-Day Critical Alert",
+                    sub: "High-priority reminder for urgent reward redemptions.",
                   },
                   {
                     key: "sevenDay" as const,
                     label: "7-Day Final Alert",
-                    sub: "Last call notifications for all active rewards.",
+                    sub: "Daily countdown for assets approaching final settlement.",
                   },
                 ].map(({ key, label, sub }) => (
                   <div key={key} className="flex items-center justify-between">
@@ -215,9 +214,9 @@ export default function SettingsPage() {
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-[#4edea3]/40">
                   <span className="text-[#4edea3] font-bold text-sm tracking-wider">ELITE PLUS</span>
                 </div>
-                <div className="flex gap-4 mt-2">
+                <div className="flex flex-col items-center gap-3 mt-2 w-full">
                   <button
-                    className="px-8 py-3 text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg text-sm"
+                    className="w-full py-3 text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg text-sm"
                     style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
                   >
                     Upgrade Plan
@@ -225,7 +224,7 @@ export default function SettingsPage() {
                   <button
                     onClick={handleSignOut}
                     disabled={signingOut}
-                    className="text-white font-medium text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
+                    className="text-on-surface-variant font-medium text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
                   >
                     {signingOut ? "Signing out…" : "Cancel Subscription"}
                   </button>
@@ -254,7 +253,7 @@ export default function SettingsPage() {
                   <button
                     onClick={handleSignOut}
                     disabled={signingOut}
-                    className="text-[#4edea3] font-bold text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
+                    className="text-[#ff4d4d] font-bold text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
                   >
                     {signingOut ? "Signing out…" : "Cancel Plan"}
                   </button>
@@ -305,7 +304,7 @@ export default function SettingsPage() {
             <div className="sticky top-24 space-y-6">
               {/* Data protection */}
               <div className="bg-gradient-to-br from-surface-container to-surface-container-low p-6 rounded-lg border border-white/5">
-                <Shield className="h-6 w-6 text-[#4edea3] mb-4" />
+                <span className="material-symbols-outlined text-[#4edea3] mb-4 block" style={{ fontSize: "24px", fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>shield</span>
                 <h3 className="font-bold text-lg mb-2">Data Protection</h3>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
                   Your sovereign ledger is protected by AES-256 encryption. We never share your transactional data with third-party aggregators.
