@@ -453,7 +453,7 @@ export default function ComparePage() {
                                 asChild
                                 size="sm"
                                 className="rounded-full text-white shadow-sm"
-                                style={{ background: "var(--gradient-cta)" }}
+                                style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
                               >
                                 <Link href={card.application_link} target="_blank" rel="noopener noreferrer">
                                   Apply

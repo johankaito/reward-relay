@@ -222,7 +222,7 @@ export default function FlightsPage() {
               </div>
               <button
                 className="text-on-primary font-black px-12 rounded-xl hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap"
-                style={{ background: 'var(--gradient-cta)' }}
+                style={{ background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' }}
               >
                 <Search className="w-4 h-4" />
                 <span className="tracking-widest text-sm uppercase">Find Rewards</span>
@@ -233,7 +233,7 @@ export default function FlightsPage() {
 
         {/* ── Active Redemption Goal ── */}
         <div className="bg-surface-container-low/80 rounded-3xl p-10 border border-white/5 relative overflow-hidden group shadow-xl">
-          <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-[#4edea3]/10 to-transparent pointer-events-none" />
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10 relative z-10">
             <div className="space-y-4">
               <div className="flex items-center gap-3 mb-2">
@@ -267,7 +267,7 @@ export default function FlightsPage() {
               </div>
               <div className="relative h-4 bg-surface-container-highest/50 rounded-full overflow-hidden p-1 shadow-inner">
                 <div
-                  className="h-full bg-gradient-to-r from-primary via-[#6ffbbe] to-primary-container rounded-full transition-all duration-1000 ease-out relative"
+                  className="h-full bg-gradient-to-r from-[#4edea3] via-[#6ffbbe] to-[#10b981] rounded-full transition-all duration-1000 ease-out relative"
                   style={{ width: `${currentPool > 0 ? goalPct : 74}%` }}
                 >
                   <div className="absolute top-0 right-0 h-full w-8 bg-gradient-to-r from-transparent to-white/20" />
@@ -427,7 +427,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
               </div>
               <button
                 className="w-full py-4 rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-[#4edea3]/20"
-                style={{ background: 'var(--gradient-cta)' }}
+                style={{ background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' }}
               >
                 Book with Points
               </button>

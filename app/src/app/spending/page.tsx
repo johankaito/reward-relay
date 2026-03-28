@@ -402,7 +402,7 @@ export default function SpendingTrackerPage() {
       {/* ── Sticky header ── */}
       <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5">
         <div className="flex items-center justify-between px-10 h-16 w-full max-w-[1440px] mx-auto">
-          <h1 className="text-lg font-black bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent font-headline">Spend Tracker</h1>
+          <h1 className="text-lg font-black text-on-surface font-headline">Spend Tracker</h1>
           {/* Period selector chips */}
           <div className="flex items-center gap-1 bg-surface-container rounded-xl p-1">
             {(["monthly", "quarterly", "annual"] as SpendPeriod[]).map((p) => (
@@ -543,7 +543,7 @@ export default function SpendingTrackerPage() {
             </p>
             <Button
               className="rounded-full font-bold text-on-primary"
-              style={{ background: "var(--gradient-cta)" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
               onClick={() => (window.location.href = "/cards")}
             >
               Add cards
@@ -669,7 +669,7 @@ export default function SpendingTrackerPage() {
                       <DialogTrigger asChild>
                         <Button
                           className="rounded-xl font-bold text-on-primary px-5 py-2.5"
-                          style={{ background: "var(--gradient-cta)" }}
+                          style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
                         >
                           + Add Transaction
                         </Button>
@@ -732,7 +732,7 @@ export default function SpendingTrackerPage() {
                           <Button
                             onClick={handleAddTransaction}
                             className="w-full rounded-full font-bold text-on-primary"
-                            style={{ background: "var(--gradient-cta)" }}
+                            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
                           >
                             Save Transaction
                           </Button>
@@ -884,7 +884,7 @@ export default function SpendingTrackerPage() {
           onClick={() => setIsDialogOpen(true)}
           className="fixed bottom-28 right-6 w-16 h-16 rounded-2xl z-50 flex items-center justify-center active:scale-90 transition-all md:hidden overflow-hidden"
           style={{
-            background: "var(--gradient-cta)",
+            background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)",
             boxShadow: "0 12px 40px rgba(78,222,163,0.4)",
             border: "1px solid rgba(255,255,255,0.2)",
             color: "var(--on-primary)",

@@ -354,7 +354,7 @@ export default function InquiriesPage() {
                 type="submit"
                 disabled={submitting}
                 className="text-white shadow-sm"
-                style={{ background: "var(--gradient-cta)" }}
+                style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
               >
                 {submitting ? "Adding..." : "Add Application"}
               </Button>
@@ -501,7 +501,7 @@ export default function InquiriesPage() {
                                 <Button
                                   size="sm"
                                   className="h-6 px-2 text-xs text-white"
-                                  style={{ background: "var(--gradient-cta)" }}
+                                  style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
                                   onClick={() => handleEditSave(inquiry.id)}
                                 >
                                   Save

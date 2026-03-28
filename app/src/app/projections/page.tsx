@@ -247,7 +247,7 @@ export default function ProjectionsPage() {
           style={{ background: "rgba(23, 27, 40, 0.8)" }}
         >
           {/* Emerald glow on right */}
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/8 to-transparent" />
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-[#4edea3]/8 to-transparent" />
 
           <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             {/* Left: label + headline */}
@@ -331,7 +331,7 @@ export default function ProjectionsPage() {
                   className="h-full rounded-full transition-all duration-1000 ease-out"
                   style={{
                     width: `${percentage}%`,
-                    background: "var(--gradient-cta)",
+                    background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)",
                   }}
                 >
                   <div className="absolute right-0 top-0 h-full w-8 bg-gradient-to-r from-transparent to-white/20" />
@@ -511,7 +511,7 @@ export default function ProjectionsPage() {
                               ? "text-on-primary shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]"
                               : "border border-white/10 bg-white/5 text-on-surface hover:bg-white/10 hover:text-on-surface"
                           }`}
-                          style={isHighlighted ? { background: "var(--gradient-cta)" } : undefined}
+                          style={isHighlighted ? { background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" } : undefined}
                         >
                           <CreditCard className="h-4 w-4" />
                           View Card Details

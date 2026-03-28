@@ -228,7 +228,7 @@ export default function RecommendationsPage() {
                 <div key={rec.card.id} className={`relative group ${isBestMatch ? "" : ""}`}>
                   {/* Glow for best match */}
                   {isBestMatch && (
-                    <div className="absolute -inset-1 bg-gradient-to-br from-primary to-primary-container rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
+                    <div className="absolute -inset-1 bg-gradient-to-br from-[#4edea3] to-[#10b981] rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
                   )}
 
                   <div
@@ -326,7 +326,7 @@ export default function RecommendationsPage() {
                     {isBestMatch ? (
                       <button
                         className="w-full py-4 rounded-full font-bold text-sm text-black transition-all hover:scale-[1.02] shadow-lg shadow-[#4edea3]/20"
-                        style={{ background: "var(--gradient-cta)" }}
+                        style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
                       >
                         View Details
                       </button>

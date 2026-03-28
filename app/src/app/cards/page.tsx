@@ -138,7 +138,7 @@ export default function CardsPage() {
       <header className="sticky top-0 w-full z-40 bg-background/50 backdrop-blur-md border-b border-white/5 -mx-4 md:-mx-8 px-4 md:px-0 mb-8">
         <div className="flex items-center justify-between px-4 md:px-8 h-20 w-full max-w-[1440px] mx-auto">
           <div>
-            <h1 className="font-headline text-2xl font-black bg-gradient-to-br from-primary to-primary-container bg-clip-text text-transparent">
+            <h1 className="font-headline text-2xl font-black text-on-surface">
               Card Portfolio
             </h1>
             <p className="text-xs text-on-surface-variant font-medium">
@@ -148,7 +148,7 @@ export default function CardsPage() {
           <button
             onClick={() => setShowAddForm((v) => !v)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-black shadow-lg shadow-[#4edea3]/20 hover:opacity-90 transition-opacity"
-            style={{ background: "var(--gradient-cta)" }}
+            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
           >
             <Plus className="h-4 w-4" />
             {showAddForm ? "Cancel" : "Add Card"}
@@ -205,7 +205,7 @@ export default function CardsPage() {
           <button
             onClick={() => setShowAddForm(true)}
             className="px-6 py-3 rounded-full font-bold text-sm text-black shadow-lg shadow-[#4edea3]/20"
-            style={{ background: "var(--gradient-cta)" }}
+            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
           >
             + Add your first card
           </button>

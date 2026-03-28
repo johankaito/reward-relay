@@ -309,7 +309,7 @@ export default function TrackerPage() {
           <Link
             href="/cards"
             className="flex h-14 w-14 lg:h-16 lg:w-16 items-center justify-center rounded-full shadow-[0px_24px_48px_-12px_rgba(78,222,163,0.4)] text-on-primary transition-all hover:scale-110 active:scale-95"
-            style={{ background: "var(--gradient-cta)" }}
+            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
           >
             <Plus className="h-6 w-6 lg:h-7 lg:w-7" />
           </Link>

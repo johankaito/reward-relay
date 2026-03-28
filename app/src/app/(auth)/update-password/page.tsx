@@ -105,7 +105,7 @@ export default function UpdatePasswordPage() {
             <Button
               type="submit"
               className="w-full text-white"
-              style={{ background: "var(--gradient-cta)" }}
+              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
               disabled={isUpdating}
             >
               {isUpdating ? "Updating..." : "Update password"}
