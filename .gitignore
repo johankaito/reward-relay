@@ -1,7 +1,10 @@
 .vercel
 .env*.local
 
-# Visual diff screenshots
+# Visual diff tool output — local only, not committed
 app/tests/visual-diff-output/*.png
 app/tests/visual-diff-output/report-*.md
 app/tests/visual-diff-output/manifest.json
+
+# PR review screenshots — committed per-branch by pr-screenshot.ts, cleaned up after merge
+# screenshots/ intentionally tracked (not ignored) so GitHub can serve raw URLs in PR bodies
