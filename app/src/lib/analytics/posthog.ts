@@ -13,11 +13,11 @@ export function initPostHog() {
         capture_pageview: false, // We'll handle this manually in App Router
         capture_pageleave: true,
         autocapture: true, // Captures clicks, form submits automatically
-        capture_exceptions: {
+        capture_exceptions: process.env.NEXT_PUBLIC_APP_ENV === "production" ? {
           capture_unhandled_errors: true,
           capture_unhandled_rejections: true,
           capture_console_errors: false,
-        },
+        } : false,
         session_recording: {
           recordCrossOriginIframes: true,
         },
