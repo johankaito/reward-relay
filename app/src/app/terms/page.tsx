@@ -1,6 +1,9 @@
+import Header from "@/components/layout/Header"
+
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-[var(--surface-muted)] text-white">
+      <Header logoClickable />
       <div className="mx-auto max-w-4xl px-6 py-12">
         <div className="space-y-8">
           <div className="space-y-4">
