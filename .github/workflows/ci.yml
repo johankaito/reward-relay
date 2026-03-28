@@ -59,7 +59,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    environment: production
+    environment: Production
     defaults:
       run:
         working-directory: app
@@ -86,109 +86,26 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
 
-  # ─── Staging pipeline (master push only) ──────────────────────────────────
+  # ─── Production pipeline (master push only) ───────────────────────────────
   #
-  # SETUP REQUIRED — GitHub environment secrets:
-  #   staging:
-  #     SUPABASE_ACCESS_TOKEN  — account-level token (supabase.com/dashboard/account/tokens)
-  #     SUPABASE_PROJECT_REF   — ulwdfdaecrbjdiknntws
-  #     SUPABASE_DB_PASSWORD   — staging DB password
+  # GitHub environment secrets (Production):
+  #   SUPABASE_ACCESS_TOKEN  — account-level token
+  #   SUPABASE_PROJECT_REF   — ovqgvobmnzcdtkaosisg
+  #   SUPABASE_DB_PASSWORD   — prod DB password
+  #   VERCEL_TOKEN           — Vercel personal access token
+  #   VERCEL_ORG_ID          — Vercel team/org ID
+  #   VERCEL_PROJECT_ID      — Vercel project ID
   #
-  # SETUP REQUIRED — Vercel project settings (Preview environment variables):
-  #   NEXT_PUBLIC_SUPABASE_URL      — https://ulwdfdaecrbjdiknntws.supabase.co
-  #   NEXT_PUBLIC_SUPABASE_ANON_KEY — staging anon key
-  #   SUPABASE_SERVICE_KEY          — staging service_role key
-  #
-  # Vercel's Preview environment is used by `vercel deploy` (no --prod flag).
-  # Set staging Supabase vars under Preview only; keep prod vars under Production only.
-
-  migrate-staging:
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: [typecheck, build]
-    runs-on: ubuntu-latest
-    environment: staging
-    defaults:
-      run:
-        working-directory: app
-    env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Run staging migrations
-        run: |
-          supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
-          supabase db push --include-all
-
-  deploy-staging:
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: [migrate-staging]
-    runs-on: ubuntu-latest
-    outputs:
-      staging_url: ${{ steps.deploy.outputs.url }}
-    environment:
-      name: staging
-      url: ${{ steps.deploy.outputs.url }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Deploy to Vercel (staging preview)
-        id: deploy
-        working-directory: app
-        run: |
-          DEPLOY_URL=$(vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes)
-          echo "url=$DEPLOY_URL" >> $GITHUB_OUTPUT
-          echo "✅ Staging deployed to: $DEPLOY_URL"
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Alias to stable staging URL
-        working-directory: app
-        run: |
-          vercel alias set ${{ steps.deploy.outputs.url }} reward-relay-staging.vercel.app \
-            --token=${{ secrets.VERCEL_TOKEN }} \
-            --scope=${{ secrets.VERCEL_ORG_ID }}
-          echo "✅ reward-relay-staging.vercel.app → ${{ steps.deploy.outputs.url }}"
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-  # ─── Production pipeline (only runs if staging deploy succeeded) ──────────
-  #
-  # SETUP REQUIRED — GitHub environment secrets:
-  #   production:
-  #     SUPABASE_ACCESS_TOKEN  — account-level token (same as staging)
-  #     SUPABASE_PROJECT_REF   — ovqgvobmnzcdtkaosisg
-  #     SUPABASE_DB_PASSWORD   — prod DB password
-  #     VERCEL_TOKEN           — Vercel personal access token
-  #     VERCEL_ORG_ID          — Vercel team/org ID
-  #     VERCEL_PROJECT_ID      — Vercel project ID
-  #
-  # SETUP REQUIRED — Vercel project settings (Production environment variables):
+  # Vercel Production environment variables:
   #   NEXT_PUBLIC_SUPABASE_URL      — https://ovqgvobmnzcdtkaosisg.supabase.co
   #   NEXT_PUBLIC_SUPABASE_ANON_KEY — production anon key
   #   SUPABASE_SERVICE_KEY          — production service_role key
 
   migrate-production:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: [deploy-staging]
+    needs: [typecheck, build]
     runs-on: ubuntu-latest
-    continue-on-error: true
-    environment: production
+    environment: Production
     defaults:
       run:
         working-directory: app
@@ -212,11 +129,10 @@ jobs:
 
   deploy-production:
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs: [deploy-staging]
+    needs: [typecheck, build, migrate-production]
     runs-on: ubuntu-latest
     environment:
-      name: production
-      url: ${{ needs.deploy-staging.outputs.staging_url }}
+      name: Production
 
     steps:
       - name: Checkout code
@@ -225,14 +141,11 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Promote staging build to production
+      - name: Deploy to production
         working-directory: app
         run: |
-          vercel promote ${{ needs.deploy-staging.outputs.staging_url }} \
-            --token=${{ secrets.VERCEL_TOKEN }} \
-            --scope=${{ secrets.VERCEL_ORG_ID }} \
-            --yes
-          echo "✅ Promoted ${{ needs.deploy-staging.outputs.staging_url }} to production"
+          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+          echo "✅ Deployed to production"
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
