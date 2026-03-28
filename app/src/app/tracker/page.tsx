@@ -240,7 +240,7 @@ export default function TrackerPage() {
                 >
                   {/* Card identity */}
                   <div className="lg:col-span-3 flex items-center gap-4">
-                    <div className="w-16 h-10 rounded-md bg-surface-container-highest border border-outline-variant/10 flex items-center justify-center shrink-0 overflow-hidden">
+                    <div className="w-24 h-16 lg:w-16 lg:h-10 rounded-md bg-surface-container-highest border border-outline-variant/10 flex items-center justify-center shrink-0 overflow-hidden">
                       <span className="text-[10px] font-extrabold text-on-surface-variant tracking-widest">
                         {bank.slice(0, 3).toUpperCase()}
                       </span>
@@ -248,6 +248,11 @@ export default function TrackerPage() {
                     <div>
                       <div className="font-bold text-on-surface truncate max-w-[140px]">{cardName}</div>
                       <div className="text-xs text-on-surface-variant uppercase tracking-wider font-medium">{bank}</div>
+                      {card.application_date && (
+                        <div className="text-[10px] text-on-surface-variant mt-0.5 lg:hidden">
+                          Applied: {new Date(card.application_date).toLocaleDateString("en-AU", { month: "short", day: "numeric", year: "numeric" })}
+                        </div>
+                      )}
                     </div>
                   </div>
 
