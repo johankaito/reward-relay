@@ -332,9 +332,10 @@ export default function SpendingTrackerPage() {
         }
       })
 
-      setUserCards(enrichedCards)
-      if (enrichedCards.length > 0) {
-        setSelectedCardId(enrichedCards[0].id)
+      const validCards = enrichedCards.filter((c) => c.card !== null)
+      setUserCards(validCards)
+      if (validCards.length > 0) {
+        setSelectedCardId(validCards[0].id)
       }
 
       const transactionMap: Record<string, SpendingTransaction[]> = {}
@@ -521,7 +522,7 @@ export default function SpendingTrackerPage() {
             >
               {userCards.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.card.bank} — {c.card.name}
+                  {c.card?.bank ?? ""} — {c.card?.name ?? ""}
                 </option>
               ))}
             </select>
