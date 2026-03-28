@@ -331,12 +331,16 @@ export default function Home() {
                   <ul className="mb-10 flex-grow space-y-4">
                     {["Up to 2 Bank Syncs", "Basic Point Dashboard"].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
-                        <Check className="h-5 w-5 shrink-0 text-outline" />
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: "rgba(78,222,163,0.15)", border: "1px solid rgba(78,222,163,0.3)" }}>
+                          <Check className="h-3 w-3" style={{ color: "#4edea3" }} />
+                        </span>
                         {f}
                       </li>
                     ))}
                     <li className="flex items-center gap-3 text-sm opacity-40">
-                      <Check className="h-5 w-5 shrink-0 text-outline" />
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: "rgba(78,222,163,0.08)", border: "1px solid rgba(78,222,163,0.15)" }}>
+                        <Check className="h-3 w-3 text-outline" />
+                      </span>
                       No Churn Strategy
                     </li>
                   </ul>
@@ -361,7 +365,8 @@ export default function Home() {
                   <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl"
                     style={{ background: "rgba(78,222,163,0.1)" }} />
                   <div
-                    className="absolute right-4 top-4 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-widest bg-primary-gradient text-on-primary"
+                    className="absolute left-1/2 -translate-x-1/2 -top-4 rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest"
+                    style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)", color: "#003824" }}
                   >
                     Most Popular
                   </div>
@@ -382,7 +387,9 @@ export default function Home() {
                       "Priority Concierge Support",
                     ].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
-                        <Check className="h-5 w-5 shrink-0" style={{ color: "var(--primary)" }} />
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full" style={{ background: "rgba(78,222,163,0.2)", border: "1px solid rgba(78,222,163,0.4)" }}>
+                          <Check className="h-3 w-3" style={{ color: "#4edea3" }} />
+                        </span>
                         <strong>{f}</strong>
                       </li>
                     ))}
