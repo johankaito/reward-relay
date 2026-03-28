@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import {
   Lock,
-  Lightbulb,
   Check,
 } from "lucide-react"
 import Header from "@/components/layout/Header"
@@ -101,14 +100,6 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Social proof text */}
-            <div className="mt-16 text-center">
-              <p className="text-sm font-semibold text-on-surface-variant tracking-wide">
-                Trusted by{" "}
-                <span className="font-bold text-[#4edea3]">5,000+</span>{" "}
-                Aussie Points Hackers
-              </p>
-            </div>
           </div>
         </section>
 
@@ -192,13 +183,13 @@ export default function Home() {
               </h3>
               <div className="relative h-64 w-64">
                 <svg className="h-full w-full -rotate-90">
-                  <circle cx="128" cy="128" r="110" fill="transparent" stroke="var(--surface-container-highest)" strokeWidth="16" />
+                  <circle cx="128" cy="128" r="110" fill="transparent" stroke="rgba(78,222,163,0.12)" strokeWidth="16" />
                   <circle
                     cx="128"
                     cy="128"
                     r="110"
                     fill="transparent"
-                    stroke="var(--primary)"
+                    stroke="#4edea3"
                     strokeWidth="16"
                     strokeDasharray="691"
                     strokeDashoffset="103"
@@ -410,14 +401,6 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="text-center">
-                <p className="flex items-center justify-center gap-2 text-sm" style={{ color: "var(--on-surface)" }}>
-                  <Lightbulb className="h-5 w-5" style={{ color: "var(--primary)" }} />
-                  <span>
-                    <strong>Earn back your subscription</strong> in just ONE sign-up bonus (avg $1,200 value)
-                  </span>
-                </p>
-              </div>
             </div>
           </section>
         </BetaGate>
@@ -566,12 +549,17 @@ export default function Home() {
               />
             </BetaOnly>
             <BetaGate>
-              <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
+              <div className="flex flex-col items-center justify-center gap-3 md:flex-row">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full md:w-72 h-14 px-5 rounded-full bg-surface-container border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+                />
                 <a
                   href="/login"
-                  className="w-full rounded-full px-10 py-4 text-lg font-bold transition-all hover:scale-105 md:w-auto"
+                  className="w-full md:w-auto h-14 flex items-center justify-center rounded-full px-10 text-lg font-bold transition-all hover:scale-105"
                   style={{
-                    background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
+                    background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)",
                     color: "#003824",
                     boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
                   }}
