@@ -62,35 +62,23 @@ function computeSummary(cards: ProfitCard[]) {
   }
 }
 
-/** Build monthly area chart data from cards earned this FY */
+/** Build per-card chart data from cards earned this FY, sorted by bonus desc */
 function buildChartData(cards: ProfitCard[], fy: string) {
-  const fyCards = cards.filter((c) => c.fy === fy && c.bonusEarnedAt)
+  const fyCards = cards.filter((c) => c.fy === fy)
   if (fyCards.length === 0) return []
 
-  // Group by month label
-  const byMonth: Record<string, { bonuses: number; fees: number }> = {}
-  for (const c of fyCards) {
-    const d = new Date(c.bonusEarnedAt)
-    const key = d.toLocaleDateString("en-AU", { month: "short", year: "2-digit" })
-    if (!byMonth[key]) byMonth[key] = { bonuses: 0, fees: 0 }
-    byMonth[key].bonuses += c.bonusAud
-    byMonth[key].fees += c.fee
-  }
-
-  // Sort by date
-  const sorted = Object.entries(byMonth).sort(([a], [b]) => {
-    const parseKey = (k: string) => {
-      const [mon, yr] = k.split(" ")
-      return new Date(`${mon} 20${yr}`)
-    }
-    return parseKey(a).getTime() - parseKey(b).getTime()
-  })
-
-  return sorted.map(([month, { bonuses, fees }]) => ({
-    month,
-    bonuses: Math.round(bonuses),
-    fees: Math.round(fees),
-  }))
+  // One bar per card, sorted by bonus value descending so highest earners appear first
+  return [...fyCards]
+    .sort((a, b) => b.bonusAud - a.bonusAud)
+    .map((c) => {
+      // Truncate card name to fit under bar label
+      const label = c.name.split(" ").slice(0, 2).join(" ")
+      return {
+        month: label,
+        bonuses: Math.round(c.bonusAud),
+        fees: Math.round(c.fee),
+      }
+    })
 }
 
 // Custom Recharts tooltip with glass-panel styling
@@ -338,9 +326,9 @@ export default function ProfitPage() {
               {chartData.length > 0 && (
                 <section className="flex flex-col gap-5">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-headline font-bold">Monthly Yield</h3>
+                    <h3 className="text-xl font-headline font-bold">Bonuses vs Fees per Card</h3>
                     <span className="px-3 py-1 bg-surface-container-highest/50 rounded-full text-[10px] font-extrabold text-on-surface-variant tracking-wider">
-                      {chartData.length} MONTHS
+                      {chartData.length} CARDS
                     </span>
                   </div>
                   <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
