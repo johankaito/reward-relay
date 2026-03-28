@@ -37,7 +37,7 @@ function getCardStatus(card: UserCard): "ACTIVE" | "BEHIND" | "CANCEL SOON" {
 }
 
 function statusColor(status: string) {
-  if (status === "CANCEL SOON") return "text-error"
+  if (status === "CANCEL SOON") return "text-[#ffb4ab]"
   if (status === "BEHIND") return "text-yellow-400"
   return "text-primary"
 }
@@ -400,7 +400,7 @@ export default function CardsPage() {
                       {selectedCard.cancellation_date && (
                         <div className="flex justify-between items-center border-b border-white/5 pb-4">
                           <span className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold">Cancel By</span>
-                          <span className="text-sm font-bold tabular-nums text-error">
+                          <span className="text-sm font-bold tabular-nums text-[#ffb4ab]">
                             {new Date(selectedCard.cancellation_date).toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric" })}
                           </span>
                         </div>

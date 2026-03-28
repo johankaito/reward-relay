@@ -216,9 +216,9 @@ export default function SettingsPage() {
             </section>
 
             {/* Danger Zone */}
-            <section className="bg-surface-container/30 p-6 rounded-lg border border-error/20">
+            <section className="bg-surface-container/30 p-6 rounded-lg border border-[#ffb4ab]/20">
               <div className="mb-6">
-                <h2 className="text-2xl font-extrabold font-headline text-error mb-1">Danger Zone</h2>
+                <h2 className="text-2xl font-extrabold font-headline text-[#ffb4ab] mb-1">Danger Zone</h2>
                 <p className="text-sm text-on-surface-variant">Irreversible actions regarding your digital footprint.</p>
               </div>
               <div className="flex items-center justify-between">
@@ -229,7 +229,7 @@ export default function SettingsPage() {
                 <button
                   onClick={handleDeleteAccount}
                   disabled={deletingAccount}
-                  className="text-error font-bold text-sm px-4 py-2 rounded-lg hover:bg-error/10 transition-colors disabled:opacity-50 ml-6 flex-shrink-0"
+                  className="text-[#ffb4ab] font-bold text-sm px-4 py-2 rounded-lg hover:bg-[#ffb4ab]/10 transition-colors disabled:opacity-50 ml-6 flex-shrink-0"
                 >
                   Delete Account
                 </button>

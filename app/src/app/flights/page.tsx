@@ -434,9 +434,9 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
             </>
           ) : (
             <>
-              <div className={`p-4 rounded-2xl border ${isEmiratesFirst ? 'bg-surface-container-highest/30 border-white/5' : 'bg-error/5 border-error/10'}`}>
+              <div className={`p-4 rounded-2xl border ${isEmiratesFirst ? 'bg-surface-container-highest/30 border-white/5' : 'bg-[#ffb4ab]/5 border-[#ffb4ab]/10'}`}>
                 <div className="flex justify-between items-center">
-                  <span className={`text-xs font-bold uppercase tracking-widest ${isEmiratesFirst ? 'text-on-surface-variant' : 'text-error'}`}>
+                  <span className={`text-xs font-bold uppercase tracking-widest ${isEmiratesFirst ? 'text-on-surface-variant' : 'text-[#ffb4ab]'}`}>
                     Gap to target
                   </span>
                   <span className="text-lg font-extrabold text-white tabular-nums">
