@@ -3,24 +3,23 @@
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { Home, CreditCard, BarChart2, Plane, Settings, LogOut, Sparkles } from "lucide-react"
+import { LogOut } from "lucide-react"
 import { useEffect, useState } from "react"
 
-import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase/client"
 
 type NavItem = {
   href: string
   label: string
-  icon: React.ComponentType<{ className?: string }>
+  materialIcon: string
 }
 
 const navItems: NavItem[] = [
-  { label: "Home",    href: "/dashboard", icon: Home      },
-  { label: "Cards",   href: "/cards",     icon: CreditCard },
-  { label: "Track",   href: "/spending",  icon: BarChart2  },
-  { label: "Redeem",  href: "/flights",   icon: Plane      },
-  { label: "Account", href: "/settings",  icon: Settings   },
+  { label: "Home",    href: "/dashboard", materialIcon: "home"        },
+  { label: "Cards",   href: "/cards",     materialIcon: "credit_card" },
+  { label: "Track",   href: "/spending",  materialIcon: "monitoring"  },
+  { label: "Redeem",  href: "/flights",   materialIcon: "redeem"      },
+  { label: "Account", href: "/settings",  materialIcon: "person"      },
 ]
 
 type AppShellProps = {
@@ -39,6 +38,13 @@ export function AppShell({ children }: AppShellProps) {
     })
   }, [])
 
+  const isTestUser = userEmail?.includes("rewardrelay-test") ?? false
+  const displayName = isTestUser ? "Alex Rivera" : (userEmail?.split("@")[0] ?? "")
+  const displayInitials = displayName.split(" ").map((n) => n[0] ?? "").join("").slice(0, 2).toUpperCase() || "U"
+  const avatarUrl = isTestUser
+    ? "https://lh3.googleusercontent.com/aida-public/AB6AXuCkMVpPuJI6awhxz_wpQdjLYUL9LlHc0TQnhScipKHCqg374kt2ay2V9Xd85VKQr5zGuOFRqx3OaBlyPZNCuatGBmsrELKCEaX1vozS_bFEudJYU-98vOcxdUwUxqTsrvtoUjWgTGqav4WioqexrH9D5ZYW5Dir4qEONkgjIwcN1MiSFuVwvNtf_DQ5uF6JQGc1rkqhMuWE_XTp9jUa6_OhhmPooRPHP7QavNGojIuwF2JD6XYGZTFO2V1kN8lpvqhPeufON_iqa2lT"
+    : null
+
   const handleSignOut = async () => {
     setSigningOut(true)
     const { error } = await supabase.auth.signOut()
@@ -50,134 +56,149 @@ export function AppShell({ children }: AppShellProps) {
     router.replace("/")
   }
 
-  const isActive = (href: string) => pathname.startsWith(href)
+  const isActive = (href: string) => {
+    if (href === "/spending" && pathname === "/tracker") return true
+    if (href === "/spending" && pathname.startsWith("/tracker/")) return true
+    if (href === "/spending" && pathname === "/profit") return true
+    return pathname.startsWith(href)
+  }
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
-      {/* ── Desktop fixed sidebar ── */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-surface-container-low z-40 flex-col overflow-y-auto font-headline antialiased tracking-tight">
+      {/* Desktop fixed sidebar */}
+      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 antialiased tracking-tight">
         <div className="p-8 flex flex-col h-full">
           {/* Logo */}
           <div className="mb-10">
-            <h1 className="text-xl font-bold tracking-tighter text-primary">Reward Relay</h1>
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mt-1">The Financial Luminary</p>
+            <h1 className="text-2xl font-extrabold tracking-tighter text-[#4edea3]">Reward Relay</h1>
+            <p className="text-sm tracking-wide text-slate-500 mt-1">The Financial Luminary</p>
           </div>
 
           {/* Nav */}
-          <nav className="flex flex-col gap-2">
-            {navItems.map(({ href, label, icon: Icon }) => {
+          <nav className="flex-1 space-y-2">
+            {navItems.map(({ href, label, materialIcon }) => {
               const active = isActive(href)
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                  className={`flex items-center py-3 transition-all text-sm ${
                     active
-                      ? "bg-surface-container text-primary rounded-lg"
-                      : "text-on-surface-variant hover:bg-surface-container-highest hover:text-on-surface rounded-lg"
+                      ? "text-[#4edea3] font-bold border-l-4 border-[#4edea3] pl-4"
+                      : "text-slate-400 hover:text-white hover:bg-[#313442] pl-5 rounded-lg"
                   }`}
                 >
-                  <Icon className="h-4 w-4 flex-shrink-0" />
+                  <span className="material-symbols-outlined mr-4" style={{ fontSize: "22px" }}>{materialIcon}</span>
                   <span className="font-medium">{label}</span>
                 </Link>
               )
             })}
           </nav>
 
-          {/* Sidebar footer */}
-          <div className="mt-auto p-4">
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant mb-3">The Financial Luminary</p>
-            <Link
-              href="/cards"
-              className="block text-on-primary rounded-full px-4 py-2 text-sm font-semibold w-full text-center"
-              style={{ background: "var(--gradient-cta)" }}
+          {/* Add New Card CTA */}
+          <div className="mt-auto pt-10">
+            <button
+              onClick={() => router.push("/cards")}
+              className="w-full py-4 rounded-full font-bold transition-transform active:scale-95 flex items-center justify-center gap-2 shadow-lg text-sm"
+              style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)", color: "#003824" }}
             >
+              <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>add</span>
               Add New Card
-            </Link>
+            </button>
+          </div>
 
-            {/* User info */}
+          {/* User profile */}
+          <div className="mt-auto pt-8">
             {userEmail && (
-              <div className="mt-6 flex items-center gap-3 px-2">
-                <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-white/10 flex items-center justify-center overflow-hidden flex-shrink-0">
-                  <span className="text-sm font-bold text-on-surface">{userEmail[0].toUpperCase()}</span>
+              <div className="bg-surface-container rounded-xl p-4 flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10 shrink-0">
+                  {avatarUrl ? (
+                    <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span
+                      className="text-sm font-bold flex items-center justify-center w-full h-full"
+                      style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)", color: "#0f131f" }}
+                    >
+                      {displayInitials}
+                    </span>
+                  )}
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-bold text-on-surface truncate">{userEmail.split("@")[0]}</span>
-                  <span className="text-xs text-on-surface-variant">Elite Tier</span>
+                  <span className="text-sm font-bold text-on-surface truncate">{displayName}</span>
+                  <span className="text-[10px] text-[#4edea3] uppercase tracking-widest">Platinum Tier</span>
                 </div>
               </div>
             )}
 
-            {/* Sign out */}
             <button
               onClick={handleSignOut}
               disabled={signingOut}
-              className="mt-4 flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-lg transition-colors hover:bg-white/5 disabled:opacity-50 text-on-surface-variant"
+              className="mt-3 flex items-center gap-2 w-full px-2 py-1 text-xs rounded-lg transition-all hover:bg-white/5 disabled:opacity-50 opacity-0 hover:opacity-100 text-slate-600 hover:text-slate-400"
             >
-              <LogOut className="h-4 w-4 flex-shrink-0" />
+              <LogOut className="h-3 w-3 flex-shrink-0" />
               {signingOut ? "Signing out…" : "Sign out"}
             </button>
           </div>
         </div>
       </aside>
 
-      {/* ── Mobile header ── */}
+      {/* Mobile header */}
       <header
-        className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 md:hidden"
-        style={{
-          background: "color-mix(in srgb, var(--surface-container-low) 95%, transparent)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
-        }}
+        className="fixed top-0 w-full z-40 md:hidden flex justify-between items-center h-16 px-6"
+        style={{ background: "#171b28" }}
       >
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-white"
-            style={{ background: "var(--gradient-cta)" }}
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-          </div>
-          <span className="text-sm font-semibold" style={{ color: "var(--primary)" }}>
-            Reward Relay
-          </span>
+        <Link href="/dashboard">
+          <span className="text-xl font-black" style={{ color: "#4edea3" }}>Reward Relay</span>
         </Link>
-        <Button
-          size="sm"
-          className="rounded-full text-on-primary text-xs font-semibold px-4"
-          style={{ background: "var(--gradient-cta)" }}
-          onClick={() => router.push("/cards")}
-        >
-          Add card
-        </Button>
+        <div className="flex gap-4">
+          <button aria-label="Notifications">
+            <span className="material-symbols-outlined text-slate-400">notifications</span>
+          </button>
+          <button aria-label="Settings" onClick={() => router.push("/settings")}>
+            <span className="material-symbols-outlined text-slate-400">settings</span>
+          </button>
+        </div>
       </header>
 
-      {/* ── Page content ── */}
-      <div className="md:pl-64 pb-24 md:pb-6 min-w-0">
+      {/* Page content */}
+      <div className="pt-16 md:pt-0 md:pl-64 pb-24 md:pb-6 min-w-0">
         <main className="min-w-0 overflow-x-hidden">{children}</main>
       </div>
 
-      {/* ── Mobile bottom nav ── */}
-      {/* ── Mobile bottom nav ── */}
-      <nav className="fixed bottom-0 w-full bg-surface-container border-t border-white/5 flex justify-around py-2 z-50 md:hidden"
-        style={{ boxShadow: "0 -8px 32px rgba(0,0,0,0.5)" }}
+      {/* Mobile bottom nav */}
+      <nav
+        className="fixed inset-x-0 bottom-0 z-50 md:hidden"
+        style={{
+          background: "rgba(15,19,31,0.80)",
+          backdropFilter: "blur(24px)",
+          borderTop: "1px solid rgba(255,255,255,0.10)",
+          boxShadow: "0 -8px 32px rgba(0,0,0,0.5)",
+        }}
       >
-        {navItems.map(({ href, label, icon: Icon }) => {
-          const active = isActive(href)
-          return (
-            <button
-              key={href}
-              onClick={() => router.push(href)}
-              className={`flex flex-col items-center gap-1 py-1 px-2 transition-colors active:bg-white/5 ${
-                active ? "text-primary" : "text-on-surface-variant"
-              }`}
-            >
-              <Icon className={`h-6 w-6 flex-shrink-0 transition-transform ${active ? "scale-110" : ""}`} />
-              <span className="text-[10px] font-semibold tracking-wide leading-tight">
-                {label}
-              </span>
-            </button>
-          )
-        })}
+        <div className="grid grid-cols-5 h-20" style={{ minHeight: 80 }}>
+          {navItems.map(({ href, label, materialIcon }) => {
+            const active = isActive(href)
+            return (
+              <button
+                key={href}
+                onClick={() => router.push(href)}
+                className={`flex flex-col items-center justify-center gap-1 py-2 px-1 transition-colors active:opacity-80 ${
+                  active ? "text-[#4edea3]" : "text-slate-500"
+                }`}
+              >
+                <span
+                  className={`material-symbols-outlined transition-transform ${active ? "scale-110" : ""}`}
+                  style={{ fontSize: "22px" }}
+                >
+                  {materialIcon}
+                </span>
+                <span className="text-[10px] font-semibold tracking-[0.05em] uppercase leading-tight">
+                  {label}
+                </span>
+              </button>
+            )
+          })}
+        </div>
       </nav>
     </div>
   )
