@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { Download, AlertTriangle, CheckCircle, TrendingUp } from "lucide-react"
+import { Download, AlertTriangle, CheckCircle, TrendingUp, Sparkles, Activity } from "lucide-react"
 import {
   BarChart,
   Bar,
@@ -525,7 +525,7 @@ export default function ProfitPage() {
                           <YAxis hide />
                           <Tooltip content={<GlassTooltip />} />
                           <Bar dataKey="bonuses" fill="#4edea3" radius={[4, 4, 0, 0]} maxBarSize={32} />
-                          <Bar dataKey="fees" fill="#ffb4ab" radius={[4, 4, 0, 0]} maxBarSize={32} />
+                          <Bar dataKey="fees" fill="#d0bcff" radius={[4, 4, 0, 0]} maxBarSize={32} />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -577,9 +577,10 @@ export default function ProfitPage() {
             {/* ── High Velocity Assets ────────────────────────────────── */}
             {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee >= 5).length > 0 && (
               <div className="rounded-2xl bg-surface-container p-6" style={{ border: '1px solid rgba(78,222,163,0.1)' }}>
-                <p className="mb-4 text-sm font-bold text-on-surface">
-                  ⚡ High Velocity Assets
-                </p>
+                <div className="flex items-center gap-3 mb-6">
+                  <Sparkles className="h-7 w-7 text-primary" />
+                  <h3 className="font-headline font-bold text-2xl">High Velocity Assets</h3>
+                </div>
                 <div className="space-y-3">
                   {[...fyCards]
                     .filter(c => c.fee > 0 && c.bonusAud / c.fee >= 5)
@@ -615,9 +616,10 @@ export default function ProfitPage() {
             {/* ── Holding Strategy ────────────────────────────────────── */}
             {fyCards.filter(c => c.fee > 0 && c.bonusAud / c.fee < 2).length > 0 && (
               <div className="rounded-2xl bg-surface-container p-6" style={{ border: '1px solid rgba(255,180,171,0.08)' }}>
-                <p className="mb-4 text-sm font-bold text-on-surface">
-                  ◎ Holding Strategy
-                </p>
+                <div className="flex items-center gap-3 mb-6">
+                  <Activity className="h-7 w-7 text-secondary" />
+                  <h3 className="font-headline font-bold text-2xl">Holding Strategy</h3>
+                </div>
                 <div className="space-y-3">
                   {[...fyCards]
                     .filter(c => c.fee > 0 && c.bonusAud / c.fee < 2)
@@ -640,7 +642,7 @@ export default function ProfitPage() {
                           </div>
                           <div className="text-right">
                             <p className="text-secondary font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
-                            <p className="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Efficiency</p>
+                            <p className="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Maintenance</p>
                           </div>
                         </div>
                       )
