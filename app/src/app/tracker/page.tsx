@@ -315,7 +315,6 @@ export default function TrackerPage() {
           </Link>
         </div>
       </div>
-      </div>
     </AppShell>
   )
 }
