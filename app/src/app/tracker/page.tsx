@@ -56,25 +56,25 @@ function statusBadge(status: CardStatus) {
   switch (status) {
     case "cancel_soon":
       return (
-        <span className="px-3 py-1 rounded-full bg-error/10 text-error text-[10px] font-bold tracking-[0.08em] uppercase border border-error/20">
+        <span className="px-4 py-2 rounded-full bg-destructive/10 text-destructive text-[10px] font-bold tracking-[0.08em] uppercase border border-destructive/20">
           Cancel Soon
         </span>
       )
     case "behind":
       return (
-        <span className="px-3 py-1 rounded-full bg-amber-400/10 text-amber-400 text-[10px] font-bold tracking-[0.08em] uppercase border border-amber-400/20">
+        <span className="px-4 py-2 rounded-full bg-amber-400/10 text-amber-400 text-[10px] font-bold tracking-[0.08em] uppercase border border-amber-400/20">
           Behind
         </span>
       )
     case "eligible":
       return (
-        <span className="px-3 py-1 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold tracking-[0.08em] uppercase border border-secondary/20">
+        <span className="px-4 py-2 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold tracking-[0.08em] uppercase border border-secondary/20">
           Eligible
         </span>
       )
     default:
       return (
-        <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-[0.08em] uppercase border border-primary/20">
+        <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-[0.08em] uppercase border border-primary/20">
           Active
         </span>
       )
@@ -192,8 +192,8 @@ export default function TrackerPage() {
             {/* Desktop table header */}
             <div className="hidden lg:grid grid-cols-12 gap-8 px-8 text-[10px] font-bold text-on-surface-variant tracking-[0.1em] uppercase">
               <div className="col-span-3">Card Identity</div>
-              <div className="col-span-6">Application → Eligibility → Deadline Timeline</div>
-              <div className="col-span-3 text-right">Status</div>
+              <div className="col-span-6">Application → Eligibility → Cancellation Timeline</div>
+              <div className="col-span-3 text-right">Lifecycle Status</div>
             </div>
 
             {/* Timeline rows */}
@@ -224,13 +224,13 @@ export default function TrackerPage() {
               }).toUpperCase()
 
               const progressBarColor =
-                status === "cancel_soon" ? "bg-error/60"
+                status === "cancel_soon" ? "bg-destructive/60"
                 : status === "behind" ? "bg-amber-400/60"
                 : status === "eligible" ? "bg-secondary/40"
                 : "bg-primary/40"
 
               const deadlineLabelColor =
-                status === "cancel_soon" ? "text-error" : "text-on-surface-variant"
+                status === "cancel_soon" ? "text-destructive" : "text-on-surface-variant"
 
               return (
                 <Link
@@ -240,7 +240,7 @@ export default function TrackerPage() {
                 >
                   {/* Card identity */}
                   <div className="lg:col-span-3 flex items-center gap-4">
-                    <div className="w-16 h-10 rounded-md bg-surface-container-highest border border-white/5 flex items-center justify-center shrink-0 overflow-hidden">
+                    <div className="w-16 h-10 rounded-md bg-surface-container-highest border border-outline-variant/10 flex items-center justify-center shrink-0 overflow-hidden">
                       <span className="text-[10px] font-extrabold text-on-surface-variant tracking-widest">
                         {bank.slice(0, 3).toUpperCase()}
                       </span>
@@ -253,36 +253,36 @@ export default function TrackerPage() {
 
                   {/* Timeline bar */}
                   <div className="lg:col-span-6 relative pt-5 pb-1">
-                    <div className="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden relative">
+                    <div className="h-1.5 w-full bg-surface-variant rounded-full overflow-hidden relative">
                       {/* Progress fill */}
                       <div
                         className={`absolute left-0 top-0 h-full ${progressBarColor} rounded-full`}
                         style={{ width: `${progressPct}%` }}
                       />
                       {/* Applied marker */}
-                      <div className="absolute left-0 top-0 h-full w-1.5 bg-primary rounded-l-full" />
+                      <div className="absolute left-0 top-0 h-full w-2 bg-primary rounded-l-full" />
                       {/* Eligibility marker */}
                       <div
-                        className="absolute top-0 h-full w-1.5 bg-secondary"
+                        className="absolute top-0 h-full w-2 bg-secondary"
                         style={{ left: `${eligibilityPct}%` }}
                       />
                       {/* Deadline marker */}
-                      <div className="absolute right-0 top-0 h-full w-1.5 bg-error rounded-r-full" />
+                      <div className="absolute right-0 top-0 h-full w-2 bg-destructive rounded-r-full" />
                     </div>
                     <div className="flex justify-between mt-3 text-[10px] font-bold text-on-surface-variant tracking-wider uppercase">
                       <div className="flex flex-col">
                         <span>Applied</span>
-                        <span className="text-on-surface tabular-nums mt-0.5">{appliedLabel}</span>
+                        <span className="text-on-surface tabular-nums mt-1">{appliedLabel}</span>
                       </div>
                       <div className="flex flex-col items-center">
                         <span>Eligible</span>
-                        <span className="text-secondary tabular-nums mt-0.5">
+                        <span className={`tabular-nums mt-1 ${progressPct >= eligibilityPct ? "text-secondary" : "text-on-surface-variant"}`}>
                           {progressPct >= eligibilityPct ? "✓ Met" : "Pending"}
                         </span>
                       </div>
                       <div className="flex flex-col items-end">
                         <span>Deadline</span>
-                        <span className={`${deadlineLabelColor} tabular-nums mt-0.5`}>
+                        <span className={`${deadlineLabelColor} tabular-nums mt-1`}>
                           {status === "cancel_soon" ? `${daysLeft}d left` : deadlineLabel}
                         </span>
                       </div>
@@ -299,14 +299,14 @@ export default function TrackerPage() {
           </div>
         )}
 
-        {/* FAB — mobile */}
-        <div className="md:hidden fixed bottom-24 right-6 z-40">
+        {/* FAB */}
+        <div className="fixed bottom-24 lg:bottom-12 right-6 lg:right-12 z-40">
           <Link
             href="/cards"
-            className="flex h-14 w-14 items-center justify-center rounded-full shadow-[0px_24px_48px_-12px_rgba(78,222,163,0.4)] text-on-primary transition-all hover:scale-110 active:scale-95"
+            className="flex h-14 w-14 lg:h-16 lg:w-16 items-center justify-center rounded-full shadow-[0px_24px_48px_-12px_rgba(78,222,163,0.4)] text-on-primary transition-all hover:scale-110 active:scale-95"
             style={{ background: "var(--gradient-cta)" }}
           >
-            <Plus className="h-6 w-6" />
+            <Plus className="h-6 w-6 lg:h-7 lg:w-7" />
           </Link>
         </div>
       </div>
