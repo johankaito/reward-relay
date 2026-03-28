@@ -137,7 +137,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="name@company.com"
+                  placeholder="name@luxury.com"
                   className="w-full h-14 bg-surface-container-highest border-none rounded-2xl md:rounded-lg pl-12 md:pl-5 pr-4 text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all font-medium"
                 />
               </div>
@@ -208,7 +208,9 @@ export default function LoginPage() {
                 <>
                   Sign in
                   {/* Mobile only: arrow icon */}
-                  <span className="md:hidden material-symbols-outlined group-hover:translate-x-1 transition-transform" style={{ fontSize: "18px" }}>arrow_forward</span>
+                  <span className="md:hidden">
+                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform" style={{ fontSize: "18px" }}>arrow_forward</span>
+                  </span>
                 </>
               )}
             </button>
