@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
-import { Mail, Lock, ArrowRight, Zap } from "lucide-react"
+import { Mail, Lock } from "lucide-react"
 
 import { supabase } from "@/lib/supabase/client"
 
@@ -86,13 +86,22 @@ export default function LoginPage() {
       />
 
       <div className="relative z-10 w-full max-w-md">
+        {/* Decorative circles */}
+        <div className="absolute inset-0 z-[-1] opacity-20 pointer-events-none">
+          <div className="absolute top-1/4 right-1/4 w-32 h-32 border border-outline-variant/30 rounded-full" />
+          <div className="absolute bottom-1/4 left-1/3 w-64 h-64 border border-outline-variant/20 rounded-full" />
+        </div>
+
         {/* Glass card */}
-        <div className="glass-card rounded-2xl p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
+        <div className="glass-card rounded-[2rem] p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
 
           {/* Brand section */}
           <div className="mb-10 text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-surface-container-highest border border-outline-variant/15 mb-4">
-              <Zap className="h-7 w-7 text-primary fill-primary" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-surface-variant border border-outline-variant/15 mb-4">
+              <span
+                className="material-symbols-outlined text-[#4edea3] text-3xl"
+                style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
+              >bolt</span>
             </div>
             <h1 className="font-headline text-3xl font-extrabold tracking-tighter text-on-surface">
               Reward Relay
@@ -164,13 +173,10 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading || !email || !password}
-              className="w-full h-14 mt-4 text-black font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
+              className="w-full h-14 mt-4 text-black font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
               style={{ background: "var(--gradient-cta)" }}
             >
               {isLoading ? "Signing in…" : "Sign in"}
-              {!isLoading && (
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              )}
             </button>
           </form>
 
@@ -182,7 +188,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowBetaForm(true)}
-                  className="text-primary font-bold hover:underline underline-offset-4 ml-1"
+                  className="text-[#4edea3] font-bold hover:underline underline-offset-4 ml-1"
                 >
                   Sign up
                 </button>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
-import { Mail, Lock, ShieldCheck, ArrowRight } from "lucide-react"
+import { Mail, Lock, ShieldCheck } from "lucide-react"
 
 import { supabase } from "@/lib/supabase/client"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
@@ -98,7 +98,7 @@ export default function SignupPage() {
         {/* Brand header */}
         <div className="flex flex-col items-center mb-10">
           <div className="mb-4">
-            <span className="text-4xl font-extrabold text-primary tracking-tighter font-headline">R</span>
+            <span className="text-4xl font-extrabold text-[#4edea3] tracking-tighter font-headline">R</span>
           </div>
           <h1 className="font-headline text-3xl font-extrabold tracking-tight text-center text-on-surface">
             Reward Relay
@@ -109,11 +109,11 @@ export default function SignupPage() {
         </div>
 
         {/* Glass card */}
-        <div className="glass-card rounded-2xl p-8 md:p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
+        <div className="glass-panel rounded-[2rem] p-8 md:p-10 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]">
           {/* Beta badge */}
           <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#4edea3]/10 border border-[#4edea3]/20">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#4edea3]">
                 Private Beta — Invite Only
               </span>
             </div>
@@ -196,42 +196,39 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading || !email || !password || !confirmPassword}
-              className="w-full h-14 mt-4 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-primary/20"
+              className="w-full h-14 mt-4 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 group shadow-lg shadow-[#4edea3]/20"
               style={{ background: "var(--gradient-cta)" }}
             >
               {isLoading ? "Creating account…" : "Create account"}
               {!isLoading && (
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <span className="material-symbols-outlined text-lg transition-transform group-hover:translate-x-1" style={{ fontSize: "18px" }}>arrow_forward</span>
               )}
             </button>
 
             {/* Terms */}
             <p className="text-center text-[11px] text-on-surface-variant leading-relaxed mt-6 px-4">
               By clicking Create account, you agree to our{" "}
-              <Link href="/terms" className="text-primary hover:underline underline-offset-2">
+              <Link href="/terms" className="text-[#4edea3] hover:underline underline-offset-2">
                 Terms of Service
               </Link>{" "}
               and acknowledge our{" "}
-              <Link href="/privacy" className="text-primary hover:underline underline-offset-2">
+              <Link href="/privacy" className="text-[#4edea3] hover:underline underline-offset-2">
                 Privacy Policy
               </Link>
               .
             </p>
           </form>
 
-          <div className="mt-8 pt-8 border-t border-outline-variant/15 flex flex-col items-center">
-            <p className="text-on-surface-variant text-sm">
-              Already have an account?{" "}
-              <Link href="/login" className="text-primary font-bold ml-1 hover:underline underline-offset-4">
-                Sign In
-              </Link>
-            </p>
-          </div>
         </div>
 
-        {/* Bottom branding */}
-        <div className="mt-12 text-center text-[10px] text-outline uppercase tracking-widest font-medium">
-          © 2024 Reward Relay • Secure Sovereign Ledger • All Rights Reserved
+        {/* Secondary action — outside card */}
+        <div className="mt-10 text-center">
+          <p className="text-on-surface-variant text-sm">
+            Already have an account?{" "}
+            <Link href="/login" className="text-[#4edea3] font-bold ml-1 hover:underline underline-offset-4">
+              Log in
+            </Link>
+          </p>
         </div>
       </div>
     </>
