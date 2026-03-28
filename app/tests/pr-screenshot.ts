@@ -116,7 +116,7 @@ async function main() {
 
   const staged = run("git diff --cached --name-only", { silent: true, cwd: REPO_ROOT })
   if (staged.trim()) {
-    run(`git commit -m "chore(screenshots): add PR review screenshots for ${pages.join(", ")}"`, { cwd: REPO_ROOT })
+    run(`git -c commit.gpgsign=false commit -m "chore(screenshots): add PR review screenshots for ${pages.join(", ")}"`, { cwd: REPO_ROOT })
     console.log("  ✓ Screenshots committed")
   } else {
     console.log("  ✓ Screenshots already up to date (no new commit needed)")

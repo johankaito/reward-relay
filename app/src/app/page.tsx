@@ -8,7 +8,6 @@ import {
 } from "lucide-react"
 import Header from "@/components/layout/Header"
 import { supabase } from "@/lib/supabase/client"
-
 import { BetaGate } from "@/components/ui/BetaGate"
 import { BetaOnly } from "@/components/ui/BetaOnly"
 import { BetaRequestForm } from "@/components/forms/BetaRequestForm"
@@ -100,25 +99,34 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Trusted By strip — inside hero, below CTAs */}
-            <div className="mt-10 border-t border-white/5 pt-8">
-              <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-                Trusted by Aussie Points Hackers
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-6">
-                {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((label) => (
-                  <span
+            {/* Social proof — avatar stack */}
+            <div className="mt-16 flex flex-col items-center gap-4">
+              <div className="flex items-center -space-x-5">
+                {[
+                  { bg: "from-emerald-400 to-teal-500", label: "A" },
+                  { bg: "from-violet-500 to-purple-600", label: "B" },
+                  { bg: "from-blue-500 to-indigo-500", label: "C" },
+                  { bg: "from-rose-500 to-pink-500", label: "D" },
+                  { bg: "from-amber-400 to-orange-500", label: "E" },
+                ].map(({ bg, label }) => (
+                  <div
                     key={label}
-                    className="text-[11px] font-bold tracking-[0.15em] text-on-surface-variant"
+                    className={`flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${bg} ring-[3px] ring-[#0f131f] text-sm font-bold text-white shadow-lg`}
                   >
                     {label}
-                  </span>
+                  </div>
                 ))}
               </div>
+              <p className="text-base font-semibold text-on-surface-variant">
+                Join{" "}
+                <span className="font-bold text-[#4edea3]">2,400+</span>{" "}
+                points optimisers
+              </p>
             </div>
 
           </div>
         </section>
+
 
         {/* How it Works */}
         <section id="how-it-works" className="bg-surface-container-low px-6 py-24 md:px-20">
