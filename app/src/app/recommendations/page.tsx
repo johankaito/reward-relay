@@ -323,15 +323,18 @@ export default function RecommendationsPage() {
                     </div>
 
                     {/* CTA */}
-                    <button
-                      className={`w-full py-4 rounded-full font-bold text-sm transition-all hover:scale-[1.02] ${
-                        isBestMatch
-                          ? "bg-gradient-to-br from-primary to-primary-container text-on-primary shadow-lg shadow-primary/20"
-                          : "bg-transparent border border-white/10 text-on-surface hover:bg-white/5"
-                      }`}
-                    >
-                      View Details
-                    </button>
+                    {isBestMatch ? (
+                      <button
+                        className="w-full py-4 rounded-full font-bold text-sm text-black transition-all hover:scale-[1.02] shadow-lg shadow-primary/20"
+                        style={{ background: "var(--gradient-cta)" }}
+                      >
+                        View Details
+                      </button>
+                    ) : (
+                      <button className="w-full py-4 rounded-full font-bold text-sm bg-transparent border border-white/10 text-on-surface hover:bg-white/5 transition-all hover:scale-[1.02]">
+                        View Details
+                      </button>
+                    )}
                   </div>
                 </div>
               )
