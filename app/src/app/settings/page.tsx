@@ -156,18 +156,18 @@ export default function SettingsPage() {
                 {[
                   {
                     key: "thirtyDay" as const,
-                    label: "30-Day Outlook",
-                    sub: "Receive an email summary of upcoming points expirations.",
+                    label: "30-Day Reminder",
+                    sub: "Get notified a month before points expire.",
                   },
                   {
                     key: "fourteenDay" as const,
-                    label: "14-Day Critical Alert",
-                    sub: "High-priority reminder for urgent reward redemptions.",
+                    label: "14-Day Reminder",
+                    sub: "Critical alert two weeks prior to expiry.",
                   },
                   {
                     key: "sevenDay" as const,
                     label: "7-Day Final Alert",
-                    sub: "Daily countdown for assets approaching final settlement.",
+                    sub: "Last call notifications for all active rewards.",
                   },
                 ].map(({ key, label, sub }) => (
                   <div key={key} className="flex items-center justify-between">
@@ -214,7 +214,7 @@ export default function SettingsPage() {
                 <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-[#4edea3]/40">
                   <span className="text-[#4edea3] font-bold text-sm tracking-wider">ELITE PLUS</span>
                 </div>
-                <div className="flex flex-col items-center gap-3 mt-2 w-full">
+                <div className="flex flex-col items-center gap-2 w-full">
                   <button
                     className="w-full py-3 text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg text-sm"
                     style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
