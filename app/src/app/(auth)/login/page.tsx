@@ -93,8 +93,8 @@ export default function LoginPage() {
         </div>
 
         {/* Glass card */}
-        <div className="rounded-[2rem] px-10 pt-10 pb-8 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]"
-          style={{ background: "rgba(20, 25, 40, 0.6)", backdropFilter: "blur(20px)", border: "1px solid rgba(68, 71, 85, 0.15)" }}>
+        <div className="glass-card rounded-[2rem] px-10 pt-10 pb-8 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]"
+          style={{ border: "1px solid rgba(68, 71, 85, 0.15)" }}>
 
           {/* Brand section */}
           <div className="mb-10 text-center">
