@@ -183,7 +183,7 @@ export default function Home() {
               </h2>
               <div className="mx-auto h-1.5 w-16 rounded-full bg-[#4edea3]" />
             </div>
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="space-y-16">
               {[
                 {
                   num: "1",
@@ -201,19 +201,11 @@ export default function Home() {
                   body: "Receive real-time notifications on when to spend, when to apply, and when to close to keep your credit score pristine.",
                 },
               ].map((step) => (
-                <div
-                  key={step.num}
-                  className="flex flex-col gap-6 rounded-2xl border p-8"
-                  style={{
-                    background: "rgba(27,31,44,0.6)",
-                    borderColor: "rgba(255,255,255,0.06)",
-                    backdropFilter: "blur(12px)",
-                  }}
-                >
+                <div key={step.num} className="flex items-start gap-8">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#4edea3]/20 bg-[#4edea3]/10 text-2xl font-headline font-bold text-[#4edea3]">
                     {step.num}
                   </div>
-                  <div>
+                  <div className="pt-1">
                     <h3 className="font-headline mb-3 text-xl font-bold text-on-surface">
                       {step.title}
                     </h3>
