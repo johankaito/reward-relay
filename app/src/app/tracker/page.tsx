@@ -154,21 +154,20 @@ export default function TrackerPage() {
         {/* Hero Section */}
         <section className="mt-12 mb-4">
           <h1 className="font-headline text-5xl lg:text-6xl font-extrabold tracking-tight text-on-surface mb-4">
-            Your Churn{" "}
-            <span className="text-[#4edea3]">Command Centre</span>
+            Your Churn Command Centre
           </h1>
-          <p className="text-on-surface-variant text-lg max-w-2xl">
-            {activeCount > 0 ? (
-              <>
-                Currently managing{" "}
-                <span className="text-on-surface font-bold">{activeCount} active card{activeCount !== 1 ? "s" : ""}</span>.
-                {behindCount > 0 && (
-                  <> <span className="text-destructive font-bold">{behindCount} behind pace</span>.</>
-                )}{" "}
-                <span className="text-on-surface-variant">{fmt(totalRemaining)} total remaining spend.</span>
-              </>
-            ) : "No active bonus windows."}
-          </p>
+          <div className="flex items-center gap-3 flex-wrap">
+            {activeCount > 0 && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#4edea3]/10 text-[#4edea3] font-bold text-xs tracking-wider uppercase">
+                {activeCount} Active Track{activeCount !== 1 ? "s" : ""}
+              </span>
+            )}
+            <p className="text-on-surface-variant">
+              {activeCount > 0
+                ? `Managing across ${activeCount} card${activeCount !== 1 ? "s" : ""}.${behindCount > 0 ? ` ${behindCount} behind pace.` : ""}`
+                : "No active bonus windows."}
+            </p>
+          </div>
         </section>
 
         {/* Timeline Section */}

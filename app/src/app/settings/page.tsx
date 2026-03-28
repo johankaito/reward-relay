@@ -76,11 +76,11 @@ export default function SettingsPage() {
     <AppShell>
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-16">
         <div className="mb-12">
-          <h1 className="text-[60px] font-extrabold font-headline leading-tight tracking-tight text-on-surface">
+          <h2 className="text-3xl font-extrabold font-headline tracking-tight text-on-surface">
             Account Settings
-          </h1>
-          <p className="text-on-surface-variant mt-2 text-lg">
-            Manage your sovereign profile and ledger preferences.
+          </h2>
+          <p className="text-on-surface-variant mt-2">
+            Manage your profile, preferences and subscription.
           </p>
         </div>
 
@@ -89,60 +89,65 @@ export default function SettingsPage() {
           <div className="lg:col-span-8 space-y-12">
 
             {/* Profile Section */}
-            <section className="bg-surface-container rounded-lg p-6 border border-white/5">
-              <div className="flex items-center gap-6 mb-10">
-                <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-extrabold text-white font-headline flex-shrink-0 ring-2 ring-white/15" style={{ background: "linear-gradient(135deg, #2DD4BF 0%, #059669 100%)" }}>
-                  {initials}
-                </div>
-                <div>
-                  <h2 className="text-2xl font-extrabold font-headline mb-1">Personal Identity</h2>
-                  <p className="text-sm text-on-surface-variant">The core details associated with your ledger account.</p>
-                </div>
+            <section className="bg-surface-container rounded-lg p-6 lg:p-8 border border-white/5">
+              <div className="flex items-center gap-4 mb-8">
+                <span className="material-symbols-outlined text-[#4edea3]" style={{ fontSize: "24px" }}>person_outline</span>
+                <h3 className="text-xl font-bold font-headline">Profile</h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <label className="block text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium mb-2">
-                    Display Name
-                  </label>
-                  <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium">
-                    {displayName || "—"}
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="relative">
+                  <div className="w-24 h-24 rounded-full bg-surface-container-highest flex items-center justify-center text-3xl font-extrabold text-[#4edea3] font-headline border-4 border-surface-container-low">
+                    {initials}
+                  </div>
+                  <div className="absolute bottom-0 right-0 p-1.5 bg-[#07b77f] rounded-full">
+                    <span className="material-symbols-outlined text-on-primary" style={{ fontSize: "14px" }}>edit</span>
                   </div>
                 </div>
-                <div>
-                  <label className="block text-[0.6875rem] uppercase tracking-[0.05em] text-on-surface-variant font-medium mb-2">
-                    Primary Email
-                  </label>
-                  <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium overflow-hidden text-ellipsis whitespace-nowrap">
-                    {userEmail || "—"}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1 w-full">
+                  <div className="space-y-2">
+                    <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">
+                      Display Name
+                    </label>
+                    <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium border border-outline-variant/10">
+                      {displayName || "—"}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">
+                      Email Address
+                    </label>
+                    <div className="bg-surface-container-low px-4 py-3 rounded-lg text-on-surface font-medium overflow-hidden text-ellipsis whitespace-nowrap border border-outline-variant/10">
+                      {userEmail || "—"}
+                    </div>
                   </div>
                 </div>
               </div>
             </section>
 
             {/* Notifications Section */}
-            <section className="bg-surface-container rounded-lg p-6 border border-white/5">
-              <div className="mb-10">
-                <h2 className="text-2xl font-extrabold font-headline mb-1">Notification Protocol</h2>
-                <p className="text-sm text-on-surface-variant">Configure how you receive alert transmissions.</p>
+            <section className="bg-surface-container rounded-lg p-6 lg:p-8 border border-white/5">
+              <div className="flex items-center gap-4 mb-8">
+                <span className="material-symbols-outlined text-[#4edea3]" style={{ fontSize: "24px" }}>notifications_active</span>
+                <h3 className="text-xl font-bold font-headline">Notifications</h3>
               </div>
 
               <div className="space-y-8">
                 {[
                   {
                     key: "thirtyDay" as const,
-                    label: "30-Day Outlook",
-                    sub: "Receive an email summary of upcoming points expirations.",
+                    label: "30-Day Reminder",
+                    sub: "Get notified a month before points expire.",
                   },
                   {
                     key: "fourteenDay" as const,
-                    label: "14-Day Critical Alert",
-                    sub: "High-priority reminder for urgent reward redemptions.",
+                    label: "14-Day Reminder",
+                    sub: "Critical alert two weeks prior to expiry.",
                   },
                   {
                     key: "sevenDay" as const,
-                    label: "7-Day Final Call",
-                    sub: "Daily countdown for assets approaching final settlement.",
+                    label: "7-Day Final Alert",
+                    sub: "Last call notifications for all active rewards.",
                   },
                 ].map(({ key, label, sub }) => (
                   <div key={key} className="flex items-center justify-between">
@@ -171,10 +176,10 @@ export default function SettingsPage() {
             </section>
 
             {/* Billing Section */}
-            <section className="bg-surface-container rounded-lg p-6 border border-white/5">
-              <div className="mb-10">
-                <h2 className="text-2xl font-extrabold font-headline mb-1">Billing &amp; Tier Status</h2>
-                <p className="text-sm text-on-surface-variant">Manage your subscription level and payment methods.</p>
+            <section className="bg-surface-container rounded-lg p-6 lg:p-8 border border-white/5">
+              <div className="flex items-center gap-4 mb-8">
+                <span className="material-symbols-outlined text-[#4edea3]" style={{ fontSize: "24px" }}>credit_card</span>
+                <h3 className="text-xl font-bold font-headline">Billing</h3>
               </div>
 
               <div className="bg-surface-container-low p-8 rounded-lg mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6 border border-white/5">
@@ -200,7 +205,7 @@ export default function SettingsPage() {
                     disabled={signingOut}
                     className="text-[#4edea3] font-bold text-sm hover:underline underline-offset-4 disabled:opacity-50 transition-opacity"
                   >
-                    {signingOut ? "Signing out…" : "Cancel Plan"}
+                    {signingOut ? "Signing out…" : "Cancel Subscription"}
                   </button>
                 </div>
               </div>
@@ -209,22 +214,16 @@ export default function SettingsPage() {
             {/* Danger Zone */}
             <section className="bg-surface-container/30 p-6 rounded-lg border border-[#ffb4ab]/20">
               <div className="mb-6">
-                <h2 className="text-2xl font-extrabold font-headline text-[#ffb4ab] mb-1">Danger Zone</h2>
-                <p className="text-sm text-on-surface-variant">Irreversible actions regarding your digital footprint.</p>
+                <h2 className="text-2xl font-extrabold font-headline text-[#ffb4ab] mb-1">⚠ Danger Zone</h2>
+                <p className="text-sm text-on-surface-variant">Once you delete your account, there is no going back. Please be certain.</p>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium text-on-surface">Delete Account</p>
-                  <p className="text-xs text-on-surface-variant">Permanently remove all data and forfeit earned rewards.</p>
-                </div>
-                <button
-                  onClick={handleDeleteAccount}
-                  disabled={deletingAccount}
-                  className="text-[#ffb4ab] font-bold text-sm px-4 py-2 rounded-lg hover:bg-[#ffb4ab]/10 transition-colors disabled:opacity-50 ml-6 flex-shrink-0"
-                >
-                  Delete Account
-                </button>
-              </div>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deletingAccount}
+                className="w-full p-4 rounded-lg border border-[#ffb4ab]/30 text-[#ffb4ab] text-sm text-center hover:bg-[#ffb4ab]/10 transition-colors disabled:opacity-50"
+              >
+                Delete account and all associated data
+              </button>
             </section>
           </div>
 
