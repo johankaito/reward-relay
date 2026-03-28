@@ -87,14 +87,14 @@ export default function SignupPage() {
       {/* Ambient glow blobs */}
       <div
         className="pointer-events-none fixed -top-24 -left-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0"
-        style={{ background: "rgba(101,243,182,0.08)" }}
+        style={{ background: "rgba(78,222,163,0.20)" }}
       />
       <div
         className="pointer-events-none fixed -bottom-24 -right-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0"
         style={{ background: "rgba(208,188,255,0.05)" }}
       />
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-sm">
         {/* Brand header */}
         <div className="flex flex-col items-center mb-10">
           <div className="mb-4">
