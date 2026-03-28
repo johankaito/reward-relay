@@ -150,25 +150,25 @@ export default function TrackerPage() {
 
   return (
     <AppShell>
-      <div className="space-y-8">
+      <div className="px-6 lg:px-12 max-w-7xl mx-auto space-y-8">
         {/* Hero Section */}
-        <section>
-          <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-surface md:text-4xl lg:text-5xl">
+        <section className="mt-12 mb-4">
+          <h1 className="font-headline text-5xl lg:text-6xl font-extrabold tracking-tight text-on-surface mb-4">
             Your Churn{" "}
             <span className="text-primary">Command Centre</span>
           </h1>
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <p className="text-on-surface-variant text-lg max-w-2xl">
             {activeCount > 0 ? (
-              <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
-                {activeCount} Active Track{activeCount !== 1 ? "s" : ""}
-              </span>
-            ) : null}
-            <p className="text-on-surface-variant">
-              {activeCount > 0
-                ? `${behindCount > 0 ? `${behindCount} behind pace · ` : ""}${fmt(totalRemaining)} total remaining spend`
-                : "No active bonus windows"}
-            </p>
-          </div>
+              <>
+                Currently managing{" "}
+                <span className="text-on-surface font-bold">{activeCount} active card{activeCount !== 1 ? "s" : ""}</span>.
+                {behindCount > 0 && (
+                  <> <span className="text-destructive font-bold">{behindCount} behind pace</span>.</>
+                )}{" "}
+                <span className="text-on-surface-variant">{fmt(totalRemaining)} total remaining spend.</span>
+              </>
+            ) : "No active bonus windows."}
+          </p>
         </section>
 
         {/* Timeline Section */}
@@ -240,7 +240,7 @@ export default function TrackerPage() {
                 >
                   {/* Card identity */}
                   <div className="lg:col-span-3 flex items-center gap-4">
-                    <div className="w-16 h-10 rounded-md bg-surface-container-highest border border-outline-variant/10 flex items-center justify-center shrink-0 overflow-hidden">
+                    <div className="w-24 h-16 lg:w-16 lg:h-10 rounded-md bg-surface-container-highest border border-outline-variant/10 flex items-center justify-center shrink-0 overflow-hidden">
                       <span className="text-[10px] font-extrabold text-on-surface-variant tracking-widest">
                         {bank.slice(0, 3).toUpperCase()}
                       </span>
@@ -248,6 +248,11 @@ export default function TrackerPage() {
                     <div>
                       <div className="font-bold text-on-surface truncate max-w-[140px]">{cardName}</div>
                       <div className="text-xs text-on-surface-variant uppercase tracking-wider font-medium">{bank}</div>
+                      {card.application_date && (
+                        <div className="text-[10px] text-on-surface-variant mt-0.5 lg:hidden">
+                          Applied: {new Date(card.application_date).toLocaleDateString("en-AU", { month: "short", day: "numeric", year: "numeric" })}
+                        </div>
+                      )}
                     </div>
                   </div>
 
