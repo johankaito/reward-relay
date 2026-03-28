@@ -75,15 +75,19 @@ export default function LoginPage() {
 
   return (
     <>
-      {/* Ambient glow blobs */}
+      {/* Ambient glow blobs — mobile: subtle radial, desktop: solid circle blur */}
       <div
-        className="pointer-events-none fixed top-[-10%] left-[-10%] w-[60%] h-[60%] z-0"
-        style={{ background: "radial-gradient(circle, rgba(78,222,163,0.25) 0%, rgba(78,222,163,0) 70%)" }}
+        className="pointer-events-none fixed top-[-10%] left-[-10%] w-[60%] h-[60%] z-0 md:hidden"
+        style={{ background: "radial-gradient(circle at center, rgba(101,243,182,0.08) 0%, rgba(10,14,26,0) 70%)" }}
       />
       <div
-        className="pointer-events-none fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] z-0"
-        style={{ background: "radial-gradient(circle, rgba(208,188,255,0.10) 0%, rgba(208,188,255,0) 70%)" }}
+        className="pointer-events-none fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] z-0 md:hidden"
+        style={{ background: "radial-gradient(circle at center, rgba(208,188,255,0.05) 0%, rgba(10,14,26,0) 70%)" }}
       />
+      <div className="pointer-events-none fixed -top-24 -left-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0 hidden md:block"
+        style={{ background: "rgba(78,222,163,0.20)" }} />
+      <div className="pointer-events-none fixed -bottom-24 -right-24 w-[500px] h-[500px] rounded-full blur-[120px] z-0 hidden md:block"
+        style={{ background: "rgba(208,188,255,0.05)" }} />
 
       <div className="relative z-10 w-full max-w-md">
         {/* Decorative circles */}
