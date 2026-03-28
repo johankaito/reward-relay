@@ -87,7 +87,7 @@ export default function LoginPage() {
 
       <div className="relative z-10 w-full max-w-md px-4">
         {/* Glass card */}
-        <div className="glass-card rounded-2xl p-8 md:p-12 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)]">
+        <div className="glass-card rounded-2xl p-8 md:p-12 shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.4)] border border-white/10">
 
           {/* Brand section */}
           <div className="mb-10 text-center">
@@ -164,7 +164,8 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading || !email || !password}
-              className="w-full h-14 mt-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
+              className="w-full h-14 mt-4 text-black font-headline font-extrabold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
+              style={{ background: "var(--gradient-cta)" }}
             >
               {isLoading ? "Signing in…" : "Sign in"}
               {!isLoading && (
@@ -212,7 +213,8 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={betaLoading}
-                    className="flex-1 h-12 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all"
+                    className="flex-1 h-12 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all shadow-lg shadow-primary/20"
+                    style={{ background: "var(--gradient-cta)" }}
                   >
                     {betaLoading ? "Submitting…" : "Request Access"}
                   </button>
