@@ -187,6 +187,39 @@ export default function DashboardPage() {
       </div>
 
       <div className="space-y-10 pb-8">
+
+        {/* ── Mobile hero metric ── */}
+        <div className="md:hidden -mx-4 px-6 pt-6 pb-8 bg-surface-container border-b border-white/5 text-center">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">
+            Total Rewards Value
+          </p>
+          <div className="font-headline font-extrabold tabular-nums tracking-tighter text-on-surface text-[40px] leading-none mb-4">
+            ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+          {/* Bank avatar circles row */}
+          {cards.filter((c) => c.status === "active").length > 0 && (
+            <div className="flex items-center justify-center -space-x-2">
+              {cards.filter((c) => c.status === "active").slice(0, 5).map((card) => {
+                const gradient = getBankGradient(card.bank ?? "")
+                return (
+                  <div
+                    key={card.id}
+                    className="w-8 h-8 rounded-full border-2 border-surface-container flex items-center justify-center text-[9px] font-bold text-white"
+                    style={{ background: gradient }}
+                  >
+                    {(card.bank ?? "?").slice(0, 2).toUpperCase()}
+                  </div>
+                )
+              })}
+              {cards.filter((c) => c.status === "active").length > 5 && (
+                <div className="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-container-highest flex items-center justify-center text-[9px] font-bold text-on-surface-variant">
+                  +{cards.filter((c) => c.status === "active").length - 5}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* ── Alert Banner ── */}
         {(cancelAlerts.length > 0 || behindPaceCards.length > 0) && (
           <div
