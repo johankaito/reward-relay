@@ -107,7 +107,7 @@ export default function Home() {
         <section className="border-y border-white/5 py-10" style={{ backgroundColor: "var(--surface-container)" }}>
           <div className="mx-auto max-w-4xl px-6">
             <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-              Trusted by 5,000+ Aussie Points Hackers
+              Trusted by Aussie Points Hackers
             </p>
             <div className="flex flex-wrap items-center justify-center gap-6">
               {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((label) => (
