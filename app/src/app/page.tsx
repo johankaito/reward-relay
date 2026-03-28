@@ -226,7 +226,7 @@ export default function Home() {
                   Portfolio Integration
                 </h3>
                 <p className="max-w-md text-lg" style={{ color: "var(--on-surface-variant)" }}>
-                  Visualise your entire card portfolio in one command center.
+                  Securely link all financial instruments into a single, unified atmospheric dashboard.
                 </p>
               </div>
 
@@ -492,16 +492,16 @@ export default function Home() {
                 key={t.name}
                 className="relative rounded-2xl p-8 italic"
                 style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(78,222,163,0.1)",
+                  background: "#1a1f2e",
+                  border: "1px solid rgba(255,255,255,0.08)",
                   color: "var(--on-surface-variant)",
                 }}
               >
                 <span
-                  className="absolute -top-4 left-6 text-6xl font-bold leading-none"
-                  style={{ color: "#4edea3" }}
+                  className="absolute -top-6 left-4 leading-none select-none"
+                  style={{ color: "#4edea3", fontSize: "80px", fontFamily: "Georgia, serif", lineHeight: 1 }}
                 >
-                  &ldquo;
+                  &#8220;
                 </span>
                 <p className="relative z-10 mb-8 text-lg leading-relaxed">{t.quote}</p>
                 <div className="flex items-center gap-4 not-italic">
