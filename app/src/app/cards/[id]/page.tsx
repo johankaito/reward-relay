@@ -175,21 +175,21 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
 
             {/* Key dates grid */}
             <section className="grid grid-cols-2 gap-4">
-              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+              <div className="bg-surface-container-highest p-4 lg:p-6 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center lg:block lg:text-left">
                 <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Applied</span>
-                <p className="font-headline font-bold text-lg tabular-nums">{fmtDate(card.application_date)}</p>
+                <p className="font-headline font-bold text-sm lg:text-lg tabular-nums">{fmtDate(card.application_date)}</p>
               </div>
-              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+              <div className="bg-surface-container-highest p-4 lg:p-6 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center lg:block lg:text-left">
                 <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Annual Fee Due</span>
-                <p className="font-headline font-bold text-lg tabular-nums">{card.card?.annual_fee != null ? fmt(card.card.annual_fee) : "—"}</p>
+                <p className="font-headline font-bold text-sm lg:text-lg tabular-nums">{card.card?.annual_fee != null ? fmt(card.card.annual_fee) : "—"}</p>
               </div>
-              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+              <div className="bg-surface-container-highest p-4 lg:p-6 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center lg:block lg:text-left">
                 <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Cancel By</span>
-                <p className="font-headline font-bold text-lg tabular-nums text-destructive">{fmtDate(card.cancellation_date)}</p>
+                <p className="font-headline font-bold text-sm lg:text-lg tabular-nums text-destructive">{fmtDate(card.cancellation_date)}</p>
               </div>
-              <div className="bg-surface-container-highest p-6 rounded-lg border border-white/5">
+              <div className="bg-surface-container-highest p-4 lg:p-6 rounded-lg border border-white/5 flex flex-col items-center justify-center text-center lg:block lg:text-left">
                 <span className="text-[10px] text-on-surface-variant uppercase tracking-[0.1em] mb-2 font-bold block">Re-Eligible</span>
-                <p className="font-headline font-bold text-lg tabular-nums text-primary">{reEligible}</p>
+                <p className="font-headline font-bold text-sm lg:text-lg tabular-nums text-primary">{reEligible}</p>
               </div>
             </section>
 
