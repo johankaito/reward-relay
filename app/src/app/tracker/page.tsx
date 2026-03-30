@@ -68,13 +68,13 @@ function statusBadge(status: CardStatus) {
       )
     case "eligible":
       return (
-        <span className="px-4 py-2 rounded-full bg-[#d0bcff]/10 text-[#d0bcff] text-[10px] font-bold tracking-[0.08em] uppercase border border-[#d0bcff]/20">
+        <span className="px-4 py-2 rounded-full bg-secondary/10 text-secondary text-[10px] font-bold tracking-[0.08em] uppercase border border-secondary/20">
           Eligible
         </span>
       )
     default:
       return (
-        <span className="px-4 py-2 rounded-full bg-[#4edea3]/10 text-[#4edea3] text-[10px] font-bold tracking-[0.08em] uppercase border border-[#4edea3]/20">
+        <span className="px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-[0.08em] uppercase border border-primary/20">
           Active
         </span>
       )
@@ -264,10 +264,10 @@ export default function TrackerPage() {
                         style={{ width: `${progressPct}%` }}
                       />
                       {/* Applied marker */}
-                      <div className="absolute left-0 top-0 h-full w-2 bg-[#4edea3] rounded-l-full" />
+                      <div className="absolute left-0 top-0 h-full w-2 bg-primary rounded-l-full" />
                       {/* Eligibility marker */}
                       <div
-                        className="absolute top-0 h-full w-2 bg-[#d0bcff]"
+                        className="absolute top-0 h-full w-2 bg-secondary"
                         style={{ left: `${eligibilityPct}%` }}
                       />
                       {/* Deadline marker */}
@@ -280,7 +280,7 @@ export default function TrackerPage() {
                       </div>
                       <div className="flex flex-col items-center">
                         <span>Eligible</span>
-                        <span className={`tabular-nums mt-1 ${progressPct >= eligibilityPct ? "text-[#d0bcff]" : "text-on-surface-variant"}`}>
+                        <span className={`tabular-nums mt-1 ${progressPct >= eligibilityPct ? "text-secondary" : "text-on-surface-variant"}`}>
                           {progressPct >= eligibilityPct ? "✓ Met" : "Pending"}
                         </span>
                       </div>
@@ -308,7 +308,7 @@ export default function TrackerPage() {
           <Link
             href="/cards"
             className="flex h-14 w-14 lg:h-16 lg:w-16 items-center justify-center rounded-full shadow-[0px_24px_48px_-12px_rgba(78,222,163,0.4)] text-on-primary transition-all hover:scale-110 active:scale-95"
-            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+            style={{ background: "var(--gradient-cta)" }}
           >
             <Plus className="h-6 w-6 lg:h-7 lg:w-7" />
           </Link>
