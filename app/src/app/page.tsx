@@ -349,7 +349,7 @@ export default function Home() {
 
                 {/* Command Center */}
                 <div
-                  className="relative flex flex-col overflow-hidden rounded-2xl p-10 shadow-2xl"
+                  className="relative flex flex-col rounded-2xl p-10 shadow-2xl"
                   style={{
                     backgroundColor: "var(--surface-container-highest)",
                     border: "1px solid rgba(78,222,163,0.45)",
