@@ -6,5 +6,5 @@ app/tests/visual-diff-output/*.png
 app/tests/visual-diff-output/report-*.md
 app/tests/visual-diff-output/manifest.json
 
-# PR review screenshots — uploaded to `screenshots` branch via API, never committed here
+# PR review screenshots — uploaded to GitHub CDN, never committed to the repo
 screenshots/

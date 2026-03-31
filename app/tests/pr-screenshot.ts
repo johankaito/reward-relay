@@ -1,7 +1,9 @@
 #!/usr/bin/env tsx
 /**
  * PR Screenshot helper — takes screenshots of affected pages and uploads them
- * to the dedicated `screenshots` branch on GitHub (never committed to feature branches).
+ * directly to GitHub's CDN (user-images.githubusercontent.com) using the same
+ * upload mechanism as drag-and-drop in the GitHub UI. No files are committed
+ * to any branch.
  *
  * Usage:
  *   pnpm pr-screenshot <page> [page2 ...]
@@ -9,12 +11,12 @@
  *
  * What it does:
  *   1. Runs pnpm visual-diff <page> to take stitch + live screenshots
- *   2. Uploads PNGs to the `screenshots` branch via GitHub Contents API
- *   3. Prints a markdown table with raw GitHub URLs for the PR body
+ *   2. Uploads PNGs to GitHub's CDN via upload/policies/assets
+ *   3. Writes a markdown table with the CDN URLs ready for the PR body
  *
  * Requires: LIVE_URL env var or defaults to http://localhost:3000
  *           GH_REPO env var or inferred from git remote (owner/repo)
- *           GH_TOKEN or gh CLI auth for API calls
+ *           gh CLI authenticated (used to get the auth token)
  */
 
 import { execSync, spawnSync } from "child_process"
@@ -24,7 +26,6 @@ import path from "path"
 const APP_DIR = path.resolve(__dirname, "..")
 const REPO_ROOT = path.resolve(APP_DIR, "..")
 const OUTPUT_DIR = path.resolve(__dirname, "visual-diff-output")
-const SCREENSHOTS_BRANCH = "screenshots"
 
 function run(cmd: string, opts?: { cwd?: string; silent?: boolean }): string {
   try {
@@ -54,72 +55,56 @@ function slugify(branch: string): string {
 }
 
 /**
- * Ensures the `screenshots` orphan branch exists on the remote.
- * If it doesn't, creates it with an empty tree via the GitHub API.
+ * Uploads a PNG to GitHub's CDN using the same endpoint the web UI uses for
+ * drag-and-drop image uploads. Returns a user-images.githubusercontent.com URL.
+ * Nothing is committed to any branch.
  */
-function ensureScreenshotsBranch(repo: string): void {
-  const existing = run(
-    `gh api repos/${repo}/branches/${SCREENSHOTS_BRANCH} --jq '.name' 2>/dev/null || echo ""`,
-    { silent: true }
-  ).trim()
+async function uploadToGitHubCDN(repo: string, filePath: string, filename: string): Promise<string> {
+  const token = run("gh auth token", { silent: true }).trim()
+  if (!token) throw new Error("Not authenticated — run: gh auth login")
 
-  if (existing === SCREENSHOTS_BRANCH) return
+  const fileBuffer = fs.readFileSync(filePath)
 
-  console.log(`  Creating '${SCREENSHOTS_BRANCH}' branch on GitHub...`)
+  // Step 1: Request an upload policy (pre-signed S3 credentials)
+  const policyRes = await fetch(`https://github.com/${repo}/upload/policies/assets`, {
+    method: "POST",
+    headers: {
+      Authorization: `token ${token}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      name: filename,
+      size: fileBuffer.length,
+      content_type: "image/png",
+    }),
+  })
 
-  // Create an empty tree
-  const treeSha = run(
-    `gh api --method POST repos/${repo}/git/trees -F "tree=[]" --jq '.sha'`,
-    { silent: true }
-  ).trim()
-
-  // Create a commit on the empty tree
-  const commitSha = run(
-    `gh api --method POST repos/${repo}/git/commits ` +
-      `-F message="init: screenshots storage branch" ` +
-      `-F tree="${treeSha}" ` +
-      `--jq '.sha'`,
-    { silent: true }
-  ).trim()
-
-  // Create the branch ref
-  run(
-    `gh api --method POST repos/${repo}/git/refs ` +
-      `-F ref="refs/heads/${SCREENSHOTS_BRANCH}" ` +
-      `-F sha="${commitSha}"`,
-    { silent: true }
-  )
-
-  console.log(`  ✓ Created '${SCREENSHOTS_BRANCH}' branch`)
-}
-
-/**
- * Uploads a single file to the screenshots branch via GitHub Contents API.
- * Handles both create and update (SHA required for updates).
- */
-function uploadFile(repo: string, remotePath: string, localPath: string, commitMessage: string): void {
-  // Check if file already exists on screenshots branch (need SHA to update)
-  const existingSha = run(
-    `gh api "repos/${repo}/contents/${remotePath}?ref=${SCREENSHOTS_BRANCH}" --jq '.sha' 2>/dev/null || echo ""`,
-    { silent: true }
-  ).trim()
-
-  const content = fs.readFileSync(localPath).toString("base64")
-  const body: Record<string, string> = {
-    message: commitMessage,
-    content,
-    branch: SCREENSHOTS_BRANCH,
+  if (!policyRes.ok) {
+    const text = await policyRes.text()
+    throw new Error(`GitHub upload policy request failed (${policyRes.status}): ${text}`)
   }
-  if (existingSha) body.sha = existingSha
 
-  const tmpFile = path.join(OUTPUT_DIR, `.gh-upload-tmp.json`)
-  fs.writeFileSync(tmpFile, JSON.stringify(body))
-
-  try {
-    run(`gh api --method PUT "repos/${repo}/contents/${remotePath}" --input "${tmpFile}"`, { silent: true })
-  } finally {
-    fs.unlinkSync(tmpFile)
+  const policy = (await policyRes.json()) as {
+    upload_url: string
+    upload_url_fields: Record<string, string>
+    asset: { href: string }
   }
+
+  // Step 2: Upload the file to S3 using the pre-signed form
+  const form = new FormData()
+  for (const [key, value] of Object.entries(policy.upload_url_fields)) {
+    form.append(key, value)
+  }
+  form.append("file", new Blob([fileBuffer], { type: "image/png" }), filename)
+
+  const uploadRes = await fetch(policy.upload_url, { method: "POST", body: form })
+  // S3 returns 204 No Content on success
+  if (!uploadRes.ok && uploadRes.status !== 204) {
+    throw new Error(`S3 upload failed (${uploadRes.status})`)
+  }
+
+  return policy.asset.href
 }
 
 async function main() {
@@ -136,13 +121,10 @@ async function main() {
 
   console.log(`\n📸  Taking screenshots for branch: ${branch}`)
   console.log(`    Pages: ${pages.join(", ")}`)
-  console.log(`    Will upload to '${SCREENSHOTS_BRANCH}' branch (not committed here)\n`)
-
-  // Ensure the screenshots storage branch exists
-  ensureScreenshotsBranch(repo)
+  console.log(`    Uploading to GitHub CDN (not committed to repo)\n`)
 
   const liveUrl = process.env.LIVE_URL ?? "http://localhost:3000"
-  const results: Array<{ page: string; stitchPath: string | null; livePath: string | null }> = []
+  const captured: Array<{ page: string; stitchPath: string | null; livePath: string | null }> = []
 
   for (const page of pages) {
     console.log(`  Running visual-diff for: ${page}`)
@@ -160,44 +142,38 @@ async function main() {
     const stitchPath = path.join(OUTPUT_DIR, `${page}-stitch.png`)
     const livePath = path.join(OUTPUT_DIR, `${page}-live.png`)
 
-    results.push({
+    captured.push({
       page,
       stitchPath: fs.existsSync(stitchPath) ? stitchPath : null,
       livePath: fs.existsSync(livePath) ? livePath : null,
     })
   }
 
-  if (results.length === 0) {
+  if (captured.length === 0) {
     console.error("No screenshots taken — check that pnpm dev is running")
     process.exit(1)
   }
 
-  // Upload to screenshots branch
-  console.log(`\n☁️   Uploading screenshots to '${SCREENSHOTS_BRANCH}' branch...`)
+  // Upload to GitHub CDN
+  console.log("\n☁️   Uploading to GitHub CDN...")
 
-  const uploadedFiles: Array<{ page: string; stitchRemote: string | null; liveRemote: string | null }> = []
+  const uploaded: Array<{ page: string; stitchUrl: string | null; liveUrl: string | null }> = []
 
-  for (const { page, stitchPath, livePath } of results) {
-    let stitchRemote: string | null = null
-    let liveRemote: string | null = null
+  for (const { page, stitchPath, livePath } of captured) {
+    let stitchUrl: string | null = null
+    let liveUrl2: string | null = null
 
     if (livePath) {
-      const remotePath = `${branchSlug}/${page}-live.png`
-      uploadFile(repo, remotePath, livePath, `screenshot: ${page} live — ${branch}`)
-      liveRemote = remotePath
-      console.log(`  ✓ Uploaded ${page}-live.png`)
+      liveUrl2 = await uploadToGitHubCDN(repo, livePath, `${branchSlug}-${page}-live.png`)
+      console.log(`  ✓ ${page}-live → ${liveUrl2}`)
     }
     if (stitchPath) {
-      const remotePath = `${branchSlug}/${page}-stitch.png`
-      uploadFile(repo, remotePath, stitchPath, `screenshot: ${page} stitch — ${branch}`)
-      stitchRemote = remotePath
-      console.log(`  ✓ Uploaded ${page}-stitch.png`)
+      stitchUrl = await uploadToGitHubCDN(repo, stitchPath, `${branchSlug}-${page}-stitch.png`)
+      console.log(`  ✓ ${page}-stitch → ${stitchUrl}`)
     }
 
-    uploadedFiles.push({ page, stitchRemote, liveRemote })
+    uploaded.push({ page, stitchUrl, liveUrl: liveUrl2 })
   }
-
-  const rawBase = `https://raw.githubusercontent.com/${repo}/${SCREENSHOTS_BRANCH}`
 
   // Generate PR markdown
   const markdownLines: string[] = [
@@ -207,18 +183,14 @@ async function main() {
     ``,
   ]
 
-  for (const { page, stitchRemote, liveRemote } of uploadedFiles) {
+  for (const { page, stitchUrl, liveUrl: lu } of uploaded) {
     markdownLines.push(`### ${page}`)
     markdownLines.push(``)
     markdownLines.push(`| Stitch design | Live implementation |`)
     markdownLines.push(`|---|---|`)
 
-    const stitchCell = stitchRemote
-      ? `![${page}-stitch](${rawBase}/${stitchRemote})`
-      : `_(no Stitch export)_`
-    const liveCell = liveRemote
-      ? `![${page}-live](${rawBase}/${liveRemote})`
-      : `_(screenshot failed)_`
+    const stitchCell = stitchUrl ? `![${page}-stitch](${stitchUrl})` : `_(no Stitch export)_`
+    const liveCell = lu ? `![${page}-live](${lu})` : `_(screenshot failed)_`
 
     markdownLines.push(`| ${stitchCell} | ${liveCell} |`)
     markdownLines.push(``)
@@ -234,7 +206,7 @@ async function main() {
   console.log(markdown)
   console.log("─".repeat(60))
 
-  // Write markdown for rr-screenshot.sh to pick up
+  // Write markdown file for rr-screenshot.sh to pick up
   const mdPath = path.resolve(OUTPUT_DIR, `pr-screenshots-${branchSlug}.md`)
   fs.writeFileSync(mdPath, markdown)
   console.log(`\n✅  Markdown saved to: ${mdPath}`)
