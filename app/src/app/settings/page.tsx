@@ -261,6 +261,32 @@ export default function SettingsPage() {
               </div>
             </section>
 
+            {/* Sign Out Section */}
+            <section className="bg-surface-container rounded-lg p-6 lg:p-8 border border-white/5">
+              <div className="flex items-center justify-between">
+                <div>
+                  {/* Mobile */}
+                  <div className="md:hidden">
+                    <h3 className="text-xl font-bold font-headline mb-1">Sign Out</h3>
+                    <p className="text-sm text-on-surface-variant">Sign out of your account on this device.</p>
+                  </div>
+                  {/* Desktop */}
+                  <div className="hidden md:block">
+                    <h2 className="text-2xl font-extrabold font-headline mb-1">Sign Out</h2>
+                    <p className="text-sm text-on-surface-variant">Sign out of your sovereign ledger session.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-outline-variant/20 text-on-surface-variant font-bold text-sm hover:text-on-surface hover:border-outline-variant/50 transition-all disabled:opacity-50 flex-shrink-0 ml-6"
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>logout</span>
+                  {signingOut ? "Signing out…" : "Log Out"}
+                </button>
+              </div>
+            </section>
+
             {/* Danger Zone */}
             {/* Mobile: transparent section with inline link */}
             <section className="md:hidden p-6">
