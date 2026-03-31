@@ -6,5 +6,5 @@ app/tests/visual-diff-output/*.png
 app/tests/visual-diff-output/report-*.md
 app/tests/visual-diff-output/manifest.json
 
-# PR review screenshots — committed per-branch by pr-screenshot.ts, cleaned up after merge
-# screenshots/ intentionally tracked (not ignored) so GitHub can serve raw URLs in PR bodies
+# PR review screenshots — uploaded to `screenshots` branch via API, never committed here
+screenshots/
