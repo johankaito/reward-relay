@@ -161,7 +161,7 @@ export default function SettingsPage() {
                   },
                   {
                     key: "fourteenDay" as const,
-                    label: "14-Day Reminder",
+                    label: "14-Day Critical Alert",
                     sub: "Critical alert two weeks prior to expiry.",
                   },
                   {
