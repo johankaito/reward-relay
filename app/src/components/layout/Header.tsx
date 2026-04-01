@@ -41,7 +41,7 @@ export default function Header({ logoClickable = false }: HeaderProps) {
           </a>
           <BetaGate>
             <a
-              href="/signup"
+              href="/login?access=1"
               className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-semibold transition-all hover:scale-105"
               style={{
                 background: "var(--gradient-cta)",
@@ -49,7 +49,7 @@ export default function Header({ logoClickable = false }: HeaderProps) {
                 boxShadow: "0 4px 16px rgba(78, 222, 163, 0.25)",
               }}
             >
-              Sign up
+              Request Access
             </a>
           </BetaGate>
         </div>

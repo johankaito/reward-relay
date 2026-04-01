@@ -80,7 +80,7 @@ export default function Home() {
                 </a>
               ) : (
                 <a
-                  href="/signup"
+                  href="/login?access=1"
                   className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-[#4edea3]/20 transition-transform hover:scale-105 md:w-auto"
                 >
                   Join the Elite
@@ -339,7 +339,7 @@ export default function Home() {
                     </li>
                   </ul>
                   <a
-                    href="/signup"
+                    href="/login?access=1"
                     className="rounded-full py-4 text-center font-bold text-white transition-colors hover:bg-white/10"
                     style={{ border: "1px solid rgba(134, 148, 138, 0.5)" }}
                   >
@@ -387,7 +387,7 @@ export default function Home() {
                     ))}
                   </ul>
                   <a
-                    href="/signup"
+                    href="/login?access=1"
                     className="rounded-full py-4 text-center font-bold transition-all hover:scale-105"
                     style={{
                       background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
