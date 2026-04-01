@@ -14,7 +14,7 @@ type Props = {
 
 export function WalletCard({ card, showProgress = false, onClick }: Props) {
   const gradient = getBankGradient(card.bank)
-  const isLight = card.bank === "CommBank"
+  const isLight = card.bank === "CommBank" || card.bank === "CBA"
 
   const textColor = isLight ? "text-black/80" : "text-white"
   const textMuted = isLight ? "text-black/50" : "text-white/60"

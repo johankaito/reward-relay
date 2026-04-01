@@ -92,7 +92,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
   const cardName = card.name ?? card.card?.name ?? "Card"
   const bank = card.bank ?? card.card?.bank ?? ""
   const gradient = getBankGradient(bank)
-  const isLight = bank === "CommBank"
+  const isLight = bank === "CommBank" || bank === "CBA"
   const textColor = isLight ? "text-black/80" : "text-white"
   const textMuted = isLight ? "text-black/50" : "text-white/60"
 

@@ -259,7 +259,7 @@ export default function CardsPage() {
                 {userCards.map((uc) => {
                   const cc = getCatalogCard(uc)
                   const gradient = getBankGradient(uc.bank ?? "")
-                  const isLight = uc.bank === "CommBank"
+                  const isLight = uc.bank === "CommBank" || uc.bank === "CBA"
                   const textColor = isLight ? "rgba(0,0,0,0.9)" : "white"
                   const textMuted = isLight ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.6)"
                   const spendTarget = cc?.bonus_spend_requirement ?? 0

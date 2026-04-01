@@ -429,7 +429,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
                 className="w-full py-4 rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-[#4edea3]/20"
                 style={{ background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' }}
               >
-                Book with Points
+                Book Redemption
               </button>
             </>
           ) : (

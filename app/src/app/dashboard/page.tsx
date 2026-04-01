@@ -443,7 +443,7 @@ export default function DashboardPage() {
                     const rotations = [-3, 1, -1]
                     const tops = [idx === 0 ? 16 : idx === 1 ? 8 : 0]
                     const gradient = getBankGradient(card.bank ?? "")
-                    const isLight = card.bank === "CommBank"
+                    const isLight = card.bank === "CommBank" || card.bank === "CBA"
                     const textColor = isLight ? "black" : "white"
 
                     return (
