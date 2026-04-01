@@ -191,7 +191,7 @@ export function AppShell({ children }: AppShellProps) {
 
       {/* Page content */}
       <div className="pt-16 md:pl-64 pb-24 md:pb-6 min-w-0">
-        <main className="min-w-0 overflow-x-hidden">{children}</main>
+        <main className="min-w-0 overflow-x-hidden px-6 md:px-10 py-8">{children}</main>
       </div>
 
       {/* Mobile bottom nav */}

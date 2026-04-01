@@ -72,8 +72,10 @@ export default function DashboardPage() {
       const {
         data: { session },
       } = await supabase.auth.getSession()
-      const isNewLogin = !!(session && !email)
-      loadCards(isNewLogin)
+      const alreadyWelcomed = sessionStorage.getItem('rr_welcomed') === '1'
+      const shouldWelcome = !!session && !alreadyWelcomed
+      if (shouldWelcome) sessionStorage.setItem('rr_welcomed', '1')
+      loadCards(shouldWelcome)
     }
     checkAndLoad()
   // eslint-disable-next-line react-hooks/exhaustive-deps
