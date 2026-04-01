@@ -1,19 +1,20 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { toast } from "sonner"
 import type { FormEvent } from "react"
 
 import { supabase } from "@/lib/supabase/client"
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const [showBetaForm, setShowBetaForm] = useState(false)
+  const [showBetaForm, setShowBetaForm] = useState(searchParams.get('access') === '1')
   const [betaEmail, setBetaEmail] = useState("")
   const [betaName, setBetaName] = useState("")
   const [betaLoading, setBetaLoading] = useState(false)
@@ -75,15 +76,17 @@ export default function LoginPage() {
 
   return (
     <>
-      {/* Ambient glow blobs */}
-      <div
-        className="pointer-events-none fixed top-[-10%] left-[-10%] w-[60%] h-[60%] z-0"
-        style={{ background: "radial-gradient(circle, rgba(78,222,163,0.25) 0%, rgba(78,222,163,0) 70%)" }}
-      />
-      <div
-        className="pointer-events-none fixed bottom-[-10%] right-[-10%] w-[60%] h-[60%] z-0"
-        style={{ background: "radial-gradient(circle, rgba(208,188,255,0.10) 0%, rgba(208,188,255,0) 70%)" }}
-      />
+      {/* Background glow blobs */}
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div
+          className="absolute left-[-10%] top-[10%] h-[600px] w-[600px] rounded-full blur-[120px]"
+          style={{ background: "rgba(78, 222, 163, 0.08)" }}
+        />
+        <div
+          className="absolute bottom-[10%] right-[-10%] h-[600px] w-[600px] rounded-full blur-[120px]"
+          style={{ background: "rgba(208, 188, 255, 0.04)" }}
+        />
+      </div>
 
       <div className="relative z-10 w-full max-w-md">
         {/* Decorative circles */}
@@ -305,5 +308,13 @@ export default function LoginPage() {
 
       </div>
     </>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginPageInner />
+    </Suspense>
   )
 }
