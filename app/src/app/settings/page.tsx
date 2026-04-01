@@ -73,7 +73,7 @@ export default function SettingsPage() {
 
   return (
     <AppShell>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-16">
+      <div className="max-w-7xl mx-auto pb-16">
         <div className="mb-12">
           <h1 className="text-3xl md:text-[3.5rem] font-extrabold font-headline leading-tight tracking-tight text-on-surface">
             Account Settings
