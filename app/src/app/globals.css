@@ -139,7 +139,7 @@
   }
 
   html {
-    /* Smooth color transitions when theme changes */
+    font-size: 14px; /* Design system base: scales all rem values ~12.5% smaller than browser default */
     color-scheme: light dark;
   }
 
