@@ -31,11 +31,11 @@ export default function Home() {
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div
           className="absolute left-[-10%] top-[10%] h-[600px] w-[600px] rounded-full blur-[120px]"
-          style={{ background: "rgba(78, 222, 163, 0.08)" }}
+          style={{ background: "rgba(78, 222, 163, 0.10)" }}
         />
         <div
           className="absolute bottom-[10%] right-[-10%] h-[600px] w-[600px] rounded-full blur-[120px]"
-          style={{ background: "rgba(208, 188, 255, 0.04)" }}
+          style={{ background: "rgba(208, 188, 255, 0.05)" }}
         />
       </div>
 
@@ -44,11 +44,17 @@ export default function Home() {
       <main className="relative z-10 flex-1">
         {/* Hero Section */}
         <section className="relative flex min-h-[800px] items-center justify-center overflow-hidden px-6 py-20 md:px-20 md:py-28">
-          {/* Ambient green glow — left edge bleeds to right */}
+          {/* Ambient green glow — centered radial behind headline + left edge bleed */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {/* Centered hero glow — primary focal point */}
+            <div
+              className="absolute left-1/2 top-1/2 h-[800px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px]"
+              style={{ background: "rgba(78, 222, 163, 0.09)" }}
+            />
+            {/* Left edge bleed */}
             <div
               className="absolute -left-40 top-1/2 h-[700px] w-[700px] -translate-y-1/2 rounded-full blur-[130px]"
-              style={{ background: "rgba(78, 222, 163, 0.07)" }}
+              style={{ background: "rgba(78, 222, 163, 0.06)" }}
             />
           </div>
           <div className="relative z-10 mx-auto max-w-5xl text-center">
@@ -61,7 +67,7 @@ export default function Home() {
             {/* Headline */}
             <h1 className="mb-6 font-headline text-5xl font-extrabold leading-[1.1] tracking-tight text-on-surface md:text-7xl">
               Master the{" "}
-              <span className="text-[#4edea3]">Churn</span>
+              <span className="text-[#4edea3]" style={{ textShadow: "0 0 60px rgba(78, 222, 163, 0.4)" }}>Churn</span>
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
