@@ -452,15 +452,15 @@ export default function ProfitPage() {
             <div className="hidden md:block">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
               {/* Hero Metrics Card: col-span-5 */}
-              <div className="lg:col-span-5 flex flex-col justify-between p-10 bg-surface-container rounded-lg relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#4edea3]/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+              <div className="lg:col-span-5 flex flex-col justify-between p-10 glass rounded-3xl relative overflow-hidden group">
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
                 <div className="relative z-10 space-y-8">
                   <div>
                     <span className="text-xs font-bold tracking-[0.3em] uppercase text-outline opacity-70">
                       {fy} Net Profit
                     </span>
                     <div className="mt-4 flex items-baseline gap-2">
-                      <span className="text-6xl md:text-7xl font-headline font-extrabold text-[#4edea3] tabular tracking-tighter">
+                      <span className="text-6xl md:text-7xl font-headline font-extrabold text-on-surface tabular tracking-tighter">
                         {fmtAud(fyNet)}
                       </span>
                     </div>
