@@ -209,8 +209,8 @@ async function login(browser: Browser): Promise<void> {
   await page.locator('input[type="password"], input[name="password"]').fill(password)
   await page.locator('button[type="submit"]').click()
 
-  // Wait for redirect to dashboard
-  await page.waitForNavigation({ waitUntil: "networkidle0", timeout: 15000 })
+  // Wait for redirect to dashboard (client-side nav, so waitForURL is more reliable)
+  await page.waitForURL("**/dashboard**", { timeout: 30000 })
 
   const url = page.url()
   if (url.includes("/login") || url.includes("/auth")) {
