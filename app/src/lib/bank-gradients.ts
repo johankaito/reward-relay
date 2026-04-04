@@ -1,35 +1,35 @@
 // Keys are lowercase for case-insensitive matching
 const BANK_GRADIENTS_LOWER: Record<string, string> = {
-  // ANZ
-  anz: "linear-gradient(135deg, #1c4fd8 0%, #0a2fa8 100%)",
-  // CommBank / CBA
+  // ANZ — teal brand
+  anz: "linear-gradient(135deg, #007B85 0%, #005f68 100%)",
+  // CommBank / CBA — gold/amber
   commbank: "linear-gradient(135deg, #f5a623 0%, #e8830c 100%)",
   cba: "linear-gradient(135deg, #f5a623 0%, #e8830c 100%)",
-  // Westpac
+  // Westpac — red
   westpac: "linear-gradient(135deg, #d0021b 0%, #9b0114 100%)",
-  // NAB
-  nab: "linear-gradient(135deg, #e31837 0%, #b0102a 100%)",
-  // American Express / Amex
-  amex: "linear-gradient(135deg, #2e77bc 0%, #1a4f8a 100%)",
-  "american express": "linear-gradient(135deg, #2e77bc 0%, #1a4f8a 100%)",
-  // HSBC
+  // NAB — dark navy/charcoal
+  nab: "linear-gradient(135deg, #1a1f3c 0%, #0d1124 100%)",
+  // American Express / Amex — silver/platinum metallic
+  amex: "linear-gradient(135deg, #a8a9ad 0%, #6e7074 100%)",
+  "american express": "linear-gradient(135deg, #a8a9ad 0%, #6e7074 100%)",
+  // HSBC — deep red
   hsbc: "linear-gradient(135deg, #db0011 0%, #a30009 100%)",
-  // Bendigo Bank
+  // Bendigo Bank — burgundy red
   "bendigo bank": "linear-gradient(135deg, #c41230 0%, #8c0d22 100%)",
   bendigo: "linear-gradient(135deg, #c41230 0%, #8c0d22 100%)",
-  // Bankwest
+  // Bankwest — sky blue
   bankwest: "linear-gradient(135deg, #009fdf 0%, #006ea8 100%)",
-  // Citi
+  // Citi — royal blue
   citi: "linear-gradient(135deg, #056dae 0%, #034d80 100%)",
-  // Macquarie
+  // Macquarie — dark charcoal
   macquarie: "linear-gradient(135deg, #2c2c2c 0%, #111111 100%)",
-  // St.George
+  // St.George — green
   "st.george": "linear-gradient(135deg, #00a651 0%, #007a3a 100%)",
   stgeorge: "linear-gradient(135deg, #00a651 0%, #007a3a 100%)",
-  // Virgin Money
+  // Virgin Money — crimson
   "virgin money": "linear-gradient(135deg, #cf0a2c 0%, #9b081f 100%)",
   virgin: "linear-gradient(135deg, #cf0a2c 0%, #9b081f 100%)",
-  // Qantas
+  // Qantas — deep red
   qantas: "linear-gradient(135deg, #e20008 0%, #a80006 100%)",
 }
 
