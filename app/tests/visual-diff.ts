@@ -209,8 +209,11 @@ async function login(browser: Browser): Promise<void> {
   await page.locator('input[type="password"], input[name="password"]').fill(password)
   await page.locator('button[type="submit"]').click()
 
-  // Wait for redirect to dashboard (client-side nav, so waitForURL is more reliable)
-  await page.waitForURL("**/dashboard**", { timeout: 30000 })
+  // Wait for client-side redirect away from /login (Next.js router.push)
+  await page.waitForFunction(
+    () => window.location.pathname !== "/login",
+    { timeout: 30000, polling: "raf" }
+  )
 
   const url = page.url()
   if (url.includes("/login") || url.includes("/auth")) {
