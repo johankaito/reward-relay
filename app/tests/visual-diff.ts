@@ -194,46 +194,66 @@ type PageEntry = (typeof PAGES)[number]
 async function login(browser: Browser): Promise<void> {
   const email = process.env.TEST_EMAIL
   const password = process.env.TEST_PASSWORD
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-  if (!email || !password) {
-    throw new Error("TEST_EMAIL / TEST_PASSWORD not set — check .env.local")
+  if (!email || !password || !supabaseUrl || !supabaseAnonKey) {
+    throw new Error("TEST_EMAIL / TEST_PASSWORD / NEXT_PUBLIC_SUPABASE_* not set — check .env.local")
   }
 
   console.log(`  🔐 Logging in as ${email}...`)
-  const page = await browser.newPage()
-  await page.setViewport(VIEWPORTS.desktop)
-  await page.goto(`${LIVE_BASE}/login`, { waitUntil: "networkidle0", timeout: 30000 })
 
-  // Fill form using native value setter + input events (reliable with React controlled inputs)
-  await page.evaluate((e, p) => {
-    const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")!.set!
-    const emailEl = document.querySelector('input[type="email"]') as HTMLInputElement
-    const passEl = document.querySelector('input[type="password"]') as HTMLInputElement
-    setter.call(emailEl, e)
-    emailEl.dispatchEvent(new Event("input", { bubbles: true }))
-    setter.call(passEl, p)
-    passEl.dispatchEvent(new Event("input", { bubbles: true }))
-  }, email, password)
-  // Wait for React to process state updates and enable the submit button
-  await page.waitForFunction(
-    () => !(document.querySelector('button[type="submit"]') as HTMLButtonElement)?.disabled,
-    { timeout: 5000 }
-  )
-  await page.click('button[type="submit"]')
-
-  // Wait for client-side redirect away from /login (Next.js router.push)
-  await page.waitForFunction(
-    () => window.location.pathname !== "/login",
-    { timeout: 30000, polling: "raf" }
-  )
-
-  const url = page.url()
-  if (url.includes("/login") || url.includes("/auth")) {
-    throw new Error(`Login failed — still on ${url}. Check credentials in .env.local`)
+  // Get session tokens directly from Supabase API (bypasses UI login form issues)
+  const res = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: { apikey: supabaseAnonKey, "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  })
+  if (!res.ok) throw new Error(`Supabase auth failed: ${res.status} ${await res.text()}`)
+  const session = await res.json() as {
+    access_token: string
+    refresh_token: string
+    expires_in: number
+    user: Record<string, unknown>
   }
 
-  console.log(`  ✓ Logged in — session established`)
-  await page.close()
+  // Inject session as @supabase/ssr cookie (cookie name: sb-<projectRef>-auth-token)
+  const projectRef = new URL(supabaseUrl).hostname.split(".")[0]
+  const cookieName = `sb-${projectRef}-auth-token`
+  const cookieValue = JSON.stringify({
+    access_token: session.access_token,
+    token_type: "bearer",
+    expires_in: session.expires_in,
+    expires_at: Math.floor(Date.now() / 1000) + session.expires_in,
+    refresh_token: session.refresh_token,
+    user: session.user,
+  })
+
+  const liveHostname = new URL(LIVE_BASE).hostname
+
+  // Chunk if needed (cookies max ~4096 bytes; split at 3000 chars)
+  const CHUNK = 3000
+  if (cookieValue.length <= CHUNK) {
+    await browser.defaultBrowserContext().setCookie({
+      name: cookieName,
+      value: cookieValue,
+      domain: liveHostname,
+      path: "/",
+    })
+  } else {
+    const chunks: string[] = []
+    for (let i = 0; i < cookieValue.length; i += CHUNK) chunks.push(cookieValue.slice(i, i + CHUNK))
+    for (let i = 0; i < chunks.length; i++) {
+      await browser.defaultBrowserContext().setCookie({
+        name: `${cookieName}.${i}`,
+        value: chunks[i],
+        domain: liveHostname,
+        path: "/",
+      })
+    }
+  }
+
+  console.log(`  ✓ Logged in — session injected via cookie`)
 }
 
 async function screenshotPage(
