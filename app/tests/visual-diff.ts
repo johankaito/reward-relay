@@ -204,13 +204,21 @@ async function login(browser: Browser): Promise<void> {
   await page.setViewport(VIEWPORTS.desktop)
   await page.goto(`${LIVE_BASE}/login`, { waitUntil: "networkidle0", timeout: 30000 })
 
-  // Fill email + password using keyboard events (triggers React onChange)
-  await page.click('input[type="email"]')
-  await page.type('input[type="email"]', email, { delay: 30 })
-  await page.click('input[type="password"]')
-  await page.type('input[type="password"]', password, { delay: 30 })
-  // Give React time to update state and enable the submit button
-  await new Promise((r) => setTimeout(r, 800))
+  // Fill form using native value setter + input events (reliable with React controlled inputs)
+  await page.evaluate((e, p) => {
+    const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")!.set!
+    const emailEl = document.querySelector('input[type="email"]') as HTMLInputElement
+    const passEl = document.querySelector('input[type="password"]') as HTMLInputElement
+    setter.call(emailEl, e)
+    emailEl.dispatchEvent(new Event("input", { bubbles: true }))
+    setter.call(passEl, p)
+    passEl.dispatchEvent(new Event("input", { bubbles: true }))
+  }, email, password)
+  // Wait for React to process state updates and enable the submit button
+  await page.waitForFunction(
+    () => !(document.querySelector('button[type="submit"]') as HTMLButtonElement)?.disabled,
+    { timeout: 5000 }
+  )
   await page.click('button[type="submit"]')
 
   // Wait for client-side redirect away from /login (Next.js router.push)
