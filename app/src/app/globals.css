@@ -76,7 +76,6 @@
 }
 
 :root {
-  --radius: var(--radius);
   --background: var(--surface-muted);
   --foreground: var(--text-primary);
   --card: var(--surface);
