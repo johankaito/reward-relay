@@ -277,8 +277,8 @@ export default function CardsPage() {
                     >
                       {/* Card artwork tile */}
                       <div
-                        className="relative w-full rounded-xl p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[#4edea3]/10 overflow-hidden"
-                        style={{ background: gradient, aspectRatio: "1.586/1" }}
+                        className="relative w-full p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[#4edea3]/10 overflow-hidden"
+                        style={{ background: gradient, aspectRatio: "1.586/1", borderRadius: "1.5rem" }}
                       >
                         <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
                         <div className="flex justify-between items-start relative z-10">
@@ -358,8 +358,8 @@ export default function CardsPage() {
                   <div className="space-y-5">
                     {/* Card preview mini */}
                     <div
-                      className="w-full rounded-xl p-5 relative overflow-hidden"
-                      style={{ background: getBankGradient(selectedCard.bank ?? ""), aspectRatio: "1.586/1" }}
+                      className="w-full p-5 relative overflow-hidden"
+                      style={{ background: getBankGradient(selectedCard.bank ?? ""), aspectRatio: "1.586/1", borderRadius: "1.5rem" }}
                     >
                       <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
                       <div className="relative z-10 flex justify-between items-start">
