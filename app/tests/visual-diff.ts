@@ -204,10 +204,14 @@ async function login(browser: Browser): Promise<void> {
   await page.setViewport(VIEWPORTS.desktop)
   await page.goto(`${LIVE_BASE}/login`, { waitUntil: "networkidle0", timeout: 30000 })
 
-  // Fill email + password and submit
-  await page.locator('input[type="email"], input[name="email"]').fill(email)
-  await page.locator('input[type="password"], input[name="password"]').fill(password)
-  await page.locator('button[type="submit"]').click()
+  // Fill email + password using keyboard events (triggers React onChange)
+  await page.click('input[type="email"]')
+  await page.type('input[type="email"]', email, { delay: 30 })
+  await page.click('input[type="password"]')
+  await page.type('input[type="password"]', password, { delay: 30 })
+  // Give React time to update state and enable the submit button
+  await new Promise((r) => setTimeout(r, 800))
+  await page.click('button[type="submit"]')
 
   // Wait for client-side redirect away from /login (Next.js router.push)
   await page.waitForFunction(
