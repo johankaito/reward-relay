@@ -1,11 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Plane, MapPin, PlaneLanding, Search } from 'lucide-react'
+import { Plane, MapPin, PlaneLanding, Search, CreditCard, ChevronRight } from 'lucide-react'
 
 import { AppShell } from '@/components/layout/AppShell'
 import { supabase } from '@/lib/supabase/client'
+import type { Database } from '@/types/database.types'
+
+type UserCard = Database['public']['Tables']['user_cards']['Row']
+type CatalogCard = Database['public']['Tables']['cards']['Row']
 
 interface LoyaltyBalance {
   id: string
@@ -65,6 +69,9 @@ export default function FlightsPage() {
   const router = useRouter()
   const [balanceMap, setBalanceMap] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
+  // Card recommendations (merged from /projections)
+  const [userCards, setUserCards] = useState<UserCard[]>([])
+  const [catalogCards, setCatalogCards] = useState<CatalogCard[]>([])
 
   // Hero search form state (display only — no live DB search)
   const [origin, setOrigin] = useState('Sydney (SYD)')
@@ -82,16 +89,20 @@ export default function FlightsPage() {
         return
       }
 
-      const { data: balancesData } = await supabase
-        .from('loyalty_balances' as never)
-        .select('*')
+      const [balancesResult, userCardsResult, catalogResult] = await Promise.all([
+        supabase.from('loyalty_balances' as never).select('*'),
+        supabase.from('user_cards').select('*'),
+        supabase.from('cards').select('*').eq('is_active', true).order('welcome_bonus_points', { ascending: false }),
+      ])
 
-      const balances: LoyaltyBalance[] = (balancesData as LoyaltyBalance[] | null) ?? []
+      const balances: LoyaltyBalance[] = ((balancesResult.data as LoyaltyBalance[] | null) ?? [])
       const map: Record<string, number> = balances.reduce(
         (acc, b) => ({ ...acc, [b.program]: b.balance }),
         {},
       )
       setBalanceMap(map)
+      setUserCards((userCardsResult.data as UserCard[]) ?? [])
+      setCatalogCards((catalogResult.data as CatalogCard[]) ?? [])
       setLoading(false)
     }
 
@@ -104,11 +115,29 @@ export default function FlightsPage() {
   const velocityBalance = balanceMap['velocity'] ?? 0
   const amexBalance = balanceMap['amex_mr'] ?? 0
 
-  // Redemption goal: 80k QFF pts toward SYD→LHR Business
+  // Redemption goal: SYD→LHR Business via Qatar (164k pts)
   const GOAL_POINTS = 164000
   const currentPool = totalPoints
   const goalPct = Math.min(100, Math.round((currentPool / GOAL_POINTS) * 100))
   const pointsGap = Math.max(0, GOAL_POINTS - currentPool)
+
+  // Card recommendations to close the gap (merged from /projections)
+  const ownedCardIds = useMemo(() => new Set(userCards.map((uc) => uc.card_id).filter(Boolean)), [userCards])
+  const topRecommendations = useMemo(
+    () => catalogCards.filter((c) => !ownedCardIds.has(c.id) && (c.welcome_bonus_points ?? 0) > 0).slice(0, 3),
+    [catalogCards, ownedCardIds],
+  )
+  const monthlyEarning = useMemo(() => {
+    if (userCards.length === 0) return 0
+    const ownedCatalog = catalogCards.filter((c) => ownedCardIds.has(c.id))
+    if (ownedCatalog.length === 0) return 0
+    const avgRate = ownedCatalog.reduce((sum, c) => sum + (c.earn_rate_primary ?? 1), 0) / ownedCatalog.length
+    return Math.round(avgRate * 3000)
+  }, [userCards, catalogCards, ownedCardIds])
+  const monthsToClose = useMemo(() => {
+    if (pointsGap <= 0 || monthlyEarning <= 0) return null
+    return Math.ceil(pointsGap / monthlyEarning)
+  }, [pointsGap, monthlyEarning])
 
   if (loading) {
     return (
@@ -323,6 +352,110 @@ export default function FlightsPage() {
             ))}
           </div>
         </div>
+
+        {/* ── Top Cards to Close the Gap (merged from /projections) ── */}
+        {topRecommendations.length > 0 && (
+          <div>
+            <div className="mb-8 flex items-center justify-between">
+              <div>
+                <h3 className="text-3xl font-headline font-bold tracking-tight">Top Cards to Close the Gap</h3>
+                <p className="mt-1 text-base font-medium text-on-surface-variant">
+                  Ranked by welcome bonus — highest points first
+                  {monthsToClose && (
+                    <span className="ml-2 text-sm text-[#4edea3]">· est. {monthsToClose} months at current earn rate</span>
+                  )}
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+              {topRecommendations.map((card, idx) => {
+                const bonus = card.welcome_bonus_points ?? 0
+                const newTotal = currentPool + bonus
+                const newGap = GOAL_POINTS - newTotal
+                const wouldSuffice = newGap <= 0
+                const isTop = idx === 0
+                return (
+                  <div
+                    key={card.id}
+                    className={`flex flex-col overflow-hidden rounded-3xl border transition-all duration-500 ${
+                      isTop
+                        ? 'border-[#4edea3]/40 ring-1 ring-[#4edea3]/20 scale-[1.02] shadow-[0_24px_48px_-12px_rgba(78,222,163,0.15)]'
+                        : 'border-white/5 hover:border-[#4edea3]/20 hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.4)]'
+                    }`}
+                    style={{ background: 'rgba(23,27,40,0.5)' }}
+                  >
+                    <div className="relative flex h-32 items-end overflow-hidden p-5">
+                      <div className="absolute inset-0 bg-gradient-to-br from-surface-container to-surface-container-high" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent" />
+                      <div
+                        className="absolute left-5 top-4 rounded-full border border-white/10 px-3 py-1"
+                        style={{ background: 'rgba(27,31,44,0.6)', backdropFilter: 'blur(24px)' }}
+                      >
+                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-white">{card.bank}</span>
+                      </div>
+                      <div className="relative z-10 flex w-full items-end justify-between">
+                        <div>
+                          <span className="font-headline text-4xl font-extrabold tabular-nums tracking-tighter text-white">
+                            {bonus.toLocaleString()}
+                          </span>
+                          <span className="ml-2 text-[11px] font-bold uppercase tracking-widest text-[#4edea3]">Bonus pts</span>
+                        </div>
+                        {isTop && (
+                          <span className="rounded bg-[#4edea3] px-2 py-1 text-[10px] font-black uppercase tracking-widest text-on-primary">Best</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-1 flex-col p-6">
+                      <div className="mb-6 space-y-4">
+                        <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                          <span className="text-sm font-semibold text-on-surface-variant">Card</span>
+                          <span className="text-sm font-bold text-white">{card.name}</span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                          <span className="text-sm font-semibold text-on-surface-variant">Annual Fee</span>
+                          <span className="text-sm font-bold tabular-nums text-white">${(card.annual_fee ?? 0).toLocaleString()} AUD</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-on-surface-variant">Earn Rate</span>
+                          <span className="text-sm font-bold tabular-nums text-white">{card.earn_rate_primary ?? 1} pt / $1</span>
+                        </div>
+                      </div>
+                      <div className="mt-auto space-y-3">
+                        <div
+                          className={`rounded-2xl border p-3 ${
+                            wouldSuffice ? 'border-[#4edea3]/20 bg-[#4edea3]/10' : 'border-white/5 bg-surface-container/30'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className={`text-xs font-bold uppercase tracking-widest ${wouldSuffice ? 'text-[#4edea3]' : 'text-on-surface-variant'}`}>
+                              {wouldSuffice ? 'Would cover goal' : 'Remaining gap'}
+                            </span>
+                            <span className={`font-headline text-base font-extrabold tabular-nums ${wouldSuffice ? 'text-[#4edea3]' : 'text-white'}`}>
+                              {wouldSuffice ? `+${Math.abs(newGap).toLocaleString()} surplus` : `-${newGap.toLocaleString()} pts`}
+                            </span>
+                          </div>
+                        </div>
+                        <a
+                          href="/cards"
+                          className={`flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-bold uppercase tracking-widest transition-all ${
+                            isTop
+                              ? 'text-on-primary shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]'
+                              : 'border border-white/10 bg-white/5 text-on-surface hover:bg-white/10 hover:text-on-surface'
+                          }`}
+                          style={isTop ? { background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' } : undefined}
+                        >
+                          <CreditCard className="h-4 w-4" />
+                          View Card Details
+                          <ChevronRight className="h-4 w-4" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
       </div>
     </AppShell>
