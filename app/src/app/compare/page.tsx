@@ -2,257 +2,126 @@
 
 import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { toast } from "sonner"
-import { TrendingUp, DollarSign, Calendar, AlertCircle, Check, X, ExternalLink } from "lucide-react"
+import { X, Plus, Lock, Star } from "lucide-react"
 
 import { AppShell } from "@/components/layout/AppShell"
-import { ProGate } from "@/components/ui/ProGate"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { supabase } from "@/lib/supabase/client"
 import { useCatalog } from "@/contexts/CatalogContext"
+import { useSubscription } from "@/hooks/useSubscription"
 import type { Database } from "@/types/database.types"
 
-type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
-interface CardWithEligibility extends CatalogCard {
-  eligibility: {
-    canApply: boolean
-    reason: string
-    monthsUntilEligible?: number
-    lastChurned?: string
-  }
-  netValue: number
-  recommendation: {
-    score: number
-    reasons: string[]
-  }
+const FREE_TIER_LIMIT = 3
+
+function fmtAud(n: number | null | undefined) {
+  if (n == null) return "—"
+  return `$${n.toLocaleString("en-AU", { minimumFractionDigits: 0 })}`
 }
+
+function fmtPts(n: number | null | undefined) {
+  if (n == null) return "—"
+  return `${n.toLocaleString("en-AU")} pts`
+}
+
+function calcNetValue(card: CatalogCard) {
+  return (card.welcome_bonus_points || 0) * 0.01 - (card.annual_fee || 0)
+}
+
+const COMPARE_ROWS: {
+  label: string
+  key: keyof CatalogCard | "net_value"
+  fmt: (card: CatalogCard) => string
+}[] = [
+  { label: "Annual Fee", key: "annual_fee", fmt: (c) => fmtAud(c.annual_fee) },
+  { label: "Welcome Bonus", key: "welcome_bonus_points", fmt: (c) => fmtPts(c.welcome_bonus_points) },
+  {
+    label: "Spend Requirement",
+    key: "bonus_spend_requirement",
+    fmt: (c) =>
+      c.bonus_spend_requirement
+        ? `${fmtAud(c.bonus_spend_requirement)} in ${c.bonus_spend_window_months ?? "?"}mo`
+        : "—",
+  },
+  {
+    label: "Earn Rate (Primary)",
+    key: "earn_rate_primary",
+    fmt: (c) => (c.earn_rate_primary != null ? `${c.earn_rate_primary}x` : "—"),
+  },
+  { label: "Points Currency", key: "points_currency", fmt: (c) => c.points_currency ?? "—" },
+  {
+    label: "Net Value (Est.)",
+    key: "net_value",
+    fmt: (c) => fmtAud(calcNetValue(c)),
+  },
+]
 
 export default function ComparePage() {
   const router = useRouter()
   const { catalogCards } = useCatalog()
-  const [userCards, setUserCards] = useState<UserCard[]>([])
+  const { isPro } = useSubscription()
   const [loading, setLoading] = useState(true)
-  const [sortBy, setSortBy] = useState<"netValue" | "bonus" | "fee" | "recommendation">("recommendation")
-  const [filterEligible, setFilterEligible] = useState(true)
-
-  const loadData = async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-
-    if (!session) {
-      router.replace("/")
-      return
-    }
-
-    // Load user's cards
-    const { data: userCardsData, error: userError } = await supabase
-      .from("user_cards")
-      .select("*")
-      .order("cancellation_date", { ascending: false })
-
-    if (userError) {
-      toast.error(userError.message || "Unable to load your cards")
-      setLoading(false)
-      return
-    }
-
-    setUserCards(userCardsData || [])
-    setLoading(false)
-  }
+  const [selected, setSelected] = useState<CatalogCard[]>([])
+  const [search, setSearch] = useState("")
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false)
 
   useEffect(() => {
-    loadData()
+    async function checkAuth() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      if (!session) {
+        router.replace("/")
+        return
+      }
+      setLoading(false)
+    }
+    void checkAuth()
   }, [router])
 
-  const calculateMonthsSince = (date: string | null) => {
-    if (!date) return null
-    // eslint-disable-next-line react-hooks/purity
-    const months = Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24 * 30))
-    return months
+  const maxCards = isPro ? Infinity : FREE_TIER_LIMIT
+
+  const filteredCatalog = useMemo(() => {
+    if (!search.trim()) return []
+    const q = search.toLowerCase()
+    return catalogCards
+      .filter(
+        (c) =>
+          !selected.some((s) => s.id === c.id) &&
+          (c.name?.toLowerCase().includes(q) || c.bank?.toLowerCase().includes(q))
+      )
+      .slice(0, 8)
+  }, [search, catalogCards, selected])
+
+  function addCard(card: CatalogCard) {
+    if (selected.length >= maxCards) {
+      setShowUpgradePrompt(true)
+      return
+    }
+    setSelected((prev) => [...prev, card])
+    setSearch("")
   }
 
-  const checkEligibility = (card: CatalogCard): CardWithEligibility["eligibility"] => {
-    // Find if user has churned this bank before
-    const previousCards = userCards.filter(uc => uc.bank === card.bank && uc.status === "cancelled")
-
-    if (previousCards.length === 0) {
-      // Never churned this bank - eligible
-      return {
-        canApply: true,
-        reason: "Never churned - eligible to apply"
-      }
-    }
-
-    // Find most recent cancellation
-    const mostRecent = previousCards.reduce((latest, card) => {
-      if (!latest.cancellation_date) return card
-      if (!card.cancellation_date) return latest
-      return new Date(card.cancellation_date) > new Date(latest.cancellation_date) ? card : latest
-    })
-
-    if (!mostRecent.cancellation_date) {
-      return {
-        canApply: true,
-        reason: "No cancellation date recorded"
-      }
-    }
-
-    const monthsSince = calculateMonthsSince(mostRecent.cancellation_date)
-    if (!monthsSince || monthsSince >= 12) {
-      return {
-        canApply: true,
-        reason: `Eligible - ${monthsSince || 0} months since cancellation`,
-        lastChurned: mostRecent.cancellation_date
-      }
-    }
-
-    return {
-      canApply: false,
-      reason: `Wait ${12 - monthsSince} more months`,
-      monthsUntilEligible: 12 - monthsSince,
-      lastChurned: mostRecent.cancellation_date
-    }
+  function removeCard(id: string) {
+    setSelected((prev) => prev.filter((c) => c.id !== id))
+    setShowUpgradePrompt(false)
   }
 
-  const calculateNetValue = (card: CatalogCard): number => {
-    // Net value = (Welcome bonus points × value per point) - annual fee
-    const pointValue = 0.01 // Default: 1 cent per point
-    const bonusValue = (card.welcome_bonus_points || 0) * pointValue
-    const fee = card.annual_fee || 0
-    return bonusValue - fee
-  }
-
-  const calculateRecommendation = (card: CatalogCard, eligibility: CardWithEligibility["eligibility"], netValue: number): CardWithEligibility["recommendation"] => {
-    let score = 0
-    const reasons: string[] = []
-
-    // Eligibility is most important
-    if (!eligibility.canApply) {
-      return { score: 0, reasons: ["Not eligible yet"] }
-    }
-
-    // High net value is great
-    if (netValue > 500) {
-      score += 40
-      reasons.push(`High net value: $${netValue.toFixed(0)}`)
-    } else if (netValue > 200) {
-      score += 25
-      reasons.push(`Good net value: $${netValue.toFixed(0)}`)
-    } else if (netValue > 0) {
-      score += 10
-      reasons.push(`Positive net value: $${netValue.toFixed(0)}`)
-    }
-
-    // Large bonus is attractive
-    if ((card.welcome_bonus_points || 0) >= 100000) {
-      score += 30
-      reasons.push("Excellent bonus points")
-    } else if ((card.welcome_bonus_points || 0) >= 50000) {
-      score += 20
-      reasons.push("Good bonus points")
-    }
-
-    // Low/no annual fee is good
-    if (!card.annual_fee || card.annual_fee === 0) {
-      score += 20
-      reasons.push("No annual fee")
-    } else if (card.annual_fee <= 200) {
-      score += 10
-      reasons.push("Low annual fee")
-    }
-
-    // Reasonable spend requirement
-    if (!card.bonus_spend_requirement || card.bonus_spend_requirement <= 3000) {
-      score += 10
-      reasons.push("Easy spend requirement")
-    }
-
-    // Check if currently holding cards from same bank
-    const activeFromBank = userCards.filter(uc =>
-      uc.bank === card.bank && uc.status !== "cancelled"
-    ).length
-    if (activeFromBank > 0) {
-      score -= 20
-      reasons.push("Already have card from this bank")
-    }
-
-    return { score, reasons }
-  }
-
-  const cardsWithAnalysis = useMemo(() => {
-    const analyzed = catalogCards.map(card => {
-      const eligibility = checkEligibility(card)
-      const netValue = calculateNetValue(card)
-      const recommendation = calculateRecommendation(card, eligibility, netValue)
-
-      return {
-        ...card,
-        eligibility,
-        netValue,
-        recommendation
-      } as CardWithEligibility
-    })
-
-    // Filter if needed
-    let filtered = analyzed
-    if (filterEligible) {
-      filtered = filtered.filter(c => c.eligibility.canApply)
-    }
-
-    // Sort
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "recommendation":
-          return b.recommendation.score - a.recommendation.score
-        case "netValue":
-          return b.netValue - a.netValue
-        case "bonus":
-          return (b.welcome_bonus_points || 0) - (a.welcome_bonus_points || 0)
-        case "fee":
-          return (a.annual_fee || 0) - (b.annual_fee || 0)
-        default:
-          return 0
-      }
-    })
-
-    return filtered
-  }, [catalogCards, userCards, sortBy, filterEligible])
-
-  // Calculate stats
-  const stats = {
-    eligibleCards: cardsWithAnalysis.filter(c => c.eligibility.canApply).length,
-    avgNetValue: cardsWithAnalysis.filter(c => c.eligibility.canApply).reduce((sum, c) => sum + c.netValue, 0) /
-                 (cardsWithAnalysis.filter(c => c.eligibility.canApply).length || 1),
-    bestCard: cardsWithAnalysis[0],
-    totalPotentialValue: cardsWithAnalysis
-      .filter(c => c.eligibility.canApply)
-      .slice(0, 3)
-      .reduce((sum, c) => sum + c.netValue, 0)
-  }
+  // Best value card = highest net value among selected
+  const bestCardId = useMemo(() => {
+    if (selected.length === 0) return null
+    return selected.reduce((best, c) =>
+      calcNetValue(c) > calcNetValue(best) ? c : best
+    ).id
+  }, [selected])
 
   if (loading) {
     return (
       <AppShell>
-        <div className="space-y-5">
-          <div className="h-14 animate-pulse rounded-xl bg-[var(--surface)]" />
-          <div className="grid grid-cols-4 gap-3">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-20 animate-pulse rounded-xl bg-[var(--surface)]" />
-            ))}
-          </div>
+        <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 space-y-6">
+          <div className="h-16 animate-pulse rounded-2xl bg-surface-container" />
+          <div className="h-64 animate-pulse rounded-2xl bg-surface-container" />
         </div>
       </AppShell>
     )
@@ -260,247 +129,220 @@ export default function ComparePage() {
 
   return (
     <AppShell>
-      <ProGate
-        feature="card comparison"
-        teaserText="Australians with optimised card portfolios earn up to $800 more per year in points & bonuses."
-      >
-      <div className="space-y-6">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
-            Discover
-          </p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-            Compare cards
-          </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Ranked by net value with personalised eligibility checks
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-8 pb-16 space-y-10">
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-1 pt-4">
-              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Eligible cards</CardTitle>
-            </CardHeader>
-            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
-              {stats.eligibleCards}
-            </CardContent>
-          </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-1 pt-4">
-              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Avg net value</CardTitle>
-            </CardHeader>
-            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--success-fg)]">
-              ${stats.avgNetValue.toFixed(0)}
-            </CardContent>
-          </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-1 pt-4">
-              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Best card value</CardTitle>
-            </CardHeader>
-            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--accent)]">
-              ${stats.bestCard?.netValue.toFixed(0) || 0}
-            </CardContent>
-          </Card>
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardHeader className="pb-1 pt-4">
-              <CardTitle className="text-xs font-medium text-[var(--text-secondary)]">Next 3 cards</CardTitle>
-            </CardHeader>
-            <CardContent className="pb-4 pt-0 text-2xl font-semibold text-[var(--text-primary)]">
-              ${stats.totalPotentialValue.toFixed(0)}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Filters */}
-        <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-          <CardHeader className="border-b border-[var(--border-default)]">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <CardTitle className="text-[var(--text-primary)]">Card rankings</CardTitle>
-              <div className="flex gap-2">
-                <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
-                  <SelectTrigger className="w-[160px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="recommendation">Recommended</SelectItem>
-                    <SelectItem value="netValue">Net Value</SelectItem>
-                    <SelectItem value="bonus">Bonus Points</SelectItem>
-                    <SelectItem value="fee">Annual Fee</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant={filterEligible ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setFilterEligible(!filterEligible)}
-                >
-                  {filterEligible ? "Eligible Only" : "Show All"}
-                </Button>
-              </div>
+        {/* ── Hero ── */}
+        <section className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 className="font-headline text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface mb-2">
+              Compare Cards
+            </h1>
+            <p className="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+              Select up to {isPro ? "unlimited" : FREE_TIER_LIMIT} cards and compare side-by-side.
+              {!isPro && (
+                <span className="ml-1 text-[#4edea3] font-semibold">
+                  Pro unlocks unlimited.
+                </span>
+              )}
+            </p>
+          </div>
+          {!isPro && (
+            <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+              <span className="w-2 h-2 rounded-full bg-[#4edea3]" />
+              <span>{selected.length} / {FREE_TIER_LIMIT} slots used</span>
             </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            {cardsWithAnalysis.length === 0 ? (
-              <div className="py-8 text-center text-sm text-[var(--text-secondary)]">
-                No cards match your criteria
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {cardsWithAnalysis.slice(0, 10).map((card, index) => (
-                  <div
+          )}
+        </section>
+
+        {/* ── Card selector ── */}
+        <section className="bg-surface-container rounded-2xl p-6 border border-white/5 space-y-4">
+          <div className="relative">
+            <div className="flex items-center gap-3 bg-surface-container-high rounded-xl px-4 py-3 border border-white/5 focus-within:border-[#4edea3]/30 transition-colors">
+              <Plus className="w-4 h-4 text-on-surface-variant flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="Search by card name or bank…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 bg-transparent text-sm text-on-surface placeholder:text-on-surface-variant outline-none"
+              />
+            </div>
+
+            {/* Dropdown results */}
+            {filteredCatalog.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-surface-container-high rounded-xl border border-white/10 shadow-xl z-20 overflow-hidden">
+                {filteredCatalog.map((card) => (
+                  <button
                     key={card.id}
-                    className={`rounded-2xl border p-4 ${
-                      index === 0 && card.eligibility.canApply
-                        ? "border-[var(--accent)] bg-[var(--surface)] ring-1 ring-[var(--accent)]/20"
-                        : "border-[var(--border-default)] bg-[var(--surface)]"
-                    }`}
+                    onClick={() => addCard(card)}
+                    className="w-full flex items-center justify-between px-4 py-3 text-sm hover:bg-surface-container-highest transition-colors text-left"
                   >
-                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-start justify-between">
-                          <div className="space-y-1">
-                            <div className="flex items-center gap-2">
-                              <p className="font-semibold text-[var(--text-primary)]">
-                                {card.bank} — {card.name}
-                              </p>
-                              {index === 0 && card.eligibility.canApply && (
-                                <Badge style={{ backgroundColor: "var(--accent)", color: "white" }}>
-                                  Top pick
-                                </Badge>
-                              )}
-                              {!card.eligibility.canApply && (
-                                <Badge style={{ backgroundColor: "var(--warning-bg)", color: "var(--warning-fg)" }}>
-                                  Not eligible
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="flex flex-wrap gap-4 text-xs text-[var(--text-secondary)]">
-                              <div className="flex items-center gap-1">
-                                <TrendingUp className="h-3 w-3" />
-                                {card.welcome_bonus_points?.toLocaleString() || 0} points
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <DollarSign className="h-3 w-3" />
-                                ${card.annual_fee || 0} fee
-                              </div>
-                              {card.bonus_spend_requirement && (
-                                <div>
-                                  Spend ${card.bonus_spend_requirement.toLocaleString()} in {card.bonus_spend_window_months || 3} months
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Eligibility Status */}
-                        <div className="flex items-center gap-2 text-sm">
-                          {card.eligibility.canApply ? (
-                            <Check className="h-4 w-4 text-[var(--success-fg)]" />
-                          ) : (
-                            <X className="h-4 w-4 text-[var(--danger)]" />
-                          )}
-                          <span className={card.eligibility.canApply ? "text-[var(--success-fg)]" : "text-[var(--danger)]"}>
-                            {card.eligibility.reason}
-                          </span>
-                        </div>
-
-                        {/* Recommendation Reasons */}
-                        {card.recommendation.reasons.length > 0 && (
-                          <div className="flex flex-wrap gap-2">
-                            {card.recommendation.reasons.slice(0, 3).map((reason, i) => (
-                              <Badge key={i} variant="secondary" className="text-xs">
-                                {reason}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Net Value Display */}
-                      <div className="flex flex-col items-end gap-2">
-                        <div className="text-right">
-                          <p className="text-xs text-[var(--text-secondary)]">Net value</p>
-                          <p className={`text-2xl font-bold ${
-                            card.netValue > 0 ? "text-[var(--success-fg)]" : "text-[var(--danger)]"
-                          }`}>
-                            ${card.netValue.toFixed(0)}
-                          </p>
-                        </div>
-                        {card.recommendation.score > 0 && (
-                          <div className="flex items-center gap-1">
-                            <div className="flex gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className={`h-2 w-2 rounded-full ${
-                                    i < Math.floor(card.recommendation.score / 20)
-                                      ? "bg-[var(--accent)]"
-                                      : "bg-[var(--surface-strong)]"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                            <span className="text-xs text-[var(--text-secondary)]">
-                              {card.recommendation.score}%
-                            </span>
-                          </div>
-                        )}
-                        {card.eligibility.canApply && (
-                          <div className="mt-2 flex gap-2">
-                            {card.application_link && (
-                              <Button
-                                asChild
-                                size="sm"
-                                className="rounded-full text-white shadow-sm"
-                                style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
-                              >
-                                <Link href={card.application_link} target="_blank" rel="noopener noreferrer">
-                                  Apply
-                                  <ExternalLink className="ml-1 h-3 w-3" />
-                                </Link>
-                              </Button>
-                            )}
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => router.push("/cards")}
-                            >
-                              Track
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                    <span>
+                      <span className="font-semibold text-on-surface">{card.bank}</span>
+                      <span className="text-on-surface-variant ml-2">{card.name}</span>
+                    </span>
+                    <span className="text-[10px] text-on-surface-variant tabular-nums">
+                      {fmtPts(card.welcome_bonus_points)}
+                    </span>
+                  </button>
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Eligibility Calculator Info */}
-        <Card className="border border-[var(--border-default)] bg-[var(--surface-muted)] shadow-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-[var(--text-primary)]">
-              <AlertCircle className="h-5 w-5 text-[var(--accent)]" />
-              How eligibility works
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-[var(--text-secondary)]">
-            <p>
-              <strong className="text-[var(--text-primary)]">12-month rule:</strong> Most Australian banks require you to wait 12 months after cancelling before you can receive welcome bonuses again.
+          {/* Selected pills */}
+          {selected.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {selected.map((card) => (
+                <span
+                  key={card.id}
+                  className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                    card.id === bestCardId
+                      ? "bg-[#4edea3]/15 text-[#4edea3] border-[#4edea3]/30"
+                      : "bg-surface-container-highest text-on-surface border-white/5"
+                  }`}
+                >
+                  {card.id === bestCardId && <Star className="w-3 h-3" />}
+                  {card.bank} {card.name}
+                  <button
+                    onClick={() => removeCard(card.id)}
+                    className="hover:text-on-surface transition-colors"
+                    aria-label={`Remove ${card.name}`}
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Upgrade prompt (inline, when free cap hit) */}
+          {showUpgradePrompt && !isPro && (
+            <div className="flex items-center justify-between rounded-xl border border-[#4edea3]/20 bg-[#4edea3]/5 px-5 py-4">
+              <div className="flex items-center gap-3">
+                <Lock className="w-4 h-4 text-[#4edea3] flex-shrink-0" />
+                <p className="text-sm text-on-surface">
+                  <span className="font-semibold text-[#4edea3]">Pro</span> unlocks unlimited card comparison.
+                </p>
+              </div>
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("open-upgrade-modal"))}
+                className="text-xs font-bold text-black rounded-full px-4 py-2 whitespace-nowrap"
+                style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
+              >
+                Start Free Trial
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* ── Comparison table ── */}
+        {selected.length >= 2 ? (
+          <section className="overflow-x-auto">
+            <table className="w-full border-separate border-spacing-0">
+              <thead>
+                <tr>
+                  <th className="w-40 text-left px-4 py-4 text-[10px] uppercase tracking-widest text-on-surface-variant font-bold sticky left-0 bg-background z-10">
+                    Field
+                  </th>
+                  {selected.map((card) => (
+                    <th
+                      key={card.id}
+                      className={`px-6 py-4 text-center min-w-[180px] rounded-t-2xl border-x border-t transition-colors ${
+                        card.id === bestCardId
+                          ? "border-[#4edea3]/20 bg-[#4edea3]/5"
+                          : "border-white/5 bg-surface-container"
+                      }`}
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        {card.id === bestCardId && (
+                          <span className="text-[9px] font-bold uppercase tracking-widest text-[#4edea3] flex items-center gap-1">
+                            <Star className="w-2.5 h-2.5" /> Best Value
+                          </span>
+                        )}
+                        <span className="text-xs font-bold text-on-surface">{card.bank}</span>
+                        <span className="text-[11px] text-on-surface-variant leading-tight text-center">
+                          {card.name}
+                        </span>
+                        <button
+                          onClick={() => removeCard(card.id)}
+                          className="mt-1 text-on-surface-variant hover:text-on-surface transition-colors"
+                          aria-label={`Remove ${card.name}`}
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARE_ROWS.map((row, rowIdx) => {
+                  // Find best raw value for numeric highlighting
+                  const values = selected.map((c) => {
+                    if (row.key === "net_value") return calcNetValue(c)
+                    if (row.key === "annual_fee") return c.annual_fee ?? 0
+                    if (row.key === "welcome_bonus_points") return c.welcome_bonus_points ?? 0
+                    if (row.key === "earn_rate_primary") return c.earn_rate_primary ?? 0
+                    return null
+                  })
+                  const isLastRow = rowIdx === COMPARE_ROWS.length - 1
+
+                  return (
+                    <tr key={row.key}>
+                      <td
+                        className={`px-4 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant sticky left-0 z-10 bg-background ${
+                          isLastRow ? "rounded-bl-2xl" : ""
+                        }`}
+                      >
+                        {row.label}
+                      </td>
+                      {selected.map((card, colIdx) => {
+                        const val = values[colIdx]
+                        const allVals = values.filter((v) => v != null) as number[]
+                        // For fee and spend: lower is better; for the rest: higher is better
+                        const lowerBetter = row.key === "annual_fee" || row.key === "bonus_spend_requirement"
+                        const best = lowerBetter ? Math.min(...allVals) : Math.max(...allVals)
+                        const isBest = val != null && val === best && allVals.length > 1
+
+                        return (
+                          <td
+                            key={card.id}
+                            className={`px-6 py-4 text-center text-sm border-x transition-colors ${
+                              isLastRow ? "border-b rounded-b-2xl" : ""
+                            } ${
+                              card.id === bestCardId
+                                ? "border-[#4edea3]/20 bg-[#4edea3]/5"
+                                : "border-white/5 bg-surface-container"
+                            }`}
+                          >
+                            <span
+                              className={`font-semibold tabular-nums ${
+                                isBest ? "text-[#4edea3]" : "text-on-surface"
+                              }`}
+                            >
+                              {row.fmt(card)}
+                            </span>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </section>
+        ) : (
+          <section className="py-20 text-center bg-surface-container rounded-2xl border border-white/5">
+            <p className="font-headline text-xl font-bold text-on-surface mb-2">
+              Select at least 2 cards to compare
             </p>
-            <p>
-              <strong className="text-[var(--text-primary)]">Net value:</strong> Calculated as (Welcome Bonus Points × $0.01) − Annual Fee. This gives you the first-year value of each card.
+            <p className="text-on-surface-variant text-sm">
+              Search for cards above and they&apos;ll appear side-by-side here.
             </p>
-            <p>
-              <strong className="text-[var(--text-primary)]">Scores:</strong> Based on eligibility, net value, spend requirements, and your current portfolio. Higher scores mean better matches for your situation.
-            </p>
-          </CardContent>
-        </Card>
+          </section>
+        )}
       </div>
-      </ProGate>
     </AppShell>
   )
 }
