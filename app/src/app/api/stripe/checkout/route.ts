@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
       subscription_data: {
-        trial_period_days: existingCustomer?.has_used_trial ? 0 : TRIAL_DAYS,
+        ...(existingCustomer?.has_used_trial ? {} : { trial_period_days: TRIAL_DAYS }),
         metadata: { supabase_user_id: user.id },
       },
       success_url: `${appUrl}/dashboard?upgraded=true`,
