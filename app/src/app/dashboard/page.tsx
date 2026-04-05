@@ -257,7 +257,7 @@ export default function DashboardPage() {
                 Total Valuation (AUD)
               </h2>
               <div className="flex items-baseline gap-4 flex-wrap">
-                <span className="font-headline font-extrabold tabular-nums tracking-tighter text-on-surface text-5xl md:text-6xl lg:text-[64px]">
+                <span className="font-headline font-extrabold tabular-nums tracking-[-0.04em] text-on-surface text-5xl md:text-6xl lg:text-[80px]">
                   ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
                 {stats.totalPoints > 0 && (
@@ -271,23 +271,23 @@ export default function DashboardPage() {
 
             {/* Quick Stats Row */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+              <div className="glass-card rounded-2xl p-6 border border-white/5 space-y-2">
                 <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Points Sum</span>
                 <div className="text-xl font-bold tabular-nums text-on-surface">
                   {stats.totalPoints >= 1000 ? `${(stats.totalPoints / 1000).toFixed(0)}k` : stats.totalPoints.toLocaleString()}
                 </div>
               </div>
-              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+              <div className="glass-card rounded-2xl p-6 border border-white/5 space-y-2">
                 <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Active Cards</span>
                 <div className="text-xl font-bold tabular-nums text-on-surface">{stats.active}</div>
               </div>
-              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+              <div className="glass-card rounded-2xl p-6 border border-white/5 space-y-2">
                 <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Yearly Fees</span>
                 <div className="text-xl font-bold tabular-nums text-on-surface">
                   ${stats.yearlyFees > 0 ? stats.yearlyFees.toLocaleString() : "0"}
                 </div>
               </div>
-              <div className="bg-surface-container p-6 rounded-lg border border-white/5 space-y-2">
+              <div className="glass-card rounded-2xl p-6 border border-white/5 space-y-2">
                 <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Saved (YTD)</span>
                 <div className="text-xl font-bold tabular-nums text-[#4edea3]">
                   ${Math.max(0, stats.valueSavedYTD).toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
@@ -299,7 +299,7 @@ export default function DashboardPage() {
           {/* Right: Next Flight Opportunity */}
           <div className="lg:col-span-1">
             <div
-              className="rounded-xl p-8 border border-white/5 relative overflow-hidden flex flex-col justify-end h-full gap-4"
+              className="glass rounded-[2.5rem] p-8 border border-white/5 relative overflow-hidden flex flex-col justify-end h-full gap-4 shadow-[0_0_40px_-10px_rgba(78,222,163,0.2)]"
               style={{ background: "linear-gradient(135deg, #1b1f2c 0%, #0a0e1a 100%)" }}
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#4edea3]/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />
@@ -458,7 +458,7 @@ export default function DashboardPage() {
                         onClick={() => handleEditCard(card)}
                       >
                         <div
-                          className="w-full max-w-[420px] rounded-xl p-8 border border-white/10 shadow-2xl relative overflow-hidden"
+                          className={`w-full max-w-[420px] rounded-[2rem] p-8 border border-white/10 shadow-2xl relative overflow-hidden${revIdx === 0 ? " shadow-[0_0_30px_-5px_rgba(78,222,163,0.25)]" : ""}`}
                           style={{ background: gradient, aspectRatio: "1.58/1" }}
                         >
                           <div className="flex justify-between items-start">
