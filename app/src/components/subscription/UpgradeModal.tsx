@@ -63,16 +63,23 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
         body: JSON.stringify({ plan }),
       })
 
+      if (!res.ok) {
+        if (res.status === 401) {
+          window.location.href = "/"
+          return
+        }
+        throw new Error(`Checkout error ${res.status}`)
+      }
+
       const data = await res.json()
 
       if (data.url) {
         window.location.href = data.url
       } else {
-        console.error("No checkout URL returned")
-        setLoading(null)
+        throw new Error("No checkout URL returned")
       }
-    } catch {
-      console.error("Checkout failed")
+    } catch (err) {
+      console.error("Checkout failed", err)
       setLoading(null)
     }
   }
@@ -82,7 +89,7 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
       <DialogContent className="border-[var(--border-default)] bg-[var(--surface)] text-white sm:max-w-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl text-white">
-            <Sparkles className="h-6 w-6 text-teal-400" />
+            <Sparkles className="h-6 w-6 text-[#4edea3]" />
             Upgrade to Pro
           </DialogTitle>
           <DialogDescription className="text-on-surface">
@@ -107,16 +114,16 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
           </div>
 
           {/* Pro */}
-          <div className="rounded-xl border-2 border-teal-500/50 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 p-4">
-            <p className="text-sm font-semibold text-teal-400">Pro</p>
+          <div className="rounded-xl border-2 border-[#4edea3]/30 bg-[#4edea3]/5 p-4">
+            <p className="text-sm font-semibold text-[#4edea3]">Pro</p>
             <p className="mt-1 text-2xl font-bold text-white">
               $9.99<span className="text-sm font-normal text-on-surface-variant">/mo</span>
             </p>
-            <p className="text-xs text-teal-300">7-day free trial</p>
+            <p className="text-xs text-[#4edea3]">7-day free trial</p>
             <ul className="mt-4 space-y-2">
               {PRO_FEATURES.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-sm text-on-surface">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-teal-400" />
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4edea3]" />
                   {f}
                 </li>
               ))}

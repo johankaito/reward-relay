@@ -229,7 +229,7 @@ export default function RecommendationsPage() {
               const isGated = !isPro && index >= 1
 
               const cardInner = (
-                <div className={`relative group ${isBestMatch ? "" : ""}`}>
+                <div key={rec.card.id} className="relative group">
                   {/* Glow for best match */}
                   {isBestMatch && (
                     <div className="absolute -inset-1 bg-gradient-to-br from-[#4edea3] to-[#10b981] rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
@@ -350,7 +350,7 @@ export default function RecommendationsPage() {
                   </ProGate>
                 )
               }
-              return <div key={rec.card.id}>{cardInner}</div>
+              return cardInner
             })}
 
             {/* Insights bento card */}

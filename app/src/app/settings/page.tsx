@@ -70,11 +70,18 @@ export default function SettingsPage() {
   }
 
   const handleDeleteAccount = async () => {
-    if (!confirm("This will permanently delete your account and all data. Are you sure?")) return
-    setDeletingAccount(true)
-    // Sign out — actual deletion requires a server-side admin call
-    await supabase.auth.signOut()
-    router.replace("/")
+    toast("This will permanently delete your account and all data.", {
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          setDeletingAccount(true)
+          await supabase.auth.signOut()
+          router.replace("/")
+        },
+      },
+      cancel: { label: "Cancel", onClick: () => {} },
+      duration: 10000,
+    })
   }
 
   const toggleNotif = async (key: keyof NotificationPrefs) => {

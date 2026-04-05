@@ -404,7 +404,7 @@ export default function StatementsPage() {
                   <option value="">Select a card…</option>
                   {userCards.map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.bank} — {c.card_name ?? c.id}
+                      {c.bank} — {c.name ?? c.id}
                     </option>
                   ))}
                 </select>
