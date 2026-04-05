@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import { AppShell } from "@/components/layout/AppShell"
+import { ProGate } from "@/components/ui/ProGate"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { useCatalog } from "@/contexts/CatalogContext"
+import { useSubscription } from "@/hooks/useSubscription"
 import type { Database } from "@/types/database.types"
 import type { Recommendation } from "@/lib/recommendations"
 
@@ -62,6 +64,7 @@ function formatEligibility(rec: Recommendation): { label: string; color: string 
 export default function RecommendationsPage() {
   const router = useRouter()
   const { catalogCards } = useCatalog()
+  const { isPro } = useSubscription()
   const [cards, setCards] = useState<UserCard[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>("all")
@@ -217,15 +220,16 @@ export default function RecommendationsPage() {
           </div>
         ) : (
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredRecommendations.map((rec, index) => {
+            {(isPro ? filteredRecommendations : filteredRecommendations.slice(0, 5)).map((rec, index) => {
               const isBestMatch = index === 0 && filter === "all"
               const badgeLabel = getBadgeLabel(index, rec)
               const bonus = formatBonus(rec)
               const elig = formatEligibility(rec)
               const gradient = CARD_GRADIENTS[index % CARD_GRADIENTS.length]
+              const isGated = !isPro && index >= 1
 
-              return (
-                <div key={rec.card.id} className={`relative group ${isBestMatch ? "" : ""}`}>
+              const cardInner = (
+                <div className={`relative group ${isBestMatch ? "" : ""}`}>
                   {/* Glow for best match */}
                   {isBestMatch && (
                     <div className="absolute -inset-1 bg-gradient-to-br from-[#4edea3] to-[#10b981] rounded-2xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
@@ -326,7 +330,7 @@ export default function RecommendationsPage() {
                     {isBestMatch ? (
                       <button
                         className="w-full py-4 rounded-full font-bold text-sm text-black transition-all hover:scale-[1.02] shadow-lg shadow-[#4edea3]/20"
-                        style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+                        style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
                       >
                         View Details
                       </button>
@@ -338,6 +342,15 @@ export default function RecommendationsPage() {
                   </div>
                 </div>
               )
+
+              if (isGated) {
+                return (
+                  <ProGate key={rec.card.id} feature="Full Recommendations">
+                    {cardInner}
+                  </ProGate>
+                )
+              }
+              return <div key={rec.card.id}>{cardInner}</div>
             })}
 
             {/* Insights bento card */}
