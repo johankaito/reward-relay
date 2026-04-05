@@ -370,6 +370,107 @@ Complete these before Week 4 launch:
 - [ ] Prepare community posts for launch day (r/startups, r/sideprojects, Indie Hackers)
 - [ ] Brief 5 friends/early users to upvote in the first hour (critical for getting featured)
 
+### 1.7 Founder Dogfood Session (Real Card Data)
+
+**When**: Complete before Week 1 launch post — this is a launch blocker.  
+**Time required**: 2–3 hours across one sitting.  
+**Purpose**: Find every rough edge, missing data point, and confusing UX before real users hit it. Every friction point you feel is a friction point that will cause a stranger to drop off.
+
+---
+
+#### What to enter
+
+Enter every card you currently hold or have held in the last 24 months. For each card, record:
+
+- Card issuer + product name (exact)
+- Application date
+- Approval date
+- Welcome bonus: amount, type (points/cashback), received (y/n), date received
+- Minimum spend requirement and deadline
+- Annual fee amount and due date
+- Cancellation date (if applicable)
+- Current cooling period status
+
+Do NOT approximate dates. Pull your actual email confirmations, bank statements, or credit file if needed. The point is to stress-test the system with accurate real-world data, not clean test data.
+
+---
+
+#### What to look for (audit checklist)
+
+**Data entry**:
+- [ ] Is the card I want listed in the database? If not, can I add it manually?
+- [ ] Are the default cooling period rules correct for every card I entered?
+- [ ] Are the annual fee defaults correct (or do I have to override)?
+- [ ] Does the minimum spend tracker calculate correctly against my actual deadline?
+
+**Eligibility engine**:
+- [ ] For every card I've cancelled: does the re-eligibility date shown match what I know to be true?
+- [ ] For Amex cards: is the system using bonus received date (not cancellation date) for the 18-month rule?
+- [ ] For Westpac/St George/BankSA/Bank of Melbourne: does the system correctly treat them as the same group?
+- [ ] For CommBank/Bankwest: same group detection working?
+- [ ] For NAB/Citibank products: correctly flagged as same product post-migration?
+
+**Reminders**:
+- [ ] Trigger a test reminder for one card — does the email arrive, formatted correctly, with the right dates?
+- [ ] Is the 30/14/7-day logic correct for your actual annual fee dates?
+
+**Recommendations**:
+- [ ] Based on your real history, do the recommendations make sense?
+- [ ] Are there any obviously wrong suggestions (e.g., recommending a card you're in cooling on)?
+- [ ] Is the ranking logic visible enough — do you understand *why* card X is ranked above card Y?
+
+**Flight projections**:
+- [ ] Enter a real goal (e.g., business class SYD→NRT in 18 months)
+- [ ] Does the projected point sequence match what you'd manually calculate?
+- [ ] Are the earning rates accurate for your specific card/program combinations?
+
+**Edge cases from your own history**:
+- [ ] Any card you've held twice — does the system handle the second cooling period correctly?
+- [ ] Any card you were declined for — how does the system treat a no bonus received entry?
+- [ ] Any card where you cancelled before receiving the bonus — is the cooling period treatment correct?
+
+---
+
+#### What to document
+
+For every issue found, log it in the format below before fixing anything. Fix after the full session, not during — otherwise you'll miss compounding issues.
+
+| # | Screen | What happened | What I expected | Priority |
+|---|--------|---------------|-----------------|----------|
+| 1 | Card entry | No Amex Platinum Edge in dropdown | Should be in AU card list | P1 |
+| 2 | Eligibility | Shows eligible for ANZ Black — I'm in a 12-month cooling period | Should be blocked | P0 |
+| 3 | Reminders | Test email had wrong annual fee amount | Should pull from what I entered | P1 |
+
+P0 = wrong data shown to user (correctness bug — fix before launch, no exceptions)  
+P1 = missing card or broken feature (fix before launch)  
+P2 = UX friction or confusing copy (fix before launch if quick, defer if complex)  
+P3 = nice to have (backlog)
+
+---
+
+#### The launch gate
+
+Do not post on r/churningaustralia until:
+- [ ] All P0 bugs are fixed
+- [ ] All P1 bugs are fixed or explicitly accepted with a workaround documented
+- [ ] You have personally used the product for at least 7 days with your real data
+- [ ] You can demo the full end-to-end flow (add card → view eligibility → set reminder → get recommendation) in under 3 minutes without hitting a bug
+
+The r/churningaustralia audience is sophisticated. They will find every data error within hours. Being the founder who already found and fixed them is credibility. Being the founder whose Amex cooling period logic is wrong is a reputation problem that will follow the product.
+
+---
+
+#### What to share from this session
+
+After the dogfood session, write a short internal note (can be a comment in Notion or a Slack message to yourself) covering:
+- Cards added: [list]
+- Bugs found: [count and priority breakdown]
+- Data corrections made to the card database
+- One surprising thing you discovered about your own portfolio from using the product
+
+This note becomes the raw material for your Week 1 Reddit post. The most credible founder posts are specific: I entered my 6 active cards and found 3 data issues in our cooling period database — all fixed before launch. That specificity builds trust.
+
+
 ---
 
 ## Part 2: Week-by-Week Execution (Weeks 1–12)
