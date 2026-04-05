@@ -87,7 +87,7 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
           r={RADIUS}
           fill="none"
           stroke="rgba(255,255,255,0.1)"
-          strokeWidth={5}
+          strokeWidth={6}
           strokeDasharray={`${ARC_LENGTH} ${CIRCUMFERENCE - ARC_LENGTH}`}
           strokeLinecap="round"
           transform={`rotate(${rotation} ${center} ${center})`}
@@ -100,7 +100,7 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
           r={RADIUS}
           fill="none"
           stroke="#4edea3"
-          strokeWidth={6}
+          strokeWidth={8}
           strokeDasharray={`${filledLength} ${CIRCUMFERENCE - filledLength}`}
           strokeLinecap="round"
           transform={`rotate(${rotation} ${center} ${center})`}
