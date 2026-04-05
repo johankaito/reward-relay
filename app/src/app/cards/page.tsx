@@ -217,7 +217,7 @@ export default function CardsPage() {
         <>
           {/* Stats bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
+            <div className="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
                 <CreditCard className="h-24 w-24" />
               </div>
@@ -226,7 +226,7 @@ export default function CardsPage() {
                 <div className="text-3xl font-headline font-bold tabular-nums text-on-surface">{userCards.length}</div>
               </div>
             </div>
-            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
+            <div className="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-[#4edea3]">
                 <span className="text-8xl font-bold">$</span>
               </div>
@@ -237,7 +237,7 @@ export default function CardsPage() {
                 </div>
               </div>
             </div>
-            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
+            <div className="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-tertiary">
                 <span className="text-8xl font-bold">✦</span>
               </div>
@@ -313,8 +313,8 @@ export default function CardsPage() {
                             <div className="text-xs font-bold text-[#4edea3] tabular-nums">
                               ${currentSpend.toLocaleString()} / ${spendTarget.toLocaleString()}
                             </div>
-                            <div className="w-24 h-1 bg-surface-container-highest rounded-full mt-1 overflow-hidden">
-                              <div className="h-full bg-[#4edea3] rounded-full" style={{ width: `${pct}%` }} />
+                            <div className="w-24 h-2.5 bg-surface-container-highest rounded-full mt-1 overflow-hidden">
+                              <div className="h-full bg-[#4edea3] rounded-full" style={{ width: `${pct}%`, boxShadow: "0 0 12px rgba(78,222,163,0.3)" }} />
                             </div>
                           </div>
                         )}
@@ -434,10 +434,10 @@ export default function CardsPage() {
                               <span>${current.toLocaleString()} Spent</span>
                               <span>${target.toLocaleString()} Target</span>
                             </div>
-                            <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                            <div className="w-full h-2.5 bg-surface-container-highest rounded-full overflow-hidden">
                               <div
                                 className="h-full rounded-full"
-                                style={{ width: `${pct}%`, background: "linear-gradient(to right, var(--primary-container), var(--primary))" }}
+                                style={{ width: `${pct}%`, background: "linear-gradient(to right, var(--primary-container), var(--primary))", boxShadow: "0 0 12px rgba(78,222,163,0.3)" }}
                               />
                             </div>
                             {daysLeft !== null && bonusPts > 0 && (
