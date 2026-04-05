@@ -67,8 +67,8 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
     >
       <style>{`
         .progress-arc-container:hover .progress-arc-path {
-          stroke-width: 12 !important;
-          filter: drop-shadow(0 0 12px rgba(78,222,163,0.6));
+          stroke-width: 7 !important;
+          filter: drop-shadow(0 0 10px rgba(78,222,163,0.6));
         }
         .progress-arc-container:hover .progress-center-amount {
           text-shadow: 0 0 15px rgba(255,255,255,0.2);
@@ -87,7 +87,7 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
           r={RADIUS}
           fill="none"
           stroke="rgba(255,255,255,0.1)"
-          strokeWidth={6}
+          strokeWidth={5}
           strokeDasharray={`${ARC_LENGTH} ${CIRCUMFERENCE - ARC_LENGTH}`}
           strokeLinecap="round"
           transform={`rotate(${rotation} ${center} ${center})`}
@@ -100,7 +100,7 @@ function SpendArc({ spent, target }: { spent: number; target: number }) {
           r={RADIUS}
           fill="none"
           stroke="#4edea3"
-          strokeWidth={8}
+          strokeWidth={6}
           strokeDasharray={`${filledLength} ${CIRCUMFERENCE - filledLength}`}
           strokeLinecap="round"
           transform={`rotate(${rotation} ${center} ${center})`}
@@ -537,18 +537,18 @@ export default function SpendingTrackerPage() {
                           <path
                             d="M 10 50 A 40 40 0 0 1 90 50"
                             fill="none"
-                            opacity="0.6"
-                            stroke="#262a37"
+                            opacity="0.5"
+                            stroke="rgba(255,255,255,0.08)"
                             strokeLinecap="round"
-                            strokeWidth="6"
+                            strokeWidth="3"
                           />
                           <path
                             d="M 10 50 A 40 40 0 0 1 90 50"
                             fill="none"
-                            stroke="#313442"
-                            strokeDasharray="0.5 7.5"
+                            stroke="rgba(255,255,255,0.04)"
+                            strokeDasharray="0.3 5"
                             strokeLinecap="round"
-                            strokeWidth="6"
+                            strokeWidth="3"
                           />
                           {(() => {
                             // Total arc path length for "M 10 50 A 40 40 0 0 1 90 50" ≈ 125.66
@@ -565,7 +565,7 @@ export default function SpendingTrackerPage() {
                                 stroke="url(#arc-gradient-spend)"
                                 strokeDasharray={`${filled} ${totalLen - filled}`}
                                 strokeLinecap="round"
-                                strokeWidth="8"
+                                strokeWidth="4"
                                 style={{ transition: "stroke-dasharray 600ms ease-out" }}
                               />
                             )
@@ -577,7 +577,7 @@ export default function SpendingTrackerPage() {
                             </linearGradient>
                           </defs>
                         </svg>
-                        <div className="absolute bottom-0 inset-x-0 flex flex-col items-center pb-2">
+                        <div className="absolute inset-x-0 top-[42%] -translate-y-1/2 flex flex-col items-center">
                           <span className="text-5xl font-headline font-extrabold tabular-nums tracking-tight text-white">
                             {formatCurrencyCompact(activeCard.current_spend)}
                           </span>
