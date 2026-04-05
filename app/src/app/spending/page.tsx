@@ -3,11 +3,9 @@
 import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase/client"
 import { AppShell } from "@/components/layout/AppShell"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Pencil } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -16,7 +14,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { SpendingSliderWizard } from "@/components/forms/SpendingSliderWizard"
 
 interface UserCard {
   id: string
@@ -280,8 +277,6 @@ export default function SpendingTrackerPage() {
     category: "general",
   })
   const [userId, setUserId] = useState<string | null>(null)
-  const [hasSpendingProfile, setHasSpendingProfile] = useState<boolean | null>(null)
-  const [editingProfile, setEditingProfile] = useState(false)
 
   useEffect(() => {
     void loadUserCards()
@@ -295,14 +290,6 @@ export default function SpendingTrackerPage() {
       if (!user) return
 
       setUserId(user.id)
-
-      // Check spending profile existence
-      const { data: profile } = await supabase
-        .from("spending_profiles")
-        .select("id")
-        .eq("user_id", user.id)
-        .maybeSingle()
-      setHasSpendingProfile(!!profile)
 
       const { data: cards, error } = await supabase
         .from("user_cards")
@@ -423,36 +410,7 @@ export default function SpendingTrackerPage() {
       </header>
 
       <div className="space-y-6 pb-10 px-10 pt-10">
-        {/* ── Spending profile wizard — shown when no profile exists or editing ── */}
-        {userId && (hasSpendingProfile === false || editingProfile) && (
-          <Card className="border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
-            <CardContent className="p-5">
-              <SpendingSliderWizard
-                userId={userId}
-                stepLabel="Your Spending Profile"
-                onSaved={() => {
-                  setHasSpendingProfile(true)
-                  setEditingProfile(false)
-                }}
-              />
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Profile edit trigger — only visible when profile exists and not editing */}
-        {userId && hasSpendingProfile && !editingProfile && (
-          <div className="flex justify-end">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="rounded-full text-on-surface-variant hover:text-on-surface text-xs"
-              onClick={() => setEditingProfile(true)}
-            >
-              <Pencil className="mr-1.5 h-3 w-3" />
-              Edit spending profile
-            </Button>
-          </div>
-        )}
+        {/* Spending profile wizard — hidden for now */}
 
         {/* ── Top stats row (Stitch 4-col glass panels) ── */}
         {activeCard && pace && (() => {
@@ -566,7 +524,7 @@ export default function SpendingTrackerPage() {
               <div className="grid grid-cols-12 gap-10">
                 {/* Arc panel: col-span-5 */}
                 <div className="col-span-12 lg:col-span-5">
-                  <div className="bg-surface-container-low rounded-2xl p-10 relative overflow-hidden flex flex-col items-center text-center border border-white/5 h-full">
+                  <div className="glass-card rounded-3xl p-10 relative overflow-hidden flex flex-col items-center text-center border border-white/5 h-full">
                     <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#4edea3]/10 blur-[100px] rounded-full" />
                     <div className="relative w-full">
                       <h2 className="text-on-surface-variant text-[11px] uppercase tracking-[0.2em] font-bold mb-10">
@@ -582,7 +540,7 @@ export default function SpendingTrackerPage() {
                             opacity="0.6"
                             stroke="#262a37"
                             strokeLinecap="round"
-                            strokeWidth="10"
+                            strokeWidth="6"
                           />
                           <path
                             d="M 10 50 A 40 40 0 0 1 90 50"
@@ -590,7 +548,7 @@ export default function SpendingTrackerPage() {
                             stroke="#313442"
                             strokeDasharray="0.5 7.5"
                             strokeLinecap="round"
-                            strokeWidth="10"
+                            strokeWidth="6"
                           />
                           {(() => {
                             // Total arc path length for "M 10 50 A 40 40 0 0 1 90 50" ≈ 125.66
@@ -607,7 +565,7 @@ export default function SpendingTrackerPage() {
                                 stroke="url(#arc-gradient-spend)"
                                 strokeDasharray={`${filled} ${totalLen - filled}`}
                                 strokeLinecap="round"
-                                strokeWidth="10"
+                                strokeWidth="8"
                                 style={{ transition: "stroke-dasharray 600ms ease-out" }}
                               />
                             )
@@ -742,7 +700,7 @@ export default function SpendingTrackerPage() {
                   </div>
 
                   {/* Transaction list */}
-                  <div className="bg-surface-container/30 rounded-2xl overflow-hidden border border-white/5">
+                  <div className="glass-card rounded-2xl overflow-hidden border border-white/5">
                     <div className="divide-y divide-white/5">
                       {(transactions[activeCard.id]?.length ?? 0) > 0 ? (
                         transactions[activeCard.id].slice(0, 5).map((txn) => (
@@ -778,7 +736,7 @@ export default function SpendingTrackerPage() {
                         </div>
                       )}
                     </div>
-                    <div className="p-5 bg-surface-container-high/30 border-t border-white/5 flex justify-center">
+                    <div className="p-5 border-t border-white/5 flex justify-center">
                       <button className="text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant hover:text-[#4edea3] transition-colors py-2 px-8">
                         Load More Activity
                       </button>
@@ -799,12 +757,12 @@ export default function SpendingTrackerPage() {
                 const dailyPaceMobile = daysLeft && daysLeft > 0 ? remaining / daysLeft : null
                 return (
                   <section className="-mx-4 px-4 -mt-10 grid grid-cols-2 gap-5">
-                    <div className="bg-surface-container/80 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-xl transition-transform active:scale-95">
+                    <div className="glass-card p-6 rounded-2xl border border-white/5 transition-transform active:scale-95">
                       <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">Spend Progress</p>
                       <p className="text-2xl font-bold font-headline tabular-nums">{formatCurrencyCompact(activeCard.current_spend)}</p>
                       <p className="text-on-surface-variant text-xs mt-1">of {formatCurrencyCompact(activeCard.spend_target)} goal</p>
                     </div>
-                    <div className="bg-surface-container/80 backdrop-blur-md p-6 rounded-2xl border border-white/5 shadow-xl transition-transform active:scale-95">
+                    <div className="glass-card p-6 rounded-2xl border border-white/5 transition-transform active:scale-95">
                       <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.15em] mb-1.5">
                         {daysLeft !== null ? "Days Left" : "Daily Pace"}
                       </p>
@@ -861,7 +819,7 @@ export default function SpendingTrackerPage() {
                       </div>
                     ))
                   ) : (
-                    <div className="p-8 text-center rounded-2xl bg-surface-container/30 border border-white/5">
+                    <div className="p-8 text-center rounded-2xl glass-card border border-white/5">
                       <p className="text-on-surface-variant text-sm">No transactions recorded yet.</p>
                       <button
                         onClick={() => setIsDialogOpen(true)}
