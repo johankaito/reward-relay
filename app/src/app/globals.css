@@ -284,10 +284,10 @@
   }
 }
 
-/* ─── Sidebar layout offset (guaranteed, supplements md:pl-64) ─── */
+/* ─── Sidebar layout offset (guaranteed, supplements md:pl-72) ─── */
 @media (min-width: 768px) {
-  .md\:pl-64 {
-    padding-left: 16rem !important; /* 256px = w-64 sidebar */
+  .md\:pl-72 {
+    padding-left: 18rem !important; /* 288px = w-72 sidebar */
   }
 }
 

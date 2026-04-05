@@ -66,7 +66,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
       {/* Desktop fixed sidebar */}
-      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 antialiased tracking-tight">
+      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 antialiased tracking-tight">
         <div className="p-8 flex flex-col h-full">
           {/* Logo */}
           <div className="mb-10">
@@ -82,10 +82,10 @@ export function AppShell({ children }: AppShellProps) {
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center gap-3 px-4 py-3 transition-all text-sm rounded-lg ${
+                  className={`flex items-center gap-3 transition-all text-sm ${
                     active
-                      ? "bg-[#1b1f2c] text-[#4edea3] font-bold"
-                      : "text-slate-400 hover:text-white hover:bg-[#313442]"
+                      ? "bg-[#4edea3]/10 text-[#4edea3] font-bold rounded-xl px-5 py-3.5"
+                      : "text-slate-400 hover:text-white hover:bg-[#313442] rounded-lg px-4 py-3"
                   }`}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>{materialIcon}</span>
@@ -161,7 +161,7 @@ export function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* Desktop top-right header bar */}
-      <header className="hidden md:flex fixed top-0 right-0 z-40 items-center gap-3 px-6 h-16" style={{ left: 256 }}>
+      <header className="hidden md:flex fixed top-0 right-0 z-40 items-center gap-3 px-6 h-16" style={{ left: 288 }}>
         <div className="flex-1">
           <div className="relative max-w-xs">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" style={{ fontSize: "18px" }}>search</span>
@@ -190,7 +190,7 @@ export function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* Page content */}
-      <div className="pt-16 md:pl-64 pb-24 md:pb-6 min-w-0">
+      <div className="pt-16 md:pl-72 pb-24 md:pb-6 min-w-0">
         <main className="min-w-0 overflow-x-hidden px-6 md:px-10 py-8">{children}</main>
       </div>
 

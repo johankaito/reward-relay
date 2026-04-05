@@ -13,12 +13,12 @@ export function ProgressBar({ value, height = "sm", className }: ProgressBarProp
     <div
       className={cn(
         "overflow-hidden rounded-full bg-surface-container-highest",
-        height === "sm" ? "h-1.5" : "h-2",
+        height === "sm" ? "h-1.5" : "h-2.5",
         className,
       )}
     >
       <div
-        className="h-full rounded-full transition-all duration-700"
+        className="h-full rounded-full transition-all duration-700 shadow-[0_0_12px_rgba(78,222,163,0.3)]"
         style={{
           width: `${clamped}%`,
           background: "linear-gradient(90deg, #10b981 0%, #4edea3 100%)",
