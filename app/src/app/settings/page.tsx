@@ -6,6 +6,8 @@ import { toast } from "sonner"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { supabase } from "@/lib/supabase/client"
+import { useSubscription } from "@/hooks/useSubscription"
+import { Lock } from "lucide-react"
 
 interface NotificationPrefs {
   thirtyDay: boolean
@@ -15,6 +17,7 @@ interface NotificationPrefs {
 
 export default function SettingsPage() {
   const router = useRouter()
+  const { isPro } = useSubscription()
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [displayName, setDisplayName] = useState<string>("")
   const [signingOut, setSigningOut] = useState(false)
@@ -22,7 +25,7 @@ export default function SettingsPage() {
   const [notifs, setNotifs] = useState<NotificationPrefs>({
     thirtyDay: true,
     fourteenDay: true,
-    sevenDay: false,
+    sevenDay: true,
   })
 
   useEffect(() => {
@@ -40,6 +43,13 @@ export default function SettingsPage() {
       const meta = session.user.user_metadata as Record<string, unknown>
       const name = (meta?.full_name as string) ?? (meta?.name as string) ?? session.user.email?.split("@")[0] ?? ""
       setDisplayName(name)
+
+      // Load persisted reminder preferences (default true if not set)
+      setNotifs({
+        thirtyDay: meta.reminder_30d !== false,
+        fourteenDay: meta.reminder_14d !== false,
+        sevenDay: meta.reminder_7d !== false,
+      })
     }
     void load()
   }, [router])
@@ -67,8 +77,12 @@ export default function SettingsPage() {
     router.replace("/")
   }
 
-  const toggleNotif = (key: keyof NotificationPrefs) => {
-    setNotifs((prev) => ({ ...prev, [key]: !prev[key] }))
+  const toggleNotif = async (key: keyof NotificationPrefs) => {
+    const metaKey = key === "thirtyDay" ? "reminder_30d" : key === "fourteenDay" ? "reminder_14d" : "reminder_7d"
+    const newVal = !notifs[key]
+    setNotifs((prev) => ({ ...prev, [key]: newVal }))
+    const { error } = await supabase.auth.updateUser({ data: { [metaKey]: newVal } })
+    if (error) toast.error("Failed to save preference")
   }
 
   return (
@@ -157,41 +171,68 @@ export default function SettingsPage() {
                   {
                     key: "thirtyDay" as const,
                     label: "30-Day Reminder",
-                    sub: "Get notified a month before points expire.",
+                    sub: "Get notified a month before cancellation date.",
+                    proOnly: true,
                   },
                   {
                     key: "fourteenDay" as const,
                     label: "14-Day Critical Alert",
-                    sub: "Critical alert two weeks prior to expiry.",
+                    sub: "Critical alert two weeks prior to cancellation.",
+                    proOnly: true,
                   },
                   {
                     key: "sevenDay" as const,
                     label: "7-Day Final Alert",
-                    sub: "Last call notifications for all active rewards.",
+                    sub: "Last call notification before cancellation date.",
+                    proOnly: false,
                   },
-                ].map(({ key, label, sub }) => (
-                  <div key={key} className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-on-surface">{label}</p>
-                      <p className="text-xs text-on-surface-variant mt-1">{sub}</p>
-                    </div>
-                    <button
-                      onClick={() => toggleNotif(key)}
-                      className={`w-12 h-6 rounded-full relative transition-colors duration-200 focus:outline-none ${
-                        notifs[key] ? "bg-[#07b77f]" : "bg-surface-container-highest"
-                      }`}
-                      aria-label={label}
-                    >
-                      <span
-                        className={`absolute top-1 w-4 h-4 rounded-full shadow-sm transition-all duration-200 ${
-                          notifs[key]
-                            ? "right-1 bg-on-primary"
-                            : "left-1 bg-outline"
+                ].map(({ key, label, sub, proOnly }) => {
+                  const isLocked = proOnly && !isPro
+                  return (
+                    <div key={key} className={`flex items-center justify-between ${isLocked ? "opacity-60" : ""}`}>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-on-surface">{label}</p>
+                          {proOnly && (
+                            <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest text-[#4edea3] bg-[#4edea3]/15 px-1.5 py-0.5 rounded-full ring-1 ring-[#4edea3]/30">
+                              Pro
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-on-surface-variant mt-1">{sub}</p>
+                        {isLocked && (
+                          <button
+                            onClick={() => window.dispatchEvent(new CustomEvent("open-upgrade-modal"))}
+                            className="flex items-center gap-1 text-[10px] text-[#4edea3] mt-1 hover:underline"
+                          >
+                            <Lock className="w-3 h-3" />
+                            Upgrade to enable
+                          </button>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => { if (!isLocked) void toggleNotif(key) }}
+                        disabled={isLocked}
+                        className={`w-12 h-6 rounded-full relative transition-colors duration-200 focus:outline-none ${
+                          isLocked
+                            ? "bg-surface-container-highest cursor-not-allowed"
+                            : notifs[key]
+                            ? "bg-[#07b77f]"
+                            : "bg-surface-container-highest"
                         }`}
-                      />
-                    </button>
-                  </div>
-                ))}
+                        aria-label={label}
+                      >
+                        <span
+                          className={`absolute top-1 w-4 h-4 rounded-full shadow-sm transition-all duration-200 ${
+                            !isLocked && notifs[key]
+                              ? "right-1 bg-on-primary"
+                              : "left-1 bg-outline"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  )
+                })}
               </div>
             </section>
 

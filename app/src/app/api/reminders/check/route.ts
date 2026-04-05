@@ -79,12 +79,30 @@ export async function GET(request: Request) {
 
       if (existingReminder) continue; // Already sent
 
-      // Get user email
+      // Get user email + metadata
       const { data: userData } = await supabaseAdmin.auth.admin.getUserById(
         userCard.user_id
       );
 
       if (!userData?.user?.email) continue;
+
+      // Tier gating: free users only receive the 7-day reminder
+      const meta = (userData.user.user_metadata ?? {}) as Record<string, unknown>;
+      const isPro =
+        meta.subscription_tier === "pro" ||
+        meta.subscription_tier === "business" ||
+        meta.is_pro === true;
+
+      if (!isPro && reminderType !== "7_day") continue;
+
+      // User preference opt-out
+      const prefKey =
+        reminderType === "30_day"
+          ? "reminder_30d"
+          : reminderType === "14_day"
+          ? "reminder_14d"
+          : "reminder_7d";
+      if (meta[prefKey] === false) continue;
 
       // Prepare email data
       const emailData = {
