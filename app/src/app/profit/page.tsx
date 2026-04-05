@@ -523,7 +523,7 @@ export default function ProfitPage() {
                             tickLine={false}
                           />
                           <YAxis hide />
-                          <Tooltip content={<GlassTooltip />} />
+                          <Tooltip content={<GlassTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
                           <Bar dataKey="bonuses" fill="#4edea3" radius={[4, 4, 0, 0]} maxBarSize={32} />
                           <Bar dataKey="fees" fill="#d0bcff" radius={[4, 4, 0, 0]} maxBarSize={32} />
                         </BarChart>
