@@ -299,7 +299,7 @@ export default function DashboardPage() {
           {/* Right: Next Flight Opportunity */}
           <div className="lg:col-span-1">
             <div
-              className="glass rounded-[2.5rem] p-8 border border-white/5 relative overflow-hidden flex flex-col justify-end h-full gap-4 shadow-[0_0_40px_-10px_rgba(78,222,163,0.2)]"
+              className="glass-card rounded-[3rem] p-8 border border-white/5 relative overflow-hidden flex flex-col justify-end h-full gap-4 shadow-[0_0_40px_-10px_rgba(78,222,163,0.2)]"
               style={{ background: "linear-gradient(135deg, #1b1f2c 0%, #0a0e1a 100%)" }}
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#4edea3]/10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none" />

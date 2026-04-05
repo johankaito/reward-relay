@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
             <Button
               type="submit"
               className="w-full text-white"
-              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+              style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
               disabled={isLoading || !email}
             >
               {isLoading ? "Sending..." : "Send reset link"}

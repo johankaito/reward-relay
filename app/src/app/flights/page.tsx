@@ -251,7 +251,7 @@ export default function FlightsPage() {
               </div>
               <button
                 className="text-on-primary font-black px-12 rounded-xl hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap"
-                style={{ background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' }}
               >
                 <Search className="w-4 h-4" />
                 <span className="tracking-widest text-sm uppercase">Find Rewards</span>
@@ -442,7 +442,7 @@ export default function FlightsPage() {
                               ? 'text-on-primary shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]'
                               : 'border border-white/10 bg-white/5 text-on-surface hover:bg-white/10 hover:text-on-surface'
                           }`}
-                          style={isTop ? { background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' } : undefined}
+                          style={isTop ? { background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' } : undefined}
                         >
                           <CreditCard className="h-4 w-4" />
                           View Card Details
@@ -560,7 +560,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
               </div>
               <button
                 className="w-full py-4 rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-[#4edea3]/20"
-                style={{ background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' }}
               >
                 Book Redemption
               </button>

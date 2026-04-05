@@ -217,7 +217,7 @@ export default function SettingsPage() {
                 <div className="flex flex-col items-center gap-2 w-full">
                   <button
                     className="w-full py-3 text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg text-sm"
-                    style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
                   >
                     Upgrade Plan
                   </button>
@@ -246,7 +246,7 @@ export default function SettingsPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     className="px-8 py-3 text-[#003824] font-bold rounded-full hover:scale-105 transition-transform duration-200 shadow-lg text-sm"
-                    style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
                   >
                     Upgrade Plan
                   </button>

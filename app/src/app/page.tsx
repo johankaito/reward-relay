@@ -67,7 +67,7 @@ export default function Home() {
             {/* Headline */}
             <h1 className="mb-6 font-headline text-5xl font-extrabold leading-[1.1] tracking-tight text-on-surface md:text-7xl">
               Master the{" "}
-              <span className="text-[#4edea3]" style={{ textShadow: "0 0 60px rgba(78, 222, 163, 0.4)" }}>Churn</span>
+              <span className="text-[#10b981]">Churn</span>
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
@@ -177,7 +177,7 @@ export default function Home() {
             {/* Spend progress ring */}
             <div
               className="flex flex-col items-center justify-center overflow-hidden rounded-2xl p-10 text-center md:col-span-12 lg:col-span-5"
-              style={{ backgroundColor: "var(--surface-container)", border: "1px solid rgba(60, 74, 66, 0.1)" }}
+              style={{ backgroundColor: "var(--surface-container)", border: "1px solid rgba(255, 255, 255, 0.05)" }}
             >
               <h3
                 className="mb-10 text-3xl font-bold"
@@ -220,7 +220,7 @@ export default function Home() {
             {/* Card portfolio stack */}
             <div
               className="relative flex flex-col justify-between overflow-hidden rounded-2xl p-10 md:col-span-12 lg:col-span-7"
-              style={{ backgroundColor: "var(--surface-container)", border: "1px solid rgba(60, 74, 66, 0.1)" }}
+              style={{ backgroundColor: "var(--surface-container)", border: "1px solid rgba(255, 255, 255, 0.05)" }}
             >
               <div className="relative z-10">
                 <h3
@@ -300,7 +300,7 @@ export default function Home() {
 
         {/* Pricing */}
         <BetaGate>
-          <section className="px-8 py-24" style={{ backgroundColor: "var(--surface)" }}>
+          <section className="px-8 py-24" style={{ backgroundColor: "var(--surface-container-low)" }}>
             <div className="mx-auto max-w-7xl space-y-8">
               <div className="space-y-3 text-center">
                 <h2
@@ -320,7 +320,7 @@ export default function Home() {
                   className="flex flex-col rounded-2xl p-10 transition-all hover:border-[rgba(78,222,163,0.2)]"
                   style={{
                     backgroundColor: "var(--surface-container)",
-                    border: "1px solid rgba(60, 74, 66, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.05)",
                   }}
                 >
                   <div className="mb-8">
@@ -366,7 +366,7 @@ export default function Home() {
                     style={{ background: "rgba(78,222,163,0.1)" }} />
                   <div
                     className="absolute left-1/2 -translate-x-1/2 -top-4 rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest"
-                    style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)", color: "#003824" }}
+                    style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)", color: "#003824" }}
                   >
                     Most Popular
                   </div>
@@ -565,7 +565,7 @@ export default function Home() {
                   href="/login"
                   className="w-full md:w-auto h-14 flex items-center justify-center rounded-full px-10 text-lg font-bold transition-all hover:scale-105"
                   style={{
-                    background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)",
+                    background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
                     color: "#003824",
                     boxShadow: "0 8px 24px rgba(78, 222, 163, 0.2)",
                   }}

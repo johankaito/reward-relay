@@ -326,7 +326,7 @@ export default function RecommendationsPage() {
                     {isBestMatch ? (
                       <button
                         className="w-full py-4 rounded-full font-bold text-sm text-black transition-all hover:scale-[1.02] shadow-lg shadow-[#4edea3]/20"
-                        style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+                        style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
                       >
                         View Details
                       </button>

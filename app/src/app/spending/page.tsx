@@ -501,7 +501,7 @@ export default function SpendingTrackerPage() {
             </p>
             <Button
               className="rounded-full font-bold text-on-primary"
-              style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+              style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
               onClick={() => (window.location.href = "/cards")}
             >
               Add cards
@@ -540,15 +540,15 @@ export default function SpendingTrackerPage() {
                             opacity="0.5"
                             stroke="rgba(255,255,255,0.08)"
                             strokeLinecap="round"
-                            strokeWidth="3"
+                            strokeWidth="10"
                           />
                           <path
                             d="M 10 50 A 40 40 0 0 1 90 50"
                             fill="none"
                             stroke="rgba(255,255,255,0.04)"
-                            strokeDasharray="0.3 5"
+                            strokeDasharray="0.5 7.5"
                             strokeLinecap="round"
-                            strokeWidth="3"
+                            strokeWidth="10"
                           />
                           {(() => {
                             // Total arc path length for "M 10 50 A 40 40 0 0 1 90 50" ≈ 125.66
@@ -565,7 +565,7 @@ export default function SpendingTrackerPage() {
                                 stroke="url(#arc-gradient-spend)"
                                 strokeDasharray={`${filled} ${totalLen - filled}`}
                                 strokeLinecap="round"
-                                strokeWidth="4"
+                                strokeWidth="10"
                                 style={{ transition: "stroke-dasharray 600ms ease-out" }}
                               />
                             )
@@ -627,7 +627,7 @@ export default function SpendingTrackerPage() {
                       <DialogTrigger asChild>
                         <Button
                           className="rounded-xl font-bold text-on-primary px-5 py-2.5"
-                          style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+                          style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
                         >
                           + Add Transaction
                         </Button>
@@ -690,7 +690,7 @@ export default function SpendingTrackerPage() {
                           <Button
                             onClick={handleAddTransaction}
                             className="w-full rounded-full font-bold text-on-primary"
-                            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+                            style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
                           >
                             Save Transaction
                           </Button>
@@ -842,7 +842,7 @@ export default function SpendingTrackerPage() {
           onClick={() => setIsDialogOpen(true)}
           className="fixed bottom-28 right-6 w-16 h-16 rounded-2xl z-50 flex items-center justify-center active:scale-90 transition-all md:hidden overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)",
+            background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)",
             boxShadow: "0 12px 40px rgba(78,222,163,0.4)",
             border: "1px solid rgba(255,255,255,0.2)",
             color: "var(--on-primary)",

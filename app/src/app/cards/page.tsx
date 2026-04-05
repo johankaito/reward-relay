@@ -148,7 +148,7 @@ export default function CardsPage() {
           <button
             onClick={() => setShowAddForm((v) => !v)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm text-black shadow-lg shadow-[#4edea3]/20 hover:opacity-90 transition-opacity"
-            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+            style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
           >
             <Plus className="h-4 w-4" />
             {showAddForm ? "Cancel" : "Add Card"}
@@ -205,7 +205,7 @@ export default function CardsPage() {
           <button
             onClick={() => setShowAddForm(true)}
             className="px-6 py-3 rounded-full font-bold text-sm text-black shadow-lg shadow-[#4edea3]/20"
-            style={{ background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+            style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
           >
             + Add your first card
           </button>

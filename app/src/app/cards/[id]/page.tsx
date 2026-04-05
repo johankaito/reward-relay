@@ -256,7 +256,7 @@ export default function CardDetailPage({ params }: { params: { id: string } }) {
                   <div className="h-3 w-full bg-surface-container-highest rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full shadow-[0_0_12px_rgba(78,222,163,0.3)]"
-                      style={{ width: `${spentPct}%`, background: "linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)" }}
+                      style={{ width: `${spentPct}%`, background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
                     />
                   </div>
                   {pace && remaining > 0 && (
