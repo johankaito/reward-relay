@@ -204,14 +204,14 @@ export function AppShell({ children }: AppShellProps) {
           boxShadow: "0 -8px 32px rgba(0,0,0,0.5)",
         }}
       >
-        <div className="grid grid-cols-5 h-20" style={{ minHeight: 80 }}>
+        <div className="grid grid-cols-5 pb-safe" style={{ minHeight: 80 }}>
           {navItems.map(({ href, label, materialIcon }) => {
             const active = isActive(href)
             return (
               <button
                 key={href}
                 onClick={() => router.push(href)}
-                className={`flex flex-col items-center justify-center gap-1 py-2 px-1 transition-colors active:opacity-80 ${
+                className={`flex flex-col items-center justify-center gap-1 py-2 px-1 transition-colors active:bg-white/5 ${
                   active ? "text-[#4edea3]" : "text-slate-500"
                 }`}
               >
