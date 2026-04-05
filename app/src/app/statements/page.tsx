@@ -1,463 +1,437 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase/client";
-import { AppShell } from "@/components/layout/AppShell";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { FileUp, Upload, CheckCircle, XCircle, AlertCircle } from "lucide-react";
-import Papa from "papaparse";
+import { useState, useEffect, useCallback, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { Upload, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
+import Papa from "papaparse"
 
-interface UserCard {
-  id: string;
-  card: {
-    bank: string;
-    name: string;
-  } | null;
-}
+import { AppShell } from "@/components/layout/AppShell"
+import { ProGate } from "@/components/ui/ProGate"
+import { supabase } from "@/lib/supabase/client"
+import { useCatalog } from "@/contexts/CatalogContext"
+import type { Database } from "@/types/database.types"
+
+type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
+type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
+
+type Category = "Groceries" | "Dining" | "Fuel" | "Travel" | "Other"
 
 interface Transaction {
-  date: string;
-  description: string;
-  amount: number;
-  category: string;
-  rawRow: Record<string, unknown>;
+  date: string
+  description: string
+  amount: number
+  category: Category
 }
 
-const CATEGORY_KEYWORDS = {
-  groceries: ["coles", "woolworths", "iga", "aldi", "foodworks", "supermarket"],
-  dining: [
-    "restaurant",
-    "cafe",
-    "coffee",
-    "ubereats",
-    "menulog",
-    "deliveroo",
-    "doordash",
-    "mcdonald",
-    "kfc",
-    "hungry jack",
-    "domino",
-    "subway",
-    "pizza",
-  ],
-  travel: [
-    "qantas",
-    "virgin",
-    "jetstar",
-    "airline",
-    "hotel",
-    "airbnb",
-    "booking.com",
-    "expedia",
-    "flight centre",
-    "taxi",
-    "uber",
-  ],
-  fuel: ["bp", "shell", "caltex", "7-eleven", "ampol", "metro petroleum"],
-  other: [],
-};
+const CATEGORY_COLOURS: Record<Category, string> = {
+  Groceries: "#4edea3",
+  Dining:    "#f59e0b",
+  Fuel:      "#3b82f6",
+  Travel:    "#a855f7",
+  Other:     "#6b7280",
+}
 
-export default function StatementsPage() {
-  const [userCards, setUserCards] = useState<UserCard[]>([]);
-  const [selectedCard, setSelectedCard] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const [parseError, setParseError] = useState<string | null>(null);
+const CATEGORIES: Category[] = ["Groceries", "Dining", "Fuel", "Travel", "Other"]
 
-  useEffect(() => {
-    loadUserCards();
-  }, []);
+// ── CSV parsers for each bank format ──────────────────────────────────────────
 
-  const loadUserCards = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
+function parseRows(data: Record<string, string>[]): Omit<Transaction, "category">[] {
+  const headers = Object.keys(data[0] || {}).map((h) => h.toLowerCase())
+  const results: Omit<Transaction, "category">[] = []
 
-      const { data: cards, error } = await supabase
-        .from("user_cards")
-        .select(`
-          id,
-          card:cards(bank, name)
-        `)
-        .eq("user_id", user.id)
-        .eq("status", "active");
+  for (const row of data) {
+    let date = ""
+    let description = ""
+    let amount = 0
 
-      if (error) throw error;
-      // Filter out cards with null card data
-      setUserCards((cards || []).filter(c => c.card !== null));
-    } catch (error) {
-      console.error("Error loading cards:", error);
-    }
-  };
-
-  const categorizeTransaction = (description: string): string => {
-    const lowerDesc = description.toLowerCase();
-
-    for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
-      if (category === "other") continue;
-      if (keywords.some((keyword) => lowerDesc.includes(keyword))) {
-        return category;
+    if (headers.includes("date") && (headers.includes("debit") || headers.includes("credit"))) {
+      // CommBank / Westpac: Date, Description/Narrative, Debit, Credit, Balance
+      date = row["Date"] || row["date"]
+      description = row["Description"] || row["description"] || row["Narrative"] || row["narrative"]
+      const debit = parseFloat((row["Debit"] || row["debit"] || "0").replace(/[^0-9.-]/g, ""))
+      const credit = parseFloat((row["Credit"] || row["credit"] || "0").replace(/[^0-9.-]/g, ""))
+      amount = debit > 0 ? debit : credit
+    } else if (headers.includes("date") && headers.includes("amount")) {
+      // ANZ / NAB: Date, Description/Narrative, Amount, Balance
+      date = row["Date"] || row["date"]
+      description = row["Description"] || row["description"] || row["Narrative"] || row["narrative"]
+      amount = Math.abs(parseFloat((row["Amount"] || row["amount"] || "0").replace(/[^0-9.-]/g, "")))
+    } else {
+      // Generic fallback
+      for (const k of headers) {
+        if (k.includes("date")) { date = row[k]; break }
+      }
+      for (const k of headers) {
+        if (k.includes("description") || k.includes("narrative")) { description = row[k]; break }
+      }
+      for (const k of headers) {
+        if (k.includes("amount") || k === "debit" || k === "credit") {
+          amount = Math.abs(parseFloat((row[k] || "0").replace(/[^0-9.-]/g, "")))
+          if (amount > 0) break
+        }
       }
     }
 
-    return "other";
-  };
+    if (!date || !description || amount === 0 || isNaN(amount)) continue
+    const parsed = new Date(date)
+    if (isNaN(parsed.getTime())) continue
 
-  const parseCSV = (file: File) => {
-    setParseError(null);
-    setTransactions([]);
+    results.push({ date: parsed.toISOString().split("T")[0], description: description.trim(), amount })
+  }
 
-    Papa.parse(file, {
-      header: true,
-      complete: (results) => {
-        try {
-          const parsedTransactions: Transaction[] = [];
-          const data = results.data as Record<string, string>[];
+  return results
+}
 
-          // Detect bank format and parse accordingly
-          const headers = Object.keys(data[0] || {}).map((h) => h.toLowerCase());
+// ── Main component ─────────────────────────────────────────────────────────────
 
-          for (const row of data) {
-            let date: string = "";
-            let description: string = "";
-            let amount: number = 0;
+export default function StatementsPage() {
+  const router = useRouter()
+  const { catalogCards } = useCatalog()
+  const [userCards, setUserCards] = useState<UserCard[]>([])
+  const [loading, setLoading] = useState(true)
+  const [file, setFile] = useState<File | null>(null)
+  const [dragging, setDragging] = useState(false)
+  const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [analysing, setAnalysing] = useState(false)
+  const [parseError, setParseError] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [selectedCard, setSelectedCard] = useState<string>("")
 
-            // CommBank format: Date, Description, Debit, Credit, Balance
-            if (headers.includes("date") && (headers.includes("debit") || headers.includes("credit"))) {
-              date = row["Date"] || row["date"];
-              description = row["Description"] || row["description"];
-              const debit = parseFloat((row["Debit"] || row["debit"] || "0").replace(/[^0-9.-]/g, ""));
-              const credit = parseFloat(
-                (row["Credit"] || row["credit"] || "0").replace(/[^0-9.-]/g, "")
-              );
-              amount = credit > 0 ? credit : debit;
-            }
-            // ANZ/NAB format: Date, Description, Amount, Balance
-            else if (headers.includes("date") && headers.includes("amount")) {
-              date = row["Date"] || row["date"];
-              description = row["Description"] || row["description"] || row["Narrative"] || row["narrative"];
-              amount = Math.abs(
-                parseFloat((row["Amount"] || row["amount"] || "0").replace(/[^0-9.-]/g, ""))
-              );
-            }
-            // Generic fallback
-            else {
-              // Try to find date-like column
-              for (const key of headers) {
-                if (key.includes("date") || key === "date") {
-                  date = row[key];
-                  break;
-                }
-              }
-              // Try to find description-like column
-              for (const key of headers) {
-                if (
-                  key.includes("description") ||
-                  key.includes("narrative") ||
-                  key === "description"
-                ) {
-                  description = row[key];
-                  break;
-                }
-              }
-              // Try to find amount-like column
-              for (const key of headers) {
-                if (key.includes("amount") || key === "debit" || key === "credit") {
-                  amount = Math.abs(parseFloat((row[key] || "0").replace(/[^0-9.-]/g, "")));
-                  if (amount > 0) break;
-                }
-              }
-            }
+  useEffect(() => {
+    async function load() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { router.replace("/"); return }
 
-            // Skip if no valid data
-            if (!date || !description || amount === 0 || isNaN(amount)) continue;
+      const { data } = await supabase
+        .from("user_cards")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", { ascending: false })
 
-            // Parse date
-            const parsedDate = new Date(date);
-            if (isNaN(parsedDate.getTime())) continue;
-
-            parsedTransactions.push({
-              date: parsedDate.toISOString().split("T")[0],
-              description: description.trim(),
-              amount: Math.abs(amount),
-              category: categorizeTransaction(description),
-              rawRow: row,
-            });
-          }
-
-          if (parsedTransactions.length === 0) {
-            setParseError(
-              "No valid transactions found. Please check your CSV format."
-            );
-          } else {
-            setTransactions(parsedTransactions);
-          }
-        } catch (error: unknown) {
-          setParseError(`Failed to parse CSV: ${(error as Error).message}`);
-        }
-      },
-      error: (error) => {
-        setParseError(`CSV parsing error: ${error.message}`);
-      },
-    });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile && selectedFile.type === "text/csv") {
-      setFile(selectedFile);
-      parseCSV(selectedFile);
-    } else {
-      setParseError("Please select a valid CSV file");
+      setUserCards(data || [])
+      setLoading(false)
     }
-  };
+    void load()
+  }, [router])
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && droppedFile.type === "text/csv") {
-      setFile(droppedFile);
-      parseCSV(droppedFile);
-    } else {
-      setParseError("Please drop a valid CSV file");
+  const spendByCategory = useMemo<Record<Category, number>>(() => {
+    const acc = { Groceries: 0, Dining: 0, Fuel: 0, Travel: 0, Other: 0 }
+    for (const t of transactions) acc[t.category] += t.amount
+    return acc
+  }, [transactions])
+
+  const totalSpend = useMemo(
+    () => Object.values(spendByCategory).reduce((a, b) => a + b, 0),
+    [spendByCategory]
+  )
+
+  // Missed points: compare each catalog card's earn rate vs total spend
+  const missedPoints = useMemo(() => {
+    if (transactions.length === 0 || catalogCards.length === 0) return []
+    return catalogCards
+      .filter((c) => c.earn_rate_primary != null && c.earn_rate_primary > 0)
+      .map((c) => ({
+        card: c,
+        earnedPoints: Math.round(totalSpend * (c.earn_rate_primary ?? 1)),
+      }))
+      .sort((a, b) => b.earnedPoints - a.earnedPoints)
+      .slice(0, 3)
+  }, [transactions, catalogCards, totalSpend])
+
+  const parseFile = useCallback(async (f: File) => {
+    setParseError(null)
+    setTransactions([])
+    setFile(f)
+
+    const text = await f.text()
+    const result = Papa.parse<Record<string, string>>(text, { header: true, skipEmptyLines: true })
+
+    if (result.errors.length > 0 && result.data.length === 0) {
+      setParseError("Could not parse CSV. Please check the file format.")
+      return
     }
-  };
+
+    const rows = parseRows(result.data)
+    if (rows.length === 0) {
+      setParseError("No valid transactions found. Please check the format is ANZ, CommBank, NAB, or Westpac.")
+      return
+    }
+
+    // Categorise via Claude API
+    setAnalysing(true)
+    try {
+      const res = await fetch("/api/statements/analyse", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ descriptions: rows.map((r) => r.description) }),
+      })
+
+      if (!res.ok) {
+        const err = (await res.json()) as { error?: string }
+        throw new Error(err.error ?? "Analysis failed")
+      }
+
+      const { categories } = (await res.json()) as { categories: Category[] }
+      const withCategories: Transaction[] = rows.map((r, i) => ({
+        ...r,
+        category: categories[i] ?? "Other",
+      }))
+      setTransactions(withCategories)
+    } catch (err) {
+      // Fall back to keyword matching if Claude fails
+      toast.error("AI categorisation unavailable — using keyword matching")
+      const withCategories: Transaction[] = rows.map((r) => ({
+        ...r,
+        category: "Other" as Category,
+      }))
+      setTransactions(withCategories)
+    } finally {
+      setAnalysing(false)
+    }
+  }, [])
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault()
+      setDragging(false)
+      const f = e.dataTransfer.files[0]
+      if (f?.name.endsWith(".csv")) void parseFile(f)
+      else setParseError("Please drop a .csv file")
+    },
+    [parseFile]
+  )
+
+  const handleFileInput = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const f = e.target.files?.[0]
+      if (f) void parseFile(f)
+    },
+    [parseFile]
+  )
 
   const handleUpload = async () => {
-    if (!selectedCard || transactions.length === 0) return;
+    if (!selectedCard || transactions.length === 0) return
+    setUploading(true)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { toast.error("Not authenticated"); setUploading(false); return }
 
-    setUploading(true);
-
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      // Insert transactions
-      const transactionRecords = transactions.map((txn) => ({
+    const { error } = await supabase.from("spending_transactions").insert(
+      transactions.map((t) => ({
         user_card_id: selectedCard,
         user_id: user.id,
-        amount: txn.amount,
-        description: txn.description,
-        transaction_date: txn.date,
-        category: txn.category,
-      }));
+        amount: t.amount,
+        description: t.description,
+        transaction_date: t.date,
+        category: t.category.toLowerCase(),
+      }))
+    )
 
-      const { error } = await supabase
-        .from("spending_transactions")
-        .insert(transactionRecords);
-
-      if (error) throw error;
-
-      // Success
-      alert(`Successfully uploaded ${transactions.length} transactions!`);
-      setFile(null);
-      setTransactions([]);
-      setSelectedCard("");
-    } catch (error: unknown) {
-      console.error("Upload error:", error);
-      alert(`Failed to upload transactions: ${(error as Error).message}`);
-    } finally {
-      setUploading(false);
+    if (error) {
+      toast.error(error.message || "Upload failed")
+    } else {
+      toast.success(`${transactions.length} transactions saved to your spending tracker`)
+      setFile(null)
+      setTransactions([])
+      setSelectedCard("")
     }
-  };
+    setUploading(false)
+  }
 
-  const updateCategory = (index: number, newCategory: string) => {
-    const updated = [...transactions];
-    updated[index].category = newCategory;
-    setTransactions(updated);
-  };
-
-  const totalAmount = transactions.reduce((sum, txn) => sum + txn.amount, 0);
+  if (loading) {
+    return (
+      <AppShell>
+        <div className="max-w-4xl mx-auto px-6 pt-8 space-y-6">
+          <div className="h-16 animate-pulse rounded-2xl bg-surface-container" />
+          <div className="h-64 animate-pulse rounded-2xl bg-surface-container" />
+        </div>
+      </AppShell>
+    )
+  }
 
   return (
     <AppShell>
-      <div className="space-y-5">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-[var(--accent)]">
-            Spending
-          </p>
-          <h1 className="mt-1 text-2xl font-semibold text-[var(--text-primary)]">
-            Import statements
-          </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Upload a bank CSV to automatically categorise your spending
-          </p>
-        </div>
+      <ProGate feature="Statement Analysis">
+        <div className="max-w-4xl mx-auto px-6 md:px-12 pt-8 pb-16 space-y-10">
 
-      {/* Card Selection */}
-      <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
-        <Label htmlFor="card-select" className="mb-2 block text-sm font-semibold text-[var(--text-primary)]">
-          Select card
-        </Label>
-        <Select value={selectedCard} onValueChange={setSelectedCard}>
-          <SelectTrigger id="card-select">
-            <SelectValue placeholder="Choose a card..." />
-          </SelectTrigger>
-          <SelectContent>
-            {userCards.map((card) => (
-              <SelectItem key={card.id} value={card.id}>
-                {card.card?.bank} - {card.card?.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </Card>
+          {/* ── Hero ── */}
+          <section>
+            <h1 className="font-headline text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface mb-2">
+              Statement Analysis
+            </h1>
+            <p className="text-on-surface-variant text-lg leading-relaxed">
+              Upload a bank CSV — Claude categorises your spending and reveals missed points opportunities.
+            </p>
+          </section>
 
-      {/* File Upload */}
-      <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
-        <div
-          className="cursor-pointer rounded-xl border-2 border-dashed border-[var(--border-default)] p-10 text-center transition-colors hover:border-[var(--accent)]/50"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleDrop}
-          onClick={() => document.getElementById("file-input")?.click()}
-        >
-          <Upload className="mx-auto mb-3 h-10 w-10 text-[var(--text-secondary)]/40" />
-          <p className="mb-1 font-medium text-[var(--text-primary)]">
-            Drop your CSV file here or click to browse
-          </p>
-          <p className="text-sm text-[var(--text-secondary)]">
-            Supports CommBank, ANZ, NAB, Westpac formats
-          </p>
-          <input
-            id="file-input"
-            type="file"
-            accept=".csv"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-          {file && (
-            <Badge className="mt-4" variant="secondary">
-              {file.name}
-            </Badge>
-          )}
-        </div>
-
-        {parseError && (
-          <div
-            className="mt-4 flex items-start gap-2 rounded-lg border p-3"
-            style={{
-              backgroundColor: "color-mix(in srgb, var(--danger) 10%, transparent)",
-              borderColor: "color-mix(in srgb, var(--danger) 30%, transparent)",
-            }}
+          {/* ── Upload zone ── */}
+          <section
+            className={`relative rounded-2xl border-2 border-dashed transition-all cursor-pointer ${
+              dragging
+                ? "border-[#4edea3]/60 bg-[#4edea3]/5"
+                : "border-white/10 bg-surface-container hover:border-white/20"
+            }`}
+            onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
+            onDragLeave={() => setDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => document.getElementById("file-input")?.click()}
           >
-            <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[var(--danger)]" />
-            <p className="text-sm text-[var(--danger)]">{parseError}</p>
-          </div>
-        )}
-      </Card>
-
-      {/* Transaction Preview */}
-      {transactions.length > 0 && (
-        <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <h2 className="font-semibold text-[var(--text-primary)]">Preview</h2>
-              <p className="text-sm text-[var(--text-secondary)]">
-                {transactions.length} transactions · ${totalAmount.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </p>
+            <input id="file-input" type="file" accept=".csv" className="hidden" onChange={handleFileInput} />
+            <div className="flex flex-col items-center justify-center py-14 px-6 text-center gap-4">
+              {analysing ? (
+                <>
+                  <Loader2 className="w-10 h-10 text-[#4edea3] animate-spin" />
+                  <p className="font-semibold text-on-surface">Analysing with Claude…</p>
+                  <p className="text-sm text-on-surface-variant">Categorising your transactions</p>
+                </>
+              ) : file && transactions.length > 0 ? (
+                <>
+                  <CheckCircle className="w-10 h-10 text-[#4edea3]" />
+                  <p className="font-semibold text-on-surface">{file.name}</p>
+                  <p className="text-sm text-on-surface-variant">{transactions.length} transactions parsed</p>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-10 h-10 text-on-surface-variant" />
+                  <div>
+                    <p className="font-semibold text-on-surface mb-1">Drop your CSV here or click to browse</p>
+                    <p className="text-sm text-on-surface-variant">ANZ · CommBank · NAB · Westpac formats supported</p>
+                  </div>
+                </>
+              )}
             </div>
-            <Button
-              onClick={handleUpload}
-              disabled={!selectedCard || uploading}
-            >
-              {uploading ? "Uploading..." : "Upload Transactions"}
-            </Button>
-          </div>
+          </section>
 
-          <div className="overflow-hidden rounded-lg border border-[var(--border-default)]">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Category</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {transactions.slice(0, 50).map((txn, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-mono text-sm">{txn.date}</TableCell>
-                    <TableCell>{txn.description}</TableCell>
-                    <TableCell className="font-mono">
-                      ${txn.amount.toFixed(2)}
-                    </TableCell>
-                    <TableCell>
-                      <Select
-                        value={txn.category}
-                        onValueChange={(value) => updateCategory(index, value)}
+          {parseError && (
+            <div className="flex items-start gap-3 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+              <AlertCircle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-red-400">{parseError}</p>
+            </div>
+          )}
+
+          {/* ── Results ── */}
+          {transactions.length > 0 && (
+            <>
+              {/* Spending breakdown chart */}
+              <section className="bg-surface-container rounded-2xl p-8 border border-white/5">
+                <h2 className="font-headline text-xl font-extrabold text-on-surface mb-6">
+                  Spending Breakdown
+                </h2>
+                <div className="space-y-4">
+                  {CATEGORIES.map((cat) => {
+                    const amount = spendByCategory[cat]
+                    const pct = totalSpend > 0 ? (amount / totalSpend) * 100 : 0
+                    if (amount === 0) return null
+                    return (
+                      <div key={cat}>
+                        <div className="flex justify-between text-sm mb-1.5">
+                          <span className="font-semibold text-on-surface">{cat}</span>
+                          <span className="tabular-nums text-on-surface-variant">
+                            ${amount.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            <span className="ml-2 text-xs">({pct.toFixed(0)}%)</span>
+                          </span>
+                        </div>
+                        <div className="h-2 rounded-full bg-surface-container-highest overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all duration-700"
+                            style={{ width: `${pct}%`, background: CATEGORY_COLOURS[cat] }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+                <p className="mt-6 text-right text-sm text-on-surface-variant">
+                  Total spend:{" "}
+                  <span className="font-bold text-on-surface tabular-nums">
+                    ${totalSpend.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </p>
+              </section>
+
+              {/* Missed points analysis */}
+              {missedPoints.length > 0 && (
+                <section className="bg-surface-container rounded-2xl p-8 border border-white/5">
+                  <h2 className="font-headline text-xl font-extrabold text-on-surface mb-2">
+                    Missed Points Opportunity
+                  </h2>
+                  <p className="text-sm text-on-surface-variant mb-6">
+                    Based on your ${totalSpend.toLocaleString("en-AU", { minimumFractionDigits: 0 })} spend, here&apos;s what you could have earned:
+                  </p>
+                  <div className="space-y-4">
+                    {missedPoints.map(({ card, earnedPoints }, i) => (
+                      <div
+                        key={card.id}
+                        className={`flex items-center justify-between rounded-xl p-5 border transition-all ${
+                          i === 0
+                            ? "border-[#4edea3]/20 bg-[#4edea3]/5"
+                            : "border-white/5 bg-surface-container-high"
+                        }`}
                       >
-                        <SelectTrigger className="w-32">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="groceries">Groceries</SelectItem>
-                          <SelectItem value="dining">Dining</SelectItem>
-                          <SelectItem value="travel">Travel</SelectItem>
-                          <SelectItem value="fuel">Fuel</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {transactions.length > 50 && (
-              <div className="bg-[var(--surface-muted)] p-3 text-center text-sm text-[var(--text-secondary)]">
-                Showing first 50 of {transactions.length} transactions
-              </div>
-            )}
-          </div>
-        </Card>
-      )}
+                        <div>
+                          <p className="font-bold text-on-surface">
+                            {card.bank} {card.name}
+                          </p>
+                          <p className="text-xs text-on-surface-variant mt-0.5">
+                            {card.earn_rate_primary}x on all spend · {card.points_currency ?? "points"}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className={`text-2xl font-extrabold tabular-nums tracking-tighter ${i === 0 ? "text-[#4edea3]" : "text-on-surface"}`}>
+                            {earnedPoints.toLocaleString("en-AU")}
+                          </p>
+                          <p className="text-[10px] uppercase tracking-widest text-on-surface-variant">pts earned</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
-      {/* Supported Formats */}
-      <Card className="border border-[var(--border-default)] bg-[var(--surface)] p-5 shadow-sm">
-        <h3 className="mb-3 text-sm font-semibold text-[var(--text-primary)]">Supported formats</h3>
-        <div className="space-y-2 text-sm text-[var(--text-secondary)]">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
-            <span>CommBank — Date, Description, Debit, Credit, Balance</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
-            <span>ANZ — Date, Description, Amount, Balance</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
-            <span>NAB — Date, Description, Amount, Balance, Category</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-[var(--success-fg)]" />
-            <span>Westpac — Date, Narrative, Debit, Credit, Balance</span>
-          </div>
+              {/* Save to tracker */}
+              <section className="bg-surface-container rounded-2xl p-8 border border-white/5 space-y-4">
+                <h2 className="font-headline text-xl font-extrabold text-on-surface mb-1">
+                  Save to Spend Tracker
+                </h2>
+                <p className="text-sm text-on-surface-variant">
+                  Link these {transactions.length} transactions to one of your active cards.
+                </p>
+                <select
+                  value={selectedCard}
+                  onChange={(e) => setSelectedCard(e.target.value)}
+                  className="w-full bg-surface-container-high text-on-surface text-sm rounded-xl px-4 py-3 border border-white/5 focus:outline-none focus:border-[#4edea3]/30"
+                >
+                  <option value="">Select a card…</option>
+                  {userCards.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.bank} — {c.card_name ?? c.id}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => void handleUpload()}
+                  disabled={!selectedCard || uploading}
+                  className="w-full py-4 rounded-full font-bold text-sm text-black transition-all hover:scale-[1.01] disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-[#4edea3]/10"
+                  style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)" }}
+                >
+                  {uploading ? "Saving…" : `Save ${transactions.length} transactions`}
+                </button>
+              </section>
+            </>
+          )}
+
+          {/* Supported formats info */}
+          <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {(["CommBank", "ANZ", "NAB", "Westpac"] as const).map((bank) => (
+              <div key={bank} className="flex items-center gap-2 bg-surface-container rounded-xl px-4 py-3 border border-white/5">
+                <CheckCircle className="w-3.5 h-3.5 text-[#4edea3] flex-shrink-0" />
+                <span className="text-xs font-semibold text-on-surface">{bank}</span>
+              </div>
+            ))}
+          </section>
+
         </div>
-      </Card>
-      </div>
+      </ProGate>
     </AppShell>
-  );
+  )
 }
