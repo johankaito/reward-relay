@@ -307,7 +307,7 @@ export default function ProfitPage() {
             <div className="md:hidden space-y-8">
               {/* Mobile Hero */}
               <section className="flex flex-col gap-1">
-                <span className="text-[#4edea3] text-[11px] uppercase tracking-[0.2em] font-bold">Total Net Profit</span>
+                <span className="text-primary text-[11px] uppercase tracking-[0.2em] font-bold">Total Net Profit</span>
                 <div className="flex items-end gap-3 mt-1">
                   <h2 className="text-5xl font-headline font-extrabold tracking-tight tabular-nums">{fmtAud(fyNet)}</h2>
                   {fyNet > 0 && (
@@ -452,7 +452,7 @@ export default function ProfitPage() {
             <div className="hidden md:block">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
               {/* Hero Metrics Card: col-span-5 */}
-              <div className="lg:col-span-5 flex flex-col justify-between p-10 glass rounded-3xl relative overflow-hidden group">
+              <div className="lg:col-span-5 flex flex-col justify-between p-10 bg-surface-container rounded-lg relative overflow-hidden group">
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
                 <div className="relative z-10 space-y-8">
                   <div>
@@ -602,7 +602,7 @@ export default function ProfitPage() {
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-[#4edea3] font-headline font-bold text-lg tabular">{roi.toFixed(1)}x</p>
+                            <p className="text-primary font-headline font-extrabold text-lg tabular-nums tracking-tighter">{roi.toFixed(1)}x</p>
                             <p className="text-[10px] text-outline uppercase font-bold tracking-widest mt-1">Efficiency</p>
                           </div>
                         </div>

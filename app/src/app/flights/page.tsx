@@ -225,15 +225,23 @@ export default function FlightsPage() {
                   </div>
                 </div>
                 {/* Cabin Class */}
-                <div className="bg-surface-container/60 p-4 rounded-xl group hover:bg-surface-bright/80 transition-all cursor-pointer border border-white/5">
-                  <label className="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-1.5">Cabin Class</label>
-                  <div className="flex items-center gap-3">
-                    <Plane className="w-5 h-5 text-on-surface-variant shrink-0" />
-                    <input
-                      value={cabinClass}
-                      onChange={(e) => setCabinClass(e.target.value)}
-                      className="bg-transparent font-bold text-on-surface text-lg placeholder:text-on-surface-variant/30 focus:outline-none w-full truncate"
-                    />
+                <div className="bg-surface-container/60 p-4 rounded-xl border border-white/5">
+                  <label className="block text-[10px] uppercase tracking-[0.15em] text-on-surface-variant font-bold mb-2">Cabin Class</label>
+                  <div className="flex gap-1">
+                    {['Economy', 'Business', 'First'].map((cabin) => (
+                      <button
+                        key={cabin}
+                        type="button"
+                        onClick={() => setCabinClass(cabin + ' Class')}
+                        className={`flex-1 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-all ${
+                          cabinClass === cabin + ' Class'
+                            ? 'bg-[#4edea3] text-on-primary'
+                            : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface'
+                        }`}
+                      >
+                        {cabin}
+                      </button>
+                    ))}
                   </div>
                 </div>
                 {/* Departure */}
@@ -251,7 +259,7 @@ export default function FlightsPage() {
               </div>
               <button
                 className="text-on-primary font-black px-12 rounded-xl hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap"
-                style={{ background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' }}
               >
                 <Search className="w-4 h-4" />
                 <span className="tracking-widest text-sm uppercase">Find Rewards</span>
@@ -277,7 +285,7 @@ export default function FlightsPage() {
               </h4>
               <p className="text-on-surface-variant max-w-lg text-lg leading-relaxed font-medium">
                 {pointsGap > 0
-                  ? <>You&apos;re closing in on your goal. Secure <span className="text-white font-bold underline decoration-primary/40 underline-offset-4">{pointsGap.toLocaleString()} more points</span> to book via Qatar Airways.</>
+                  ? <>You&apos;re closing in on your goal. Secure <span className="text-white font-bold tabular-nums underline decoration-primary/40 underline-offset-4">{pointsGap.toLocaleString()} more points</span> to book via Qatar Airways.</>
                   : <>You have enough points to book this redemption. Book via <span className="text-white font-bold">Singapore Airlines</span> now.</>
                 }
               </p>
@@ -442,7 +450,7 @@ export default function FlightsPage() {
                               ? 'text-on-primary shadow-lg shadow-[#4edea3]/20 hover:opacity-90 hover:scale-[1.02]'
                               : 'border border-white/10 bg-white/5 text-on-surface hover:bg-white/10 hover:text-on-surface'
                           }`}
-                          style={isTop ? { background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' } : undefined}
+                          style={isTop ? { background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' } : undefined}
                         >
                           <CreditCard className="h-4 w-4" />
                           View Card Details
@@ -560,7 +568,7 @@ function AirlineRedemptionCard({ card }: { card: AirlineCard }) {
               </div>
               <button
                 className="w-full py-4 rounded-2xl text-sm font-black text-on-primary hover:opacity-90 hover:scale-[1.02] active:scale-100 transition-all uppercase tracking-widest shadow-xl shadow-[#4edea3]/20"
-                style={{ background: 'linear-gradient(135deg, #3DFFA0 0%, #00C878 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' }}
               >
                 Book Redemption
               </button>

@@ -257,7 +257,7 @@ export default function DashboardPage() {
                 Total Valuation (AUD)
               </h2>
               <div className="flex items-baseline gap-4 flex-wrap">
-                <span className="font-headline font-extrabold tabular-nums tracking-[-0.04em] text-on-surface text-5xl md:text-6xl lg:text-[80px]">
+                <span className="font-headline font-extrabold tabular-nums tracking-tighter text-on-surface text-[40px] md:text-[64px]">
                   ${stats.portfolioValue.toLocaleString("en-AU", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
                 {stats.totalPoints > 0 && (

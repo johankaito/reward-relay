@@ -217,7 +217,7 @@ export default function CardsPage() {
         <>
           {/* Stats bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div className="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
+            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
                 <CreditCard className="h-24 w-24" />
               </div>
@@ -226,7 +226,7 @@ export default function CardsPage() {
                 <div className="text-3xl font-headline font-bold tabular-nums text-on-surface">{userCards.length}</div>
               </div>
             </div>
-            <div className="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
+            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-[#4edea3]">
                 <span className="text-8xl font-bold">$</span>
               </div>
@@ -237,7 +237,7 @@ export default function CardsPage() {
                 </div>
               </div>
             </div>
-            <div className="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
+            <div className="bg-surface-container p-6 rounded-lg relative overflow-hidden group">
               <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity text-tertiary">
                 <span className="text-8xl font-bold">✦</span>
               </div>
@@ -278,7 +278,7 @@ export default function CardsPage() {
                       {/* Card artwork tile */}
                       <div
                         className="relative w-full p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[#4edea3]/10 overflow-hidden"
-                        style={{ background: gradient, aspectRatio: "1.586/1", borderRadius: "1.5rem" }}
+                        style={{ background: gradient, aspectRatio: "1.586/1", borderRadius: "1rem" }}
                       >
                         <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
                         <div className="flex justify-between items-start relative z-10">
@@ -359,7 +359,7 @@ export default function CardsPage() {
                     {/* Card preview mini */}
                     <div
                       className="w-full p-5 relative overflow-hidden"
-                      style={{ background: getBankGradient(selectedCard.bank ?? ""), aspectRatio: "1.586/1", borderRadius: "1.5rem" }}
+                      style={{ background: getBankGradient(selectedCard.bank ?? ""), aspectRatio: "1.586/1", borderRadius: "1rem" }}
                     >
                       <div className="absolute inset-0 bg-white/5 opacity-50 mix-blend-overlay" />
                       <div className="relative z-10 flex justify-between items-start">

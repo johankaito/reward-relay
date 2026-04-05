@@ -67,7 +67,7 @@ export default function Home() {
             {/* Headline */}
             <h1 className="mb-6 font-headline text-5xl font-extrabold leading-[1.1] tracking-tight text-on-surface md:text-7xl">
               Master the{" "}
-              <span className="text-[#4edea3]" style={{ textShadow: "0 0 60px rgba(78, 222, 163, 0.4)" }}>Churn</span>
+              <span className="text-[#10b981]">Churn</span>
             </h1>
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
@@ -109,7 +109,7 @@ export default function Home() {
             {/* Trusted By strip — inside hero, below CTAs */}
             <div className="mt-10 border-t border-white/5 pt-8">
               <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-                Trusted by Aussie Points Hackers
+                Trusted by 5,000+ Aussie Points Hackers
               </p>
               <div className="flex flex-wrap items-center justify-center gap-6">
                 {["AMEX", "QANTAS", "VELOCITY", "COMMBANK", "ANZ"].map((label) => (
