@@ -10,12 +10,7 @@ export function PainPointHook({ onContinue, onSkip }: PainPointHookProps) {
     <div className="flex min-h-screen bg-[#0F131F]">
       {/* Mobile / single column */}
       <div className="flex flex-col w-full lg:w-3/5 px-6 py-10 justify-center max-w-2xl mx-auto lg:mx-0 lg:pl-20">
-        {/* Step pill */}
-        <div className="mb-6">
-          <span className="inline-flex items-center rounded-full bg-teal-500/15 border border-teal-500/30 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-teal-400">
-            Step 1 of 3
-          </span>
-        </div>
+        <div className="mb-6" />
 
         {/* Headline */}
         <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">
