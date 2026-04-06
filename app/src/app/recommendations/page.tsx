@@ -12,6 +12,7 @@ import { useCatalog } from "@/contexts/CatalogContext"
 import { useSubscription } from "@/hooks/useSubscription"
 import type { Database } from "@/types/database.types"
 import type { Recommendation } from "@/lib/recommendations"
+import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 
@@ -66,6 +67,7 @@ export default function RecommendationsPage() {
   const { catalogCards } = useCatalog()
   const { isPro } = useSubscription()
   const [cards, setCards] = useState<UserCard[]>([])
+  const [exclusionPeriods, setExclusionPeriods] = useState<BankExclusionPeriod[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>("all")
   const [sort, setSort] = useState<SortType>("score")
@@ -81,18 +83,19 @@ export default function RecommendationsPage() {
         return
       }
 
-      const { data: userCardsResult, error } = await supabase
-        .from("user_cards")
-        .select("*")
-        .order("created_at", { ascending: false })
+      const [userCardsResult, exclusionPeriodsResult] = await Promise.all([
+        supabase.from("user_cards").select("*").order("created_at", { ascending: false }),
+        supabase.from("bank_exclusion_periods").select("*"),
+      ])
 
-      if (error) {
-        toast.error(error.message || "Unable to load your cards")
+      if (userCardsResult.error) {
+        toast.error(userCardsResult.error.message || "Unable to load your cards")
         setLoading(false)
         return
       }
 
-      setCards(userCardsResult || [])
+      setCards(userCardsResult.data || [])
+      setExclusionPeriods((exclusionPeriodsResult.data as BankExclusionPeriod[]) || [])
       setLoading(false)
     }
     void loadData()
@@ -100,8 +103,8 @@ export default function RecommendationsPage() {
 
   const allRecommendations = useMemo(() => {
     if (cards.length === 0 || catalogCards.length === 0) return []
-    return getRecommendations(cards, catalogCards, { limit: 50 })
-  }, [cards, catalogCards])
+    return getRecommendations(cards, catalogCards, { limit: 50 }, exclusionPeriods)
+  }, [cards, catalogCards, exclusionPeriods])
 
   const filteredRecommendations = useMemo(() => {
     let filtered = allRecommendations

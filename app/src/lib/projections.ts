@@ -1,5 +1,7 @@
 import type { Database } from "@/types/database.types"
 import type { OnboardingCardEntry } from "./recommendations"
+import { lookupExclusionPeriod } from "./bank-exclusions"
+import type { BankExclusionPeriod } from "./bank-exclusions"
 
 type Card = Database["public"]["Tables"]["cards"]["Row"]
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
@@ -97,10 +99,15 @@ export const GOALS: Record<string, RedemptionGoal> = {
  * - AMEX: 18 months since last card
  * - Others: 12 months since last cancellation
  */
-function getBankEligibilityDate(userCards: UserCard[], bank: string): Date | null {
+function getBankEligibilityDate(
+  userCards: UserCard[],
+  bank: string,
+  exclusionPeriods: BankExclusionPeriod[] = []
+): Date | null {
   const bankLower = bank.toLowerCase()
   const isAmex = bankLower.includes("amex") || bankLower.includes("american express")
-  const coolingPeriodMonths = isAmex ? 18 : 12
+  const exclusionRecord = lookupExclusionPeriod(bank, exclusionPeriods)
+  const coolingPeriodMonths = exclusionRecord?.exclusion_months ?? 18
 
   // Find most recent relevant date for this bank
   let mostRecentDate: Date | null = null
@@ -145,7 +152,8 @@ function generateSingleCardPaths(
   goal: RedemptionGoal,
   currentPoints: number,
   catalogCards: Card[],
-  userCards: UserCard[]
+  userCards: UserCard[],
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): MultiCardPath[] {
   const paths: MultiCardPath[] = []
   const pointsNeeded = Math.max(0, goal.pointsRequired - currentPoints)
@@ -154,7 +162,7 @@ function generateSingleCardPaths(
     if (!card.welcome_bonus_points || card.welcome_bonus_points === 0) continue
 
     // Check bank eligibility
-    const eligibleAt = getBankEligibilityDate(userCards, card.bank)
+    const eligibleAt = getBankEligibilityDate(userCards, card.bank, exclusionPeriods)
     const isEligibleNow = !eligibleAt || new Date() >= eligibleAt
 
     // Skip if not enough points even with this card
@@ -223,7 +231,8 @@ function generateTwoCardPaths(
   goal: RedemptionGoal,
   currentPoints: number,
   catalogCards: Card[],
-  userCards: UserCard[]
+  userCards: UserCard[],
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): MultiCardPath[] {
   const paths: MultiCardPath[] = []
   const pointsNeeded = Math.max(0, goal.pointsRequired - currentPoints)
@@ -245,8 +254,8 @@ function generateTwoCardPaths(
       const now = new Date()
 
       // Check eligibility for both cards
-      const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank)
-      const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank)
+      const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank, exclusionPeriods)
+      const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank, exclusionPeriods)
 
       const isEligible1 = !eligibleAt1 || now >= eligibleAt1
       const isEligible2 = !eligibleAt2 || now >= eligibleAt2
@@ -302,7 +311,8 @@ function generateThreeCardPaths(
   goal: RedemptionGoal,
   currentPoints: number,
   catalogCards: Card[],
-  userCards: UserCard[]
+  userCards: UserCard[],
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): MultiCardPath[] {
   const paths: MultiCardPath[] = []
   const pointsNeeded = Math.max(0, goal.pointsRequired - currentPoints)
@@ -330,9 +340,9 @@ function generateThreeCardPaths(
 
         const now = new Date()
 
-        const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank)
-        const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank)
-        const eligibleAt3 = getBankEligibilityDate(userCards, card3.bank)
+        const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank, exclusionPeriods)
+        const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank, exclusionPeriods)
+        const eligibleAt3 = getBankEligibilityDate(userCards, card3.bank, exclusionPeriods)
 
         const applyDate1 = eligibleAt1 && now < eligibleAt1 ? eligibleAt1 : now
         const applyDate2 = new Date(applyDate1.getTime() + 180 * 24 * 60 * 60 * 1000)
@@ -392,14 +402,15 @@ export function calculateMultiCardPaths(
   goal: RedemptionGoal,
   userCards: UserCard[],
   catalogCards: Card[],
-  currentPoints: number = 0
+  currentPoints: number = 0,
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): MultiCardPath[] {
   const allPaths: MultiCardPath[] = []
 
   // Generate all possible paths (1-3 cards)
-  allPaths.push(...generateSingleCardPaths(goal, currentPoints, catalogCards, userCards))
-  allPaths.push(...generateTwoCardPaths(goal, currentPoints, catalogCards, userCards))
-  allPaths.push(...generateThreeCardPaths(goal, currentPoints, catalogCards, userCards))
+  allPaths.push(...generateSingleCardPaths(goal, currentPoints, catalogCards, userCards, exclusionPeriods))
+  allPaths.push(...generateTwoCardPaths(goal, currentPoints, catalogCards, userCards, exclusionPeriods))
+  allPaths.push(...generateThreeCardPaths(goal, currentPoints, catalogCards, userCards, exclusionPeriods))
 
   // Sort by score
   allPaths.sort((a, b) => b.score - a.score)
@@ -444,7 +455,8 @@ function generateThreeCardPathsUnrestricted(
   goal: RedemptionGoal,
   currentPoints: number,
   catalogCards: Card[],
-  userCards: UserCard[]
+  userCards: UserCard[],
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): MultiCardPath[] {
   const paths: MultiCardPath[] = []
   const pointsNeeded = Math.max(0, goal.pointsRequired - currentPoints)
@@ -469,9 +481,9 @@ function generateThreeCardPathsUnrestricted(
 
         const now = new Date()
 
-        const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank)
-        const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank)
-        const eligibleAt3 = getBankEligibilityDate(userCards, card3.bank)
+        const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank, exclusionPeriods)
+        const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank, exclusionPeriods)
+        const eligibleAt3 = getBankEligibilityDate(userCards, card3.bank, exclusionPeriods)
 
         const applyDate1 = eligibleAt1 && now < eligibleAt1 ? eligibleAt1 : now
         const applyDate2 = new Date(applyDate1.getTime() + 180 * 24 * 60 * 60 * 1000)
@@ -560,15 +572,16 @@ export function calculateOnboardingPath(
   goal: RedemptionGoal,
   spendBand: SpendBand,
   cardHistory: OnboardingCardEntry[],
-  catalogCards: Card[]
+  catalogCards: Card[],
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): MultiCardPath | null {
   const userCards = historyToUserCards(cardHistory)
   const monthlySpend = SPEND_BAND_MIDPOINTS[spendBand]
 
   const allPaths: MultiCardPath[] = [
-    ...generateSingleCardPaths(goal, 0, catalogCards, userCards),
-    ...generateTwoCardPaths(goal, 0, catalogCards, userCards),
-    ...generateThreeCardPathsUnrestricted(goal, 0, catalogCards, userCards),
+    ...generateSingleCardPaths(goal, 0, catalogCards, userCards, exclusionPeriods),
+    ...generateTwoCardPaths(goal, 0, catalogCards, userCards, exclusionPeriods),
+    ...generateThreeCardPathsUnrestricted(goal, 0, catalogCards, userCards, exclusionPeriods),
   ]
 
   if (allPaths.length === 0) return null

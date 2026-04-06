@@ -1,10 +1,12 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { useCatalog } from "@/contexts/CatalogContext"
 import type { OnboardingCardEntry } from "@/lib/recommendations"
 import { GOALS, calculateOnboardingPath, type SpendBand } from "@/lib/projections"
 import type { Database } from "@/types/database.types"
+import { supabase } from "@/lib/supabase/client"
+import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
 
 type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
@@ -85,6 +87,13 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
   const [spendBand, setSpendBand] = useState<SpendBand>("2k4k")
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [details, setDetails] = useState<Record<string, CardDetail>>({})
+  const [exclusionPeriods, setExclusionPeriods] = useState<BankExclusionPeriod[]>([])
+
+  useEffect(() => {
+    supabase.from("bank_exclusion_periods").select("*").then(({ data }) => {
+      if (data) setExclusionPeriods(data as BankExclusionPeriod[])
+    })
+  }, [])
 
   const goal = goalKey ? GOALS[goalKey as keyof typeof GOALS] : null
   const ctx = goalKey ? GOAL_CONTEXT[goalKey] : null
@@ -110,8 +119,8 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
 
   const bestPath = useMemo(() => {
     if (!goal) return null
-    return calculateOnboardingPath(goal, spendBand, cardHistory, catalogCards)
-  }, [goal, spendBand, cardHistory, catalogCards])
+    return calculateOnboardingPath(goal, spendBand, cardHistory, catalogCards, exclusionPeriods)
+  }, [goal, spendBand, cardHistory, catalogCards, exclusionPeriods])
 
   // Card picker state (step: history)
   const byBank = useMemo(() => {

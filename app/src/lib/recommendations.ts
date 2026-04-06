@@ -1,4 +1,6 @@
 import type { Database } from "@/types/database.types";
+import { lookupExclusionPeriod, LOW_CONFIDENCE_THRESHOLD } from "./bank-exclusions";
+import type { BankExclusionPeriod } from "./bank-exclusions";
 
 type Card = Database["public"]["Tables"]["cards"]["Row"];
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"];
@@ -9,6 +11,7 @@ export interface Recommendation {
   reason: string;
   eligibleAt: Date | null;
   eligibleNow: boolean;
+  eligibilityUnconfirmed: boolean;
 }
 
 interface BankEligibility {
@@ -16,6 +19,8 @@ interface BankEligibility {
   lastCancellation: Date | null;
   eligibleAt: Date;
   eligible: boolean;
+  eligibilityUnconfirmed: boolean;
+  exclusionMonths: number | null;
 }
 
 /**
@@ -24,7 +29,8 @@ interface BankEligibility {
  * - All others: 12 months since last cancellation
  */
 export function calculateBankEligibility(
-  userCards: UserCard[]
+  userCards: UserCard[],
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): BankEligibility[] {
   const bankMap = new Map<string, BankEligibility>();
 
@@ -33,7 +39,12 @@ export function calculateBankEligibility(
 
     const bankLower = card.bank.toLowerCase();
     const isAmex = bankLower.includes("amex") || bankLower.includes("american express");
-    const coolingPeriodMonths = isAmex ? 18 : 12;
+    const exclusionRecord = lookupExclusionPeriod(card.bank, exclusionPeriods);
+    const coolingPeriodMonths = exclusionRecord?.exclusion_months ?? 18;
+    const eligibilityUnconfirmed =
+      !exclusionRecord ||
+      (exclusionRecord.confidence_pct ?? 0) < LOW_CONFIDENCE_THRESHOLD ||
+      exclusionRecord.exclusion_months === null;
 
     let relevantDate: Date | null = null;
 
@@ -62,6 +73,8 @@ export function calculateBankEligibility(
           lastCancellation: relevantDate,
           eligibleAt,
           eligible: new Date() >= eligibleAt,
+          eligibilityUnconfirmed,
+          exclusionMonths: exclusionRecord?.exclusion_months ?? null,
         });
       }
     }
@@ -117,13 +130,14 @@ export interface RecommendationOptions {
 export function getRecommendations(
   userCards: UserCard[],
   catalogCards: Card[],
-  options?: RecommendationOptions
+  options?: RecommendationOptions,
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): Recommendation[] {
   const limit = options?.limit || 5;
   const pointsCurrency = options?.pointsCurrency || 'all';
   const includeFirstCardOnly = options?.includeFirstCardOnly ?? true;
   // Calculate bank eligibility
-  const eligibility = calculateBankEligibility(userCards);
+  const eligibility = calculateBankEligibility(userCards, exclusionPeriods);
   const eligibilityMap = new Map(eligibility.map((e) => [e.bank.toLowerCase(), e]));
 
   // Get user's active card IDs to exclude
@@ -166,27 +180,32 @@ export function getRecommendations(
       const bankEligibility = eligibilityMap.get(card.bank.toLowerCase());
       const eligibleNow = bankEligibility ? bankEligibility.eligible : true;
       const eligibleAt = bankEligibility ? bankEligibility.eligibleAt : null;
+      const eligibilityUnconfirmed = bankEligibility ? bankEligibility.eligibilityUnconfirmed : true;
 
       const score = calculateCardScore(card);
 
       // Generate reason
       let reason = "";
       if (eligibleNow) {
-        reason = "Eligible now";
-        if (score > 15) {
+        if (eligibilityUnconfirmed) {
+          reason = "⚠️ May be eligible (period unconfirmed)";
+        } else if (score > 15) {
           reason = "High value, eligible now";
         } else if (score > 10) {
           reason = "Good value, eligible now";
+        } else {
+          reason = "Eligible now";
         }
       } else if (eligibleAt) {
         const daysUntil = Math.ceil(
           (eligibleAt.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
         );
+        const suffix = eligibilityUnconfirmed ? " ⚠️" : "";
         if (daysUntil < 30) {
-          reason = `Eligible in ${daysUntil} days`;
+          reason = `Eligible in ${daysUntil} days${suffix}`;
         } else {
           const monthsUntil = Math.ceil(daysUntil / 30);
-          reason = `Eligible in ${monthsUntil} ${monthsUntil === 1 ? "month" : "months"}`;
+          reason = `Eligible in ${monthsUntil} ${monthsUntil === 1 ? "month" : "months"}${suffix}`;
         }
       }
 
@@ -196,6 +215,7 @@ export function getRecommendations(
         reason,
         eligibleAt,
         eligibleNow,
+        eligibilityUnconfirmed,
       };
     })
     .sort((a, b) => {
@@ -219,7 +239,8 @@ export function getRecommendations(
 export function getRecommendationsFromHistory(
   cardHistory: OnboardingCardEntry[],
   catalogCards: Card[],
-  options?: RecommendationOptions
+  options?: RecommendationOptions,
+  exclusionPeriods: BankExclusionPeriod[] = []
 ): Recommendation[] {
   // Build minimal UserCard-compatible objects for eligibility calculation.
   // For Amex: application_date is the relevant date (18-month rule from application).
@@ -262,5 +283,5 @@ export function getRecommendationsFromHistory(
     } as unknown as UserCard
   })
 
-  return getRecommendations(virtualUserCards, catalogCards, options)
+  return getRecommendations(virtualUserCards, catalogCards, options, exclusionPeriods)
 }
