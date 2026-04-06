@@ -28,14 +28,26 @@ function LoginPageInner() {
     setIsLoading(true)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
       if (error) throw error
 
-      router.push("/dashboard")
+      // Route new users (no onboarding completed) to the onboarding flow
+      const userId = data.user?.id
+      if (userId) {
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("onboarding_completed_at")
+          .eq("user_id", userId)
+          .single()
+        const destination = profile?.onboarding_completed_at ? "/dashboard" : "/onboarding"
+        router.push(destination)
+      } else {
+        router.push("/dashboard")
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Login failed. Try again."

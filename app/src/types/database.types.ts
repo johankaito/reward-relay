@@ -1069,14 +1069,18 @@ export type Database = {
           current_streak_days: number | null
           free_days_earned: number | null
           has_added_card: boolean
+          has_churned_before: boolean | null
           has_set_spending: boolean
           has_viewed_gap: boolean
           id: string
           last_active_date: string | null
           longest_streak_days: number | null
+          onboarding_card_history: unknown | null
           onboarding_completed_at: string | null
           onboarding_dismissed_at: string | null
+          onboarding_path: string | null
           optimization_goal: string | null
+          spend_band: string | null
           spending_category: string | null
           updated_at: string | null
           user_id: string
@@ -1087,14 +1091,18 @@ export type Database = {
           current_streak_days?: number | null
           free_days_earned?: number | null
           has_added_card?: boolean
+          has_churned_before?: boolean | null
           has_set_spending?: boolean
           has_viewed_gap?: boolean
           id?: string
           last_active_date?: string | null
           longest_streak_days?: number | null
+          onboarding_card_history?: unknown | null
           onboarding_completed_at?: string | null
           onboarding_dismissed_at?: string | null
+          onboarding_path?: string | null
           optimization_goal?: string | null
+          spend_band?: string | null
           spending_category?: string | null
           updated_at?: string | null
           user_id: string
@@ -1105,14 +1113,18 @@ export type Database = {
           current_streak_days?: number | null
           free_days_earned?: number | null
           has_added_card?: boolean
+          has_churned_before?: boolean | null
           has_set_spending?: boolean
           has_viewed_gap?: boolean
           id?: string
           last_active_date?: string | null
           longest_streak_days?: number | null
+          onboarding_card_history?: unknown | null
           onboarding_completed_at?: string | null
           onboarding_dismissed_at?: string | null
+          onboarding_path?: string | null
           optimization_goal?: string | null
+          spend_band?: string | null
           spending_category?: string | null
           updated_at?: string | null
           user_id?: string

@@ -90,6 +90,17 @@ function calculateCardScore(card: Card): number {
   return pointsPerDollar * 10 + netValueScore;
 }
 
+/**
+ * Lightweight card history entry collected during onboarding
+ * (before cards are saved to user_cards table)
+ */
+export interface OnboardingCardEntry {
+  bank: string
+  cardId: string
+  applicationMonth: string  // "YYYY-MM"
+  bonusReceived: boolean
+}
+
 export interface RecommendationOptions {
   limit?: number;
   pointsCurrency?: 'Qantas' | 'Velocity' | 'all';
@@ -198,4 +209,58 @@ export function getRecommendations(
     .slice(0, limit);
 
   return recommendations;
+}
+
+/**
+ * Get recommendations from onboarding card history (before cards are in user_cards).
+ * Converts OnboardingCardEntry[] into a UserCard-compatible shape and reuses
+ * the same eligibility + scoring pipeline as getRecommendations().
+ */
+export function getRecommendationsFromHistory(
+  cardHistory: OnboardingCardEntry[],
+  catalogCards: Card[],
+  options?: RecommendationOptions
+): Recommendation[] {
+  // Build minimal UserCard-compatible objects for eligibility calculation.
+  // For Amex: application_date is the relevant date (18-month rule from application).
+  // For others: we set cancellation_date to application + 1 month to be conservative
+  // (we don't know when they cancelled, but at minimum they'd cancel after a month).
+  const virtualUserCards: UserCard[] = cardHistory.map((entry) => {
+    const bankLower = entry.bank.toLowerCase()
+    const isAmex = bankLower.includes("amex") || bankLower.includes("american express")
+
+    const appDate = `${entry.applicationMonth}-01`
+    const cancelDate = (() => {
+      if (isAmex) return null
+      const d = new Date(`${entry.applicationMonth}-01`)
+      d.setMonth(d.getMonth() + 1)
+      return d.toISOString().split("T")[0]
+    })()
+
+    return {
+      id: entry.cardId,
+      user_id: "",
+      card_id: entry.cardId,
+      bank: entry.bank,
+      name: null,
+      status: "cancelled",
+      application_date: appDate,
+      approval_date: null,
+      cancellation_date: cancelDate,
+      annual_fee: null,
+      notes: null,
+      current_spend: null,
+      spend_updated_at: null,
+      bonus_spend_deadline: null,
+      alert_enabled: false,
+      next_eligible_date: null,
+      bonus_earned: entry.bonusReceived,
+      bonus_earned_at: null,
+      bonus_earned_suggested: false,
+      created_at: null,
+      updated_at: null,
+    } as unknown as UserCard
+  })
+
+  return getRecommendations(virtualUserCards, catalogCards, options)
 }

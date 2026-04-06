@@ -1,4 +1,5 @@
 import type { Database } from "@/types/database.types"
+import type { OnboardingCardEntry } from "./recommendations"
 
 type Card = Database["public"]["Tables"]["cards"]["Row"]
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
@@ -423,4 +424,170 @@ export function calculateMultiCardPaths(
   }
 
   return topPaths
+}
+
+export type SpendBand = 'lt1k' | '1k2k' | '2k4k' | '4k6k' | 'gt6k'
+
+const SPEND_BAND_MIDPOINTS: Record<SpendBand, number> = {
+  lt1k: 750,
+  '1k2k': 1500,
+  '2k4k': 3000,
+  '4k6k': 5000,
+  gt6k: 7500,
+}
+
+/**
+ * Generate three-card paths without the high-points guard.
+ * Used during onboarding where we want to show paths for any goal size.
+ */
+function generateThreeCardPathsUnrestricted(
+  goal: RedemptionGoal,
+  currentPoints: number,
+  catalogCards: Card[],
+  userCards: UserCard[]
+): MultiCardPath[] {
+  const paths: MultiCardPath[] = []
+  const pointsNeeded = Math.max(0, goal.pointsRequired - currentPoints)
+
+  for (let i = 0; i < catalogCards.length; i++) {
+    const card1 = catalogCards[i]
+    if (!card1.welcome_bonus_points) continue
+
+    for (let j = i + 1; j < catalogCards.length; j++) {
+      const card2 = catalogCards[j]
+      if (!card2.welcome_bonus_points) continue
+      if (card1.bank.toLowerCase() === card2.bank.toLowerCase()) continue
+
+      for (let k = j + 1; k < catalogCards.length; k++) {
+        const card3 = catalogCards[k]
+        if (!card3.welcome_bonus_points) continue
+        if (card1.bank.toLowerCase() === card3.bank.toLowerCase()) continue
+        if (card2.bank.toLowerCase() === card3.bank.toLowerCase()) continue
+
+        const totalPoints = card1.welcome_bonus_points + card2.welcome_bonus_points + card3.welcome_bonus_points
+        if (totalPoints < pointsNeeded) continue
+
+        const now = new Date()
+
+        const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank)
+        const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank)
+        const eligibleAt3 = getBankEligibilityDate(userCards, card3.bank)
+
+        const applyDate1 = eligibleAt1 && now < eligibleAt1 ? eligibleAt1 : now
+        const applyDate2 = new Date(applyDate1.getTime() + 180 * 24 * 60 * 60 * 1000)
+        const applyDate3 = new Date(applyDate2.getTime() + 180 * 24 * 60 * 60 * 1000)
+
+        if (eligibleAt2 && applyDate2 < eligibleAt2) continue
+        if (eligibleAt3 && applyDate3 < eligibleAt3) continue
+
+        const steps: PathStep[] = [
+          { month: 0, action: "apply", card: card1, pointsAccumulated: 0, runningTotal: currentPoints, date: applyDate1 },
+          { month: 3, action: "meet_spend", card: card1, pointsAccumulated: 0, runningTotal: currentPoints, date: new Date(applyDate1.getTime() + 90 * 24 * 60 * 60 * 1000) },
+          { month: 4, action: "bonus_posts", card: card1, pointsAccumulated: card1.welcome_bonus_points, runningTotal: currentPoints + card1.welcome_bonus_points, date: new Date(applyDate1.getTime() + 120 * 24 * 60 * 60 * 1000) },
+          { month: 6, action: "apply", card: card2, pointsAccumulated: 0, runningTotal: currentPoints + card1.welcome_bonus_points, date: applyDate2 },
+          { month: 9, action: "meet_spend", card: card2, pointsAccumulated: 0, runningTotal: currentPoints + card1.welcome_bonus_points, date: new Date(applyDate2.getTime() + 90 * 24 * 60 * 60 * 1000) },
+          { month: 10, action: "bonus_posts", card: card2, pointsAccumulated: card2.welcome_bonus_points, runningTotal: currentPoints + card1.welcome_bonus_points + card2.welcome_bonus_points, date: new Date(applyDate2.getTime() + 120 * 24 * 60 * 60 * 1000) },
+          { month: 12, action: "apply", card: card3, pointsAccumulated: 0, runningTotal: currentPoints + card1.welcome_bonus_points + card2.welcome_bonus_points, date: applyDate3 },
+          { month: 15, action: "meet_spend", card: card3, pointsAccumulated: 0, runningTotal: currentPoints + card1.welcome_bonus_points + card2.welcome_bonus_points, date: new Date(applyDate3.getTime() + 90 * 24 * 60 * 60 * 1000) },
+          { month: 16, action: "bonus_posts", card: card3, pointsAccumulated: card3.welcome_bonus_points, runningTotal: currentPoints + totalPoints, date: new Date(applyDate3.getTime() + 120 * 24 * 60 * 60 * 1000) },
+        ]
+
+        const timeToGoal = Math.ceil((applyDate1.getTime() - now.getTime()) / (30 * 24 * 60 * 60 * 1000)) + 16
+        const totalCost = (card1.annual_fee || 0) + (card2.annual_fee || 0) + (card3.annual_fee || 0)
+        const netValue = (totalPoints * 0.01) - totalCost
+        const speedScore = 1000 / timeToGoal
+        const valueScore = netValue / 10
+        const score = speedScore + valueScore
+
+        paths.push({ cards: [card1, card2, card3], totalPoints, totalCost, netValue, timeToGoal, steps, score, rank: "balanced" })
+      }
+    }
+  }
+
+  return paths
+}
+
+/**
+ * Convert onboarding card history to minimal UserCard-compatible shape
+ * for eligibility calculation in projections.
+ */
+function historyToUserCards(cardHistory: OnboardingCardEntry[]): UserCard[] {
+  return cardHistory.map((entry) => {
+    const bankLower = entry.bank.toLowerCase()
+    const isAmex = bankLower.includes("amex") || bankLower.includes("american express")
+    const appDate = `${entry.applicationMonth}-01`
+    const cancelDate = (() => {
+      if (isAmex) return null
+      const d = new Date(`${entry.applicationMonth}-01`)
+      d.setMonth(d.getMonth() + 1)
+      return d.toISOString().split("T")[0]
+    })()
+    return {
+      id: entry.cardId,
+      user_id: "",
+      card_id: entry.cardId,
+      bank: entry.bank,
+      name: null,
+      status: "cancelled",
+      application_date: appDate,
+      approval_date: null,
+      cancellation_date: cancelDate,
+      annual_fee: null,
+      notes: null,
+      current_spend: null,
+      spend_updated_at: null,
+      bonus_spend_deadline: null,
+      alert_enabled: false,
+      next_eligible_date: null,
+      bonus_earned: entry.bonusReceived,
+      bonus_earned_at: null,
+      bonus_earned_suggested: false,
+      created_at: null,
+      updated_at: null,
+    } as unknown as UserCard
+  })
+}
+
+/**
+ * Calculate the best card path for onboarding users (Path B new churner flow).
+ * Unlike calculateMultiCardPaths, this:
+ *  - Has no minimum points threshold for 3-card paths
+ *  - Accepts OnboardingCardEntry[] history instead of UserCard[]
+ *  - Adjusts timeToGoal based on spend band (how fast the user can meet bonus spend requirements)
+ *  - Returns the single best path (highest score)
+ */
+export function calculateOnboardingPath(
+  goal: RedemptionGoal,
+  spendBand: SpendBand,
+  cardHistory: OnboardingCardEntry[],
+  catalogCards: Card[]
+): MultiCardPath | null {
+  const userCards = historyToUserCards(cardHistory)
+  const monthlySpend = SPEND_BAND_MIDPOINTS[spendBand]
+
+  const allPaths: MultiCardPath[] = [
+    ...generateSingleCardPaths(goal, 0, catalogCards, userCards),
+    ...generateTwoCardPaths(goal, 0, catalogCards, userCards),
+    ...generateThreeCardPathsUnrestricted(goal, 0, catalogCards, userCards),
+  ]
+
+  if (allPaths.length === 0) return null
+
+  // Adjust timeToGoal for each path based on how quickly the user can meet
+  // each card's bonus spend requirement given their spend band.
+  const adjusted = allPaths.map((path) => {
+    let extraMonths = 0
+    for (const card of path.cards) {
+      const spendReq = card.bonus_spend_requirement ?? 0
+      if (spendReq > 0 && monthlySpend > 0) {
+        const monthsToMeetSpend = Math.ceil(spendReq / monthlySpend)
+        // Default timeline assumes 3 months to meet spend; adjust if different
+        extraMonths += Math.max(0, monthsToMeetSpend - 3)
+      }
+    }
+    return { ...path, timeToGoal: path.timeToGoal + extraMonths }
+  })
+
+  adjusted.sort((a, b) => b.score - a.score)
+  return adjusted[0]
 }
