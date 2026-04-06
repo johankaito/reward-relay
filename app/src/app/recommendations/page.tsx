@@ -15,6 +15,7 @@ import type { Database } from "@/types/database.types"
 import type { Recommendation } from "@/lib/recommendations"
 import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
 import { GeneralInfoDisclaimer } from "@/components/ui/GeneralInfoDisclaimer"
+import { ReportIncorrectForm } from "@/components/ui/ReportIncorrectForm"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 
@@ -73,7 +74,6 @@ export default function RecommendationsPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>("all")
   const [sort, setSort] = useState<SortType>("score")
-
   useEffect(() => {
     async function loadData() {
       const {
@@ -352,6 +352,8 @@ export default function RecommendationsPage() {
                         View Details
                       </button>
                     )}
+
+                    <ReportIncorrectForm cardId={rec.card.id} />
                   </div>
                 </div>
               )

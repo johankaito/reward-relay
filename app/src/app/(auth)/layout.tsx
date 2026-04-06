@@ -18,6 +18,16 @@ export default function AuthLayout({
       <main className="relative z-10 flex min-h-screen items-center justify-center p-6">
         {children}
       </main>
+
+      {/* Disclaimer footer */}
+      <footer className="relative z-10 pb-4 text-center">
+        <p className="text-xs text-muted-foreground">
+          Not financial advice &middot;{" "}
+          <a href="/terms" className="underline-offset-2 hover:underline">
+            Terms
+          </a>
+        </p>
+      </footer>
     </div>
   )
 }
