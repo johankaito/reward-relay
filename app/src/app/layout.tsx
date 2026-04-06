@@ -47,13 +47,11 @@ export const metadata: Metadata = {
     title: "Reward Relay — maximize card rewards",
     description: "Track every Australian credit card, hit every bonus, never miss a cancel date.",
     siteName: "Reward Relay",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Reward Relay" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Reward Relay — maximize card rewards",
     description: "Track every Australian credit card, hit every bonus, never miss a cancel date.",
-    images: ["/og-image.png"],
   },
   appleWebApp: {
     capable: true,
