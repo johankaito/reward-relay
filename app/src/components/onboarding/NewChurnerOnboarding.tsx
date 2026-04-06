@@ -352,28 +352,30 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
                 </div>
               )}
 
-              {/* What's Next teaser */}
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-500/20">
-                    <span className="text-sm">🚀</span>
+              {/* What’s Next teaser */}
+              {bestPath && (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-500/20">
+                      <span className="text-sm">🚀</span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-semibold uppercase tracking-widest text-white/50">What&apos;s Next</span>
+                      <p className="text-sm font-bold text-white">Keep stacking after your first plan</p>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-widest text-white/50">What’s Next</span>
-                    <p className="text-sm font-bold text-white">Keep stacking after your first plan</p>
+                  <p className="text-sm text-white/50 leading-relaxed">
+                    Once you complete Fast Track, we&apos;ll recommend your next sequence — most members unlock{" "}
+                    <span className="text-white/80 font-medium">2–3× more points</span> in year two.
+                  </p>
+                  <div className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 flex items-center justify-between text-xs">
+                    <span className="text-white/40">Year 2 potential</span>
+                    <span className="font-semibold text-white/70">
+                      ~${Math.round(bestPath.totalPoints * 0.018 * 2.5).toLocaleString()}/yr
+                    </span>
                   </div>
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed">
-                  Once you complete Fast Track, we’ll recommend your next sequence — most members unlock{" "}
-                  <span className="text-white/80 font-medium">2–3× more points</span> in year two.
-                </p>
-                <div className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 flex items-center justify-between text-xs">
-                  <span className="text-white/40">Year 2 potential</span>
-                  <span className="font-semibold text-white/70">
-                    ~${bestPath ? Math.round(bestPath.totalPoints * 0.018 * 2.5).toLocaleString() : "5,000"}/yr
-                  </span>
-                </div>
-              </div>
+              )}
             </div>
 
             <div className="flex gap-3">
