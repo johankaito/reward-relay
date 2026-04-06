@@ -87,6 +87,29 @@ export async function POST(request: NextRequest) {
         matched++
         const storedBonus = cardMatch.welcome_bonus_points ?? 0
 
+        // Store matched deal with card_id + bonus_points for two-source validation (CDP-8)
+        // Only insert if there isn't already a recent matching deal for this card+bonus combo
+        const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString()
+        const { data: existingDeal } = await supabase
+          .from('deals')
+          .select('id')
+          .eq('card_id', cardMatch.id)
+          .eq('bonus_points', offer.bonusPoints)
+          .gte('created_at', thirtyDaysAgo)
+          .limit(1)
+        if (!existingDeal || existingDeal.length === 0) {
+          await supabase.from('deals').insert({
+            title: `${offer.issuer} ${offer.cardName ?? ''} — ${offer.bonusPoints.toLocaleString()} pts bonus`.trim().slice(0, 255),
+            merchant: offer.issuer ?? 'Unknown',
+            deal_url: '',
+            source: 'ozbargain',
+            card_id: cardMatch.id,
+            bonus_points: offer.bonusPoints,
+            valid_from: new Date().toISOString(),
+            is_active: true,
+          })
+        }
+
         if (offer.bonusPoints > storedBonus) {
           // Feed shows a higher bonus — don't auto-write, flag for authoritative re-extraction
           await supabase
@@ -108,7 +131,7 @@ export async function POST(request: NextRequest) {
             .eq('id', cardMatch.id)
           confirmed++
         }
-        // If feedBonus < storedBonus: stale feed item, ignore
+        // If feedBonus < storedBonus: stale feed item, signal ignored but deal stored
       } else {
         // Store unmatched offer for admin review instead of logging and losing it
         await supabase.from('unmatched_deals').insert({
