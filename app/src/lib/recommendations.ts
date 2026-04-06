@@ -1,6 +1,7 @@
 import type { Database } from "@/types/database.types";
-import { lookupExclusionPeriod, LOW_CONFIDENCE_THRESHOLD } from "./bank-exclusions";
+import { lookupExclusionPeriod, normalizeBankName } from "./bank-exclusions";
 import type { BankExclusionPeriod } from "./bank-exclusions";
+import { computeEligibility } from "./eligibility";
 
 type Card = Database["public"]["Tables"]["cards"]["Row"];
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"];
@@ -14,73 +15,21 @@ export interface Recommendation {
   eligibilityUnconfirmed: boolean;
 }
 
-interface BankEligibility {
-  bank: string;
-  lastCancellation: Date | null;
-  eligibleAt: Date;
-  eligible: boolean;
-  eligibilityUnconfirmed: boolean;
-  exclusionMonths: number | null;
-}
-
-/**
- * Calculate bank eligibility based on churning rules
- * - AMEX: 18 months since last card (any status)
- * - All others: 12 months since last cancellation
- */
-export function calculateBankEligibility(
-  userCards: UserCard[],
-  exclusionPeriods: BankExclusionPeriod[] = []
-): BankEligibility[] {
-  const bankMap = new Map<string, BankEligibility>();
+/** Returns the most recent relevant date for a bank's exclusion window. */
+function getLastRelevantDate(userCards: UserCard[], bank: string): string | null {
+  const bankLower = bank.toLowerCase()
+  const isAmex = bankLower.includes("amex") || bankLower.includes("american express")
+  let mostRecentDate: Date | null = null
 
   for (const card of userCards) {
-    if (!card.bank) continue;
-
-    const bankLower = card.bank.toLowerCase();
-    const isAmex = bankLower.includes("amex") || bankLower.includes("american express");
-    const exclusionRecord = lookupExclusionPeriod(card.bank, exclusionPeriods);
-    const coolingPeriodMonths = exclusionRecord?.exclusion_months ?? 18;
-    const eligibilityUnconfirmed =
-      !exclusionRecord ||
-      (exclusionRecord.confidence_pct ?? 0) < LOW_CONFIDENCE_THRESHOLD ||
-      exclusionRecord.exclusion_months === null;
-
-    let relevantDate: Date | null = null;
-
-    if (isAmex) {
-      // For AMEX: Use application date (most restrictive)
-      if (card.application_date) {
-        relevantDate = new Date(card.application_date);
-      }
-    } else {
-      // For other banks: Use cancellation date
-      if (card.cancellation_date) {
-        relevantDate = new Date(card.cancellation_date);
-      }
-    }
-
-    if (relevantDate) {
-      const existing = bankMap.get(card.bank);
-
-      // Keep the most recent relevant date per bank
-      if (!existing || !existing.lastCancellation || relevantDate > existing.lastCancellation) {
-        const eligibleAt = new Date(relevantDate);
-        eligibleAt.setMonth(eligibleAt.getMonth() + coolingPeriodMonths);
-
-        bankMap.set(card.bank, {
-          bank: card.bank,
-          lastCancellation: relevantDate,
-          eligibleAt,
-          eligible: new Date() >= eligibleAt,
-          eligibilityUnconfirmed,
-          exclusionMonths: exclusionRecord?.exclusion_months ?? null,
-        });
-      }
-    }
+    if (!card.bank || card.bank.toLowerCase() !== bankLower) continue
+    const rawDate = isAmex ? card.application_date : card.cancellation_date
+    if (!rawDate) continue
+    const d = new Date(rawDate)
+    if (!mostRecentDate || d > mostRecentDate) mostRecentDate = d
   }
 
-  return Array.from(bankMap.values());
+  return mostRecentDate ? mostRecentDate.toISOString().split("T")[0] : null
 }
 
 /**
@@ -136,9 +85,19 @@ export function getRecommendations(
   const limit = options?.limit || 5;
   const pointsCurrency = options?.pointsCurrency || 'all';
   const includeFirstCardOnly = options?.includeFirstCardOnly ?? true;
-  // Calculate bank eligibility
-  const eligibility = calculateBankEligibility(userCards, exclusionPeriods);
-  const eligibilityMap = new Map(eligibility.map((e) => [e.bank.toLowerCase(), e]));
+  // Build eligibility map using the shared computeEligibility engine
+  const uniqueBanks = [...new Set(userCards.map((c) => c.bank).filter(Boolean))] as string[]
+  const eligibilityMap = new Map(
+    uniqueBanks.map((bank) => [
+      bank.toLowerCase(),
+      computeEligibility(
+        normalizeBankName(bank) ?? bank,
+        bank,
+        getLastRelevantDate(userCards, bank),
+        lookupExclusionPeriod(bank, exclusionPeriods)
+      ),
+    ])
+  );
 
   // Get user's active card IDs to exclude
   const activeCardIds = new Set(
@@ -178,9 +137,9 @@ export function getRecommendations(
     })
     .map((card) => {
       const bankEligibility = eligibilityMap.get(card.bank.toLowerCase());
-      const eligibleNow = bankEligibility ? bankEligibility.eligible : true;
-      const eligibleAt = bankEligibility ? bankEligibility.eligibleAt : null;
-      const eligibilityUnconfirmed = bankEligibility ? bankEligibility.eligibilityUnconfirmed : true;
+      const eligibleNow = bankEligibility ? bankEligibility.isEligible : true;
+      const eligibleAt = bankEligibility ? bankEligibility.eligibleDate : null;
+      const eligibilityUnconfirmed = bankEligibility ? bankEligibility.hasUnknownWindow : true;
 
       const score = calculateCardScore(card);
 
