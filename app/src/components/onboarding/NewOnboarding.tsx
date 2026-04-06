@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { supabase } from "@/lib/supabase/client"
 import { markOnboardingComplete } from "@/lib/onboarding"
+import { PainPointHook } from "./PainPointHook"
 import { OnboardingGate } from "./OnboardingGate"
 import { ChurnerOnboarding } from "./ChurnerOnboarding"
 import { NewChurnerOnboarding } from "./NewChurnerOnboarding"
@@ -12,13 +13,16 @@ import type { OnboardingCardEntry } from "@/lib/recommendations"
 import type { SpendBand } from "@/lib/projections"
 import { useCatalog } from "@/contexts/CatalogContext"
 
-type Flow = "gate" | "path-a" | "path-b"
+type Flow = "hook" | "gate" | "path-a" | "path-b"
 
 export function NewOnboarding() {
   const router = useRouter()
   const { catalogCards } = useCatalog()
-  const [flow, setFlow] = useState<Flow>("gate")
+  const [flow, setFlow] = useState<Flow>("hook")
   const [saving, setSaving] = useState(false)
+
+  const handleHookContinue = () => setFlow("gate")
+  const handleHookSkip = () => setFlow("gate")
 
   const handleGate = (hasChurned: boolean) => {
     setFlow(hasChurned ? "path-a" : "path-b")
@@ -110,6 +114,10 @@ export function NewOnboarding() {
         <p className="text-on-surface-variant animate-pulse">Saving your plan...</p>
       </div>
     )
+  }
+
+  if (flow === "hook") {
+    return <PainPointHook onContinue={handleHookContinue} onSkip={handleHookSkip} />
   }
 
   if (flow === "gate") {

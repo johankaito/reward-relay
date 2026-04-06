@@ -57,6 +57,15 @@ const GOAL_CONTEXT: Record<string, { destination: string; points: number }> = {
   internationalPremiumUpgrade: { destination: "Sydney → Tokyo in Premium Economy", points: 80000 },
 }
 
+const BANK_COLORS: Record<string, string> = {
+  ANZ: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+  Amex: "bg-purple-500/20 text-purple-300 border-purple-500/30",
+  "American Express": "bg-purple-500/20 text-purple-300 border-purple-500/30",
+  CBA: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30",
+  NAB: "bg-red-500/20 text-red-300 border-red-500/30",
+  Westpac: "bg-orange-500/20 text-orange-300 border-orange-500/30",
+}
+
 interface NewChurnerOnboardingProps {
   onComplete: (data: {
     goalKey: string
@@ -65,7 +74,7 @@ interface NewChurnerOnboardingProps {
   }) => void
 }
 
-type Step = "goal" | "spend"
+type Step = "goal" | "spend" | "plans"
 
 export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) {
   const { catalogCards } = useCatalog()
@@ -87,6 +96,20 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
     if (!goal) return null
     return calculateOnboardingPath(goal, spendBand, [], catalogCards, exclusionPeriods)
   }, [goal, spendBand, catalogCards, exclusionPeriods])
+
+  // Derive conservative and maximum haul plan variants from bestPath
+  const conservativePath = useMemo(() => {
+    if (!bestPath) return null
+    const singleCard = bestPath.cards.slice(0, 1)
+    const pts = singleCard.reduce((acc, c) => acc + (c.welcome_bonus_points ?? 0), 0)
+    return { ...bestPath, cards: singleCard, totalPoints: pts }
+  }, [bestPath])
+
+  const maxHaulPath = useMemo(() => {
+    if (!bestPath) return null
+    // Max haul: use full bestPath but label it as maximum potential
+    return bestPath
+  }, [bestPath])
 
   const handleGoalSelect = (key: string) => {
     setGoalKey(key)
@@ -196,6 +219,202 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
                 </div>
               </div>
             )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setStep("plans")}
+                className="flex-1 rounded-xl py-3 text-base font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ background: "var(--gradient-cta)" }}
+              >
+                See your plans →
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Step 3 — Recommended Plans */}
+        {step === "plans" && (
+          <>
+            <div className="space-y-2">
+              <button onClick={() => setStep("spend")} className="text-sm text-on-surface-variant hover:text-white">
+                ← Back
+              </button>
+              <h1 className="text-3xl font-bold text-white">Your recommended plans</h1>
+              <p className="text-on-surface-variant">Choose the approach that fits your risk appetite.</p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Fast Track card */}
+              {bestPath && (
+                <div className="rounded-2xl border-2 border-teal-500/40 bg-teal-500/10 p-6 space-y-4 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-semibold uppercase tracking-widest text-teal-400">Fast Track</span>
+                      <p className="mt-1 text-lg font-bold text-white">Maximum points, fastest path</p>
+                    </div>
+                    <span className="rounded-full bg-teal-500/20 border border-teal-500/30 px-2.5 py-1 text-xs font-semibold text-teal-400">Recommended</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    {bestPath.cards.map((card, i) => (
+                      <div key={card.id} className="flex items-center gap-3">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-xs font-bold text-teal-400">
+                          {i + 1}
+                        </span>
+                        <div className="flex-1">
+                          <p className="font-medium text-white">{card.name}</p>
+                          <p className="text-xs text-on-surface-variant">
+                            {card.welcome_bonus_points?.toLocaleString()} pts · {card.bank}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Card chips */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {bestPath.cards.map((card) => {
+                      const colorClass = BANK_COLORS[card.bank] ?? "bg-white/10 text-white/60 border-white/10"
+                      return (
+                        <span key={card.id} className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
+                          {card.bank}
+                        </span>
+                      )
+                    })}
+                  </div>
+
+                  <div className="border-t border-white/10 pt-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-on-surface-variant">Total points</p>
+                      <p className="text-lg font-bold text-white">{bestPath.totalPoints.toLocaleString()}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-on-surface-variant">Timeline</p>
+                      <p className="text-lg font-bold text-white">~{bestPath.timeToGoal} months</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-white/10 pt-2 text-xs">
+                    <span className="text-white/40">Est. Annual Value</span>
+                    <span className="font-semibold text-teal-400">
+                      ${Math.round(bestPath.totalPoints * 0.018).toLocaleString()}/yr
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Conservative card */}
+              {conservativePath && conservativePath.cards.length > 0 && (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-widest text-white/50">Conservative</span>
+                    <p className="mt-1 text-lg font-bold text-white">Single card, lower commitment</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    {conservativePath.cards.map((card, i) => (
+                      <div key={card.id} className="flex items-center gap-3">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white/60">
+                          {i + 1}
+                        </span>
+                        <div className="flex-1">
+                          <p className="font-medium text-white">{card.name}</p>
+                          <p className="text-xs text-on-surface-variant">
+                            {card.welcome_bonus_points?.toLocaleString()} pts · {card.bank}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Card chips */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {conservativePath.cards.map((card) => {
+                      const colorClass = BANK_COLORS[card.bank] ?? "bg-white/10 text-white/60 border-white/10"
+                      return (
+                        <span key={card.id} className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
+                          {card.bank}
+                        </span>
+                      )
+                    })}
+                  </div>
+
+                  <div className="border-t border-white/10 pt-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-on-surface-variant">Total points</p>
+                      <p className="text-lg font-bold text-white">{conservativePath.totalPoints.toLocaleString()}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-on-surface-variant">Timeline</p>
+                      <p className="text-lg font-bold text-white">~{conservativePath.timeToGoal} months</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-white/10 pt-2 text-xs">
+                    <span className="text-white/40">Est. Annual Value</span>
+                    <span className="font-semibold text-teal-400">
+                      ${Math.round(conservativePath.totalPoints * 0.018).toLocaleString()}/yr
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Maximum Haul card */}
+              {maxHaulPath && (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-widest text-white/50">Maximum Haul</span>
+                    <p className="mt-1 text-lg font-bold text-white">Go big — maximise every dollar</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    {maxHaulPath.cards.map((card, i) => (
+                      <div key={card.id} className="flex items-center gap-3">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white/60">
+                          {i + 1}
+                        </span>
+                        <div className="flex-1">
+                          <p className="font-medium text-white">{card.name}</p>
+                          <p className="text-xs text-on-surface-variant">
+                            {card.welcome_bonus_points?.toLocaleString()} pts · {card.bank}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Card chips */}
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {maxHaulPath.cards.map((card) => {
+                      const colorClass = BANK_COLORS[card.bank] ?? "bg-white/10 text-white/60 border-white/10"
+                      return (
+                        <span key={card.id} className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
+                          {card.bank}
+                        </span>
+                      )
+                    })}
+                  </div>
+
+                  <div className="border-t border-white/10 pt-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-on-surface-variant">Total points</p>
+                      <p className="text-lg font-bold text-white">{maxHaulPath.totalPoints.toLocaleString()}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-on-surface-variant">Timeline</p>
+                      <p className="text-lg font-bold text-white">~{maxHaulPath.timeToGoal} months</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-white/10 pt-2 text-xs">
+                    <span className="text-white/40">Est. Annual Value</span>
+                    <span className="font-semibold text-teal-400">
+                      ${Math.round(maxHaulPath.totalPoints * 0.018 * 1.3).toLocaleString()}/yr
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="flex gap-3">
               <button
