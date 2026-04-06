@@ -30,7 +30,7 @@ async function main() {
 
   for (const { bankSlug, products, error } of bankResults) {
     if (error || products.length === 0) {
-      console.error(`  ${bankSlug}: ${error ?? 'No products found'}`)
+      console.warn(`  WARN ${bankSlug}: ${error ?? 'No products found'}`)
       bankSummary.push({ bank: bankSlug, upserted: 0, error: error ?? 'No products found' })
       totalFailed++
       continue
@@ -68,13 +68,16 @@ async function main() {
 
   console.log(`\nDone in ${Date.now() - startTime}ms — ${totalUpserted} upserted, ${totalFailed} banks failed`)
   bankSummary.forEach((b) => {
-    if (b.error) console.error(`  FAILED ${b.bank}: ${b.error}`)
+    // Log upstream bank failures as warnings, not errors — these are routine CDR outages
+    if (b.error) console.warn(`  WARN ${b.bank}: ${b.error}`)
   })
 
-  if (totalFailed > 0) process.exit(1)
+  // Upstream bank failures are not our bug — exit 0 so GH Actions stays green
+  // process.exit(1) is reserved for genuine code errors (see catch below)
 }
 
 main().catch((err) => {
+  // Genuine failures: DB connection down, missing env vars, etc.
   console.error('Fatal:', err)
   process.exit(1)
 })
