@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import { AppShell } from "@/components/layout/AppShell"
+import { DataFreshnessChip } from "@/components/ui/DataFreshnessChip"
 import { ProGate } from "@/components/ui/ProGate"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
@@ -313,6 +314,14 @@ export default function RecommendationsPage() {
                             welcome bonus
                           </p>
                         )}
+                      </div>
+
+                      {/* Data freshness */}
+                      <div className="mb-4 px-1">
+                        <DataFreshnessChip
+                          lastVerifiedAt={rec.card.last_verified_at}
+                          confidence={rec.card.extraction_confidence}
+                        />
                       </div>
 
                       {/* Fee + Status row */}

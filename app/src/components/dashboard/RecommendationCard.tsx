@@ -4,6 +4,7 @@ import Link from "next/link"
 import { ExternalLink, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { DataFreshnessChip } from "@/components/ui/DataFreshnessChip"
 import type { Recommendation } from "@/lib/recommendations"
 
 interface RecommendationCardProps {
@@ -57,6 +58,7 @@ export function RecommendationCard({
         </div>
 
         <p className="text-sm text-[var(--accent)]">{reason}</p>
+        <DataFreshnessChip lastVerifiedAt={card.last_verified_at} confidence={card.extraction_confidence} />
       </Link>
     )
   }
@@ -133,6 +135,8 @@ export function RecommendationCard({
           {card.notes && (
             <p className="text-sm text-[var(--text-secondary)]">{card.notes}</p>
           )}
+
+          <DataFreshnessChip lastVerifiedAt={card.last_verified_at} confidence={card.extraction_confidence} />
 
           <div className="flex gap-3 pt-1">
             {card.application_link && (
