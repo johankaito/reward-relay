@@ -19,9 +19,10 @@
 
 ## Agents
 
-- All code changes must be executed on **mac-15** — never make changes locally
+- **ALL tasks must be sent to mac-15 unless explicitly told otherwise** — this includes code changes, file edits, migrations, and any other modifications
 - mac-15 SSH target: `mac-15`
 - Agent manager: `~/.claude/agents-remote/agent-manager.sh -t mac-15`
+- Never make changes locally — always delegate to mac-15
 
 ## Route Map
 
