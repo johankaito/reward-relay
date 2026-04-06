@@ -4,12 +4,9 @@ import { useState, useMemo, useEffect } from "react"
 import { useCatalog } from "@/contexts/CatalogContext"
 import type { OnboardingCardEntry } from "@/lib/recommendations"
 import { GOALS, calculateOnboardingPath, type SpendBand } from "@/lib/projections"
-import type { Database } from "@/types/database.types"
 import { supabase } from "@/lib/supabase/client"
 import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
 import { GeneralInfoDisclaimer } from "@/components/ui/GeneralInfoDisclaimer"
-
-type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
 const ONBOARDING_GOALS = [
   {
@@ -60,17 +57,6 @@ const GOAL_CONTEXT: Record<string, { destination: string; points: number }> = {
   internationalPremiumUpgrade: { destination: "Sydney → Tokyo in Premium Economy", points: 80000 },
 }
 
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-]
-
-interface CardDetail {
-  month: string
-  year: string
-  bonusReceived: "yes" | "no" | "unsure" | null
-}
-
 interface NewChurnerOnboardingProps {
   onComplete: (data: {
     goalKey: string
@@ -79,15 +65,13 @@ interface NewChurnerOnboardingProps {
   }) => void
 }
 
-type Step = "goal" | "spend" | "history"
+type Step = "goal" | "spend"
 
 export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) {
   const { catalogCards } = useCatalog()
   const [step, setStep] = useState<Step>("goal")
   const [goalKey, setGoalKey] = useState<string | null>(null)
   const [spendBand, setSpendBand] = useState<SpendBand>("2k4k")
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-  const [details, setDetails] = useState<Record<string, CardDetail>>({})
   const [exclusionPeriods, setExclusionPeriods] = useState<BankExclusionPeriod[]>([])
 
   useEffect(() => {
@@ -99,74 +83,15 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
   const goal = goalKey ? GOALS[goalKey as keyof typeof GOALS] : null
   const ctx = goalKey ? GOAL_CONTEXT[goalKey] : null
 
-  // Live path calculation (goal + spend band + history)
-  const cardHistory = useMemo<OnboardingCardEntry[]>(() => {
-    return Array.from(selectedIds)
-      .filter((id) => {
-        const d = details[id]
-        return d?.month && d?.year && d?.bonusReceived
-      })
-      .map((id) => {
-        const card = catalogCards.find((c) => c.id === id)!
-        const d = details[id]
-        return {
-          bank: card.bank,
-          cardId: id,
-          applicationMonth: `${d.year}-${d.month}`,
-          bonusReceived: d.bonusReceived === "yes",
-        }
-      })
-  }, [selectedIds, details, catalogCards])
-
   const bestPath = useMemo(() => {
     if (!goal) return null
-    return calculateOnboardingPath(goal, spendBand, cardHistory, catalogCards, exclusionPeriods)
-  }, [goal, spendBand, cardHistory, catalogCards, exclusionPeriods])
-
-  // Card picker state (step: history)
-  const byBank = useMemo(() => {
-    const map = new Map<string, CatalogCard[]>()
-    for (const card of catalogCards) {
-      if (!card.is_active) continue
-      const existing = map.get(card.bank) ?? []
-      existing.push(card)
-      map.set(card.bank, existing)
-    }
-    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b))
-  }, [catalogCards])
-
-  const toggleCard = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) {
-        next.delete(id)
-        setDetails((d) => { const c = { ...d }; delete c[id]; return c })
-      } else {
-        next.add(id)
-      }
-      return next
-    })
-  }
-
-  const updateDetail = (id: string, field: keyof CardDetail, value: string) => {
-    setDetails((prev) => ({
-      ...prev,
-      [id]: { ...(prev[id] ?? { month: "", year: "", bonusReceived: null }), [field]: value },
-    }))
-  }
+    return calculateOnboardingPath(goal, spendBand, [], catalogCards, exclusionPeriods)
+  }, [goal, spendBand, catalogCards, exclusionPeriods])
 
   const handleGoalSelect = (key: string) => {
     setGoalKey(key)
     setStep("spend")
   }
-
-  const handleSubmit = () => {
-    if (!goalKey) return
-    onComplete({ goalKey, spendBand, cardHistory })
-  }
-
-  const currentYear = new Date().getFullYear()
-  const years = Array.from({ length: 10 }, (_, i) => String(currentYear - i))
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-[var(--surface-muted)] px-4 py-10">
@@ -274,147 +199,16 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
 
             <div className="flex gap-3">
               <button
-                onClick={() => setStep("history")}
-                className="flex-1 rounded-xl py-3 text-base font-semibold text-white transition-opacity hover:opacity-90"
-                style={{ background: "var(--gradient-cta)" }}
-              >
-                Refine my eligibility →
-              </button>
-              <button
-                onClick={handleSubmit}
-                className="rounded-xl border border-white/10 px-5 py-3 text-sm text-on-surface-variant hover:border-white/20 hover:text-white"
-              >
-                Skip →
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* Step 3 — Card history (optional eligibility check) */}
-        {step === "history" && goal && (
-          <>
-            <div className="space-y-2">
-              <button onClick={() => setStep("spend")} className="text-sm text-on-surface-variant hover:text-white">
-                ← Back
-              </button>
-              <h1 className="text-3xl font-bold text-white">Have you held any of these cards recently?</h1>
-              <p className="text-on-surface-variant">
-                Helps us route around eligibility blocks. Skip if you haven&apos;t held any.
-              </p>
-            </div>
-
-            {/* Card picker */}
-            <div className="space-y-6">
-              {byBank.map(([bank, cards]) => (
-                <div key={bank}>
-                  <p className="mb-2 text-sm font-medium text-on-surface-variant">{bank}</p>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {cards.map((card) => {
-                      const selected = selectedIds.has(card.id)
-                      const d = details[card.id]
-
-                      return (
-                        <div key={card.id} className="space-y-2">
-                          <button
-                            onClick={() => toggleCard(card.id)}
-                            className={`w-full rounded-xl border-2 p-4 text-left transition-all hover:scale-[1.01] ${
-                              selected
-                                ? "border-teal-500 bg-teal-500/10"
-                                : "border-white/10 bg-white/5 hover:border-white/20"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <p className="font-medium text-white">{card.name}</p>
-                              {selected && <span className="text-teal-400">✓</span>}
-                            </div>
-                          </button>
-
-                          {selected && (
-                            <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-2">
-                              <p className="text-xs text-on-surface-variant">When did you apply?</p>
-                              <div className="flex gap-2">
-                                <select
-                                  value={d?.month ?? ""}
-                                  onChange={(e) => updateDetail(card.id, "month", e.target.value)}
-                                  className="flex-1 rounded-lg border border-white/10 bg-surface-container px-3 py-1.5 text-sm text-white"
-                                >
-                                  <option value="">Month</option>
-                                  {MONTHS.map((m, i) => (
-                                    <option key={m} value={String(i + 1).padStart(2, "0")}>{m}</option>
-                                  ))}
-                                </select>
-                                <select
-                                  value={d?.year ?? ""}
-                                  onChange={(e) => updateDetail(card.id, "year", e.target.value)}
-                                  className="w-24 rounded-lg border border-white/10 bg-surface-container px-3 py-1.5 text-sm text-white"
-                                >
-                                  <option value="">Year</option>
-                                  {years.map((y) => (
-                                    <option key={y} value={y}>{y}</option>
-                                  ))}
-                                </select>
-                              </div>
-                              <div className="flex gap-2">
-                                {(["yes", "no", "unsure"] as const).map((v) => (
-                                  <button
-                                    key={v}
-                                    onClick={() => updateDetail(card.id, "bonusReceived", v)}
-                                    className={`flex-1 rounded-lg border py-1.5 text-xs transition-colors ${
-                                      d?.bonusReceived === v
-                                        ? "border-teal-500 bg-teal-500/20 text-teal-400"
-                                        : "border-white/10 text-on-surface-variant hover:border-white/20"
-                                    }`}
-                                  >
-                                    {v === "unsure" ? "Not sure" : v === "yes" ? "Yes" : "No"}
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Live updated path if cards selected */}
-            {bestPath && selectedIds.size > 0 && (
-              <div className="rounded-2xl border border-teal-500/30 bg-teal-500/10 p-5 space-y-3">
-                <p className="text-sm text-teal-400 font-medium">Updated plan based on your history</p>
-                <div className="space-y-1.5">
-                  {bestPath.cards.map((card, i) => (
-                    <div key={card.id} className="flex items-center gap-2 text-sm">
-                      <span className="text-teal-400 font-bold">{i + 1}.</span>
-                      <span className="text-white">{card.name}</span>
-                      <span className="text-on-surface-variant">· {card.welcome_bonus_points?.toLocaleString()} pts</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-on-surface-variant">
-                  ~{bestPath.totalPoints.toLocaleString()} total points in ~{bestPath.timeToGoal} months
-                </p>
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              <button
-                onClick={handleSubmit}
+                onClick={() => { if (goalKey) onComplete({ goalKey, spendBand, cardHistory: [] }) }}
                 className="flex-1 rounded-xl py-3 text-base font-semibold text-white transition-opacity hover:opacity-90"
                 style={{ background: "var(--gradient-cta)" }}
               >
                 Start tracking this plan →
               </button>
-              <button
-                onClick={handleSubmit}
-                className="rounded-xl border border-white/10 px-5 py-3 text-sm text-on-surface-variant hover:border-white/20 hover:text-white"
-              >
-                Skip
-              </button>
             </div>
           </>
         )}
+
         <GeneralInfoDisclaimer />
       </div>
     </div>
