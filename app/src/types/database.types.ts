@@ -728,6 +728,8 @@ export type Database = {
       }
       deals: {
         Row: {
+          bonus_points: number | null
+          card_id: string | null
           card_network: string | null
           click_count: number | null
           created_at: string | null
@@ -746,6 +748,8 @@ export type Database = {
           view_count: number | null
         }
         Insert: {
+          bonus_points?: number | null
+          card_id?: string | null
           card_network?: string | null
           click_count?: number | null
           created_at?: string | null
@@ -764,6 +768,8 @@ export type Database = {
           view_count?: number | null
         }
         Update: {
+          bonus_points?: number | null
+          card_id?: string | null
           card_network?: string | null
           click_count?: number | null
           created_at?: string | null

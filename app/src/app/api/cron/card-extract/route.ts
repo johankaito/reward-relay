@@ -88,7 +88,37 @@ async function processCard(
     // Write bonus + earn data only when confidence is high enough to trust
     if (extracted.confidenceScore >= HIGH_CONFIDENCE) {
       if (extracted.bonusOffer) {
-        updateData.welcome_bonus_points = extracted.bonusOffer.bonusPoints
+        const extractedBonus = extracted.bonusOffer.bonusPoints
+        const bonusChanged = extractedBonus !== (card.welcome_bonus_points ?? 0)
+        const TWO_SOURCE_CONFIDENCE = 0.80
+
+        if (bonusChanged && extracted.confidenceScore >= TWO_SOURCE_CONFIDENCE) {
+          // Bonus has changed at high confidence — require a deal feed to confirm before auto-publishing
+          const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString()
+          const { data: dealConfirmation } = await supabase
+            .from('deals')
+            .select('id')
+            .eq('card_id', cardId)
+            .gte('bonus_points', Math.floor(extractedBonus * 0.95))
+            .gte('created_at', thirtyDaysAgo)
+            .limit(1)
+
+          if (dealConfirmation && dealConfirmation.length > 0) {
+            // Two sources agree — auto-publish the new bonus
+            updateData.welcome_bonus_points = extractedBonus
+          } else {
+            // Only Claude says it changed — hold for admin review
+            updateData.needs_verification = true
+            updateData.verification_priority = 'high'
+            console.log(
+              `Two-source gate: ${card.name} extracted=${extractedBonus}, stored=${card.welcome_bonus_points} — no deal confirmation, holding for review`
+            )
+          }
+        } else {
+          // No change, or below the two-source threshold — write directly
+          updateData.welcome_bonus_points = extractedBonus
+        }
+
         updateData.bonus_spend_requirement = extracted.bonusOffer.spendRequirement
         updateData.bonus_spend_window_months = extracted.bonusOffer.timeframeMonths
         if (extracted.bonusOffer.expiryDate) {
