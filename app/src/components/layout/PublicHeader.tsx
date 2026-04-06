@@ -9,7 +9,7 @@ export function PublicHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
-          <Image src="/logo.svg" alt="Reward Relay" width={32} height={32} />
+          <Image src="/logo.png" alt="Reward Relay" width={32} height={32} />
           <span className="text-sm font-semibold text-[var(--text-primary)]">Reward Relay</span>
         </Link>
 

@@ -13,7 +13,7 @@ interface HeaderProps {
 function LogoContent() {
   return (
     <>
-      <Image src="/logo.svg" alt="Reward Relay" width={32} height={32} className="drop-shadow-lg" />
+      <Image src="/logo.png" alt="Reward Relay" width={32} height={32} className="drop-shadow-lg" />
       <span className="text-xl font-bold text-white">Reward Relay</span>
     </>
   )

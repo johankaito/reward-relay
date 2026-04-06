@@ -4,8 +4,8 @@
   "description": "Track, churn, and optimize Australian credit cards automatically",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#FF6B6B",
+  "background_color": "#0b1326",
+  "theme_color": "#4edea3",
   "orientation": "portrait-primary",
   "icons": [
     {
