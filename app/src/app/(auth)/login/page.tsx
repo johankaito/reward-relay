@@ -15,9 +15,10 @@ function LoginPageInner() {
   const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [showBetaForm, setShowBetaForm] = useState(searchParams.get('access') === '1')
-  const [betaEmail, setBetaEmail] = useState("")
-  const [betaName, setBetaName] = useState("")
-  const [betaLoading, setBetaLoading] = useState(false)
+  const [signupEmail, setSignupEmail] = useState("")
+  const [signupPassword, setSignupPassword] = useState("")
+  const [signupConfirm, setSignupConfirm] = useState("")
+  const [signupLoading, setSignupLoading] = useState(false)
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault()
@@ -56,33 +57,29 @@ function LoginPageInner() {
     }
   }
 
-  const handleBetaRequest = async (e: FormEvent) => {
+  const handleSignup = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (!betaEmail || !betaEmail.includes("@")) {
-      toast.error("Please enter a valid email address")
+    if (signupPassword !== signupConfirm) {
+      toast.error("Passwords do not match")
       return
     }
 
-    setBetaLoading(true)
+    setSignupLoading(true)
 
     try {
-      const { error } = await supabase.from("beta_requests").insert({
-        email: betaEmail.trim(),
-        name: betaName.trim() || null,
+      const { error } = await supabase.auth.signUp({
+        email: signupEmail,
+        password: signupPassword,
       })
 
       if (error) throw error
 
-      toast.success("Request submitted! We'll be in touch soon.")
-      setShowBetaForm(false)
-      setBetaEmail("")
-      setBetaName("")
+      router.push("/onboarding")
     } catch (error: unknown) {
-      console.error("Beta request error:", error)
-      toast.error((error as Error).message || "Failed to submit request. Please try again.")
+      toast.error((error as Error).message)
     } finally {
-      setBetaLoading(false)
+      setSignupLoading(false)
     }
   }
 
@@ -252,7 +249,7 @@ function LoginPageInner() {
             </div>
           </form>
 
-          {/* Footer — sign up or beta request form */}
+          {/* Footer — sign up or signup form */}
           {!showBetaForm ? (
             <div className="mt-8 text-center">
               <p className="text-on-surface-variant text-sm font-medium">
@@ -269,40 +266,45 @@ function LoginPageInner() {
           ) : (
             <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
               <p className="text-xs font-bold text-on-surface-variant text-center uppercase tracking-widest mb-4">
-                Request Beta Access
+                Create Account
               </p>
-              <form onSubmit={handleBetaRequest} className="space-y-4">
+              <form onSubmit={handleSignup} className="space-y-4">
                 <input
                   type="email"
-                  value={betaEmail}
-                  onChange={(e) => setBetaEmail(e.target.value)}
+                  value={signupEmail}
+                  onChange={(e) => setSignupEmail(e.target.value)}
                   required
                   placeholder="you@example.com"
                   className="w-full h-12 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all"
                 />
                 <input
-                  type="text"
-                  value={betaName}
-                  onChange={(e) => setBetaName(e.target.value)}
-                  placeholder="Your name (optional)"
+                  type="password"
+                  value={signupPassword}
+                  onChange={(e) => setSignupPassword(e.target.value)}
+                  required
+                  placeholder="Password"
+                  className="w-full h-12 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all"
+                />
+                <input
+                  type="password"
+                  value={signupConfirm}
+                  onChange={(e) => setSignupConfirm(e.target.value)}
+                  required
+                  placeholder="Confirm password"
                   className="w-full h-12 px-5 bg-surface-container-highest rounded-2xl border-none text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-[#4edea3]/20 transition-all"
                 />
                 <div className="flex gap-3">
                   <button
                     type="submit"
-                    disabled={betaLoading}
+                    disabled={signupLoading}
                     className="flex-1 h-12 text-black font-headline font-bold rounded-full hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 transition-all shadow-lg shadow-[#4edea3]/20"
                     style={{ background: "var(--gradient-cta)" }}
                   >
-                    {betaLoading ? "Submitting…" : "Request Access"}
+                    {signupLoading ? "Creating…" : "Create account"}
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setShowBetaForm(false)
-                      setBetaEmail("")
-                      setBetaName("")
-                    }}
+                    onClick={() => setShowBetaForm(false)}
                     className="px-5 h-12 rounded-full bg-surface-container-highest text-on-surface-variant font-medium text-sm hover:text-on-surface transition-colors"
                   >
                     Cancel
