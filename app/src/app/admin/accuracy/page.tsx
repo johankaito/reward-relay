@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
-import { CorrectionAction } from './_components/CorrectionAction'
 import type { Database } from '@/types/database.types'
+import { CorrectionsTable } from './CorrectionsTable'
 
 const ADMIN_EMAIL = 'john.g.keto+rewardrelay@gmail.com'
 
@@ -30,7 +30,7 @@ export default async function AccuracyDashboardPage() {
     { data: lowConfLogs },
     { data: weekLogs },
     { data: hashChanges },
-    { data: pendingCorrections },
+    { data: pendingCorrectionsRaw },
   ] = await Promise.all([
     serviceSupabase
       .from('extraction_log')
@@ -59,22 +59,29 @@ export default async function AccuracyDashboardPage() {
 
     serviceSupabase
       .from('card_corrections')
-      .select('id, card_id, field, reported_value, created_at')
+      .select('id, card_id, field, reported_value, reported_by, status, created_at')
       .eq('status', 'pending')
       .order('created_at', { ascending: false })
       .limit(50),
   ])
 
-  // Fetch card names for low confidence logs + corrections
+  // Fetch card names for low confidence logs + corrections in a single query
   const logCardIds = [...new Set((lowConfLogs ?? []).map((l) => l.card_id).filter((id): id is string => id !== null))]
-  const correctionCardIds = [...new Set((pendingCorrections ?? []).map((c) => c.card_id).filter((id): id is string => id !== null))]
+  const correctionCardIds = [...new Set((pendingCorrectionsRaw ?? []).map((c) => c.card_id).filter((id): id is string => id !== null))]
   const allCardIds = [...new Set([...logCardIds, ...correctionCardIds])]
+
   const { data: cardDetails } =
     allCardIds.length > 0
       ? await serviceSupabase.from('cards').select('id, name, bank').in('id', allCardIds)
       : { data: [] }
 
   const cardMap = Object.fromEntries((cardDetails ?? []).map((c) => [c.id, c]))
+
+  const pendingCorrections = (pendingCorrectionsRaw ?? []).map((c) => ({
+    ...c,
+    cardName: c.card_id ? (cardMap[c.card_id]?.name ?? c.card_id) : '—',
+    cardBank: c.card_id ? (cardMap[c.card_id]?.bank ?? '—') : '—',
+  }))
 
   const avgConfidence =
     recentLogs && recentLogs.length > 0
@@ -84,7 +91,7 @@ export default async function AccuracyDashboardPage() {
   const weekRunCount = weekLogs?.length ?? 0
   const monthRunCount = recentLogs?.length ?? 0
   const hashChangeCount = hashChanges?.length ?? 0
-  const pendingCount = pendingCorrections?.length ?? 0
+  const pendingCount = pendingCorrections.length
 
   return (
     <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', fontFamily: 'inherit' }}>
@@ -205,8 +212,16 @@ export default async function AccuracyDashboardPage() {
         )}
       </section>
 
-      {/* Recent Runs Summary */}
+      {/* Pending Corrections Review */}
       <section style={{ marginBottom: '2rem' }}>
+        <h2 style={{ color: 'var(--text-primary)', fontSize: '1.125rem', marginBottom: '1rem' }}>
+          Pending User Corrections{pendingCount > 0 && ` (${pendingCount})`}
+        </h2>
+        <CorrectionsTable corrections={pendingCorrections} />
+      </section>
+
+      {/* Recent Runs Summary */}
+      <section>
         <h2 style={{ color: 'var(--text-primary)', fontSize: '1.125rem', marginBottom: '1rem' }}>
           Recent Extraction Runs
         </h2>
@@ -214,48 +229,6 @@ export default async function AccuracyDashboardPage() {
           {monthRunCount} extractions in the last 30 days
           {hashChangeCount > 0 && ` \u2022 ${hashChangeCount} data changes detected`}
         </p>
-      </section>
-
-      {/* Pending Corrections */}
-      <section>
-        <h2 style={{ color: 'var(--text-primary)', fontSize: '1.125rem', marginBottom: '1rem' }}>
-          Pending Corrections ({pendingCount})
-        </h2>
-        {!pendingCorrections || pendingCorrections.length === 0 ? (
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-            No pending corrections.
-          </p>
-        ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border, #e5e7eb)' }}>
-                {['Card', 'Bank', 'Field', 'Reported Value', 'Submitted', 'Actions'].map((h) => (
-                  <th key={h} style={{ textAlign: 'left', padding: '0.5rem', color: 'var(--text-secondary)', fontWeight: 500 }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {pendingCorrections.map((c) => {
-                const card = c.card_id ? cardMap[c.card_id] : null
-                return (
-                  <tr key={c.id} style={{ borderBottom: '1px solid var(--border, #e5e7eb)' }}>
-                    <td style={{ padding: '0.5rem', color: 'var(--text-primary)' }}>{card?.name ?? c.card_id ?? '—'}</td>
-                    <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>{card?.bank ?? '—'}</td>
-                    <td style={{ padding: '0.5rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{c.field}</td>
-                    <td style={{ padding: '0.5rem', color: 'var(--text-primary)', fontWeight: 600 }}>{c.reported_value}</td>
-                    <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>
-                      {c.created_at ? new Date(c.created_at).toLocaleDateString('en-AU') : '—'}
-                    </td>
-                    <td style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
-                      <CorrectionAction correctionId={c.id} action="verified" label="Approve" />
-                      <CorrectionAction correctionId={c.id} action="dismissed" label="Dismiss" />
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        )}
       </section>
     </main>
   )

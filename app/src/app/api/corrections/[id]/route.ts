@@ -5,26 +5,28 @@ import type { Database } from '@/types/database.types'
 
 const ADMIN_EMAIL = 'john.g.keto+rewardrelay@gmail.com'
 
-// Map correction field names (user-facing) → cards table column names
+// Map correction field names (user-facing) → cards table column names.
+// Allowlist prevents arbitrary column injection.
 const FIELD_TO_COLUMN: Record<string, keyof Database['public']['Tables']['cards']['Update']> = {
   bonusPoints: 'welcome_bonus_points',
   annualFee: 'annual_fee',
   earnRate: 'earn_rate_primary',
   spendRequirement: 'bonus_spend_requirement',
+  bonus_spend_window_months: 'bonus_spend_window_months',
 }
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id: correctionId } = await params
-
-  // Admin-only: verify caller is the admin user
-  const userSupabase = await getSupabaseServerClient()
-  const { data: { user } } = await userSupabase.auth.getUser()
+  // Auth: admin only
+  const supabase = await getSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
   if (!user || user.email !== ADMIN_EMAIL) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
+
+  const { id: correctionId } = await params
 
   let body: unknown
   try {
@@ -35,9 +37,13 @@ export async function PATCH(
 
   const status = (body as { status?: string })?.status
   if (status !== 'verified' && status !== 'dismissed') {
-    return NextResponse.json({ error: 'status must be "verified" or "dismissed"' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'status must be "verified" or "dismissed"' },
+      { status: 400 }
+    )
   }
 
+  // Use service role for writes
   const serviceSupabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_KEY!
@@ -55,17 +61,24 @@ export async function PATCH(
   }
 
   if (correction.status !== 'pending') {
-    return NextResponse.json({ error: 'Correction is not pending' }, { status: 409 })
+    return NextResponse.json(
+      { error: `Correction is already ${correction.status}` },
+      { status: 409 }
+    )
   }
 
   // If approving, write the value back to the cards table
-  if (status === 'verified' && correction.card_id) {
+  if (status === 'verified') {
     const column = FIELD_TO_COLUMN[correction.field]
     if (!column) {
       return NextResponse.json(
         { error: `Field "${correction.field}" cannot be applied — not in allowlist` },
         { status: 400 }
       )
+    }
+
+    if (!correction.card_id) {
+      return NextResponse.json({ error: 'Correction has no card_id' }, { status: 422 })
     }
 
     const numericValue = Number(correction.reported_value)
@@ -82,17 +95,19 @@ export async function PATCH(
       .eq('id', correction.card_id)
 
     if (updateError) {
+      console.error('Failed to apply correction to cards table:', updateError)
       return NextResponse.json({ error: 'Failed to apply correction to card' }, { status: 500 })
     }
   }
 
   // Mark correction as verified or dismissed
-  const { error: correctionUpdateError } = await serviceSupabase
+  const { error: statusError } = await serviceSupabase
     .from('card_corrections')
     .update({ status })
     .eq('id', correctionId)
 
-  if (correctionUpdateError) {
+  if (statusError) {
+    console.error('Failed to update correction status:', statusError)
     return NextResponse.json({ error: 'Failed to update correction status' }, { status: 500 })
   }
 
