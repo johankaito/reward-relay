@@ -49,11 +49,14 @@ async function processCard(
 
     // Determine verification action
     const verificationAction = getVerificationAction(extracted.confidenceScore)
+    const now = new Date().toISOString()
 
     const updateData: Database['public']['Tables']['cards']['Update'] = {
       needs_verification: verificationAction.needsVerification || reconciled.requiresReview,
       verification_priority: verificationAction.verificationPriority,
-      last_verified_at: new Date().toISOString(),
+      last_verified_at: now,
+      last_extracted_at: now,
+      extraction_confidence: extracted.confidenceScore,
     }
 
     if (reconciled.resolvedAnnualFee !== null) {
@@ -64,10 +67,42 @@ async function processCard(
       updateData.is_active = false
     }
 
+    // Write bonus + earn data only when confidence is high enough to trust
+    const HIGH_CONFIDENCE = 0.75
+    if (extracted.confidenceScore >= HIGH_CONFIDENCE) {
+      if (extracted.bonusOffer) {
+        updateData.welcome_bonus_points = extracted.bonusOffer.bonusPoints
+        updateData.bonus_spend_requirement = extracted.bonusOffer.spendRequirement
+        updateData.bonus_spend_window_months = extracted.bonusOffer.timeframeMonths
+        if (extracted.bonusOffer.expiryDate) {
+          updateData.offer_expiry_date = extracted.bonusOffer.expiryDate
+        }
+      } else {
+        // Bonus offer no longer present — clear stale values
+        updateData.welcome_bonus_points = null
+        updateData.bonus_spend_requirement = null
+        updateData.bonus_spend_window_months = null
+        updateData.offer_expiry_date = null
+      }
+
+      if (extracted.earnRates.length > 0) {
+        updateData.earn_rate_primary = extracted.earnRates[0].pointsPerDollar
+        updateData.points_currency = extracted.earnRates[0].programName
+      }
+      if (extracted.earnRates.length > 1) {
+        updateData.earn_rate_secondary = extracted.earnRates[1].pointsPerDollar
+      }
+
+      if (extracted.minIncome !== null) {
+        updateData.min_income = extracted.minIncome
+      }
+    }
+
     await supabase.from('cards').update(updateData).eq('id', cardId)
 
+    const bonusWritten = extracted.confidenceScore >= HIGH_CONFIDENCE
     console.log(
-      `Extracted ${card.name}: confidence=${extracted.confidenceScore.toFixed(2)}, conflicts=${reconciled.conflicts.length}`
+      `Extracted ${card.name}: confidence=${extracted.confidenceScore.toFixed(2)}, conflicts=${reconciled.conflicts.length}, bonus=${bonusWritten ? `${extracted.bonusOffer?.bonusPoints ?? 0}pts` : 'skipped(low-conf)'}`
     )
 
     return { cardId, success: true }
