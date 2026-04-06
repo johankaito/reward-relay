@@ -1,10 +1,12 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { useCatalog } from "@/contexts/CatalogContext"
 import type { OnboardingCardEntry } from "@/lib/recommendations"
 import { getRecommendationsFromHistory } from "@/lib/recommendations"
 import type { Database } from "@/types/database.types"
+import { supabase } from "@/lib/supabase/client"
+import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
 
 type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
@@ -27,6 +29,13 @@ export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
   const { catalogCards } = useCatalog()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [details, setDetails] = useState<Record<string, CardDetail>>({})
+  const [exclusionPeriods, setExclusionPeriods] = useState<BankExclusionPeriod[]>([])
+
+  useEffect(() => {
+    supabase.from("bank_exclusion_periods").select("*").then(({ data }) => {
+      if (data) setExclusionPeriods(data as BankExclusionPeriod[])
+    })
+  }, [])
 
   // Group catalog cards by bank for display
   const byBank = useMemo(() => {
@@ -89,20 +98,20 @@ export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
   // Live recommendation from completed cards
   const topRec = useMemo(() => {
     if (cardHistory.length === 0) return null
-    const recs = getRecommendationsFromHistory(cardHistory, catalogCards, { limit: 1 })
+    const recs = getRecommendationsFromHistory(cardHistory, catalogCards, { limit: 1 }, exclusionPeriods)
     return recs[0] ?? null
-  }, [cardHistory, catalogCards])
+  }, [cardHistory, catalogCards, exclusionPeriods])
 
   // Eligibility status per completed card
   const eligibilityByBank = useMemo(() => {
-    const map = new Map<string, { eligible: boolean; eligibleAt: Date | null }>()
+    const map = new Map<string, { eligible: boolean; eligibleAt: Date | null; eligibilityUnconfirmed: boolean }>()
     if (cardHistory.length === 0) return map
-    const recs = getRecommendationsFromHistory(cardHistory, catalogCards, { limit: 50 })
+    const recs = getRecommendationsFromHistory(cardHistory, catalogCards, { limit: 50 }, exclusionPeriods)
     for (const rec of recs) {
-      map.set(rec.card.bank, { eligible: rec.eligibleNow, eligibleAt: rec.eligibleAt })
+      map.set(rec.card.bank, { eligible: rec.eligibleNow, eligibleAt: rec.eligibleAt, eligibilityUnconfirmed: rec.eligibilityUnconfirmed })
     }
     return map
-  }, [cardHistory, catalogCards])
+  }, [cardHistory, catalogCards, exclusionPeriods])
 
   const getEligibilityChip = (cardId: string) => {
     const card = catalogCards.find((c) => c.id === cardId)
@@ -110,10 +119,16 @@ export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
     const e = eligibilityByBank.get(card.bank)
     if (!e) return null
     if (e.eligible) {
+      if (e.eligibilityUnconfirmed) {
+        return <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs text-amber-400">⚠️ May be eligible (period unconfirmed)</span>
+      }
       return <span className="rounded-full bg-teal-500/20 px-2 py-0.5 text-xs text-teal-400">✅ Eligible now</span>
     }
     if (e.eligibleAt) {
       const months = Math.ceil((e.eligibleAt.getTime() - Date.now()) / (30 * 24 * 60 * 60 * 1000))
+      if (e.eligibilityUnconfirmed) {
+        return <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs text-amber-400">⚠️ ~{months}mo wait (period unconfirmed)</span>
+      }
       return <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs text-amber-400">⏳ {months}mo wait</span>
     }
     return null
