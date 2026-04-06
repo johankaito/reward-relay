@@ -1,4 +1,5 @@
 import { load } from 'cheerio'
+import puppeteer from 'puppeteer'
 
 export interface FetchedPage {
   markdown: string
@@ -49,7 +50,7 @@ export const CARD_PAGE_URLS: Record<string, { url: string; tier: 1 | 2 }> = {
     url: 'https://www.bankwest.com.au/personal/credit-cards/rewards/qantas-world',
     tier: 1,
   },
-  // Tier 2 — JS-rendered (Firecrawl)
+  // Tier 2 — JS-rendered (Puppeteer)
   'cba-awards': {
     url: 'https://www.commbank.com.au/personal/credit-cards/commbank-awards-credit-card.html',
     tier: 2,
@@ -133,41 +134,24 @@ async function fetchTier1(url: string): Promise<string> {
   return htmlToMarkdown(html)
 }
 
+// Domains that require JS rendering
+const TIER_2_DOMAINS = ['commbank.com.au', 'americanexpress.com']
+
 async function fetchTier2(url: string): Promise<string> {
-  const firecrawlApiKey = process.env.FIRECRAWL_API_KEY
-
-  if (!firecrawlApiKey) {
-    console.warn(`FIRECRAWL_API_KEY not set, falling back to Tier 1 for ${url}`)
-    return fetchTier1(url)
-  }
-
-  const response = await fetch('https://api.firecrawl.dev/v1/scrape', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${firecrawlApiKey}`,
-    },
-    body: JSON.stringify({
-      url,
-      formats: ['markdown'],
-    }),
-    signal: AbortSignal.timeout(30000),
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
 
-  if (!response.ok) {
-    console.warn(`Firecrawl returned ${response.status} for ${url}, falling back to Tier 1`)
-    return fetchTier1(url)
+  try {
+    const page = await browser.newPage()
+    await page.setUserAgent(BROWSER_HEADERS['User-Agent'])
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 })
+    const html = await page.content()
+    return htmlToMarkdown(html)
+  } finally {
+    await browser.close()
   }
-
-  const data = (await response.json()) as { data?: { markdown?: string }; markdown?: string }
-  const markdown = data.data?.markdown ?? data.markdown ?? ''
-
-  if (!markdown) {
-    console.warn(`Firecrawl returned empty markdown for ${url}, falling back to Tier 1`)
-    return fetchTier1(url)
-  }
-
-  return markdown.slice(0, 15000)
 }
 
 export async function fetchCardPage(cardSlug: string): Promise<FetchedPage> {
@@ -182,7 +166,9 @@ export async function fetchCardPage(cardSlug: string): Promise<FetchedPage> {
   return { markdown, tier, url }
 }
 
-export async function fetchCardPageByUrl(url: string, tier: 1 | 2 = 1): Promise<FetchedPage> {
-  const markdown = tier === 2 ? await fetchTier2(url) : await fetchTier1(url)
-  return { markdown, tier, url }
+export async function fetchCardPageByUrl(url: string, tier?: 1 | 2): Promise<FetchedPage> {
+  const resolvedTier: 1 | 2 =
+    tier ?? (TIER_2_DOMAINS.some((d) => url.includes(d)) ? 2 : 1)
+  const markdown = resolvedTier === 2 ? await fetchTier2(url) : await fetchTier1(url)
+  return { markdown, tier: resolvedTier, url }
 }
