@@ -1,0 +1,123 @@
+name: Daily Crons (OzBargain + Deals Sync + Notifications)
+
+on:
+  schedule:
+    # 4am UTC daily — OzBargain parse
+    - cron: '0 4 * * *'
+    # 6am UTC daily — PointHacks deals sync
+    - cron: '0 6 * * *'
+    # 10pm UTC daily — lightweight notification crons (curl to Vercel)
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Job to run'
+        required: false
+        default: 'all'
+        type: choice
+        options: [all, ozbargain-parse, deals-sync, notifications]
+
+# ── OzBargain Parse ────────────────────────────────────────────────────────────
+jobs:
+  ozbargain-parse:
+    name: OzBargain Parse
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 4 * * *'
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          package_json_file: app/package.json
+
+      - name: Install dependencies
+        run: cd app && pnpm install --frozen-lockfile
+
+      - name: Run OzBargain parse
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: cd app && pnpm tsx scripts/run-ozbargain-parse.ts
+
+  # ── Deals Sync ────────────────────────────────────────────────────────────────
+  deals-sync:
+    name: Deals Sync (PointHacks)
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 6 * * *'
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          package_json_file: app/package.json
+
+      - name: Install dependencies
+        run: cd app && pnpm install --frozen-lockfile
+
+      - name: Run deals sync
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: cd app && pnpm tsx scripts/run-deals-sync.ts
+
+  # ── Lightweight Notification Crons (curl → Vercel) ────────────────────────────
+  notifications:
+    name: Notification Crons
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 22 * * *'
+    runs-on: ubuntu-latest
+    environment: Production
+    env:
+      BASE_URL: ${{ vars.VERCEL_APP_URL }}
+      AUTH: ${{ secrets.CRON_SECRET }}
+    steps:
+      - name: spending-alerts
+        run: |
+          curl -sf -X POST "$BASE_URL/api/cron/spending-alerts" \
+            -H "Authorization: Bearer $AUTH" \
+            -H "Content-Type: application/json" \
+            --max-time 30
+
+      - name: loyalty-expiry
+        run: |
+          curl -sf -X POST "$BASE_URL/api/cron/loyalty-expiry" \
+            -H "Authorization: Bearer $AUTH" \
+            -H "Content-Type: application/json" \
+            --max-time 30
+
+      - name: deal-alerts
+        run: |
+          curl -sf -X POST "$BASE_URL/api/cron/deal-alerts" \
+            -H "Authorization: Bearer $AUTH" \
+            -H "Content-Type: application/json" \
+            --max-time 30
+
+      - name: leaderboard
+        run: |
+          curl -sf -X POST "$BASE_URL/api/cron/leaderboard" \
+            -H "Authorization: Bearer $AUTH" \
+            -H "Content-Type: application/json" \
+            --max-time 30
+
+      - name: reminders-check
+        run: |
+          curl -sf -X POST "$BASE_URL/api/reminders/check" \
+            -H "Authorization: Bearer $AUTH" \
+            -H "Content-Type: application/json" \
+            --max-time 30

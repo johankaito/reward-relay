@@ -1,0 +1,107 @@
+name: Heavy Crons (CDR Refresh + Card Extract + TC Verify)
+
+on:
+  schedule:
+    # Sunday 4pm UTC — CDR refresh then card extract (sequential)
+    - cron: '0 16 * * 0'
+    # Monday 2am UTC — TC cooling-period verification
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Job to run'
+        required: false
+        default: 'all'
+        type: choice
+        options: [all, cdr-refresh, card-extract, tc-verify]
+
+jobs:
+  # ── CDR Refresh ──────────────────────────────────────────────────────────────
+  cdr-refresh:
+    name: CDR Refresh
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 16 * * 0'
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          package_json_file: app/package.json
+
+      - name: Install dependencies
+        run: cd app && pnpm install --frozen-lockfile
+
+      - name: Run CDR refresh
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: cd app && pnpm tsx scripts/run-cdr-refresh.ts
+
+  # ── Card Extract ─────────────────────────────────────────────────────────────
+  card-extract:
+    name: Card Extract
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 16 * * 0'
+    needs: cdr-refresh
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          package_json_file: app/package.json
+
+      - name: Install dependencies
+        run: cd app && pnpm install --frozen-lockfile
+
+      - name: Install Chromium for Puppeteer
+        run: cd app && npx puppeteer browsers install chrome
+
+      - name: Run card extract
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: cd app && pnpm tsx scripts/run-card-extract.ts
+
+  # ── TC Verify ────────────────────────────────────────────────────────────────
+  tc-verify:
+    name: TC Verify
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 2 * * 1'
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          package_json_file: app/package.json
+
+      - name: Install dependencies
+        run: cd app && pnpm install --frozen-lockfile
+
+      - name: Run TC verify
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: cd app && pnpm tsx scripts/run-tc-verify.ts
