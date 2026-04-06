@@ -31,6 +31,7 @@ export default async function AccuracyDashboardPage() {
     { data: weekLogs },
     { data: hashChanges },
     { data: pendingCorrections },
+    { data: unmatchedDeals },
   ] = await Promise.all([
     serviceSupabase
       .from('extraction_log')
@@ -63,6 +64,12 @@ export default async function AccuracyDashboardPage() {
       .eq('status', 'pending')
       .order('created_at', { ascending: false })
       .limit(50),
+
+    serviceSupabase
+      .from('unmatched_deals')
+      .select('id, source, raw_title, extracted_issuer, extracted_card_name, bonus_points, source_url, created_at')
+      .order('created_at', { ascending: false })
+      .limit(50),
   ])
 
   // Fetch card names for low confidence logs + corrections
@@ -85,6 +92,7 @@ export default async function AccuracyDashboardPage() {
   const monthRunCount = recentLogs?.length ?? 0
   const hashChangeCount = hashChanges?.length ?? 0
   const pendingCount = pendingCorrections?.length ?? 0
+  const unmatchedCount = unmatchedDeals?.length ?? 0
 
   return (
     <main style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', fontFamily: 'inherit' }}>
@@ -120,6 +128,11 @@ export default async function AccuracyDashboardPage() {
           label="Pending Corrections"
           value={String(pendingCount)}
           highlight={pendingCount > 0}
+        />
+        <StatCard
+          label="Unmatched Deals"
+          value={String(unmatchedCount)}
+          highlight={unmatchedCount > 0}
         />
       </div>
 
@@ -200,6 +213,49 @@ export default async function AccuracyDashboardPage() {
                   </tr>
                 )
               })}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      {/* Unmatched Deals Queue */}
+      <section style={{ marginBottom: '2rem' }}>
+        <h2 style={{ color: 'var(--text-primary)', fontSize: '1.125rem', marginBottom: '1rem' }}>
+          Unmatched Deal Feed Items ({unmatchedCount})
+        </h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginBottom: '1rem' }}>
+          Feed items that could not be fuzzy-matched to a card in the catalogue. Review and link manually.
+        </p>
+        {!unmatchedDeals || unmatchedDeals.length === 0 ? (
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>No unmatched deals.</p>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border, #e5e7eb)' }}>
+                {['Source', 'Issuer', 'Card Name', 'Bonus Pts', 'URL', 'Date'].map((h) => (
+                  <th key={h} style={{ textAlign: 'left', padding: '0.5rem', color: 'var(--text-secondary)', fontWeight: 500 }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {unmatchedDeals.map((d) => (
+                <tr key={d.id} style={{ borderBottom: '1px solid var(--border, #e5e7eb)' }}>
+                  <td style={{ padding: '0.5rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{d.source}</td>
+                  <td style={{ padding: '0.5rem', color: 'var(--text-primary)' }}>{d.extracted_issuer ?? '—'}</td>
+                  <td style={{ padding: '0.5rem', color: 'var(--text-primary)' }}>{d.extracted_card_name ?? d.raw_title ?? '—'}</td>
+                  <td style={{ padding: '0.5rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+                    {d.bonus_points !== null ? d.bonus_points.toLocaleString() : '—'}
+                  </td>
+                  <td style={{ padding: '0.5rem' }}>
+                    {d.source_url
+                      ? <a href={d.source_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Link</a>
+                      : '—'}
+                  </td>
+                  <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>
+                    {d.created_at ? new Date(d.created_at).toLocaleDateString('en-AU') : '—'}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
