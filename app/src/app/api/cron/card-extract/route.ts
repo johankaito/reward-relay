@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { fetchCardPageByUrl } from '@/lib/card-fetcher'
 import { extractCardData, getVerificationAction } from '@/lib/card-extractor'
@@ -87,27 +88,34 @@ async function processCard(
 
     // Write bonus + earn data only when confidence is high enough to trust
     if (extracted.confidenceScore >= HIGH_CONFIDENCE) {
+      const extractedBonus = extracted.bonusOffer?.bonusPoints ?? null
+      const existingBonus = card.welcome_bonus_points
+      const bonusChanged = extractedBonus !== null && extractedBonus !== existingBonus
+
       if (extracted.bonusOffer) {
-        const extractedBonus = extracted.bonusOffer.bonusPoints
-        const bonusChanged = extractedBonus !== (card.welcome_bonus_points ?? 0)
         const TWO_SOURCE_CONFIDENCE = 0.80
 
         if (bonusChanged && extracted.confidenceScore >= TWO_SOURCE_CONFIDENCE) {
-          // Bonus has changed at high confidence — require a deal feed to confirm before auto-publishing
+          // CDP-8: Bonus changed at high confidence — require deal feed confirmation before auto-publishing
           const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString()
           const { data: dealConfirmation } = await supabase
             .from('deals')
             .select('id')
             .eq('card_id', cardId)
-            .gte('bonus_points', Math.floor(extractedBonus * 0.95))
+            .gte('bonus_points', Math.floor((extractedBonus ?? 0) * 0.95))
             .gte('created_at', thirtyDaysAgo)
             .limit(1)
 
           if (dealConfirmation && dealConfirmation.length > 0) {
-            // Two sources agree — auto-publish the new bonus
+            // Two sources agree — auto-publish bonus + spend fields
             updateData.welcome_bonus_points = extractedBonus
+            updateData.bonus_spend_requirement = extracted.bonusOffer.spendRequirement
+            updateData.bonus_spend_window_months = extracted.bonusOffer.timeframeMonths
+            if (extracted.bonusOffer.expiryDate) {
+              updateData.offer_expiry_date = extracted.bonusOffer.expiryDate
+            }
           } else {
-            // Only Claude says it changed — hold for admin review
+            // Only Claude detected the change — hold for review, don't auto-publish
             updateData.needs_verification = true
             updateData.verification_priority = 'high'
             console.log(
@@ -115,14 +123,13 @@ async function processCard(
             )
           }
         } else {
-          // No change, or below the two-source threshold — write directly
-          updateData.welcome_bonus_points = extractedBonus
-        }
-
-        updateData.bonus_spend_requirement = extracted.bonusOffer.spendRequirement
-        updateData.bonus_spend_window_months = extracted.bonusOffer.timeframeMonths
-        if (extracted.bonusOffer.expiryDate) {
-          updateData.offer_expiry_date = extracted.bonusOffer.expiryDate
+          // No change or below two-source threshold — write bonus + spend fields directly
+          updateData.welcome_bonus_points = extracted.bonusOffer.bonusPoints
+          updateData.bonus_spend_requirement = extracted.bonusOffer.spendRequirement
+          updateData.bonus_spend_window_months = extracted.bonusOffer.timeframeMonths
+          if (extracted.bonusOffer.expiryDate) {
+            updateData.offer_expiry_date = extracted.bonusOffer.expiryDate
+          }
         }
       } else {
         // Bonus offer no longer present — clear stale values

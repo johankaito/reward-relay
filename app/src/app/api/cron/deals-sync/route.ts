@@ -72,12 +72,48 @@ export async function GET(req: NextRequest) {
     const combined = `${title} ${description}`.toLowerCase()
 
     const isRelevant = CREDIT_CARD_KEYWORDS.some((kw) => combined.includes(kw))
-    if (!isRelevant) continue
+    if (!isRelevant) {
+      skipped++
+      continue
+    }
 
     const specific_issuer = extractIssuer(title)
     const card_network = extractNetwork(title)
     const valid_until = extractExpiry(description)
 
+    // Try to match a card for CDP-8 card_id population
+    let matchedCardId: string | null = null
+    if (specific_issuer) {
+      const { data: matchedCards } = await supabase
+        .from("cards")
+        .select("id, name, bank")
+        .ilike("bank", `%${specific_issuer}%`)
+        .eq("is_active", true)
+        .limit(5)
+
+      if (matchedCards && matchedCards.length > 0) {
+        matchedCardId = matchedCards[0].id
+        const cardIds = matchedCards.map((c) => c.id)
+        await supabase
+          .from("cards")
+          .update({ needs_verification: true, verification_priority: "high" })
+          .in("id", cardIds)
+        signalled += cardIds.length
+      } else {
+        await supabase.from("unmatched_deals").insert({
+          source: "pointhacks",
+          raw_title: title.slice(0, 255),
+          extracted_issuer: specific_issuer,
+          extracted_card_name: null,
+          bonus_points: null,
+          source_url: (item.link as string) ?? null,
+          status: "pending",
+        })
+        unmatchedStored++
+      }
+    }
+
+    // CDP-5: Track DB errors instead of silently skipping
     const { error } = await supabase.from("deals").upsert(
       {
         title: title.slice(0, 255),
@@ -88,6 +124,7 @@ export async function GET(req: NextRequest) {
         source_url: (item.link as string) ?? "",
         specific_issuer,
         card_network,
+        card_id: matchedCardId,
         valid_from: new Date((item.pubDate as string) ?? Date.now()).toISOString(),
         valid_until:
           valid_until ??
@@ -99,40 +136,8 @@ export async function GET(req: NextRequest) {
 
     if (error) {
       errors.push({ title: title.slice(0, 100), error: error.message })
-      skipped++
-      continue
-    }
-    inserted++
-
-    // If we identified an issuer, attempt to match and signal a re-extraction
-    if (specific_issuer) {
-      const { data: matchedCards } = await supabase
-        .from("cards")
-        .select("id, name, bank")
-        .ilike("bank", `%${specific_issuer}%`)
-        .eq("is_active", true)
-        .limit(5)
-
-      if (matchedCards && matchedCards.length > 0) {
-        // Flag matched cards: PointHacks published new deal content — re-verify bonus accuracy
-        const cardIds = matchedCards.map((c) => c.id)
-        await supabase
-          .from("cards")
-          .update({ needs_verification: true, verification_priority: "high" })
-          .in("id", cardIds)
-        signalled += cardIds.length
-      } else {
-        // No matched card — store for admin review
-        await supabase.from("unmatched_deals").insert({
-          source: "pointhacks",
-          raw_title: title.slice(0, 255),
-          extracted_issuer: specific_issuer,
-          extracted_card_name: null,
-          bonus_points: null,
-          source_url: (item.link as string) ?? null,
-        })
-        unmatchedStored++
-      }
+    } else {
+      inserted++
     }
   }
 
