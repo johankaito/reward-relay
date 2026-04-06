@@ -37,7 +37,7 @@ const ONBOARDING_GOALS = [
     sublabel: "Free domestic flight as first win",
   },
   {
-    key: "internationalBusinessUpgrade",
+    key: "internationalPremiumUpgrade",
     icon: "🎯",
     label: "Not sure — show me",
     sublabel: "We'll show you what's possible",
