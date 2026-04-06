@@ -84,8 +84,8 @@ export function AppShell({ children }: AppShellProps) {
                   href={href}
                   className={`flex items-center gap-3 transition-all text-sm ${
                     active
-                      ? "bg-[#4edea3]/10 text-[#4edea3] font-bold rounded-xl px-5 py-3.5"
-                      : "text-slate-400 hover:text-white hover:bg-[#313442] rounded-lg px-4 py-3"
+                      ? "bg-surface-container text-primary font-bold rounded-xl px-5 py-3.5"
+                      : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest rounded-lg px-4 py-3"
                   }`}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>{materialIcon}</span>
@@ -212,7 +212,7 @@ export function AppShell({ children }: AppShellProps) {
                 key={href}
                 onClick={() => router.push(href)}
                 className={`flex flex-col items-center justify-center gap-1 py-2 px-1 transition-colors active:bg-white/5 ${
-                  active ? "text-[#4edea3]" : "text-slate-500"
+                  active ? "text-primary" : "text-on-surface-variant"
                 }`}
               >
                 <span
