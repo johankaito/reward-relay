@@ -2,9 +2,7 @@ name: Heavy Crons (CDR Refresh + Card Extract + TC Verify)
 
 on:
   schedule:
-    - cron: '0 16 * * 1'     # cdr-refresh — Monday 16:00 UTC
-    - cron: '0 17 * * 1'     # card-extract — Monday 17:00 UTC
-    - cron: '0 16 * * 0'     # tc-verify — Sunday 16:00 UTC
+    - cron: '0 16 * * 1'     # Monday 16:00 UTC (all three jobs)
   workflow_dispatch:
     inputs:
       job:
@@ -48,7 +46,7 @@ jobs:
     name: Card Extract
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 17 * * 1'
+      github.event.schedule == '0 16 * * 1'
     runs-on: ubuntu-latest
     environment: Production
     steps:
@@ -80,7 +78,7 @@ jobs:
     name: TC Verify
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 16 * * 0'
+      github.event.schedule == '0 16 * * 1'
     runs-on: ubuntu-latest
     environment: Production
     steps:
