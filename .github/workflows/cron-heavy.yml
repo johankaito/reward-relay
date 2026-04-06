@@ -2,10 +2,9 @@ name: Heavy Crons (CDR Refresh + Card Extract + TC Verify)
 
 on:
   schedule:
-    # Sunday 4pm UTC — CDR refresh then card extract (sequential)
-    - cron: '0 16 * * 0'
-    # Monday 2am UTC — TC cooling-period verification
-    - cron: '0 2 * * 1'
+    - cron: '*/15 * * * *'   # cdr-refresh — every 15 minutes
+    - cron: '*/30 * * * *'   # card-extract — every 30 minutes
+    - cron: '0 16 * * 0'     # tc-verify — Sunday 16:00 UTC
   workflow_dispatch:
     inputs:
       job:
@@ -16,12 +15,12 @@ on:
         options: [all, cdr-refresh, card-extract, tc-verify]
 
 jobs:
-  # ── CDR Refresh ──────────────────────────────────────────────────────────────
+  # ── CDR Refresh — every 15 min ───────────────────────────────────────────────
   cdr-refresh:
     name: CDR Refresh
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 16 * * 0'
+      github.event.schedule == '*/15 * * * *'
     runs-on: ubuntu-latest
     environment: Production
     steps:
@@ -44,13 +43,12 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: cd app && pnpm tsx scripts/run-cdr-refresh.ts
 
-  # ── Card Extract ─────────────────────────────────────────────────────────────
+  # ── Card Extract — every 30 min ──────────────────────────────────────────────
   card-extract:
     name: Card Extract
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 16 * * 0'
-    needs: cdr-refresh
+      github.event.schedule == '*/30 * * * *'
     runs-on: ubuntu-latest
     environment: Production
     steps:
@@ -77,12 +75,12 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: cd app && pnpm tsx scripts/run-card-extract.ts
 
-  # ── TC Verify ────────────────────────────────────────────────────────────────
+  # ── TC Verify — Sunday 16:00 UTC ────────────────────────────────────────────
   tc-verify:
     name: TC Verify
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 2 * * 1'
+      github.event.schedule == '0 16 * * 0'
     runs-on: ubuntu-latest
     environment: Production
     steps:
