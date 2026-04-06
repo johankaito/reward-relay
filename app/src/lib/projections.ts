@@ -1,7 +1,8 @@
 import type { Database } from "@/types/database.types"
 import type { OnboardingCardEntry } from "./recommendations"
-import { lookupExclusionPeriod } from "./bank-exclusions"
+import { lookupExclusionPeriod, normalizeBankName } from "./bank-exclusions"
 import type { BankExclusionPeriod } from "./bank-exclusions"
+import { computeEligibility } from "./eligibility"
 
 type Card = Database["public"]["Tables"]["cards"]["Row"]
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
@@ -94,55 +95,20 @@ export const GOALS: Record<string, RedemptionGoal> = {
   },
 }
 
-/**
- * Calculate bank eligibility considering cooling periods
- * - AMEX: 18 months since last card
- * - Others: 12 months since last cancellation
- */
-function getBankEligibilityDate(
-  userCards: UserCard[],
-  bank: string,
-  exclusionPeriods: BankExclusionPeriod[] = []
-): Date | null {
+function getLastRelevantDate(userCards: UserCard[], bank: string): string | null {
   const bankLower = bank.toLowerCase()
   const isAmex = bankLower.includes("amex") || bankLower.includes("american express")
-  const exclusionRecord = lookupExclusionPeriod(bank, exclusionPeriods)
-  const coolingPeriodMonths = exclusionRecord?.exclusion_months ?? 18
-
-  // Find most recent relevant date for this bank
   let mostRecentDate: Date | null = null
 
   for (const card of userCards) {
     if (!card.bank || card.bank.toLowerCase() !== bankLower) continue
-
-    let relevantDate: Date | null = null
-
-    if (isAmex) {
-      // AMEX: Use application date
-      if (card.application_date) {
-        relevantDate = new Date(card.application_date)
-      }
-    } else {
-      // Others: Use cancellation date
-      if (card.cancellation_date) {
-        relevantDate = new Date(card.cancellation_date)
-      }
-    }
-
-    if (relevantDate) {
-      if (!mostRecentDate || relevantDate > mostRecentDate) {
-        mostRecentDate = relevantDate
-      }
-    }
+    const rawDate = isAmex ? card.application_date : card.cancellation_date
+    if (!rawDate) continue
+    const d = new Date(rawDate)
+    if (!mostRecentDate || d > mostRecentDate) mostRecentDate = d
   }
 
-  if (!mostRecentDate) return null
-
-  // Calculate eligibility date
-  const eligibleAt = new Date(mostRecentDate)
-  eligibleAt.setMonth(eligibleAt.getMonth() + coolingPeriodMonths)
-
-  return eligibleAt
+  return mostRecentDate ? mostRecentDate.toISOString().split("T")[0] : null
 }
 
 /**
@@ -162,7 +128,7 @@ function generateSingleCardPaths(
     if (!card.welcome_bonus_points || card.welcome_bonus_points === 0) continue
 
     // Check bank eligibility
-    const eligibleAt = getBankEligibilityDate(userCards, card.bank, exclusionPeriods)
+    const eligibleAt = computeEligibility(normalizeBankName(card.bank) ?? card.bank, card.bank, getLastRelevantDate(userCards, card.bank), lookupExclusionPeriod(card.bank, exclusionPeriods)).eligibleDate
     const isEligibleNow = !eligibleAt || new Date() >= eligibleAt
 
     // Skip if not enough points even with this card
@@ -254,8 +220,8 @@ function generateTwoCardPaths(
       const now = new Date()
 
       // Check eligibility for both cards
-      const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank, exclusionPeriods)
-      const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank, exclusionPeriods)
+      const eligibleAt1 = computeEligibility(normalizeBankName(card1.bank) ?? card1.bank, card1.bank, getLastRelevantDate(userCards, card1.bank), lookupExclusionPeriod(card1.bank, exclusionPeriods)).eligibleDate
+      const eligibleAt2 = computeEligibility(normalizeBankName(card2.bank) ?? card2.bank, card2.bank, getLastRelevantDate(userCards, card2.bank), lookupExclusionPeriod(card2.bank, exclusionPeriods)).eligibleDate
 
       const isEligible1 = !eligibleAt1 || now >= eligibleAt1
       const isEligible2 = !eligibleAt2 || now >= eligibleAt2
@@ -340,9 +306,9 @@ function generateThreeCardPaths(
 
         const now = new Date()
 
-        const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank, exclusionPeriods)
-        const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank, exclusionPeriods)
-        const eligibleAt3 = getBankEligibilityDate(userCards, card3.bank, exclusionPeriods)
+        const eligibleAt1 = computeEligibility(normalizeBankName(card1.bank) ?? card1.bank, card1.bank, getLastRelevantDate(userCards, card1.bank), lookupExclusionPeriod(card1.bank, exclusionPeriods)).eligibleDate
+        const eligibleAt2 = computeEligibility(normalizeBankName(card2.bank) ?? card2.bank, card2.bank, getLastRelevantDate(userCards, card2.bank), lookupExclusionPeriod(card2.bank, exclusionPeriods)).eligibleDate
+        const eligibleAt3 = computeEligibility(normalizeBankName(card3.bank) ?? card3.bank, card3.bank, getLastRelevantDate(userCards, card3.bank), lookupExclusionPeriod(card3.bank, exclusionPeriods)).eligibleDate
 
         const applyDate1 = eligibleAt1 && now < eligibleAt1 ? eligibleAt1 : now
         const applyDate2 = new Date(applyDate1.getTime() + 180 * 24 * 60 * 60 * 1000)
@@ -481,9 +447,9 @@ function generateThreeCardPathsUnrestricted(
 
         const now = new Date()
 
-        const eligibleAt1 = getBankEligibilityDate(userCards, card1.bank, exclusionPeriods)
-        const eligibleAt2 = getBankEligibilityDate(userCards, card2.bank, exclusionPeriods)
-        const eligibleAt3 = getBankEligibilityDate(userCards, card3.bank, exclusionPeriods)
+        const eligibleAt1 = computeEligibility(normalizeBankName(card1.bank) ?? card1.bank, card1.bank, getLastRelevantDate(userCards, card1.bank), lookupExclusionPeriod(card1.bank, exclusionPeriods)).eligibleDate
+        const eligibleAt2 = computeEligibility(normalizeBankName(card2.bank) ?? card2.bank, card2.bank, getLastRelevantDate(userCards, card2.bank), lookupExclusionPeriod(card2.bank, exclusionPeriods)).eligibleDate
+        const eligibleAt3 = computeEligibility(normalizeBankName(card3.bank) ?? card3.bank, card3.bank, getLastRelevantDate(userCards, card3.bank), lookupExclusionPeriod(card3.bank, exclusionPeriods)).eligibleDate
 
         const applyDate1 = eligibleAt1 && now < eligibleAt1 ? eligibleAt1 : now
         const applyDate2 = new Date(applyDate1.getTime() + 180 * 24 * 60 * 60 * 1000)
