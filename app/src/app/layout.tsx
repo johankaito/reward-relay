@@ -24,9 +24,12 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 })
 
+const APP_URL = "https://www.rewardrelay.app"
+
 export const metadata: Metadata = {
   title: "Reward Relay — maximize card rewards",
-  description: "Track, churn, and optimize Australian credit cards automatically.",
+  description: "Track every Australian credit card, hit every bonus, never miss a cancel date. The churner's command centre.",
+  metadataBase: new URL(APP_URL),
   manifest: "/manifest.json",
   icons: {
     icon: [
@@ -37,6 +40,20 @@ export const metadata: Metadata = {
     apple: [
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
+  },
+  openGraph: {
+    type: "website",
+    url: APP_URL,
+    title: "Reward Relay — maximize card rewards",
+    description: "Track every Australian credit card, hit every bonus, never miss a cancel date.",
+    siteName: "Reward Relay",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Reward Relay" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Reward Relay — maximize card rewards",
+    description: "Track every Australian credit card, hit every bonus, never miss a cancel date.",
+    images: ["/og-image.png"],
   },
   appleWebApp: {
     capable: true,
