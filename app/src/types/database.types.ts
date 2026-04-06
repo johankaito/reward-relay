@@ -728,7 +728,6 @@ export type Database = {
       }
       deals: {
         Row: {
-          bonus_points: number | null
           card_id: string | null
           card_network: string | null
           click_count: number | null
@@ -738,6 +737,7 @@ export type Database = {
           id: string
           is_active: boolean | null
           merchant: string
+          bonus_points: number | null
           source: string | null
           source_url: string | null
           specific_issuer: string | null
@@ -748,7 +748,6 @@ export type Database = {
           view_count: number | null
         }
         Insert: {
-          bonus_points?: number | null
           card_id?: string | null
           card_network?: string | null
           click_count?: number | null
@@ -758,6 +757,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           merchant: string
+          bonus_points?: number | null
           source?: string | null
           source_url?: string | null
           specific_issuer?: string | null
@@ -768,7 +768,6 @@ export type Database = {
           view_count?: number | null
         }
         Update: {
-          bonus_points?: number | null
           card_id?: string | null
           card_network?: string | null
           click_count?: number | null
@@ -778,6 +777,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           merchant?: string
+          bonus_points?: number | null
           source?: string | null
           source_url?: string | null
           specific_issuer?: string | null
@@ -797,7 +797,10 @@ export type Database = {
           extracted_issuer: string | null
           extracted_card_name: string | null
           bonus_points: number | null
+          spend_requirement: number | null
           source_url: string | null
+          status: string | null
+          linked_card_id: string | null
           created_at: string | null
         }
         Insert: {
@@ -807,7 +810,10 @@ export type Database = {
           extracted_issuer?: string | null
           extracted_card_name?: string | null
           bonus_points?: number | null
+          spend_requirement?: number | null
           source_url?: string | null
+          status?: string | null
+          linked_card_id?: string | null
           created_at?: string | null
         }
         Update: {
@@ -817,7 +823,10 @@ export type Database = {
           extracted_issuer?: string | null
           extracted_card_name?: string | null
           bonus_points?: number | null
+          spend_requirement?: number | null
           source_url?: string | null
+          status?: string | null
+          linked_card_id?: string | null
           created_at?: string | null
         }
         Relationships: []

@@ -48,22 +48,34 @@ export async function POST(request: NextRequest) {
     process.env.SUPABASE_SERVICE_KEY!
   )
 
+  // CDP-5: Catch feed fetch failures separately → 502
+  let feedItems: OzBargainFeedItem[]
   try {
-    // Fetch OzBargain RSS feed
-    const feedItems = await fetchOzBargainFeed()
-    console.log(`Fetched ${feedItems.length} OzBargain items`)
+    feedItems = await fetchOzBargainFeed()
+  } catch (err) {
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 502 })
+  }
 
-    // Parse with Claude Haiku
-    const parsedOffers = await parseOzBargainFeed(feedItems)
-    console.log(`Parsed ${parsedOffers.length} bonus offers`)
+  // CDP-5: Catch parse failures → 500
+  let parsedOffers: Awaited<ReturnType<typeof parseOzBargainFeed>>
+  try {
+    parsedOffers = await parseOzBargainFeed(feedItems)
+  } catch (err) {
+    return NextResponse.json(
+      { ok: false, error: `Feed parse failed: ${String(err)}` },
+      { status: 500 }
+    )
+  }
 
-    let matched = 0
-    let signalled = 0
-    let confirmed = 0
-    let unmatched = 0
+  let matched = 0
+  let signalled = 0
+  let confirmed = 0
+  let unmatched = 0
+  const errors: Array<{ offer: string; error: string }> = []
 
-    // Fuzzy match against cards table
-    for (const { offer } of parsedOffers) {
+  // Fuzzy match against cards table
+  for (const { offer } of parsedOffers) {
+    try {
       // Try to match issuer + card name to existing cards
       const { data: matchedCards } = await supabase
         .from('cards')
@@ -87,8 +99,8 @@ export async function POST(request: NextRequest) {
         matched++
         const storedBonus = cardMatch.welcome_bonus_points ?? 0
 
-        // Store matched deal with card_id + bonus_points for two-source validation (CDP-8)
-        // Only insert if there isn't already a recent matching deal for this card+bonus combo
+        // CDP-8: Store deal for two-source validation — dedup by card_id+bonus_points within 30 days
+        // (ozbargain items have no stable source_url, so upsert-on-conflict is not viable)
         const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000).toISOString()
         const { data: existingDeal } = await supabase
           .from('deals')
@@ -98,68 +110,67 @@ export async function POST(request: NextRequest) {
           .gte('created_at', thirtyDaysAgo)
           .limit(1)
         if (!existingDeal || existingDeal.length === 0) {
-          await supabase.from('deals').insert({
-            title: `${offer.issuer} ${offer.cardName ?? ''} — ${offer.bonusPoints.toLocaleString()} pts bonus`.trim().slice(0, 255),
-            merchant: offer.issuer ?? 'Unknown',
+          const { error: insertError } = await supabase.from('deals').insert({
+            title: `${offer.issuer ?? ''} ${offer.cardName ?? ''} — ${offer.bonusPoints.toLocaleString()} pts bonus`.trim().slice(0, 255),
+            merchant: offer.issuer ?? 'Various',
             deal_url: '',
             source: 'ozbargain',
+            specific_issuer: offer.issuer ?? null,
             card_id: cardMatch.id,
             bonus_points: offer.bonusPoints,
             valid_from: new Date().toISOString(),
             is_active: true,
           })
+          if (insertError) {
+            errors.push({ offer: offer.cardName ?? offer.issuer ?? '', error: insertError.message })
+          }
         }
 
         if (offer.bonusPoints > storedBonus) {
-          // Feed shows a higher bonus — don't auto-write, flag for authoritative re-extraction
-          await supabase
+          // Feed shows a higher bonus — flag for authoritative re-extraction
+          const { error: updateErr } = await supabase
             .from('cards')
-            .update({
-              needs_verification: true,
-              verification_priority: 'high',
-            })
+            .update({ needs_verification: true, verification_priority: 'high' })
             .eq('id', cardMatch.id)
-          signalled++
-          console.log(
-            `Signal: ${cardMatch.bank} ${cardMatch.name} — feed=${offer.bonusPoints} > stored=${storedBonus}, flagged for re-extraction`
-          )
+          if (updateErr) errors.push({ offer: offer.cardName ?? offer.issuer ?? '', error: updateErr.message })
+          else signalled++
         } else if (offer.bonusPoints === storedBonus) {
           // Feed confirms our data — refresh last_verified_at
-          await supabase
+          const { error: updateErr } = await supabase
             .from('cards')
             .update({ last_verified_at: new Date().toISOString() })
             .eq('id', cardMatch.id)
-          confirmed++
+          if (updateErr) errors.push({ offer: offer.cardName ?? offer.issuer ?? '', error: updateErr.message })
+          else confirmed++
         }
         // If feedBonus < storedBonus: stale feed item, signal ignored but deal stored
       } else {
-        // Store unmatched offer for admin review instead of logging and losing it
-        await supabase.from('unmatched_deals').insert({
+        // Store unmatched offer for admin review
+        const { error: insertErr } = await supabase.from('unmatched_deals').insert({
           source: 'ozbargain',
           raw_title: offer.cardName ?? null,
           extracted_issuer: offer.issuer ?? null,
           extracted_card_name: offer.cardName ?? null,
           bonus_points: offer.bonusPoints,
           source_url: null,
+          status: 'pending',
         })
-        unmatched++
+        if (insertErr) errors.push({ offer: offer.cardName ?? offer.issuer ?? '', error: insertErr.message })
+        else unmatched++
       }
+    } catch (err) {
+      errors.push({ offer: offer.cardName ?? offer.issuer ?? '', error: String(err) })
     }
-
-    return NextResponse.json({
-      success: true,
-      feedItems: feedItems.length,
-      parsedOffers: parsedOffers.length,
-      matched,
-      signalled,
-      confirmed,
-      unmatched,
-    })
-  } catch (error) {
-    console.error('OzBargain parse cron error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error', details: String(error) },
-      { status: 500 }
-    )
   }
+
+  return NextResponse.json({
+    ok: errors.length === 0,
+    feedItems: feedItems.length,
+    parsedOffers: parsedOffers.length,
+    matched,
+    signalled,
+    confirmed,
+    unmatched,
+    errors,
+  })
 }
