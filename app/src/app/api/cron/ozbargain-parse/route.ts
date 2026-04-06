@@ -61,6 +61,7 @@ export async function POST(request: NextRequest) {
     let signalled = 0
     let confirmed = 0
     let unmatched = 0
+    const errors: { title: string; error: string }[] = []
 
     // Fuzzy match against cards table
     for (const { offer } of parsedOffers) {
@@ -98,7 +99,7 @@ export async function POST(request: NextRequest) {
           .gte('created_at', thirtyDaysAgo)
           .limit(1)
         if (!existingDeal || existingDeal.length === 0) {
-          await supabase.from('deals').insert({
+          const { error: insertError } = await supabase.from('deals').insert({
             title: `${offer.issuer} ${offer.cardName ?? ''} — ${offer.bonusPoints.toLocaleString()} pts bonus`.trim().slice(0, 255),
             merchant: offer.issuer ?? 'Unknown',
             deal_url: '',
@@ -108,6 +109,9 @@ export async function POST(request: NextRequest) {
             valid_from: new Date().toISOString(),
             is_active: true,
           })
+          if (insertError) {
+            errors.push({ title: offer.cardName ?? offer.issuer ?? 'unknown', error: insertError.message })
+          }
         }
 
         if (offer.bonusPoints > storedBonus) {
@@ -134,7 +138,7 @@ export async function POST(request: NextRequest) {
         // If feedBonus < storedBonus: stale feed item, signal ignored but deal stored
       } else {
         // Store unmatched offer for admin review instead of logging and losing it
-        await supabase.from('unmatched_deals').insert({
+        const { error: unmatchedError } = await supabase.from('unmatched_deals').insert({
           source: 'ozbargain',
           raw_title: offer.cardName ?? null,
           extracted_issuer: offer.issuer ?? null,
@@ -142,18 +146,22 @@ export async function POST(request: NextRequest) {
           bonus_points: offer.bonusPoints,
           source_url: null,
         })
+        if (unmatchedError) {
+          errors.push({ title: offer.cardName ?? offer.issuer ?? 'unknown', error: unmatchedError.message })
+        }
         unmatched++
       }
     }
 
     return NextResponse.json({
-      success: true,
+      ok: errors.length === 0,
       feedItems: feedItems.length,
       parsedOffers: parsedOffers.length,
       matched,
       signalled,
       confirmed,
       unmatched,
+      errors,
     })
   } catch (error) {
     console.error('OzBargain parse cron error:', error)
