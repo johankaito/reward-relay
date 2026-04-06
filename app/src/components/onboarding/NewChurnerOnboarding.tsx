@@ -97,18 +97,11 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
     return calculateOnboardingPath(goal, spendBand, [], catalogCards, exclusionPeriods)
   }, [goal, spendBand, catalogCards, exclusionPeriods])
 
-  // Derive conservative and maximum haul plan variants from bestPath
   const conservativePath = useMemo(() => {
     if (!bestPath) return null
     const singleCard = bestPath.cards.slice(0, 1)
     const pts = singleCard.reduce((acc, c) => acc + (c.welcome_bonus_points ?? 0), 0)
     return { ...bestPath, cards: singleCard, totalPoints: pts }
-  }, [bestPath])
-
-  const maxHaulPath = useMemo(() => {
-    if (!bestPath) return null
-    // Max haul: use full bestPath but label it as maximum potential
-    return bestPath
   }, [bestPath])
 
   const handleGoalSelect = (key: string) => {
@@ -359,57 +352,26 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
                 </div>
               )}
 
-              {/* Maximum Haul card */}
-              {maxHaulPath && (
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-widest text-white/50">Maximum Haul</span>
-                    <p className="mt-1 text-lg font-bold text-white">Go big — maximise every dollar</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    {maxHaulPath.cards.map((card, i) => (
-                      <div key={card.id} className="flex items-center gap-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-bold text-white/60">
-                          {i + 1}
-                        </span>
-                        <div className="flex-1">
-                          <p className="font-medium text-white">{card.name}</p>
-                          <p className="text-xs text-on-surface-variant">
-                            {card.welcome_bonus_points?.toLocaleString()} pts · {card.bank}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Card chips */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {maxHaulPath.cards.map((card) => {
-                      const colorClass = BANK_COLORS[card.bank] ?? "bg-white/10 text-white/60 border-white/10"
-                      return (
-                        <span key={card.id} className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
-                          {card.bank}
-                        </span>
-                      )
-                    })}
-                  </div>
-
-                  <div className="border-t border-white/10 pt-3 flex items-center justify-between">
+              {/* What’s Next teaser */}
+              {bestPath && (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-500/20">
+                      <span className="text-sm">🚀</span>
+                    </div>
                     <div>
-                      <p className="text-xs text-on-surface-variant">Total points</p>
-                      <p className="text-lg font-bold text-white">{maxHaulPath.totalPoints.toLocaleString()}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs text-on-surface-variant">Timeline</p>
-                      <p className="text-lg font-bold text-white">~{maxHaulPath.timeToGoal} months</p>
+                      <span className="text-xs font-semibold uppercase tracking-widest text-white/50">What&apos;s Next</span>
+                      <p className="text-sm font-bold text-white">Keep stacking after your first plan</p>
                     </div>
                   </div>
-
-                  <div className="flex items-center justify-between border-t border-white/10 pt-2 text-xs">
-                    <span className="text-white/40">Est. Annual Value</span>
-                    <span className="font-semibold text-teal-400">
-                      ${Math.round(maxHaulPath.totalPoints * 0.018 * 1.3).toLocaleString()}/yr
+                  <p className="text-sm text-white/50 leading-relaxed">
+                    Once you complete Fast Track, we&apos;ll recommend your next sequence — most members unlock{" "}
+                    <span className="text-white/80 font-medium">2–3× more points</span> in year two.
+                  </p>
+                  <div className="rounded-xl bg-white/5 border border-white/10 px-4 py-2.5 flex items-center justify-between text-xs">
+                    <span className="text-white/40">Year 2 potential</span>
+                    <span className="font-semibold text-white/70">
+                      ~${Math.round(bestPath.totalPoints * 0.018 * 2.5).toLocaleString()}/yr
                     </span>
                   </div>
                 </div>
