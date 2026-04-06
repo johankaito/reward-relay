@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { fetchCardPageByUrl } from '@/lib/card-fetcher'
 import { extractCardData, getVerificationAction } from '@/lib/card-extractor'
