@@ -7,6 +7,7 @@ import { getRecommendationsFromHistory } from "@/lib/recommendations"
 import type { Database } from "@/types/database.types"
 import { supabase } from "@/lib/supabase/client"
 import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
+import { GeneralInfoDisclaimer } from "@/components/ui/GeneralInfoDisclaimer"
 
 type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
@@ -294,6 +295,8 @@ export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
             Select the cards you&apos;ve held above to get started.
           </p>
         )}
+
+        <GeneralInfoDisclaimer />
       </div>
     </div>
   )

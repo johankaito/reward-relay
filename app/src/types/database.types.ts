@@ -238,6 +238,9 @@ export type Database = {
           source_url: string | null
           data_last_updated: string
           created_at: string | null
+          official_tc_url: string | null
+          last_verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
           id?: string
@@ -251,6 +254,9 @@ export type Database = {
           source_url?: string | null
           data_last_updated?: string
           created_at?: string | null
+          official_tc_url?: string | null
+          last_verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
           id?: string
@@ -264,6 +270,9 @@ export type Database = {
           source_url?: string | null
           data_last_updated?: string
           created_at?: string | null
+          official_tc_url?: string | null
+          last_verified_at?: string | null
+          verified_by?: string | null
         }
         Relationships: []
       }

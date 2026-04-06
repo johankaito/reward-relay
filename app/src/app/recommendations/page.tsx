@@ -13,6 +13,7 @@ import { useSubscription } from "@/hooks/useSubscription"
 import type { Database } from "@/types/database.types"
 import type { Recommendation } from "@/lib/recommendations"
 import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
+import { GeneralInfoDisclaimer } from "@/components/ui/GeneralInfoDisclaimer"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 
@@ -162,10 +163,10 @@ export default function RecommendationsPage() {
         <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <h1 className="font-headline text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface mb-2">
-              Cards Matched for You
+              Cards you may be eligible for
             </h1>
             <p className="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
-              Based on your spending profile and churning history, these assets maximise your velocity and yield.
+              Based on your card history and each bank&apos;s publicly available terms, these cards appear to be within your eligibility window.
             </p>
           </div>
 
@@ -410,20 +411,22 @@ export default function RecommendationsPage() {
                 </svg>
               </div>
               <div>
-                <h4 className="text-lg font-bold text-on-surface mb-1">Churning Strategy Analysis</h4>
+                <h4 className="text-lg font-bold text-on-surface mb-1">Eligibility Summary</h4>
                 <p className="text-on-surface-variant text-sm leading-relaxed max-w-3xl">
-                  You currently have{" "}
-                  <span className="text-[#4edea3] font-bold">{stats.eligible} eligible</span>{" "}
-                  card{stats.eligible !== 1 ? "s" : ""} ready to apply for.
+                  You currently appear eligible for{" "}
+                  <span className="text-[#4edea3] font-bold">{stats.eligible}</span>{" "}
+                  card{stats.eligible !== 1 ? "s" : ""} based on publicly available bank terms.
                   {stats.comingSoon > 0 && (
-                    <> {stats.comingSoon} more become eligible as your waiting periods expire.</>
+                    <> {stats.comingSoon} more may become available as your waiting periods expire.</>
                   )}{" "}
-                  Focus on cards with the highest bonus-to-fee ratio for maximum velocity.
+                  Always verify eligibility directly with the issuer before applying.
                 </p>
               </div>
             </div>
           </section>
         )}
+
+        <GeneralInfoDisclaimer />
       </div>
     </AppShell>
   )

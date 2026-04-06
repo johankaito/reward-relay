@@ -7,6 +7,7 @@ import { Plane, MapPin, PlaneLanding, Search, CreditCard, ChevronRight } from 'l
 import { AppShell } from '@/components/layout/AppShell'
 import { supabase } from '@/lib/supabase/client'
 import type { Database } from '@/types/database.types'
+import { GeneralInfoDisclaimer } from '@/components/ui/GeneralInfoDisclaimer'
 
 type UserCard = Database['public']['Tables']['user_cards']['Row']
 type CatalogCard = Database['public']['Tables']['cards']['Row']
@@ -465,6 +466,7 @@ export default function FlightsPage() {
           </div>
         )}
 
+        <GeneralInfoDisclaimer />
       </div>
     </AppShell>
   )
