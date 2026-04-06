@@ -30,19 +30,36 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const response = await fetch(POINT_HACKS_RSS, {
-    headers: { "User-Agent": "RewardRelay/1.0" },
-  })
-  const xml = await response.text()
+  // Fetch RSS feed with explicit error handling — failures must be non-200
+  let xml: string
+  try {
+    const res = await fetch(POINT_HACKS_RSS, {
+      headers: { "User-Agent": "RewardRelay/1.0" },
+      signal: AbortSignal.timeout(15_000),
+    })
+    if (!res.ok) {
+      return NextResponse.json({ ok: false, error: `Feed returned ${res.status}` }, { status: 502 })
+    }
+    xml = await res.text()
+  } catch (err) {
+    return NextResponse.json({ ok: false, error: String(err) }, { status: 502 })
+  }
 
-  const parser = new XMLParser({ ignoreAttributes: false })
-  const feed = parser.parse(xml)
-  const items: Record<string, unknown>[] = feed?.rss?.channel?.item ?? []
+  // Parse XML — failure must be non-200
+  let items: Record<string, unknown>[]
+  try {
+    const parser = new XMLParser({ ignoreAttributes: false })
+    const feed = parser.parse(xml)
+    items = feed?.rss?.channel?.item ?? []
+  } catch (err) {
+    return NextResponse.json({ ok: false, error: `XML parse failed: ${String(err)}` }, { status: 500 })
+  }
 
   const supabase = getServiceClient()
   let inserted = 0
   let signalled = 0
   let unmatchedStored = 0
+  const errors: Array<{ title: string; error: string }> = []
 
   for (const item of items) {
     const title = (item.title as string) ?? ""
@@ -56,7 +73,7 @@ export async function GET(req: NextRequest) {
     const card_network = extractNetwork(title)
     const valid_until = extractExpiry(description)
 
-    const { error } = await supabase.from("deals").upsert(
+    const { error: upsertError } = await supabase.from("deals").upsert(
       {
         title: title.slice(0, 255),
         description: description.slice(0, 1000),
@@ -75,7 +92,11 @@ export async function GET(req: NextRequest) {
       { onConflict: "source_url" }
     )
 
-    if (!error) inserted++
+    if (upsertError) {
+      errors.push({ title: title.slice(0, 100), error: upsertError.message })
+      continue
+    }
+    inserted++
 
     // If we identified an issuer, attempt to match and signal a re-extraction
     if (specific_issuer) {
@@ -109,5 +130,11 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ ok: true, inserted, signalled, unmatchedStored })
+  return NextResponse.json({
+    ok: errors.length === 0,
+    inserted,
+    signalled,
+    unmatchedStored,
+    errors,
+  })
 }

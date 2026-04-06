@@ -5,14 +5,19 @@ import type { Database } from '@/types/database.types'
 
 const OZBARGAIN_RSS_URL = 'https://www.ozbargain.com.au/deals/feed'
 
-async function fetchOzBargainFeed(): Promise<OzBargainFeedItem[]> {
-  const response = await fetch(OZBARGAIN_RSS_URL, {
-    headers: { 'User-Agent': 'RewardRelay/1.0' },
-    signal: AbortSignal.timeout(15000),
-  })
+async function fetchOzBargainFeed(): Promise<{ items: OzBargainFeedItem[]; fetchError?: string }> {
+  let response: Response
+  try {
+    response = await fetch(OZBARGAIN_RSS_URL, {
+      headers: { 'User-Agent': 'RewardRelay/1.0' },
+      signal: AbortSignal.timeout(15000),
+    })
+  } catch (err) {
+    return { items: [], fetchError: String(err) }
+  }
 
   if (!response.ok) {
-    throw new Error(`OzBargain feed returned ${response.status}`)
+    return { items: [], fetchError: `OzBargain feed returned ${response.status}` }
   }
 
   const xml = await response.text()
@@ -32,7 +37,7 @@ async function fetchOzBargainFeed(): Promise<OzBargainFeedItem[]> {
     }
   }
 
-  return items
+  return { items }
 }
 
 export async function POST(request: NextRequest) {
@@ -49,8 +54,11 @@ export async function POST(request: NextRequest) {
   )
 
   try {
-    // Fetch OzBargain RSS feed
-    const feedItems = await fetchOzBargainFeed()
+    // Fetch OzBargain RSS feed — return 502 on network failure so Vercel marks the cron as failed
+    const { items: feedItems, fetchError } = await fetchOzBargainFeed()
+    if (fetchError) {
+      return NextResponse.json({ ok: false, error: fetchError }, { status: 502 })
+    }
     console.log(`Fetched ${feedItems.length} OzBargain items`)
 
     // Parse with Claude Haiku
@@ -61,6 +69,7 @@ export async function POST(request: NextRequest) {
     let signalled = 0
     let confirmed = 0
     let unmatched = 0
+    const errors: Array<{ offer: string; error: string }> = []
 
     // Fuzzy match against cards table
     for (const { offer } of parsedOffers) {
@@ -111,7 +120,7 @@ export async function POST(request: NextRequest) {
         // If feedBonus < storedBonus: stale feed item, ignore
       } else {
         // Store unmatched offer for admin review instead of logging and losing it
-        await supabase.from('unmatched_deals').insert({
+        const { error: insertError } = await supabase.from('unmatched_deals').insert({
           source: 'ozbargain',
           raw_title: offer.cardName ?? null,
           extracted_issuer: offer.issuer ?? null,
@@ -119,18 +128,22 @@ export async function POST(request: NextRequest) {
           bonus_points: offer.bonusPoints,
           source_url: null,
         })
+        if (insertError) {
+          errors.push({ offer: `${offer.issuer} ${offer.cardName ?? ''}`.trim(), error: insertError.message })
+        }
         unmatched++
       }
     }
 
     return NextResponse.json({
-      success: true,
+      ok: errors.length === 0,
       feedItems: feedItems.length,
       parsedOffers: parsedOffers.length,
       matched,
       signalled,
       confirmed,
       unmatched,
+      errors,
     })
   } catch (error) {
     console.error('OzBargain parse cron error:', error)
