@@ -783,6 +783,39 @@ export type Database = {
         }
         Relationships: []
       }
+      unmatched_deals: {
+        Row: {
+          id: string
+          source: string
+          raw_title: string | null
+          extracted_issuer: string | null
+          extracted_card_name: string | null
+          bonus_points: number | null
+          source_url: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          source: string
+          raw_title?: string | null
+          extracted_issuer?: string | null
+          extracted_card_name?: string | null
+          bonus_points?: number | null
+          source_url?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          source?: string
+          raw_title?: string | null
+          extracted_issuer?: string | null
+          extracted_card_name?: string | null
+          bonus_points?: number | null
+          source_url?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
       email_reminders: {
         Row: {
           created_at: string | null

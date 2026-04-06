@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { parseOzBargainFeed, type OzBargainFeedItem } from '@/lib/ozbargain-parser'
+import type { Database } from '@/types/database.types'
 
 const OZBARGAIN_RSS_URL = 'https://www.ozbargain.com.au/deals/feed'
 
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const supabase = createClient(
+  const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_KEY!
   )
@@ -57,6 +58,8 @@ export async function POST(request: NextRequest) {
     console.log(`Parsed ${parsedOffers.length} bonus offers`)
 
     let matched = 0
+    let signalled = 0
+    let confirmed = 0
     let unmatched = 0
 
     // Fuzzy match against cards table
@@ -81,25 +84,41 @@ export async function POST(request: NextRequest) {
       }
 
       if (cardMatch) {
-        // Only update if the offer is newer or has more points
-        const shouldUpdate =
-          !cardMatch.welcome_bonus_points ||
-          offer.bonusPoints > cardMatch.welcome_bonus_points
+        matched++
+        const storedBonus = cardMatch.welcome_bonus_points ?? 0
 
-        if (shouldUpdate) {
+        if (offer.bonusPoints > storedBonus) {
+          // Feed shows a higher bonus — don't auto-write, flag for authoritative re-extraction
           await supabase
             .from('cards')
             .update({
-              welcome_bonus_points: offer.bonusPoints,
-              bonus_spend_requirement: offer.spendRequirement,
-              ...(offer.expiryDate && { offer_expiry_date: offer.expiryDate }),
-              last_verified_at: new Date().toISOString(),
+              needs_verification: true,
+              verification_priority: 'high',
             })
             .eq('id', cardMatch.id)
+          signalled++
+          console.log(
+            `Signal: ${cardMatch.bank} ${cardMatch.name} — feed=${offer.bonusPoints} > stored=${storedBonus}, flagged for re-extraction`
+          )
+        } else if (offer.bonusPoints === storedBonus) {
+          // Feed confirms our data — refresh last_verified_at
+          await supabase
+            .from('cards')
+            .update({ last_verified_at: new Date().toISOString() })
+            .eq('id', cardMatch.id)
+          confirmed++
         }
-        matched++
+        // If feedBonus < storedBonus: stale feed item, ignore
       } else {
-        console.log(`Unmatched offer: ${offer.issuer} - ${offer.cardName ?? 'unknown card'} (${offer.bonusPoints} ${offer.programName})`)
+        // Store unmatched offer for admin review instead of logging and losing it
+        await supabase.from('unmatched_deals').insert({
+          source: 'ozbargain',
+          raw_title: offer.cardName ?? null,
+          extracted_issuer: offer.issuer ?? null,
+          extracted_card_name: offer.cardName ?? null,
+          bonus_points: offer.bonusPoints,
+          source_url: null,
+        })
         unmatched++
       }
     }
@@ -109,6 +128,8 @@ export async function POST(request: NextRequest) {
       feedItems: feedItems.length,
       parsedOffers: parsedOffers.length,
       matched,
+      signalled,
+      confirmed,
       unmatched,
     })
   } catch (error) {

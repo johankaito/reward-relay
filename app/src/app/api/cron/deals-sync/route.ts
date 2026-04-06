@@ -41,6 +41,8 @@ export async function GET(req: NextRequest) {
 
   const supabase = getServiceClient()
   let inserted = 0
+  let signalled = 0
+  let unmatchedStored = 0
 
   for (const item of items) {
     const title = (item.title as string) ?? ""
@@ -74,7 +76,38 @@ export async function GET(req: NextRequest) {
     )
 
     if (!error) inserted++
+
+    // If we identified an issuer, attempt to match and signal a re-extraction
+    if (specific_issuer) {
+      const { data: matchedCards } = await supabase
+        .from("cards")
+        .select("id, name, bank")
+        .ilike("bank", `%${specific_issuer}%`)
+        .eq("is_active", true)
+        .limit(5)
+
+      if (matchedCards && matchedCards.length > 0) {
+        // Flag matched cards: PointHacks published new deal content — re-verify bonus accuracy
+        const cardIds = matchedCards.map((c) => c.id)
+        await supabase
+          .from("cards")
+          .update({ needs_verification: true, verification_priority: "high" })
+          .in("id", cardIds)
+        signalled += cardIds.length
+      } else {
+        // No matched card — store for admin review
+        await supabase.from("unmatched_deals").insert({
+          source: "pointhacks",
+          raw_title: title.slice(0, 255),
+          extracted_issuer: specific_issuer,
+          extracted_card_name: null,
+          bonus_points: null,
+          source_url: (item.link as string) ?? null,
+        })
+        unmatchedStored++
+      }
+    }
   }
 
-  return NextResponse.json({ ok: true, inserted })
+  return NextResponse.json({ ok: true, inserted, signalled, unmatchedStored })
 }
