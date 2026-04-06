@@ -137,23 +137,23 @@ async function runExtraction(
 export async function extractCardData(
   pageContent: string,
   cdrData?: object
-): Promise<ExtractedCard> {
+): Promise<ExtractedCard & { modelUsed: string }> {
+  const haiku = 'claude-haiku-4-5-20251001'
+  const sonnet = 'claude-sonnet-4-6'
+
   // Primary extraction with Haiku
-  const extracted = await runExtraction(
-    pageContent,
-    cdrData,
-    'claude-haiku-4-5-20251001'
-  )
+  const extracted = await runExtraction(pageContent, cdrData, haiku)
 
   // Escalate to Sonnet if confidence is low
   if (extracted.confidenceScore < 0.75) {
     console.log(
       `Low confidence (${extracted.confidenceScore.toFixed(2)}) — escalating to Sonnet for re-extraction`
     )
-    return runExtraction(pageContent, cdrData, 'claude-sonnet-4-6')
+    const escalated = await runExtraction(pageContent, cdrData, sonnet)
+    return { ...escalated, modelUsed: sonnet }
   }
 
-  return extracted
+  return { ...extracted, modelUsed: haiku }
 }
 
 export function getVerificationAction(confidenceScore: number): {

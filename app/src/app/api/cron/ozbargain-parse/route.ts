@@ -151,7 +151,7 @@ export async function POST(request: NextRequest) {
           raw_title: offer.cardName ?? null,
           extracted_issuer: offer.issuer ?? null,
           extracted_card_name: offer.cardName ?? null,
-          bonus_points: offer.bonusPoints,
+          bonus_points: typeof offer.bonusPoints === 'number' ? offer.bonusPoints : null,
           source_url: null,
           status: 'pending',
         })

@@ -158,6 +158,7 @@ async function processCard(
     await supabase.from('extraction_log').insert({
       card_id: cardId,
       run_at: now,
+      model_used: extracted.modelUsed,
       confidence_score: extracted.confidenceScore,
       change_hash: newHash,
       hash_changed: hasChanged,
