@@ -11,6 +11,9 @@ export function Footer() {
             <a href="/terms" className="hover:text-[var(--text-primary)] transition">
               Terms of Service
             </a>
+            <a href="/terms" className="hover:text-[var(--text-primary)] transition">
+              Not financial advice
+            </a>
             <a href="mailto:support@rewardrelay.com.au" className="hover:text-[var(--text-primary)] transition">
               Contact
             </a>

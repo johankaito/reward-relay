@@ -7,6 +7,7 @@ import { GOALS, calculateOnboardingPath, type SpendBand } from "@/lib/projection
 import type { Database } from "@/types/database.types"
 import { supabase } from "@/lib/supabase/client"
 import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
+import { GeneralInfoDisclaimer } from "@/components/ui/GeneralInfoDisclaimer"
 
 type CatalogCard = Database["public"]["Tables"]["cards"]["Row"]
 
@@ -414,6 +415,7 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
             </div>
           </>
         )}
+        <GeneralInfoDisclaimer />
       </div>
     </div>
   )
