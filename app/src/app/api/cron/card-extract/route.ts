@@ -3,9 +3,12 @@ import { createClient } from '@supabase/supabase-js'
 import { fetchCardPageByUrl } from '@/lib/card-fetcher'
 import { extractCardData, getVerificationAction } from '@/lib/card-extractor'
 import { reconcileCardData, type CdrProduct } from '@/lib/cdr/reconcile'
+import { computeChangeHash, compareHashes } from '@/lib/change-hash'
 import type { Database } from '@/types/database.types'
 
 type Card = Database['public']['Tables']['cards']['Row']
+
+const HIGH_CONFIDENCE = 0.75
 
 async function processCard(
   card: Card,
@@ -51,12 +54,27 @@ async function processCard(
     const verificationAction = getVerificationAction(extracted.confidenceScore)
     const now = new Date().toISOString()
 
+    // Compute change hash from extracted data
+    const newHash = computeChangeHash({
+      annualFee: extracted.annualFee?.amount ?? card.annual_fee ?? 0,
+      earnRates: extracted.earnRates ?? [],
+      bonusPoints: extracted.bonusOffer?.bonusPoints ?? card.welcome_bonus_points ?? 0,
+      spendReq: extracted.bonusOffer?.spendRequirement ?? card.bonus_spend_requirement ?? 0,
+    })
+
+    const { hasChanged } = compareHashes(newHash, card.change_hash, card.last_extracted_at)
+
     const updateData: Database['public']['Tables']['cards']['Update'] = {
       needs_verification: verificationAction.needsVerification || reconciled.requiresReview,
       verification_priority: verificationAction.verificationPriority,
       last_verified_at: now,
       last_extracted_at: now,
       extraction_confidence: extracted.confidenceScore,
+      change_hash: newHash,
+    }
+
+    if (hasChanged) {
+      updateData.change_detected_at = now
     }
 
     if (reconciled.resolvedAnnualFee !== null) {
@@ -68,7 +86,6 @@ async function processCard(
     }
 
     // Write bonus + earn data only when confidence is high enough to trust
-    const HIGH_CONFIDENCE = 0.75
     if (extracted.confidenceScore >= HIGH_CONFIDENCE) {
       if (extracted.bonusOffer) {
         updateData.welcome_bonus_points = extracted.bonusOffer.bonusPoints
@@ -100,9 +117,20 @@ async function processCard(
 
     await supabase.from('cards').update(updateData).eq('id', cardId)
 
+    // Write to extraction_log so admin dashboard has visibility
+    await supabase.from('extraction_log').insert({
+      card_id: cardId,
+      run_at: now,
+      confidence_score: extracted.confidenceScore,
+      change_hash: newHash,
+      hash_changed: hasChanged,
+      conflicts_detected: reconciled.conflicts as unknown as Database['public']['Tables']['extraction_log']['Insert']['conflicts_detected'],
+      raw_output: extracted as unknown as Database['public']['Tables']['extraction_log']['Insert']['raw_output'],
+    })
+
     const bonusWritten = extracted.confidenceScore >= HIGH_CONFIDENCE
     console.log(
-      `Extracted ${card.name}: confidence=${extracted.confidenceScore.toFixed(2)}, conflicts=${reconciled.conflicts.length}, bonus=${bonusWritten ? `${extracted.bonusOffer?.bonusPoints ?? 0}pts` : 'skipped(low-conf)'}`
+      `Extracted ${card.name}: confidence=${extracted.confidenceScore.toFixed(2)}, changed=${hasChanged}, conflicts=${reconciled.conflicts.length}, bonus=${bonusWritten ? `${extracted.bonusOffer?.bonusPoints ?? 0}pts` : 'skipped(low-conf)'}`
     )
 
     return { cardId, success: true }
