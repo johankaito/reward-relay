@@ -139,6 +139,13 @@ export function AppShell({ children }: AppShellProps) {
               {signingOut ? "Signing out…" : "Sign out"}
             </button>
           </div>
+
+          {/* Footer disclaimer */}
+          <div className="pt-4 border-t border-white/5">
+            <a href="/terms" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">
+              Not financial advice
+            </a>
+          </div>
         </div>
       </aside>
 

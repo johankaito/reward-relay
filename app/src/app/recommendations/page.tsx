@@ -74,12 +74,6 @@ export default function RecommendationsPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>("all")
   const [sort, setSort] = useState<SortType>("score")
-  const [reportingCardId, setReportingCardId] = useState<string | null>(null)
-  const [reportField, setReportField] = useState("")
-  const [reportValue, setReportValue] = useState("")
-  const [reportSubmitting, setReportSubmitting] = useState(false)
-  const [reportedCardIds, setReportedCardIds] = useState<Set<string>>(new Set())
-
   useEffect(() => {
     async function loadData() {
       const {
