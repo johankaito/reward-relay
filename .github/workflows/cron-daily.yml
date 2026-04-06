@@ -1,13 +1,12 @@
-name: Daily Crons (OzBargain + Deals Sync + Notifications)
+name: Daily Crons
 
 on:
   schedule:
-    # 4am UTC daily — OzBargain parse
-    - cron: '0 4 * * *'
-    # 6am UTC daily — PointHacks deals sync
-    - cron: '0 6 * * *'
-    # 10pm UTC daily — lightweight notification crons (curl to Vercel)
-    - cron: '0 22 * * *'
+    - cron: '0 0 * * *'   # spending-tracker — midnight UTC
+    - cron: '0 1 * * *'   # leaderboard — 01:00 UTC
+    - cron: '0 6 * * *'   # ozbargain-parse — 06:00 UTC
+    - cron: '0 7 * * *'   # deals-sync — 07:00 UTC
+    - cron: '0 8 * * *'   # deal-alerts — 08:00 UTC
   workflow_dispatch:
     inputs:
       job:
@@ -15,15 +14,42 @@ on:
         required: false
         default: 'all'
         type: choice
-        options: [all, ozbargain-parse, deals-sync, notifications]
+        options: [all, spending-tracker, leaderboard, ozbargain-parse, deals-sync, deal-alerts]
 
-# ── OzBargain Parse ────────────────────────────────────────────────────────────
 jobs:
+  spending-tracker:
+    name: Spending Tracker
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 0 * * *'
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Trigger spending-tracker cron
+        run: |
+          curl -sf -X POST "${{ vars.VERCEL_APP_URL }}/api/cron/spending-tracker" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --max-time 30
+
+  leaderboard:
+    name: Leaderboard
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.schedule == '0 1 * * *'
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Trigger leaderboard cron
+        run: |
+          curl -sf -X POST "${{ vars.VERCEL_APP_URL }}/api/cron/leaderboard" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --max-time 30
+
   ozbargain-parse:
     name: OzBargain Parse
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 4 * * *'
+      github.event.schedule == '0 6 * * *'
     runs-on: ubuntu-latest
     environment: Production
     steps:
@@ -47,12 +73,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: cd app && pnpm tsx scripts/run-ozbargain-parse.ts
 
-  # ── Deals Sync ────────────────────────────────────────────────────────────────
   deals-sync:
-    name: Deals Sync (PointHacks)
+    name: Deals Sync
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 6 * * *'
+      github.event.schedule == '0 7 * * *'
     runs-on: ubuntu-latest
     environment: Production
     steps:
@@ -75,49 +100,16 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: cd app && pnpm tsx scripts/run-deals-sync.ts
 
-  # ── Lightweight Notification Crons (curl → Vercel) ────────────────────────────
-  notifications:
-    name: Notification Crons
+  deal-alerts:
+    name: Deal Alerts
     if: >
       github.event_name == 'workflow_dispatch' ||
-      github.event.schedule == '0 22 * * *'
+      github.event.schedule == '0 8 * * *'
     runs-on: ubuntu-latest
     environment: Production
-    env:
-      BASE_URL: ${{ vars.VERCEL_APP_URL }}
-      AUTH: ${{ secrets.CRON_SECRET }}
     steps:
-      - name: spending-alerts
+      - name: Trigger deal-alerts cron
         run: |
-          curl -sf -X POST "$BASE_URL/api/cron/spending-alerts" \
-            -H "Authorization: Bearer $AUTH" \
-            -H "Content-Type: application/json" \
-            --max-time 30
-
-      - name: loyalty-expiry
-        run: |
-          curl -sf -X POST "$BASE_URL/api/cron/loyalty-expiry" \
-            -H "Authorization: Bearer $AUTH" \
-            -H "Content-Type: application/json" \
-            --max-time 30
-
-      - name: deal-alerts
-        run: |
-          curl -sf -X POST "$BASE_URL/api/cron/deal-alerts" \
-            -H "Authorization: Bearer $AUTH" \
-            -H "Content-Type: application/json" \
-            --max-time 30
-
-      - name: leaderboard
-        run: |
-          curl -sf -X POST "$BASE_URL/api/cron/leaderboard" \
-            -H "Authorization: Bearer $AUTH" \
-            -H "Content-Type: application/json" \
-            --max-time 30
-
-      - name: reminders-check
-        run: |
-          curl -sf -X POST "$BASE_URL/api/reminders/check" \
-            -H "Authorization: Bearer $AUTH" \
-            -H "Content-Type: application/json" \
+          curl -sf -X POST "${{ vars.VERCEL_APP_URL }}/api/cron/deal-alerts" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             --max-time 30
