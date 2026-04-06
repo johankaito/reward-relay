@@ -65,12 +65,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to save correction' }, { status: 500 })
   }
 
-  // Flag card for verification with high priority
+  // Flag card for verification — always needs_verification; escalate to 'high' on multi-user agreement
+  let verificationPriority: 'high' | 'normal' = 'normal'
+
+  const { count: pendingCount } = await supabase
+    .from('card_corrections')
+    .select('id', { count: 'exact', head: true })
+    .eq('card_id', cardId)
+    .eq('field', field)
+    .eq('status', 'pending')
+
+  if ((pendingCount ?? 0) >= 2) {
+    verificationPriority = 'high'
+  }
+
   await supabase
     .from('cards')
     .update({
       needs_verification: true,
-      verification_priority: 'high',
+      verification_priority: verificationPriority,
     })
     .eq('id', cardId)
 

@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
+import { CorrectionAction } from './_components/CorrectionAction'
 import type { Database } from '@/types/database.types'
 
 const ADMIN_EMAIL = 'john.g.keto+rewardrelay@gmail.com'
@@ -58,15 +59,19 @@ export default async function AccuracyDashboardPage() {
 
     serviceSupabase
       .from('card_corrections')
-      .select('id')
-      .eq('status', 'pending'),
+      .select('id, card_id, field, reported_value, created_at')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .limit(50),
   ])
 
-  // Fetch card names for low confidence logs
-  const cardIds = [...new Set((lowConfLogs ?? []).map((l) => l.card_id).filter((id): id is string => id !== null))]
+  // Fetch card names for low confidence logs + corrections
+  const logCardIds = [...new Set((lowConfLogs ?? []).map((l) => l.card_id).filter((id): id is string => id !== null))]
+  const correctionCardIds = [...new Set((pendingCorrections ?? []).map((c) => c.card_id).filter((id): id is string => id !== null))]
+  const allCardIds = [...new Set([...logCardIds, ...correctionCardIds])]
   const { data: cardDetails } =
-    cardIds.length > 0
-      ? await serviceSupabase.from('cards').select('id, name, bank').in('id', cardIds)
+    allCardIds.length > 0
+      ? await serviceSupabase.from('cards').select('id, name, bank').in('id', allCardIds)
       : { data: [] }
 
   const cardMap = Object.fromEntries((cardDetails ?? []).map((c) => [c.id, c]))
@@ -201,7 +206,7 @@ export default async function AccuracyDashboardPage() {
       </section>
 
       {/* Recent Runs Summary */}
-      <section>
+      <section style={{ marginBottom: '2rem' }}>
         <h2 style={{ color: 'var(--text-primary)', fontSize: '1.125rem', marginBottom: '1rem' }}>
           Recent Extraction Runs
         </h2>
@@ -209,6 +214,48 @@ export default async function AccuracyDashboardPage() {
           {monthRunCount} extractions in the last 30 days
           {hashChangeCount > 0 && ` \u2022 ${hashChangeCount} data changes detected`}
         </p>
+      </section>
+
+      {/* Pending Corrections */}
+      <section>
+        <h2 style={{ color: 'var(--text-primary)', fontSize: '1.125rem', marginBottom: '1rem' }}>
+          Pending Corrections ({pendingCount})
+        </h2>
+        {!pendingCorrections || pendingCorrections.length === 0 ? (
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+            No pending corrections.
+          </p>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border, #e5e7eb)' }}>
+                {['Card', 'Bank', 'Field', 'Reported Value', 'Submitted', 'Actions'].map((h) => (
+                  <th key={h} style={{ textAlign: 'left', padding: '0.5rem', color: 'var(--text-secondary)', fontWeight: 500 }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {pendingCorrections.map((c) => {
+                const card = c.card_id ? cardMap[c.card_id] : null
+                return (
+                  <tr key={c.id} style={{ borderBottom: '1px solid var(--border, #e5e7eb)' }}>
+                    <td style={{ padding: '0.5rem', color: 'var(--text-primary)' }}>{card?.name ?? c.card_id ?? '—'}</td>
+                    <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>{card?.bank ?? '—'}</td>
+                    <td style={{ padding: '0.5rem', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>{c.field}</td>
+                    <td style={{ padding: '0.5rem', color: 'var(--text-primary)', fontWeight: 600 }}>{c.reported_value}</td>
+                    <td style={{ padding: '0.5rem', color: 'var(--text-secondary)' }}>
+                      {c.created_at ? new Date(c.created_at).toLocaleDateString('en-AU') : '—'}
+                    </td>
+                    <td style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
+                      <CorrectionAction correctionId={c.id} action="verified" label="Approve" />
+                      <CorrectionAction correctionId={c.id} action="dismissed" label="Dismiss" />
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        )}
       </section>
     </main>
   )
