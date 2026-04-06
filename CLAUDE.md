@@ -24,6 +24,26 @@
 - Agent manager: `~/.claude/agents-remote/agent-manager.sh -t mac-15`
 - Never make changes locally — always delegate to mac-15
 
+## Launch & Marketing
+
+**Strategy docs**:
+- `docs/LAUNCH_EXECUTION_PLAN.md` — full execution plan with community warm-up scripts, outreach emails, week-by-week actions
+- `docs/MARKETING_ENGINE.md` — 4-phase launch model, AI creative loop (Claude + Midjourney), asset checklists
+
+**Startup accelerator agent** (~/.claude/agents/startup-accelerator/):
+Automatically activated for any task involving: launch, marketing, community, growth, copy, pricing, monetisation.
+
+Invoke for:
+- Drafting marketing copy (AFF post, Reddit post, emails, video script)
+- Reviewing launch decisions against the 4-phase model (dog-food → friends → community → public)
+- Running the copy review loop (prompt: "skeptical AFF member who has seen 10 overpromised apps")
+- Channel prioritisation and timing decisions
+- Pricing and monetisation strategy
+
+**Current phase**: Phase 1 (dog-food). See MARKETING_ENGINE.md for phase transition criteria.
+
+**AI creative stack**: Claude drafts copy → Midjourney generates visuals → Claude critiques for AU churning community fit → human approval → publish. Never skip the review loop.
+
 ## Route Map
 
 ### Active routes
