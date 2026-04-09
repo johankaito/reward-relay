@@ -10,14 +10,14 @@ export function OnboardingGate({ onSelect }: OnboardingGateProps) {
   const [selected, setSelected] = useState<boolean | null>(null)
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0F131F] px-4 py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--surface)] px-4 py-12">
       {/* Step indicator */}
       <div className="mb-8 w-full max-w-2xl">
         <div className="flex items-center justify-between text-xs uppercase tracking-widest text-white/30">
-          <span className="text-teal-400 font-semibold">Step 1 of 4</span>
+          <span className="text-primary font-semibold">Step 1 of 4</span>
           <div className="flex gap-1.5">
             {[0, 1, 2, 3].map((i) => (
-              <div key={i} className={`h-1 w-8 rounded-full ${i === 0 ? "bg-teal-400" : "bg-white/15"}`} />
+              <div key={i} className={`h-1 w-8 rounded-full ${i === 0 ? "bg-primary" : "bg-white/15"}`} />
             ))}
           </div>
         </div>
@@ -52,14 +52,14 @@ export function OnboardingGate({ onSelect }: OnboardingGateProps) {
               <button
                 key={String(opt.value)}
                 onClick={() => setSelected(opt.value)}
-                className={`relative rounded-2xl border-2 p-8 text-left transition-all duration-200 hover:scale-[1.01] ${
+                className={`relative rounded-2xl p-8 text-left transition-all duration-200 hover:scale-[1.01] ${
                   isSelected
-                    ? "border-teal-500 bg-teal-500/10 shadow-[0_0_30px_rgba(16,185,129,0.15)]"
-                    : "border-white/10 bg-white/5 hover:border-white/20"
+                    ? "bg-primary/10 ring-1 ring-primary/40 shadow-[0_0_30px_rgba(16,185,129,0.15)]"
+                    : "bg-white/5 hover:bg-white/8"
                 }`}
               >
                 {isSelected && (
-                  <div className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-teal-500">
+                  <div className="absolute right-4 top-4 flex h-5 w-5 items-center justify-center rounded-full bg-primary">
                     <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 12 12">
                       <path d="M10 3L5 8.5 2 5.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
                     </svg>

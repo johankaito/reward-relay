@@ -69,7 +69,7 @@ export function AwardRouteCard({ route, centsPerPoint = 2 }: AwardRouteCardProps
   )
 
   return (
-    <Card className="overflow-hidden border border-[var(--border-default)] bg-[var(--surface)] shadow-sm">
+    <Card className="overflow-hidden border border-white/10 bg-[var(--surface)] shadow-sm">
       {/* Gradient destination header bar */}
       <div
         className="flex items-center justify-between px-4 py-2"

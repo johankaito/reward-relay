@@ -125,7 +125,7 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
                 <button
                   key={i}
                   onClick={() => handleGoalSelect(g.key)}
-                  className="w-full rounded-2xl border-2 border-white/10 bg-white/5 p-5 text-left transition-all hover:scale-[1.01] hover:border-teal-500/40 hover:bg-teal-500/5"
+                  className="w-full rounded-2xl border-2 border-white/10 bg-white/5 p-5 text-left transition-all hover:scale-[1.01] hover:border-primary/40 hover:bg-primary/5"
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-3xl">{g.icon}</span>
@@ -169,7 +169,7 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
                   onClick={() => setSpendBand(b.value)}
                   className={`shrink-0 rounded-xl border-2 px-4 py-3 text-center transition-all ${
                     spendBand === b.value
-                      ? "border-teal-500 bg-teal-500/20 text-teal-400"
+                      ? "border-primary bg-primary/20 text-primary"
                       : "border-white/10 bg-white/5 text-on-surface-variant hover:border-white/20"
                   }`}
                 >
@@ -181,14 +181,14 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
 
             {/* Live path preview */}
             {bestPath && (
-              <div className="rounded-2xl border border-teal-500/30 bg-teal-500/10 p-6 space-y-4">
-                <p className="text-sm font-medium uppercase tracking-wider text-teal-400">
+              <div className="rounded-2xl border border-primary/30 bg-primary/10 p-6 space-y-4">
+                <p className="text-sm font-medium uppercase tracking-wider text-primary">
                   Fastest path to your goal
                 </p>
                 <div className="space-y-2">
                   {bestPath.cards.map((card, i) => (
                     <div key={card.id} className="flex items-center gap-3">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-xs font-bold text-teal-400">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
                         {i + 1}
                       </span>
                       <div className="flex-1">
@@ -239,19 +239,19 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
             <div className="space-y-4">
               {/* Fast Track card */}
               {bestPath && (
-                <div className="rounded-2xl border-2 border-teal-500/40 bg-teal-500/10 p-6 space-y-4 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+                <div className="rounded-2xl border-2 border-primary/40 bg-primary/10 p-6 space-y-4 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
                   <div className="flex items-center justify-between">
                     <div>
-                      <span className="text-xs font-semibold uppercase tracking-widest text-teal-400">Fast Track</span>
+                      <span className="text-xs font-semibold uppercase tracking-widest text-primary">Fast Track</span>
                       <p className="mt-1 text-lg font-bold text-white">Maximum points, fastest path</p>
                     </div>
-                    <span className="rounded-full bg-teal-500/20 border border-teal-500/30 px-2.5 py-1 text-xs font-semibold text-teal-400">Recommended</span>
+                    <span className="rounded-full bg-primary/20 border border-primary/30 px-2.5 py-1 text-xs font-semibold text-primary">Recommended</span>
                   </div>
 
                   <div className="space-y-2">
                     {bestPath.cards.map((card, i) => (
                       <div key={card.id} className="flex items-center gap-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-500/20 text-xs font-bold text-teal-400">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
                           {i + 1}
                         </span>
                         <div className="flex-1">
@@ -289,7 +289,7 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
 
                   <div className="flex items-center justify-between border-t border-white/10 pt-2 text-xs">
                     <span className="text-white/40">Est. Annual Value</span>
-                    <span className="font-semibold text-teal-400">
+                    <span className="font-semibold text-primary">
                       ${Math.round(bestPath.totalPoints * 0.018).toLocaleString()}/yr
                     </span>
                   </div>
@@ -345,7 +345,7 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
 
                   <div className="flex items-center justify-between border-t border-white/10 pt-2 text-xs">
                     <span className="text-white/40">Est. Annual Value</span>
-                    <span className="font-semibold text-teal-400">
+                    <span className="font-semibold text-primary">
                       ${Math.round(conservativePath.totalPoints * 0.018).toLocaleString()}/yr
                     </span>
                   </div>
@@ -356,7 +356,7 @@ export function NewChurnerOnboarding({ onComplete }: NewChurnerOnboardingProps) 
               {bestPath && (
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-teal-500/20">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20">
                       <span className="text-sm">🚀</span>
                     </div>
                     <div>

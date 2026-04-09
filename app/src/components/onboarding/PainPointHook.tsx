@@ -7,7 +7,7 @@ interface PainPointHookProps {
 
 export function PainPointHook({ onContinue, onSkip }: PainPointHookProps) {
   return (
-    <div className="flex min-h-screen bg-[#0F131F]">
+    <div className="flex min-h-screen bg-[var(--surface)]">
       {/* Mobile / single column */}
       <div className="flex flex-col w-full lg:w-3/5 px-6 py-10 justify-center max-w-2xl mx-auto lg:mx-0 lg:pl-20">
         <div className="mb-6" />
@@ -15,7 +15,7 @@ export function PainPointHook({ onContinue, onSkip }: PainPointHookProps) {
         {/* Headline */}
         <h1 className="text-4xl font-bold leading-tight text-white sm:text-5xl">
           Most Australians leave{" "}
-          <span className="text-teal-400">$1,200+</span> in rewards unclaimed each year.
+          <span className="text-primary">$1,200+</span> in rewards unclaimed each year.
         </h1>
 
         <p className="mt-4 text-lg text-white/60">
@@ -24,7 +24,7 @@ export function PainPointHook({ onContinue, onSkip }: PainPointHookProps) {
 
         {/* Progress steps */}
         <div className="mt-8 flex items-center gap-2 text-xs uppercase tracking-widest text-white/40">
-          <span className="text-teal-400 font-semibold">Add cards</span>
+          <span className="text-primary font-semibold">Add cards</span>
           <span className="h-px w-6 bg-white/20" />
           <span>Get spending</span>
           <span className="h-px w-6 bg-white/20" />
@@ -66,8 +66,8 @@ export function PainPointHook({ onContinue, onSkip }: PainPointHookProps) {
           </div>
           <p className="text-lg font-semibold text-white">Your personalised gap</p>
           <p className="mt-1 text-sm text-white/50">Ready to be revealed once your profile is complete.</p>
-          <div className="mt-6 rounded-xl bg-teal-500/10 border border-teal-500/20 px-4 py-3">
-            <p className="text-xs text-teal-400 uppercase tracking-wider">Avg. gap unlocked</p>
+          <div className="mt-6 rounded-xl bg-primary/10 border border-primary/20 px-4 py-3">
+            <p className="text-xs text-primary uppercase tracking-wider">Avg. gap unlocked</p>
             <p className="mt-1 text-2xl font-bold text-white">$2,393<span className="text-base font-normal text-white/60">/yr</span></p>
           </div>
         </div>
