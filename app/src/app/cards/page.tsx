@@ -285,7 +285,12 @@ export default function CardsPage() {
                           <div className="text-xs font-bold tracking-[0.2em]" style={{ color: textMuted }}>
                             {(uc.bank ?? "").toUpperCase()}
                           </div>
-                          <span style={{ color: textMuted, fontSize: "1rem" }}>◎</span>
+                          {/* CARDS-004: Points balance */}
+                          {cc?.welcome_bonus_points && cc.welcome_bonus_points > 0 && (
+                            <span className="text-xs tabular-nums" style={{ color: "rgba(255,255,255,0.7)" }}>
+                              {cc.welcome_bonus_points.toLocaleString()} pts
+                            </span>
+                          )}
                         </div>
                         <div className="flex justify-between items-end relative z-10">
                           <div className="text-sm font-headline font-bold tracking-widest" style={{ color: textColor }}>
@@ -295,6 +300,29 @@ export default function CardsPage() {
                             {uc.bank}
                           </div>
                         </div>
+
+                        {/* CARDS-003: Spend progress bar at bottom */}
+                        {spendTarget > 0 && (
+                          <div className="absolute bottom-0 left-0 right-0 px-4 pb-3 pt-2 z-10">
+                            {uc.bonus_earned ? (
+                              <p className="text-xs font-semibold text-center tabular-nums" style={{ color: "rgba(255,255,255,0.8)" }}>
+                                Bonus earned ✓
+                              </p>
+                            ) : (
+                              <>
+                                <p className="text-xs tabular-nums mb-1 text-center" style={{ color: "rgba(255,255,255,0.7)" }}>
+                                  ${currentSpend.toLocaleString()} / ${spendTarget.toLocaleString()} spent
+                                </p>
+                                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.2)" }}>
+                                  <div
+                                    className="h-full rounded-full bg-emerald-400"
+                                    style={{ width: `${pct}%`, transition: "width 400ms ease-out" }}
+                                  />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       {/* Card meta row below artwork */}
