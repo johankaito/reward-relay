@@ -192,7 +192,7 @@ export default function Home() {
                 Active Card Progress
               </h3>
               <div className="relative h-64 w-64">
-                <svg className="h-full w-full -rotate-90">
+                <svg className="h-full w-full -rotate-90" viewBox="0 0 256 256">
                   <circle cx="128" cy="128" r="110" fill="transparent" stroke="rgba(78,222,163,0.12)" strokeWidth="16" />
                   <circle
                     cx="128"
