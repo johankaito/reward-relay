@@ -66,7 +66,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
       {/* Desktop fixed sidebar */}
-      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-72 fixed left-0 top-0 overflow-y-auto z-50 antialiased tracking-tight">
+      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 antialiased tracking-tight">
         <div className="p-8 flex flex-col h-full">
           {/* Logo */}
           <div className="mb-10">
@@ -197,7 +197,7 @@ export function AppShell({ children }: AppShellProps) {
       </header>
 
       {/* Page content */}
-      <div className="pt-16 md:pl-72 pb-24 md:pb-6 min-w-0">
+      <div className="pt-16 md:pl-64 pb-24 md:pb-6 min-w-0">
         <main className="min-w-0 overflow-x-hidden px-6 md:px-10 py-8">{children}</main>
       </div>
 
@@ -219,7 +219,7 @@ export function AppShell({ children }: AppShellProps) {
                 key={href}
                 onClick={() => router.push(href)}
                 className={`flex flex-col items-center justify-center gap-1 py-2 px-1 transition-colors active:bg-white/5 ${
-                  active ? "text-primary" : "text-on-surface-variant"
+                  active ? "text-primary" : "text-slate-500"
                 }`}
               >
                 <span
@@ -228,7 +228,7 @@ export function AppShell({ children }: AppShellProps) {
                 >
                   {materialIcon}
                 </span>
-                <span className="text-[10px] font-semibold tracking-[0.05em] uppercase leading-tight">
+                <span className="text-[10px] font-semibold tracking-widest uppercase leading-tight">
                   {label}
                 </span>
               </button>

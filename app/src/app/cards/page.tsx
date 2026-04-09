@@ -272,7 +272,7 @@ export default function CardsPage() {
                   return (
                     <div
                       key={uc.id}
-                      className={`snap-center shrink-0 min-w-[300px] md:min-w-0 md:w-auto max-w-[320px] md:max-w-none group cursor-pointer${isSelected ? " ring-2 ring-primary rounded-xl" : ""}`}
+                      className={`snap-start shrink-0 min-w-[310px] md:min-w-0 md:w-auto max-w-[320px] md:max-w-none group cursor-pointer${isSelected ? " ring-2 ring-primary rounded-xl" : ""}`}
                       onClick={() => setSelectedCard(uc)}
                     >
                       {/* Card artwork tile */}
@@ -361,7 +361,7 @@ export default function CardsPage() {
 
                 {/* Add another card */}
                 <div
-                  className="snap-center shrink-0 min-w-[300px] md:min-w-0 md:w-auto max-w-[320px] md:max-w-none border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center justify-center p-8 cursor-pointer hover:bg-white/[0.02] transition-colors group"
+                  className="snap-start shrink-0 min-w-[310px] md:min-w-0 md:w-auto max-w-[320px] md:max-w-none border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center justify-center p-8 cursor-pointer hover:bg-white/[0.02] transition-colors group"
                   style={{ aspectRatio: "1.586/1" }}
                   onClick={() => setShowAddForm(true)}
                 >
