@@ -23,7 +23,7 @@ export function DataFreshnessChip({ lastVerifiedAt, confidence }: DataFreshnessC
 
   if (daysSince !== null && daysSince <= 7) {
     return (
-      <span className="inline-flex items-center gap-1 rounded-full bg-[#4edea3]/10 px-2 py-0.5 text-xs text-[#4edea3]">
+      <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
         <span aria-hidden>✓</span>
         Verified recently
       </span>

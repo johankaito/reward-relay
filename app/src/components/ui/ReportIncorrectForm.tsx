@@ -63,7 +63,7 @@ export function ReportIncorrectForm({ cardId }: ReportIncorrectFormProps) {
 
   if (formState === 'success') {
     return (
-      <p className="mt-2 text-xs text-[#4edea3]">
+      <p className="mt-2 text-xs text-primary">
         Thanks — we&apos;ll review this.
       </p>
     )
@@ -128,7 +128,7 @@ export function ReportIncorrectForm({ cardId }: ReportIncorrectFormProps) {
           type="submit"
           disabled={formState === 'submitting' || !correctValue.trim()}
           className="flex-1 rounded-lg py-2 text-xs font-semibold text-black disabled:opacity-50 transition-opacity"
-          style={{ background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' }}
+          style={{ background: 'var(--gradient-cta)' }}
         >
           {formState === 'submitting' ? 'Submitting...' : 'Submit'}
         </button>

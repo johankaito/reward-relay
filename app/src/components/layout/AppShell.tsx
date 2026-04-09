@@ -66,11 +66,11 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ background: "var(--surface)" }}>
       {/* Desktop fixed sidebar */}
-      <aside className="hidden md:flex flex-col border-r border-white/5 bg-[#171b28] h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 antialiased tracking-tight">
+      <aside className="hidden md:flex flex-col border-r border-white/5 bg-surface-container-low h-screen w-64 fixed left-0 top-0 overflow-y-auto z-50 antialiased tracking-tight">
         <div className="p-8 flex flex-col h-full">
           {/* Logo */}
           <div className="mb-10">
-            <h1 className="text-xl font-bold tracking-tighter text-[#4edea3]">Reward Relay</h1>
+            <h1 className="text-xl font-bold tracking-tighter text-primary">Reward Relay</h1>
             <p className="text-[10px] uppercase tracking-widest text-slate-500 mt-1">The Financial Luminary</p>
           </div>
 
@@ -100,7 +100,7 @@ export function AppShell({ children }: AppShellProps) {
             <button
               onClick={() => router.push("/cards")}
               className="w-full py-4 rounded-full font-bold transition-transform active:scale-95 flex items-center justify-center gap-2 shadow-lg text-sm"
-              style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)", color: "#003824" }}
+              style={{ background: "var(--gradient-cta)", color: "var(--on-primary)" }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>add</span>
               Add New Card
@@ -117,7 +117,7 @@ export function AppShell({ children }: AppShellProps) {
                   ) : (
                     <span
                       className="text-sm font-bold flex items-center justify-center w-full h-full"
-                      style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)", color: "#0f131f" }}
+                      style={{ background: "var(--gradient-cta)", color: "var(--on-primary)" }}
                     >
                       {displayInitials}
                     </span>
@@ -125,7 +125,7 @@ export function AppShell({ children }: AppShellProps) {
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-bold text-on-surface truncate">{displayName}</span>
-                  <span className="text-[10px] text-[#4edea3] uppercase tracking-widest">Platinum Tier</span>
+                  <span className="text-[10px] text-primary uppercase tracking-widest">Platinum Tier</span>
                 </div>
               </div>
             )}
@@ -152,10 +152,10 @@ export function AppShell({ children }: AppShellProps) {
       {/* Mobile header */}
       <header
         className="fixed top-0 w-full z-40 md:hidden flex justify-between items-center h-16 px-6"
-        style={{ background: "#171b28" }}
+        style={{ background: "var(--surface-container-low)" }}
       >
         <Link href="/dashboard">
-          <span className="text-xl font-black" style={{ color: "#4edea3" }}>Reward Relay</span>
+          <span className="text-xl font-black text-primary">Reward Relay</span>
         </Link>
         <div className="flex gap-4">
           <button aria-label="Notifications">
@@ -175,7 +175,7 @@ export function AppShell({ children }: AppShellProps) {
             <input
               type="text"
               placeholder="Search rewards..."
-              className="w-full h-9 pl-9 pr-4 rounded-full bg-[#1b1f2c] border border-white/5 text-sm text-on-surface placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-[#4edea3]/30"
+              className="w-full h-9 pl-9 pr-4 rounded-full bg-surface-container border border-white/5 text-sm text-on-surface placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-primary/30"
             />
           </div>
         </div>
@@ -189,7 +189,7 @@ export function AppShell({ children }: AppShellProps) {
           {avatarUrl ? (
             <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ background: "linear-gradient(135deg, #4edea3 0%, #10b981 100%)", color: "#0f131f" }}>
+            <div className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ background: "var(--gradient-cta)", color: "var(--on-primary)" }}>
               {displayInitials}
             </div>
           )}
