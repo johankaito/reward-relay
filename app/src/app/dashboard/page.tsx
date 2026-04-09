@@ -14,6 +14,8 @@ import { getBankGradient } from "@/lib/bank-gradients"
 import { useCatalog } from "@/contexts/CatalogContext"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
 import type { Database } from "@/types/database.types"
+import { getHistoryCompleteness } from "@/lib/history-completeness"
+import { HistoryCompletenessBanner } from "@/components/dashboard/HistoryCompletenessBanner"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 
@@ -141,6 +143,8 @@ export default function DashboardPage() {
         bonusPoints: catalogById.get(c.card_id!)?.welcome_bonus_points ?? 0,
       }))
   }, [cards, catalogCards])
+
+  const completeness = useMemo(() => getHistoryCompleteness(cards), [cards])
 
   const cancelAlerts = useMemo(() => {
     const now = new Date().getTime()
@@ -433,6 +437,9 @@ export default function DashboardPage() {
             </div>
           )
         })()}
+
+        {/* ── History Completeness Banner ── */}
+        <HistoryCompletenessBanner completeness={completeness} />
 
         {/* ── Credit Portfolio (wallet card stack) ── */}
         <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
