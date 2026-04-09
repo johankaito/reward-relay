@@ -8,6 +8,9 @@ import { AppShell } from '@/components/layout/AppShell'
 import { supabase } from '@/lib/supabase/client'
 import type { Database } from '@/types/database.types'
 import { GeneralInfoDisclaimer } from '@/components/ui/GeneralInfoDisclaimer'
+import { lookupExclusionPeriod, normalizeBankName } from '@/lib/bank-exclusions'
+import type { BankExclusionPeriod } from '@/lib/bank-exclusions'
+import { computeEligibility } from '@/lib/eligibility'
 
 type UserCard = Database['public']['Tables']['user_cards']['Row']
 type CatalogCard = Database['public']['Tables']['cards']['Row']
@@ -73,6 +76,7 @@ export default function FlightsPage() {
   // Card recommendations (merged from /projections)
   const [userCards, setUserCards] = useState<UserCard[]>([])
   const [catalogCards, setCatalogCards] = useState<CatalogCard[]>([])
+  const [exclusionPeriods, setExclusionPeriods] = useState<BankExclusionPeriod[]>([])
 
   // Hero search form state (display only — no live DB search)
   const [origin, setOrigin] = useState('Sydney (SYD)')
@@ -90,10 +94,11 @@ export default function FlightsPage() {
         return
       }
 
-      const [balancesResult, userCardsResult, catalogResult] = await Promise.all([
+      const [balancesResult, userCardsResult, catalogResult, exclusionPeriodsResult] = await Promise.all([
         supabase.from('loyalty_balances' as never).select('*'),
         supabase.from('user_cards').select('*'),
         supabase.from('cards').select('*').eq('is_active', true).order('welcome_bonus_points', { ascending: false }),
+        supabase.from('bank_exclusion_periods').select('*'),
       ])
 
       const balances: LoyaltyBalance[] = ((balancesResult.data as LoyaltyBalance[] | null) ?? [])
@@ -104,6 +109,7 @@ export default function FlightsPage() {
       setBalanceMap(map)
       setUserCards((userCardsResult.data as UserCard[]) ?? [])
       setCatalogCards((catalogResult.data as CatalogCard[]) ?? [])
+      setExclusionPeriods((exclusionPeriodsResult.data as BankExclusionPeriod[]) ?? [])
       setLoading(false)
     }
 
@@ -124,10 +130,33 @@ export default function FlightsPage() {
 
   // Card recommendations to close the gap (merged from /projections)
   const ownedCardIds = useMemo(() => new Set(userCards.map((uc) => uc.card_id).filter(Boolean)), [userCards])
-  const topRecommendations = useMemo(
-    () => catalogCards.filter((c) => !ownedCardIds.has(c.id) && (c.welcome_bonus_points ?? 0) > 0).slice(0, 3),
-    [catalogCards, ownedCardIds],
-  )
+  const topRecommendations = useMemo(() => {
+    return catalogCards
+      .filter((c) => {
+        if (ownedCardIds.has(c.id)) return false
+        if ((c.welcome_bonus_points ?? 0) <= 0) return false
+        // Filter out cards where the user is in an active bank exclusion window
+        const bankLower = (c.bank ?? '').toLowerCase()
+        const isAmex = bankLower.includes('amex') || bankLower.includes('american express')
+        let mostRecent: Date | null = null
+        for (const uc of userCards) {
+          if (!uc.bank || uc.bank.toLowerCase() !== bankLower) continue
+          const rawDate = isAmex ? uc.application_date : uc.cancellation_date
+          if (!rawDate) continue
+          const d = new Date(rawDate)
+          if (!mostRecent || d > mostRecent) mostRecent = d
+        }
+        const lastAppDate = mostRecent?.toISOString() ?? null
+        const { isEligible } = computeEligibility(
+          normalizeBankName(c.bank ?? '') ?? (c.bank ?? ''),
+          c.bank ?? '',
+          lastAppDate,
+          lookupExclusionPeriod(c.bank ?? '', exclusionPeriods),
+        )
+        return isEligible
+      })
+      .slice(0, 3)
+  }, [catalogCards, ownedCardIds, userCards, exclusionPeriods])
   const monthlyEarning = useMemo(() => {
     if (userCards.length === 0) return 0
     const ownedCatalog = catalogCards.filter((c) => ownedCardIds.has(c.id))
