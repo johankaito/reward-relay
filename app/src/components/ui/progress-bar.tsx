@@ -21,7 +21,7 @@ export function ProgressBar({ value, height = "sm", className }: ProgressBarProp
         className="h-full rounded-full transition-all duration-700 shadow-[0_0_12px_rgba(78,222,163,0.3)]"
         style={{
           width: `${clamped}%`,
-          background: "linear-gradient(90deg, #10b981 0%, #4edea3 100%)",
+          background: "var(--gradient-cta)",
         }}
       />
     </div>

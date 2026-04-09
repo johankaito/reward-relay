@@ -17,7 +17,7 @@ interface ProGateProps {
 
 export function ProBadge() {
   return (
-    <span className="ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#4edea3] ring-1 ring-[#4edea3]/30 bg-[#4edea3]/15">
+    <span className="ml-1.5 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary ring-1 ring-primary/30 bg-primary/15">
       Pro
     </span>
   )
@@ -48,8 +48,8 @@ export function ProGate({ feature, children, teaserText }: ProGateProps) {
   return (
     <div className="relative">
       {teaserText && (
-        <div className="mb-3 rounded-xl border border-[#4edea3]/30 bg-[#4edea3]/10 px-4 py-3">
-          <p className="text-sm font-medium text-[#4edea3]">{teaserText}</p>
+        <div className="mb-3 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3">
+          <p className="text-sm font-medium text-primary">{teaserText}</p>
         </div>
       )}
       <div className="pointer-events-none select-none blur-sm opacity-50">
@@ -57,8 +57,8 @@ export function ProGate({ feature, children, teaserText }: ProGateProps) {
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4 rounded-2xl border border-[var(--accent)]/30 bg-[var(--surface)]/95 p-8 text-center shadow-xl backdrop-blur-sm">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#4edea3]/15 ring-1 ring-[#4edea3]/30">
-            <Lock className="h-7 w-7 text-[#4edea3]" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/15 ring-1 ring-primary/30">
+            <Lock className="h-7 w-7 text-primary" />
           </div>
           <div className="space-y-2">
             <p className="text-lg font-semibold text-white">

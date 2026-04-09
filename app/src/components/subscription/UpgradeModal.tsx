@@ -89,7 +89,7 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
       <DialogContent className="border-[var(--border-default)] bg-[var(--surface)] text-white sm:max-w-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl text-white">
-            <Sparkles className="h-6 w-6 text-[#4edea3]" />
+            <Sparkles className="h-6 w-6 text-primary" />
             Upgrade to Pro
           </DialogTitle>
           <DialogDescription className="text-on-surface">
@@ -114,16 +114,16 @@ export function UpgradeModal({ open, onOpenChange }: UpgradeModalProps) {
           </div>
 
           {/* Pro */}
-          <div className="rounded-xl border-2 border-[#4edea3]/30 bg-[#4edea3]/5 p-4">
-            <p className="text-sm font-semibold text-[#4edea3]">Pro</p>
+          <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+            <p className="text-sm font-semibold text-primary">Pro</p>
             <p className="mt-1 text-2xl font-bold text-white">
               $9.99<span className="text-sm font-normal text-on-surface-variant">/mo</span>
             </p>
-            <p className="text-xs text-[#4edea3]">7-day free trial</p>
+            <p className="text-xs text-primary">7-day free trial</p>
             <ul className="mt-4 space-y-2">
               {PRO_FEATURES.map((f) => (
                 <li key={f} className="flex items-start gap-2 text-sm text-on-surface">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#4edea3]" />
+                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
                   {f}
                 </li>
               ))}
