@@ -418,6 +418,22 @@ export default function DashboardPage() {
           )}
         </section>
 
+        {/* ── Alert Strip ── */}
+        {(() => {
+          const alerts = [{ message: "ANZ Black annual fee due in 14 days", type: "warning" as const }]
+          if (alerts.length === 0) return null
+          return (
+            <div className="space-y-2">
+              {alerts.map((alert, i) => (
+                <div key={i} className="bg-amber-500/10 border border-amber-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
+                  <span className="material-symbols-outlined text-amber-400 shrink-0" style={{ fontSize: "18px" }}>warning</span>
+                  <p className="text-amber-300 text-sm">{alert.message}</p>
+                </div>
+              ))}
+            </div>
+          )
+        })()}
+
         {/* ── Credit Portfolio (wallet card stack) ── */}
         <section className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           <div className="xl:col-span-2 space-y-6">
