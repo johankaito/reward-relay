@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import {
   Lock,
@@ -14,13 +15,18 @@ import { BetaOnly } from "@/components/ui/BetaOnly"
 import { BetaRequestForm } from "@/components/forms/BetaRequestForm"
 
 export default function Home() {
+  const router = useRouter()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsLoggedIn(!!session)
+      if (session) {
+        router.replace("/dashboard")
+      } else {
+        setIsLoggedIn(false)
+      }
     })
-  }, [])
+  }, [router])
 
   return (
     <div
