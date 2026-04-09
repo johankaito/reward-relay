@@ -259,7 +259,7 @@ export default function FlightsPage() {
                 </div>
               </div>
               <button
-                className="text-on-primary font-black px-12 rounded-xl hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap"
+                className="text-on-primary font-black px-12 rounded-full hover:opacity-90 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-3 py-4 lg:py-0 whitespace-nowrap"
                 style={{ background: 'linear-gradient(135deg, #4edea3 0%, #10b981 100%)' }}
               >
                 <Search className="w-4 h-4" />
