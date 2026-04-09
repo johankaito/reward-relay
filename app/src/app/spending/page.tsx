@@ -412,6 +412,61 @@ export default function SpendingTrackerPage() {
       <div className="space-y-6 pb-10 px-10 pt-10">
         {/* Spending profile wizard — hidden for now */}
 
+        {/* ── SPEND-001: Portfolio-wide glassmorphism stat cards ── */}
+        {userCards.length > 0 && (() => {
+          const totalSpend = userCards.reduce((sum, c) => sum + (c.current_spend ?? 0), 0)
+          const totalTarget = userCards.reduce((sum, c) => sum + (c.spend_target ?? 0), 0)
+          const msrPct = totalTarget > 0 ? Math.min(100, Math.round((totalSpend / totalTarget) * 100)) : 0
+          const pointsEarned = userCards
+            .filter((c) => c.welcome_bonus_received)
+            .reduce((sum, c) => sum + (c.card?.welcome_bonus_points ?? 0), 0)
+          const deadlines = userCards
+            .filter((c) => c.spend_deadline && !c.welcome_bonus_received)
+            .map((c) => new Date(c.spend_deadline!).getTime())
+          const earliestDeadline = deadlines.length > 0 ? Math.min(...deadlines) : null
+          const daysRemaining = earliestDeadline !== null
+            ? Math.ceil((earliestDeadline - Date.now()) / 86400000)
+            : null
+
+          return (
+            <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4">
+                <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-2">Total Spend</p>
+                <p className="text-2xl font-headline font-bold tabular-nums text-on-surface">
+                  ${totalSpend.toLocaleString("en-AU", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </p>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4">
+                <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-2">MSR Progress</p>
+                <p className="text-2xl font-headline font-bold tabular-nums text-[#4edea3]">
+                  {totalTarget > 0 ? `${msrPct}%` : "—"}
+                </p>
+                {totalTarget > 0 && (
+                  <p className="text-[10px] text-on-surface-variant tabular-nums mt-0.5">
+                    ${totalSpend.toLocaleString()} / ${totalTarget.toLocaleString()}
+                  </p>
+                )}
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4">
+                <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-2">Points Earned</p>
+                <p className="text-2xl font-headline font-bold tabular-nums text-tertiary">
+                  {pointsEarned > 0 ? `${pointsEarned.toLocaleString()} pts` : "—"}
+                </p>
+              </div>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4">
+                <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest mb-2">Days Remaining</p>
+                <p className="text-2xl font-headline font-bold tabular-nums text-on-surface">
+                  {daysRemaining === null
+                    ? "—"
+                    : daysRemaining <= 0
+                    ? "Expired"
+                    : `${daysRemaining} days`}
+                </p>
+              </div>
+            </section>
+          )
+        })()}
+
         {/* ── Top stats row (Stitch 4-col glass panels) ── */}
         {activeCard && pace && (() => {
           const daysLeft = activeCard.spend_deadline
