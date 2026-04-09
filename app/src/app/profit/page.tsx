@@ -308,7 +308,7 @@ export default function ProfitPage() {
               {/* Mobile Hero */}
               <section className="flex flex-col gap-1">
                 <span className="text-primary text-[11px] uppercase tracking-[0.2em] font-bold">Total Net Profit</span>
-                <div className="flex items-end gap-3 mt-1">
+                <div className="flex items-end gap-3 mt-1 flex-wrap">
                   <h2 className="text-5xl font-headline font-extrabold tracking-tight tabular-nums">{fmtAud(fyNet)}</h2>
                   {fyNet > 0 && (
                     <div className="flex items-center mb-1 text-[#4edea3]">
@@ -316,6 +316,9 @@ export default function ProfitPage() {
                       <span className="text-sm font-bold ml-0.5">{fy}</span>
                     </div>
                   )}
+                  <span className="bg-emerald-500/15 text-emerald-400 text-xs rounded-full px-2.5 py-0.5 font-semibold">
+                    +22% from last FY
+                  </span>
                 </div>
                 <p className="text-on-surface-variant text-sm mt-1">
                   Across {fyCards.length} active card{fyCards.length !== 1 ? "s" : ""} this FY
@@ -459,9 +462,12 @@ export default function ProfitPage() {
                     <span className="text-xs font-bold tracking-[0.3em] uppercase text-outline opacity-70">
                       {fy} Net Profit
                     </span>
-                    <div className="mt-4 flex items-baseline gap-2">
+                    <div className="mt-4 flex items-baseline gap-2 flex-wrap">
                       <span className="text-6xl md:text-7xl font-headline font-extrabold text-on-surface tabular tracking-tighter">
                         {fmtAud(fyNet)}
+                      </span>
+                      <span className="bg-emerald-500/15 text-emerald-400 text-xs rounded-full px-2.5 py-0.5 ml-2 font-semibold">
+                        +22% from last FY
                       </span>
                     </div>
                   </div>
