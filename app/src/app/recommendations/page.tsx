@@ -16,6 +16,8 @@ import type { Recommendation } from "@/lib/recommendations"
 import type { BankExclusionPeriod } from "@/lib/bank-exclusions"
 import { GeneralInfoDisclaimer } from "@/components/ui/GeneralInfoDisclaimer"
 import { ReportIncorrectForm } from "@/components/ui/ReportIncorrectForm"
+import { getHistoryCompleteness } from "@/lib/history-completeness"
+import { HistoryCompletenessCallout } from "@/components/recommendations/HistoryCompletenessCallout"
 
 type UserCard = Database["public"]["Tables"]["user_cards"]["Row"]
 
@@ -135,6 +137,8 @@ export default function RecommendationsPage() {
     return sorted
   }, [allRecommendations, filter, sort])
 
+  const completeness = useMemo(() => getHistoryCompleteness(cards), [cards])
+
   const stats = useMemo(() => {
     const eligible = allRecommendations.filter((r) => r.eligibleNow).length
     const comingSoon = allRecommendations.filter((r) => !r.eligibleNow).length
@@ -188,6 +192,9 @@ export default function RecommendationsPage() {
             ))}
           </div>
         </section>
+
+        {/* ── History Completeness Callout ── */}
+        <HistoryCompletenessCallout completeness={completeness} />
 
         {/* ── Filter chips ── */}
         <div className="flex flex-wrap gap-3 overflow-x-auto pb-1 scrollbar-hide">

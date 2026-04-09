@@ -24,9 +24,13 @@ interface CardDetail {
 
 interface ChurnerOnboardingProps {
   onComplete: (cardHistory: OnboardingCardEntry[]) => void
+  excludedCardIds?: Set<string>
+  submitLabel?: string
+  headingOverride?: string
+  subheadingOverride?: string
 }
 
-export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
+export function ChurnerOnboarding({ onComplete, excludedCardIds, submitLabel, headingOverride, subheadingOverride }: ChurnerOnboardingProps) {
   const { catalogCards } = useCatalog()
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [details, setDetails] = useState<Record<string, CardDetail>>({})
@@ -43,12 +47,13 @@ export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
     const map = new Map<string, CatalogCard[]>()
     for (const card of catalogCards) {
       if (!card.is_active) continue
+      if (excludedCardIds?.has(card.id)) continue
       const existing = map.get(card.bank) ?? []
       existing.push(card)
       map.set(card.bank, existing)
     }
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b))
-  }, [catalogCards])
+  }, [catalogCards, excludedCardIds])
 
   const toggleCard = (id: string) => {
     setSelectedIds((prev) => {
@@ -147,9 +152,9 @@ export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
     <div className="flex min-h-screen flex-col items-center bg-[var(--surface-muted)] px-4 py-10">
       <div className="w-full max-w-2xl space-y-8">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-white">Your card history</h1>
+          <h1 className="text-3xl font-bold text-white">{headingOverride ?? "Your card history"}</h1>
           <p className="text-on-surface-variant">
-            Select every card you&apos;ve held in the last 3 years. We&apos;ll calculate your cooling periods instantly.
+            {subheadingOverride ?? "Select every card you\u2019ve held in the last 3 years. We\u2019ll calculate your cooling periods instantly."}
           </p>
         </div>
 
@@ -279,7 +284,7 @@ export function ChurnerOnboarding({ onComplete }: ChurnerOnboardingProps) {
               className="w-full rounded-xl py-3 text-base font-semibold text-white transition-opacity hover:opacity-90"
               style={{ background: "var(--gradient-cta)" }}
             >
-              Start tracking this plan →
+              {submitLabel ?? "Start tracking this plan →"}
             </button>
           </div>
         )}
