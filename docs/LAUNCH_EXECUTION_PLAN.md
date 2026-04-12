@@ -3,6 +3,97 @@
 **Date**: April 2026  
 **Author**: Senior Accelerator Partner (YC/Techstars framework)  
 **Kill criterion**: $500 MRR by Week 12  
+
+## Revised Strategy — Founder as Lurker (April 2026 Update)
+
+> **Context:** The founder is a consumer and lurker in the AU churning community — not an active AFF or Reddit poster. The original plan below assumes weeks of personal community warm-up. This section supersedes that approach with a strategy that works without an established presence.
+
+### Core Principle: Contribution Before Promotion
+
+Cold product posts from unknown accounts are removed as spam on AFF and viewed skeptically on Reddit. The solution is not to fake community presence — it is to route the launch through people who already have it.
+
+---
+
+### Pre-Launch Gate: Product Validation First
+
+Before any community outreach, verify three things in production:
+
+1. **End-to-end onboarding** — complete the full flow as a new user (path A and path B). Confirm cards save correctly, recommendations load, protection alerts are scheduled.
+2. **Email notifications firing** — confirm Resend cron jobs are active on Vercel. Send a test reminder to a real email address.
+3. **Catalog spot-check** — manually verify the top 10 AU cards (ANZ Black, Amex Platinum, CBA Diamond, NAB Rewards, Westpac Altitude Black) have current bonus amounts. Stale data destroys trust with power users who know the real figures.
+
+Do not proceed to outreach until all three pass.
+
+---
+
+### Channel Sequence (Lowest to Highest Stakes)
+
+#### Phase 1: r/churningaustralia (Do First)
+
+**Why first:** ~8k members, smaller than AFF, more tolerant of builders sharing tools with transparent "I made this" framing. Low stakes — a bad reception here does not poison the AFF well.
+
+**Post format:**
+> Title: "Built a free tool that tracks your bank cooling-off windows automatically — would love feedback from serious churners"
+>
+> Body: "I have been lurking here for a while and kept losing track of which banks I was in a cooling period for. Built Reward Relay to solve it — it tracks your card history, calculates your ANZ/Amex/NAB cooling windows automatically, and sends reminders before annual fees hit. Free to use. Would genuinely love feedback on whether the eligibility logic is right — you all know the bank rules better than I do."
+
+**Key:** Lead with the problem, not the product. Ask for feedback, not signups. This community will correct you if the eligibility logic is wrong — which is valuable.
+
+**Success signal:** 5-10 genuine users who complete onboarding. Watch their card history completeness scores. If they enter real data, the product resonated.
+
+---
+
+#### Phase 2: Champion Recruitment (Run Parallel to Phase 1)
+
+Identify 2-3 AFF power users who post frequently in the credit card section. Look for members with 500+ posts who regularly answer eligibility questions or bank rule clarifications.
+
+**Outreach approach (AFF DM or email if findable):**
+> "Hi [name] — I have seen your posts on ANZ/Amex cooling period questions and you clearly know this space. I built a tool that automates the eligibility tracking — no spreadsheet needed. I would love to give you a free Pro account and hear what is wrong with it. No ask, no pitch. Just honest feedback from someone who knows the rules better than I do."
+
+Give them full Pro access. No strings. If they find it useful, they will post about it organically. If they find bugs, you want to know before a wider launch.
+
+**Target: 2-3 champion users before any AFF post.**
+
+---
+
+#### Phase 3: Point Hacks AU Outreach (After Phase 1 Validation)
+
+Use the existing Point Hacks email draft below (see Part 1.2), but update it with:
+- Specific feedback quotes from r/churningaustralia users if available
+- Current user count (even "50 beta users" is better than nothing)
+- The protection framing: "free tier watches your cards so you never miss a deadline or pay an unexpected annual fee"
+
+**Timing:** Send after Phase 1 has run for 2 weeks and you have at least 20 real users with complete card histories.
+
+---
+
+#### Phase 4: AFF (Via Champions, Not a Direct Post)
+
+Do NOT post to AFF as an unknown account. The community is 20 years old and protective.
+
+Instead: let the Phase 2 champions post organically if they find the product useful. A trusted AFF member saying "I have been using this tool for a month and the eligibility logic is solid" is worth more than any launch post. This cannot be forced — it has to be earned.
+
+If champions are engaged and positive after 4 weeks, ask them directly: "Would you be comfortable posting about this in the Tools and Resources section? I will keep your Pro account active regardless."
+
+---
+
+### Success Metrics by Phase
+
+| Phase | Timeline | Success Signal | Kill Signal |
+|---|---|---|---|
+| Product validation | Week 1 | All 3 gates pass | Any gate fails — fix first |
+| r/churningaustralia | Weeks 2-3 | 10+ real users, genuine feedback | Post ignored or removed |
+| Champion recruitment | Weeks 2-4 | 2+ champions actively using it | No response after 3 outreach attempts |
+| Point Hacks outreach | Week 4+ | Editorial interest or coverage | No response after 2 follow-ups |
+| AFF organic | Week 6+ | Champion posts organically | Champions not engaged — do not force |
+
+**Overall kill criterion:** Track MRR at Week 12. If not trending after Phase 1-2, reassess positioning before Phase 3-4.
+
+---
+
+> **See also:** docs/RETENTION_RESEARCH.md for the full analysis of churner lifecycle, competitor benchmarks, and retention feature roadmap that informed this strategy.
+
+---
 **Target**: $5,000 MRR by Month 6
 
 ---
