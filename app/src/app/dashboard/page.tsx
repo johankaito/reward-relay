@@ -13,6 +13,7 @@ import { supabase } from "@/lib/supabase/client"
 import { getBankGradient } from "@/lib/bank-gradients"
 import { useCatalog } from "@/contexts/CatalogContext"
 import { useAnalytics } from "@/contexts/AnalyticsContext"
+import { useSubscription } from "@/hooks/useSubscription"
 import type { Database } from "@/types/database.types"
 import { getHistoryCompleteness } from "@/lib/history-completeness"
 import { HistoryCompletenessBanner } from "@/components/dashboard/HistoryCompletenessBanner"
@@ -25,12 +26,14 @@ export default function DashboardPage() {
   const router = useRouter()
   const { catalogCards } = useCatalog()
   const analytics = useAnalytics()
+  const { isPro } = useSubscription()
   const [email, setEmail] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [cards, setCards] = useState<UserCard[]>([])
   const [loading, setLoading] = useState(true)
   const [editingCard, setEditingCard] = useState<UserCard | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [showPowerTeaser, setShowPowerTeaser] = useState(false)
 
   const loadCards = async (showWelcome = false) => {
     const {
@@ -145,6 +148,24 @@ export default function DashboardPage() {
   }, [cards, catalogCards])
 
   const completeness = useMemo(() => getHistoryCompleteness(cards), [cards])
+
+  const cancelledCards = useMemo(() => cards.filter((c) => c.status === "cancelled"), [cards])
+
+  // Power user teaser — hydration-safe localStorage check
+  useEffect(() => {
+    if (isPro || cancelledCards.length < 3) return
+    try {
+      const stored = localStorage.getItem("rr_power_user_teaser_v1")
+      if (stored) {
+        const expiry = new Date(stored)
+        if (expiry > new Date()) return
+      }
+    } catch {
+      // localStorage unavailable (SSR guard)
+      return
+    }
+    setShowPowerTeaser(true)
+  }, [isPro, cancelledCards.length])
 
   const cancelAlerts = useMemo(() => {
     const now = new Date().getTime()
@@ -447,6 +468,46 @@ export default function DashboardPage() {
             </div>
           )
         })()}
+
+        {/* ── Power User Teaser ── */}
+        {showPowerTeaser && (
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-white/40">Pro Feature</p>
+            <p className="text-lg font-bold text-white">You&apos;re a serious churner.</p>
+            <p className="text-sm text-white/60">
+              You&apos;ve churned{" "}
+              <span className="tabular-nums font-bold text-white/80">{cancelledCards.length}</span> cards across{" "}
+              <span className="tabular-nums font-bold text-white/80">
+                {new Set(cancelledCards.map((c) => c.bank)).size}
+              </span>{" "}
+              banks. Pro unlocks your full profit history, annual fee tracking, and personalised recommendations ranked by your exact history.
+            </p>
+            <div className="flex items-center gap-4 pt-2">
+              <Link
+                href="/profit"
+                className="rounded-full px-5 py-2 text-sm font-semibold text-black"
+                style={{ background: "var(--gradient-cta)" }}
+              >
+                See what you&apos;re missing →
+              </Link>
+              <button
+                onClick={() => {
+                  const exp = new Date()
+                  exp.setDate(exp.getDate() + 7)
+                  try {
+                    localStorage.setItem("rr_power_user_teaser_v1", exp.toISOString())
+                  } catch {
+                    // ignore
+                  }
+                  setShowPowerTeaser(false)
+                }}
+                className="text-sm text-white/40 hover:text-white/60 transition-colors"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ── History Completeness Banner ── */}
         <HistoryCompletenessBanner completeness={completeness} />

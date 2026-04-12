@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
         ...(existingCustomer?.has_used_trial ? {} : { trial_period_days: TRIAL_DAYS }),
         metadata: { supabase_user_id: user.id },
       },
-      success_url: `${appUrl}/dashboard?upgraded=true`,
+      success_url: `${appUrl}/recommendations?upgraded=true`,
       cancel_url: `${appUrl}/dashboard`,
       metadata: { supabase_user_id: user.id },
     })

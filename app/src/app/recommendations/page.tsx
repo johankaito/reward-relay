@@ -6,7 +6,6 @@ import { toast } from "sonner"
 
 import { AppShell } from "@/components/layout/AppShell"
 import { DataFreshnessChip } from "@/components/ui/DataFreshnessChip"
-import { ProGate } from "@/components/ui/ProGate"
 import { supabase } from "@/lib/supabase/client"
 import { getRecommendations } from "@/lib/recommendations"
 import { useCatalog } from "@/contexts/CatalogContext"
@@ -232,15 +231,17 @@ export default function RecommendationsPage() {
           </div>
         ) : (
           <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(isPro ? filteredRecommendations : filteredRecommendations.slice(0, 5)).map((rec, index) => {
+            {filteredRecommendations.map((rec, index) => {
+              // Free users only see top 3; after that we insert an upgrade prompt
+              if (!isPro && index >= 3) return null
+
               const isBestMatch = index === 0 && filter === "all"
               const badgeLabel = getBadgeLabel(index, rec)
               const bonus = formatBonus(rec)
               const elig = formatEligibility(rec)
               const gradient = CARD_GRADIENTS[index % CARD_GRADIENTS.length]
-              const isGated = !isPro && index >= 1
 
-              const cardInner = (
+              return (
                 <div key={rec.card.id} className="relative group">
                   {/* Glow for best match */}
                   {isBestMatch && (
@@ -364,16 +365,27 @@ export default function RecommendationsPage() {
                   </div>
                 </div>
               )
-
-              if (isGated) {
-                return (
-                  <ProGate key={rec.card.id} feature="Full Recommendations">
-                    {cardInner}
-                  </ProGate>
-                )
-              }
-              return cardInner
             })}
+
+            {/* Inline upgrade prompt for free users with more than 3 recommendations */}
+            {!isPro && filteredRecommendations.length > 3 && (
+              <div className="bg-[#4edea3]/5 border border-[#4edea3]/30 rounded-2xl p-6 flex flex-col justify-center items-center text-center space-y-4">
+                <div className="text-3xl">🔒</div>
+                <p className="text-lg font-bold text-white">Unlock all your recommendations</p>
+                <p className="text-sm text-white/60">
+                  You&apos;re eligible for{" "}
+                  <span className="tabular-nums font-bold text-white/80">{filteredRecommendations.length - 3}</span>{" "}
+                  more card{filteredRecommendations.length - 3 !== 1 ? "s" : ""}. Pro ranks them by your exact history and cooling-off periods.
+                </p>
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent("open-upgrade-modal"))}
+                  className="rounded-full px-6 py-3 text-sm font-bold text-black shadow-lg shadow-[#4edea3]/20 hover:opacity-90 transition-opacity"
+                  style={{ background: "var(--gradient-cta)" }}
+                >
+                  Start Free Trial →
+                </button>
+              </div>
+            )}
 
             {/* Insights bento card */}
             {filteredRecommendations.length > 0 && filter === "all" && (

@@ -10,6 +10,7 @@ import { AddCardForm } from "@/components/cards/AddCardForm"
 import type { CardRecord } from "@/components/cards/CardGrid"
 import { AppShell } from "@/components/layout/AppShell"
 import { useCatalog } from "@/contexts/CatalogContext"
+import { useSubscription } from "@/hooks/useSubscription"
 import { getBankGradient } from "@/lib/bank-gradients"
 import { supabase } from "@/lib/supabase/client"
 import type { Database } from "@/types/database.types"
@@ -51,6 +52,7 @@ function statusDot(status: string) {
 export default function CardsPage() {
   const router = useRouter()
   const { catalogCards } = useCatalog()
+  const { isPro } = useSubscription()
   const [userCards, setUserCards] = useState<UserCardWithCatalog[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
@@ -156,37 +158,62 @@ export default function CardsPage() {
         </div>
       </header>
 
-      {/* ── Add Card Form ── */}
+      {/* ── Add Card Form / Upgrade Prompt ── */}
       {showAddForm && (
         <div className="mb-8">
-          <AddCardForm
-            cards={catalogCards.map((c) => ({
-              id: c.id,
-              bank: c.bank,
-              name: c.name,
-              annual_fee: c.annual_fee,
-              welcome_bonus_points: c.welcome_bonus_points,
-              points_currency: c.points_currency,
-              min_income: c.min_income,
-            }))}
-            onCreated={() => {
-              setShowAddForm(false)
-              // Reload user cards
-              supabase
-                .from("user_cards")
-                .select(
-                  "id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, bonus_earned_at, annual_fee, status, card_id, created_at, user_id, notes, approval_date, next_eligible_date, spend_updated_at, alert_enabled, bonus_earned_suggested, is_business, card:cards(id, name, bank, bonus_spend_requirement, welcome_bonus_points, points_currency, annual_fee)"
-                )
-                .order("created_at", { ascending: false })
-                .then(({ data }) => {
-                  if (data) {
-                    const rows = data as unknown as UserCardWithCatalog[]
-                    setUserCards(rows)
-                    if (rows.length > 0) setSelectedCard(rows[0])
-                  }
-                })
-            }}
-          />
+          {!isPro && userCards.length >= 3 ? (
+            <div className="rounded-2xl border border-[#4edea3]/30 bg-[#4edea3]/10 p-8 text-center space-y-4">
+              <p className="text-sm text-white/60">You&apos;re tracking {userCards.length} cards.</p>
+              <p className="text-xl font-bold text-white">Upgrade to Pro to track unlimited cards</p>
+              <p className="text-sm text-white/60">
+                Most active churners run 4–6 cards at once. Pro gives you unlimited card tracking, full recommendations, and profit analytics.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+                <button
+                  onClick={() => window.dispatchEvent(new CustomEvent("open-upgrade-modal"))}
+                  className="rounded-full px-6 py-3 text-sm font-bold text-black shadow-lg shadow-[#4edea3]/20 hover:opacity-90 transition-opacity"
+                  style={{ background: "var(--gradient-cta)" }}
+                >
+                  Start 7-Day Free Trial →
+                </button>
+                <button
+                  onClick={() => setShowAddForm(false)}
+                  className="text-sm text-white/40 hover:text-white/60 transition-colors"
+                >
+                  Maybe later
+                </button>
+              </div>
+            </div>
+          ) : (
+            <AddCardForm
+              cards={catalogCards.map((c) => ({
+                id: c.id,
+                bank: c.bank,
+                name: c.name,
+                annual_fee: c.annual_fee,
+                welcome_bonus_points: c.welcome_bonus_points,
+                points_currency: c.points_currency,
+                min_income: c.min_income,
+              }))}
+              onCreated={() => {
+                setShowAddForm(false)
+                // Reload user cards
+                supabase
+                  .from("user_cards")
+                  .select(
+                    "id, bank, name, current_spend, application_date, bonus_spend_deadline, cancellation_date, bonus_earned, bonus_earned_at, annual_fee, status, card_id, created_at, user_id, notes, approval_date, next_eligible_date, spend_updated_at, alert_enabled, bonus_earned_suggested, is_business, card:cards(id, name, bank, bonus_spend_requirement, welcome_bonus_points, points_currency, annual_fee)"
+                  )
+                  .order("created_at", { ascending: false })
+                  .then(({ data }) => {
+                    if (data) {
+                      const rows = data as unknown as UserCardWithCatalog[]
+                      setUserCards(rows)
+                      if (rows.length > 0) setSelectedCard(rows[0])
+                    }
+                  })
+              }}
+            />
+          )}
         </div>
       )}
 
