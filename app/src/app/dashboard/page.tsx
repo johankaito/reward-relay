@@ -9,6 +9,8 @@ import { CreditCard } from "lucide-react"
 import { AppShell } from "@/components/layout/AppShell"
 import { EditCardModal } from "@/components/cards/EditCardModal"
 import { ProgressBar } from "@/components/ui/progress-bar"
+import { WeeklyActionCard } from "@/components/ui/WeeklyActionCard"
+import { EligibilityStrip } from "@/components/ui/EligibilityStrip"
 import { supabase } from "@/lib/supabase/client"
 import { getBankGradient } from "@/lib/bank-gradients"
 import { useCatalog } from "@/contexts/CatalogContext"
@@ -30,6 +32,7 @@ export default function DashboardPage() {
   const [email, setEmail] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [cards, setCards] = useState<UserCard[]>([])
+  const [exclusionRecords, setExclusionRecords] = useState<Database["public"]["Tables"]["bank_exclusion_periods"]["Row"][]>([])
   const [loading, setLoading] = useState(true)
   const [editingCard, setEditingCard] = useState<UserCard | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
@@ -65,6 +68,12 @@ export default function DashboardPage() {
     }
 
     setCards(userCardsResult || [])
+
+    const { data: exclusionData } = await supabase
+      .from("bank_exclusion_periods")
+      .select("*")
+    setExclusionRecords(exclusionData || [])
+
     setLoading(false)
 
     if (showWelcome) {
@@ -224,6 +233,9 @@ export default function DashboardPage() {
             See Recommendations →
           </Link>
         </div>
+
+        {/* ── Weekly Action Card ── */}
+        <WeeklyActionCard userCards={cards} exclusionRecords={exclusionRecords} />
 
         {/* ── Mobile hero metric ── */}
         <div className="md:hidden -mx-4 px-6 pt-6 pb-8 bg-surface-container border-b border-white/5 text-center">
@@ -434,6 +446,38 @@ export default function DashboardPage() {
                           {pct >= 95 ? "Almost There!" : `${pct}% Done`}
                         </span>
                       </div>
+                      {/* Feature 4: Spend deadline urgency */}
+                      {card.bonus_spend_deadline && !card.bonus_earned && (() => {
+                        const deadline = new Date(card.bonus_spend_deadline)
+                        const deadlineDaysLeft = Math.ceil((deadline.getTime() - Date.now()) / 86400000)
+                        const urgentDeadline = deadlineDaysLeft <= 14
+                        const criticalDeadline = deadlineDaysLeft <= 7
+                        if (!urgentDeadline) return null
+                        return (
+                          <div className={`flex items-center gap-1.5 text-xs font-semibold mt-1 ${criticalDeadline ? 'text-red-400' : 'text-amber-400'}`}>
+                            {criticalDeadline && <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />}
+                            <span>Deadline: {deadline.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })} ({deadlineDaysLeft > 0 ? `${deadlineDaysLeft}d` : 'overdue'})</span>
+                          </div>
+                        )
+                      })()}
+                      {/* Feature 3: Annual fee row */}
+                      {card.annual_fee && card.annual_fee > 0 && (card.application_date || card.approval_date) && (() => {
+                        const refDate = card.application_date || card.approval_date
+                        if (!refDate) return null
+                        const renewDate = new Date(refDate)
+                        renewDate.setFullYear(renewDate.getFullYear() + 1)
+                        const daysUntilRenew = Math.ceil((renewDate.getTime() - Date.now()) / 86400000)
+                        const urgentFee = daysUntilRenew <= 30
+                        const criticalFee = daysUntilRenew <= 14
+                        return (
+                          <div className={`flex items-center gap-2 text-xs mt-1 ${criticalFee ? 'text-red-400' : urgentFee ? 'text-amber-400' : 'text-on-surface-variant'}`}>
+                            <span>Annual fee: ${card.annual_fee}</span>
+                            <span>·</span>
+                            <span>renews {renewDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                            {daysUntilRenew > 0 && <span>· {daysUntilRenew}d</span>}
+                          </div>
+                        )
+                      })()}
                     </div>
                   </div>
                 )
@@ -452,6 +496,9 @@ export default function DashboardPage() {
             </div>
           )}
         </section>
+
+        {/* ── Eligibility Strip ── */}
+        <EligibilityStrip userCards={cards} exclusionRecords={exclusionRecords} />
 
         {/* ── Alert Strip ── */}
         {(() => {

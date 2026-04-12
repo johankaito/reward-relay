@@ -217,7 +217,7 @@ export function GoalTimelineComparison({
                 <li>• 3 months to meet minimum spend requirement</li>
                 <li>• 1 month for bonus points to post after spend met</li>
                 <li>• 6 months minimum spacing between card applications</li>
-                <li>• AMEX: 18-month cooling period | Others: 12-month cooling period</li>
+                <li>• AMEX: 18-month cooling period | Others: 18–24 month cooling period</li>
                 <li>• Current points balance: {currentPoints.toLocaleString()}</li>
               </ul>
             </div>
