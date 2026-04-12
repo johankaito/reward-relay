@@ -67,7 +67,7 @@ export default function Home() {
             {/* Badge */}
             <div className="mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest"
               style={{ background: "rgba(78, 222, 163, 0.1)", color: "var(--primary)" }}>
-              Command Your Wealth
+              Know When to Apply
             </div>
 
             {/* Headline */}
@@ -78,7 +78,7 @@ export default function Home() {
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
               style={{ color: "var(--on-surface-variant)" }}>
-              The high-stakes command center for credit card optimization and point maximization. Orchestrate your credit portfolio with the precision of a master.
+              Know exactly when you&apos;re eligible for your next rewards card. Track your card history, see your cooling-off windows, and never miss an application opportunity.
             </p>
 
             {/* CTAs */}
@@ -95,7 +95,7 @@ export default function Home() {
                   href="/login?access=1"
                   className="bg-primary-gradient w-full rounded-full px-10 py-4 text-lg font-bold text-on-primary shadow-lg shadow-[#4edea3]/20 transition-transform hover:scale-105 md:w-auto"
                 >
-                  Join the Elite
+                  Start Tracking
                 </a>
               )}
               <a
@@ -145,18 +145,18 @@ export default function Home() {
               {[
                 {
                   num: "1",
-                  title: "Connect Your Vault",
-                  body: "Securely link your bank accounts using military-grade encryption to aggregate your entire financial footprint.",
+                  title: "Log Your Card History",
+                  body: "Tell us which cards you've had and when. We calculate your bank cooling-off periods automatically.",
                 },
                 {
                   num: "2",
-                  title: "Algorithm Audit",
-                  body: "Our proprietary engine analyzes your spending patterns against 500+ credit card offers to find your optimal path.",
+                  title: "See Your Eligibility Windows",
+                  body: "Know exactly when you're eligible again for each bank. No more guessing or re-reading the PDS.",
                 },
                 {
                   num: "3",
-                  title: "Execute & Conquer",
-                  body: "Receive real-time notifications on when to spend, when to apply, and when to close to keep your credit score pristine.",
+                  title: "Get Your Next Card",
+                  body: "We rank available cards by value, filtered to only what you can actually apply for right now.",
                 },
               ].map((step) => (
                 <div key={step.num} className="flex items-start gap-8">
@@ -233,10 +233,10 @@ export default function Home() {
                   className="mb-4 text-3xl font-bold"
                   style={{ fontFamily: "var(--font-grotesk)" }}
                 >
-                  Portfolio Integration
+                  Card History & Eligibility
                 </h3>
                 <p className="max-w-md text-lg" style={{ color: "var(--on-surface-variant)" }}>
-                  Securely link all financial instruments into a single, unified atmospheric dashboard.
+                  Your full card history in one place. See eligibility windows at a glance across every bank.
                 </p>
               </div>
 
@@ -339,7 +339,7 @@ export default function Home() {
                     </div>
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
-                    {["Up to 2 Bank Syncs", "Basic Point Dashboard"].map((f) => (
+                    {["Up to 2 active cards tracked", "Card eligibility tracker"].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
                         <span className="material-symbols-outlined text-[#4edea3] text-lg shrink-0" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>check_circle</span>
                         {f}
@@ -387,7 +387,7 @@ export default function Home() {
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
                     {[
-                      "Unlimited Bank Sync",
+                      "Unlimited card history",
                       "Sign-up Bonus Tracker",
                       "Custom Churn Strategy",
                       "Priority Concierge Support",
@@ -488,15 +488,15 @@ export default function Home() {
             {[
               {
                 quote:
-                  '"Reward Relay turned my casual spending into first-class tickets around the world. The UI is cleaner than my banking app."',
+                  '"Finally I know exactly when to apply again. No more waiting 13 months only to find out I\'m still in the cooling-off period."',
                 name: "Alex Chen",
                 role: "Churning since 2019",
               },
               {
                 quote:
-                  '"The only platform that understands the nuance of the 5/24 rule perfectly. A must-have for serious collectors."',
+                  '"It told me I was eligible for the ANZ Black 6 weeks before I\'d have figured it out myself. Already have the points in my account."',
                 name: "Sarah Jenkins",
-                role: "Venture Capitalist",
+                role: "Points collector",
               },
             ].map((t) => (
               <div
@@ -550,8 +550,8 @@ export default function Home() {
               Ready to Master the Churn?
             </h2>
             <p className="mx-auto mb-12 max-w-2xl text-lg" style={{ color: "var(--on-surface-variant)" }}>
-              Stop leaving points on the table. Join 5,000+ Aussies who have optimized their credit
-              card game with precision.
+              Stop guessing your eligibility. Join 5,000+ Aussies who know exactly when to apply for
+              their next card.
             </p>
             <BetaOnly>
               <BetaRequestForm
@@ -593,7 +593,7 @@ export default function Home() {
               Reward Relay
             </div>
             <p className="max-w-md text-sm" style={{ color: "var(--on-surface-variant)" }}>
-              The Financial Luminary Command Center. Elevating credit reward management to high-stakes precision.
+              Know exactly when you&apos;re eligible for your next rewards card.
             </p>
           </div>
           <p className="tabular-nums text-xs" style={{ color: "#475569" }}>
