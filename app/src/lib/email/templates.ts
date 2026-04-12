@@ -267,3 +267,102 @@ Cancel your card now: ${data.appUrl}/dashboard
     `.trim(),
   };
 }
+
+interface AnnualFeeReminderEmailData {
+  cardName: string;
+  bank: string;
+  annualFee: number;
+  renewalDate: string;
+  daysRemaining: number;
+  appUrl: string;
+}
+
+export function getAnnualFee30DayReminderEmail(data: AnnualFeeReminderEmailData) {
+  return {
+    subject: `💳 ${data.bank} ${data.cardName} annual fee of $${data.annualFee} renews in 30 days`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Annual Fee Reminder</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #4edea3 0%, #10b981 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #003824; margin: 0; font-size: 24px;">💳 Annual Fee Reminder</h1>
+          </div>
+          <div style="background: #f7fafc; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+            <h2 style="margin-top: 0; color: #2d3748;">30 Days Until Annual Fee</h2>
+            <p style="font-size: 16px;">Your <strong>${data.bank} ${data.cardName}</strong> annual fee of <strong>$${data.annualFee}</strong> renews on:</p>
+            <p style="font-size: 24px; font-weight: bold; color: #10b981; margin: 15px 0;">${data.renewalDate}</p>
+            <p style="font-size: 14px; color: #4a5568;">You have 30 days to cancel if you don't want to pay it. To cancel, contact ${data.bank} directly or visit your card account online.</p>
+          </div>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${data.appUrl}/cards" style="display: inline-block; background: linear-gradient(135deg, #4edea3 0%, #10b981 100%); color: #003824; font-weight: bold; text-decoration: none; padding: 14px 28px; border-radius: 25px;">
+              View My Cards →
+            </a>
+          </div>
+          <div style="border-top: 2px solid #e2e8f0; padding-top: 20px; margin-top: 30px; text-align: center; color: #718096; font-size: 14px;">
+            <p>Reward Relay — know when to act on your cards.</p>
+          </div>
+        </body>
+      </html>
+    `,
+    text: `
+💳 Annual Fee Reminder — 30 Days
+
+Your ${data.bank} ${data.cardName} annual fee of $${data.annualFee} renews on: ${data.renewalDate}
+
+You have 30 days to cancel if you don't want to pay it.
+To cancel, contact ${data.bank} directly or visit your card account online.
+
+View your cards: ${data.appUrl}/cards
+    `.trim(),
+  };
+}
+
+export function getAnnualFee14DayReminderEmail(data: AnnualFeeReminderEmailData) {
+  return {
+    subject: `⚠️ ${data.bank} ${data.cardName} annual fee of $${data.annualFee} renews in 14 days`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Annual Fee Reminder</title>
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%); padding: 30px; border-radius: 10px; text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #7b341e; margin: 0; font-size: 24px;">⚠️ Annual Fee Due in 14 Days</h1>
+          </div>
+          <div style="background: #fffaf0; border: 2px solid #f6ad55; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+            <h2 style="margin-top: 0; color: #c05621;">14 Days Until Annual Fee</h2>
+            <p style="font-size: 16px;">Your <strong>${data.bank} ${data.cardName}</strong> annual fee of <strong>$${data.annualFee}</strong> renews on:</p>
+            <p style="font-size: 24px; font-weight: bold; color: #dd6b20; margin: 15px 0;">${data.renewalDate}</p>
+            <p style="font-size: 14px; color: #744210;">Act now if you want to cancel before the fee hits. Contact ${data.bank} directly or visit your card account online.</p>
+          </div>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${data.appUrl}/cards" style="display: inline-block; background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%); color: #7b341e; font-weight: bold; text-decoration: none; padding: 14px 28px; border-radius: 25px;">
+              View My Cards →
+            </a>
+          </div>
+          <div style="border-top: 2px solid #e2e8f0; padding-top: 20px; margin-top: 30px; text-align: center; color: #718096; font-size: 14px;">
+            <p>Reward Relay — know when to act on your cards.</p>
+          </div>
+        </body>
+      </html>
+    `,
+    text: `
+⚠️ Annual Fee Reminder — 14 Days
+
+Your ${data.bank} ${data.cardName} annual fee of $${data.annualFee} renews on: ${data.renewalDate}
+
+Act now if you want to cancel before the fee hits.
+Contact ${data.bank} directly or visit your card account online.
+
+View your cards: ${data.appUrl}/cards
+    `.trim(),
+  };
+}
