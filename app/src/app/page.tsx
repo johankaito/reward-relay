@@ -78,7 +78,7 @@ export default function Home() {
 
             <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed md:text-xl"
               style={{ color: "var(--on-surface-variant)" }}>
-              Know exactly when you&apos;re eligible for your next rewards card. Track your card history, see your cooling-off windows, and never miss an application opportunity.
+              Know exactly when you&apos;re eligible for your next rewards card. Track your card history, see your cooling-off windows, and never miss an application opportunity. Free forever for the essentials.
             </p>
 
             {/* CTAs */}
@@ -313,10 +313,10 @@ export default function Home() {
                   className="text-3xl font-bold sm:text-4xl"
                   style={{ fontFamily: "var(--font-grotesk)" }}
                 >
-                  Select Your Plan
+                  Start free. Upgrade when you need more.
                 </h2>
                 <p style={{ color: "var(--on-surface-variant)" }}>
-                  Professional tools for the modern financial luminary.
+                  The free tier watches your cards. Pro tells you what to do next.
                 </p>
               </div>
 
@@ -330,32 +330,42 @@ export default function Home() {
                   }}
                 >
                   <div className="mb-8">
-                    <h3 className="mb-2 text-2xl font-bold" style={{ fontFamily: "var(--font-grotesk)" }}>
+                    <h3 className="mb-1 text-2xl font-bold" style={{ fontFamily: "var(--font-grotesk)" }}>
                       Lite Relay
                     </h3>
+                    <p className="mb-3 text-xs" style={{ color: "var(--on-surface-variant)" }}>
+                      The protection layer. Never miss a deadline or an unexpected fee.
+                    </p>
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold tabular-nums">$0</span>
                       <span style={{ color: "var(--on-surface-variant)" }}>/month</span>
                     </div>
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
-                    {["Up to 2 active cards tracked", "Card eligibility tracker"].map((f) => (
+                    {[
+                      "Track up to 3 cards",
+                      "Spend deadline alerts (30/14/7 day)",
+                      "Annual fee renewal reminders",
+                      "Bank eligibility countdown",
+                    ].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
                         <span className="material-symbols-outlined text-[#4edea3] text-lg shrink-0" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>check_circle</span>
                         {f}
                       </li>
                     ))}
-                    <li className="flex items-center gap-3 text-sm opacity-40">
-                      <span className="material-symbols-outlined text-outline text-lg shrink-0">check_circle</span>
-                      No Churn Strategy
-                    </li>
+                    {["Unlimited card history", "Full card recommendations", "Profit & analytics dashboard"].map((f) => (
+                      <li key={f} className="flex items-center gap-3 text-sm opacity-35">
+                        <span className="material-symbols-outlined text-outline text-lg shrink-0">check_circle</span>
+                        {f}
+                      </li>
+                    ))}
                   </ul>
                   <a
                     href="/login?access=1"
                     className="rounded-full py-4 text-center font-bold text-white transition-colors hover:bg-white/10"
                     style={{ border: "1px solid rgba(134, 148, 138, 0.5)" }}
                   >
-                    Start Free
+                    Start Free — No card required
                   </a>
                 </div>
 
@@ -377,9 +387,12 @@ export default function Home() {
                     Most Popular
                   </div>
                   <div className="mb-8">
-                    <h3 className="mb-2 text-2xl font-bold font-headline">
+                    <h3 className="mb-1 text-2xl font-bold font-headline">
                       Command Center
                     </h3>
+                    <p className="mb-3 text-xs" style={{ color: "var(--on-surface-variant)" }}>
+                      The intelligence layer. Know your next move before you need to make it.
+                    </p>
                     <div className="flex items-baseline gap-1">
                       <span className="text-4xl font-extrabold tabular-nums">$29</span>
                       <span style={{ color: "var(--on-surface-variant)" }}>/month</span>
@@ -387,14 +400,24 @@ export default function Home() {
                   </div>
                   <ul className="mb-10 flex-grow space-y-4">
                     {[
+                      "Everything in Free",
                       "Unlimited card history",
-                      "Sign-up Bonus Tracker",
-                      "Custom Churn Strategy",
-                      "Priority Concierge Support",
+                      "Full personalised recommendations",
+                      "Profit & P&L analytics",
                     ].map((f) => (
                       <li key={f} className="flex items-center gap-3 text-sm">
                         <span className="material-symbols-outlined text-[#4edea3] text-lg shrink-0" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>check_circle</span>
                         <strong>{f}</strong>
+                      </li>
+                    ))}
+                    {[
+                      "Catalog bonus change alerts",
+                      "Points Horizon goal tracker",
+                    ].map((f) => (
+                      <li key={f} className="flex items-center gap-3 text-sm">
+                        <span className="material-symbols-outlined text-[#4edea3] text-lg shrink-0" style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}>check_circle</span>
+                        <strong>{f}</strong>
+                        <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-primary">Soon</span>
                       </li>
                     ))}
                   </ul>
