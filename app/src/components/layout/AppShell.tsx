@@ -15,11 +15,11 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { label: "Home",    href: "/dashboard", materialIcon: "home"        },
-  { label: "Cards",   href: "/cards",     materialIcon: "credit_card" },
-  { label: "Track",   href: "/spending",  materialIcon: "monitoring"  },
-  { label: "Redeem",  href: "/flights",   materialIcon: "redeem"      },
-  { label: "Account", href: "/settings",  materialIcon: "person"      },
+  { label: "Home",    href: "/dashboard",       materialIcon: "home"        },
+  { label: "Cards",   href: "/cards",            materialIcon: "credit_card" },
+  { label: "Picks",   href: "/recommendations",  materialIcon: "recommend"   },
+  { label: "Flights", href: "/flights",           materialIcon: "redeem"      },
+  { label: "Account", href: "/settings",          materialIcon: "person"      },
 ]
 
 type AppShellProps = {
@@ -57,9 +57,6 @@ export function AppShell({ children }: AppShellProps) {
   }
 
   const isActive = (href: string) => {
-    if (href === "/spending" && pathname === "/tracker") return true
-    if (href === "/spending" && pathname.startsWith("/tracker/")) return true
-    if (href === "/spending" && pathname === "/profit") return true
     return pathname.startsWith(href)
   }
 

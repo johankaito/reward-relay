@@ -194,6 +194,16 @@ export default function DashboardPage() {
 
       <div className="space-y-10 pb-8">
 
+        {/* Next Card Hero */}
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+          <p className="text-xs uppercase tracking-widest text-on-surface-variant font-semibold mb-2">Next Card</p>
+          <h2 className="text-xl font-bold text-on-surface mb-1">Ready for your next card?</h2>
+          <p className="text-sm text-on-surface-variant mb-4">Based on your card history, here&apos;s what you&apos;re eligible for now.</p>
+          <Link href="/recommendations" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-semibold hover:bg-primary/90 transition-colors">
+            See Recommendations →
+          </Link>
+        </div>
+
         {/* ── Mobile hero metric ── */}
         <div className="md:hidden -mx-4 px-6 pt-6 pb-8 bg-surface-container border-b border-white/5 text-center">
           <p className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">
