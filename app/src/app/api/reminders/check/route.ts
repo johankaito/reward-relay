@@ -79,7 +79,7 @@ export async function GET(request: Request) {
         .select("id")
         .eq("user_card_id", userCard.id)
         .eq("reminder_type", reminderType)
-        .single();
+        .maybeSingle();
 
       if (existingReminder) continue; // Already sent
 
@@ -201,7 +201,7 @@ export async function GET(request: Request) {
         .select("id")
         .eq("user_card_id", userCard.id)
         .eq("reminder_type", `${annualFeeReminderType}_${renewalYear}`)
-        .single();
+        .maybeSingle();
 
       if (existingAnnualReminder) continue; // Already sent for this cycle
 

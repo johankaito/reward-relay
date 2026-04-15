@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 if (!process.env.RESEND_API_KEY) {
-  console.warn("RESEND_API_KEY is not set. Email reminders will not work.");
+  console.error("RESEND_API_KEY is not set. Email reminders will not work.");
 }
 
 // Use a placeholder during build time if API key is not set

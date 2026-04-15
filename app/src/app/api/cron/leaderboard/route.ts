@@ -58,24 +58,28 @@ export async function GET(req: NextRequest) {
     .sort(([, a], [, b]) => b.totalAud - a.totalAud)
     .slice(0, 100)
 
+  // Capture batch timestamp so we can purge stale rows after a successful insert
+  const batchTime = new Date().toISOString()
+
   // Build leaderboard rows — user_id is NEVER stored, only SHA-256 hash
   const rows = sorted.map(([userId, stats], index) => ({
     rank: index + 1,
     user_hash: hashUserId(userId),
     total_aud_earned: Math.round(stats.totalAud * 100) / 100,
     cards_churned: stats.cardsCount,
-    updated_at: new Date().toISOString(),
+    updated_at: batchTime,
   }))
 
-  // Replace entire leaderboard_cache
-  await db.from("leaderboard_cache").delete().neq("rank", 0)
-
+  // Atomically replace leaderboard: insert new rows first, then purge stale rows only on success
   if (rows.length > 0) {
     const { error: insertError } = await db.from("leaderboard_cache").insert(rows)
     if (insertError) {
       return NextResponse.json({ error: insertError.message }, { status: 500 })
     }
   }
+
+  // Delete only rows from previous batches — new rows are safe (updated_at === batchTime)
+  await db.from("leaderboard_cache").delete().lt("updated_at", batchTime)
 
   return NextResponse.json({ success: true, count: rows.length })
 }

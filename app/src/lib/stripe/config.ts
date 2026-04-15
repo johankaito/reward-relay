@@ -16,5 +16,15 @@ export const PLANS = {
   },
 } as const
 
+if (
+  process.env.NODE_ENV === "production" &&
+  !process.env.STRIPE_PRICE_MONTHLY &&
+  !process.env.STRIPE_PRICE_ANNUAL
+) {
+  throw new Error(
+    "STRIPE_PRICE_MONTHLY and STRIPE_PRICE_ANNUAL must be set in production"
+  )
+}
+
 export const FREE_CARD_LIMIT = 3
 export const TRIAL_DAYS = 7

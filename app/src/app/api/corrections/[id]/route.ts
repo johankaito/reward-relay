@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { getSupabaseServerClient } from '@/lib/supabase/server'
 import type { Database } from '@/types/database.types'
 
-const ADMIN_EMAIL = 'john.g.keto+rewardrelay@gmail.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'john.g.keto+rewardrelay@gmail.com'
 
 // Map correction field names (user-facing) → cards table column names
 const FIELD_TO_COLUMN: Record<string, keyof Database['public']['Tables']['cards']['Update']> = {
