@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe/client"
-import { PLANS, TRIAL_DAYS } from "@/lib/stripe/config"
+import { PLANS, TRIAL_DAYS, assertStripeConfigured } from "@/lib/stripe/config"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 import { createServerClient } from "@supabase/ssr"
 import type { Database } from "@/types/database.types"
@@ -21,6 +21,7 @@ async function getServiceClient() {
 
 export async function POST(req: NextRequest) {
   try {
+    assertStripeConfigured()
     const supabase = await getSupabaseServerClient()
     const { data: { user } } = await supabase.auth.getUser()
 

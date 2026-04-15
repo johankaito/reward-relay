@@ -16,14 +16,18 @@ export const PLANS = {
   },
 } as const
 
-if (
-  process.env.NODE_ENV === "production" &&
-  !process.env.STRIPE_PRICE_MONTHLY &&
-  !process.env.STRIPE_PRICE_ANNUAL
-) {
-  throw new Error(
-    "STRIPE_PRICE_MONTHLY and STRIPE_PRICE_ANNUAL must be set in production"
-  )
+// Validate at runtime inside request handlers, not at module evaluation time.
+// Module-level throws break Next.js page data collection during CI builds.
+export function assertStripeConfigured(): void {
+  if (
+    process.env.NODE_ENV === "production" &&
+    !process.env.STRIPE_PRICE_MONTHLY &&
+    !process.env.STRIPE_PRICE_ANNUAL
+  ) {
+    throw new Error(
+      "STRIPE_PRICE_MONTHLY and STRIPE_PRICE_ANNUAL must be set in production"
+    )
+  }
 }
 
 export const FREE_CARD_LIMIT = 3
