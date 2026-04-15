@@ -63,111 +63,116 @@ export async function GET(request: Request) {
 
     const stats = { pace: 0, warning14: 0, warning3: 0, completion: 0, skipped: 0 }
 
-    const promises = ((activeCards ?? []) as unknown as CardRow[]).map((card) =>
-      (async () => {
-        const requirement = card.card?.bonus_spend_requirement ?? 0
-        if (requirement === 0) {
-          stats.skipped++
-          return
-        }
+    const allCards = (activeCards ?? []) as unknown as CardRow[]
+    const BATCH_SIZE = 10
 
-        const currentSpend = card.current_spend ?? 0
-        const deadline = card.bonus_spend_deadline!
-        const applicationDate = card.application_date ?? todayStr
+    const processCard = async (card: CardRow) => {
+      const requirement = card.card?.bonus_spend_requirement ?? 0
+      if (requirement === 0) {
+        stats.skipped++
+        return
+      }
 
-        const pace = calculatePace(currentSpend, requirement, applicationDate, deadline)
-        const { daysRemaining, requiredDailySpend, paceStatus } = pace
+      const currentSpend = card.current_spend ?? 0
+      const deadline = card.bonus_spend_deadline!
+      const applicationDate = card.application_date ?? todayStr
 
-        let alertType: AlertType | null = null
-        if (currentSpend >= requirement) {
-          alertType = 'spending_completion'
-        } else if (daysRemaining <= 3 && paceStatus === 'will_miss') {
-          alertType = 'spending_3day'
-        } else if (daysRemaining <= 14 && paceStatus !== 'on_track') {
-          alertType = 'spending_14day'
-        } else if (paceStatus === 'will_miss' && daysRemaining > 14) {
-          alertType = 'spending_pace'
-        }
+      const pace = calculatePace(currentSpend, requirement, applicationDate, deadline)
+      const { daysRemaining, requiredDailySpend, paceStatus } = pace
 
-        if (!alertType) {
-          stats.skipped++
-          return
-        }
+      let alertType: AlertType | null = null
+      if (currentSpend >= requirement) {
+        alertType = 'spending_completion'
+      } else if (daysRemaining <= 3 && paceStatus === 'will_miss') {
+        alertType = 'spending_3day'
+      } else if (daysRemaining <= 14 && paceStatus !== 'on_track') {
+        alertType = 'spending_14day'
+      } else if (paceStatus === 'will_miss' && daysRemaining > 14) {
+        alertType = 'spending_pace'
+      }
 
-        // Deduplicate: skip if same alert type already sent today
-        const { data: existing } = await supabaseAdmin
-          .from('email_reminders')
-          .select('id')
-          .eq('user_card_id', card.id)
-          .eq('reminder_type', alertType)
-          .gte('sent_at', todayStr)
-          .maybeSingle()
+      if (!alertType) {
+        stats.skipped++
+        return
+      }
 
-        if (existing) {
-          stats.skipped++
-          return
-        }
+      // Deduplicate: skip if same alert type already sent today
+      const { data: existing } = await supabaseAdmin
+        .from('email_reminders')
+        .select('id')
+        .eq('user_card_id', card.id)
+        .eq('reminder_type', alertType)
+        .gte('sent_at', todayStr)
+        .maybeSingle()
 
-        const { data: userData } = await supabaseAdmin.auth.admin.getUserById(card.user_id)
-        if (!userData?.user?.email) {
-          stats.skipped++
-          return
-        }
+      if (existing) {
+        stats.skipped++
+        return
+      }
 
-        const emailData = {
-          cardName: card.name ?? '',
-          bank: card.bank ?? '',
-          currentSpend,
-          requirement,
-          daysRemaining,
-          dailyNeeded: requiredDailySpend,
-          deadline: new Date(deadline).toLocaleDateString('en-AU', {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-          }),
-          appUrl: APP_URL,
-        }
+      const { data: userData } = await supabaseAdmin.auth.admin.getUserById(card.user_id)
+      if (!userData?.user?.email) {
+        stats.skipped++
+        return
+      }
 
-        const emailFns = {
-          spending_completion: getCompletionEmail,
-          spending_3day: get3DayWarningEmail,
-          spending_14day: get14DayWarningEmail,
-          spending_pace: getPaceAlertEmail,
-        }
-        const email = emailFns[alertType](emailData)
+      const emailData = {
+        cardName: card.name ?? '',
+        bank: card.bank ?? '',
+        currentSpend,
+        requirement,
+        daysRemaining,
+        dailyNeeded: requiredDailySpend,
+        deadline: new Date(deadline).toLocaleDateString('en-AU', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }),
+        appUrl: APP_URL,
+      }
 
-        await resend.emails.send({
-          from: FROM_EMAIL,
-          to: userData.user.email,
-          subject: email.subject,
-          html: email.html,
-          text: email.text,
-        })
+      const emailFns = {
+        spending_completion: getCompletionEmail,
+        spending_3day: get3DayWarningEmail,
+        spending_14day: get14DayWarningEmail,
+        spending_pace: getPaceAlertEmail,
+      }
+      const email = emailFns[alertType](emailData)
 
-        await supabaseAdmin.from('email_reminders').insert({
-          user_card_id: card.id,
-          reminder_type: alertType,
-          email_to: userData.user.email,
-        })
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: userData.user.email,
+        subject: email.subject,
+        html: email.html,
+        text: email.text,
+      })
 
-        if (alertType === 'spending_completion') {
-          await supabaseAdmin
-            .from('user_cards')
-            .update({ bonus_earned_suggested: true })
-            .eq('id', card.id)
-          stats.completion++
-        } else if (alertType === 'spending_3day') {
-          stats.warning3++
-        } else if (alertType === 'spending_14day') {
-          stats.warning14++
-        } else {
-          stats.pace++
-        }
-      })()
-    )
+      await supabaseAdmin.from('email_reminders').insert({
+        user_card_id: card.id,
+        reminder_type: alertType,
+        email_to: userData.user.email,
+      })
 
-    await Promise.all(promises)
+      if (alertType === 'spending_completion') {
+        await supabaseAdmin
+          .from('user_cards')
+          .update({ bonus_earned_suggested: true })
+          .eq('id', card.id)
+        stats.completion++
+      } else if (alertType === 'spending_3day') {
+        stats.warning3++
+      } else if (alertType === 'spending_14day') {
+        stats.warning14++
+      } else {
+        stats.pace++
+      }
+    }
+
+    // Process in serial batches of 10 to stay within Resend burst limits
+    for (let i = 0; i < allCards.length; i += BATCH_SIZE) {
+      const batch = allCards.slice(i, i + BATCH_SIZE)
+      await Promise.all(batch.map(processCard))
+    }
 
     return NextResponse.json({
       success: true,

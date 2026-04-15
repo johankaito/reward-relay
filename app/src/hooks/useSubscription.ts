@@ -20,14 +20,14 @@ export function useSubscription(): SubscriptionState {
 
   useEffect(() => {
     async function load() {
-      const { data: { session } } = await supabase.auth.getSession()
+      const { data: { user } } = await supabase.auth.getUser()
 
-      if (!session) {
+      if (!user) {
         setState({ tier: 'free', isPro: false, isBusiness: false, isLoading: false })
         return
       }
 
-      const meta = session.user.user_metadata as Record<string, unknown>
+      const meta = user.user_metadata as Record<string, unknown>
       const rawTier = meta?.subscription_tier as string | undefined
       const isProFlag = meta?.is_pro === true
 

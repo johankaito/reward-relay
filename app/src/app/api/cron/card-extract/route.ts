@@ -102,7 +102,7 @@ async function processCard(
             .from('deals')
             .select('id')
             .eq('card_id', cardId)
-            .gte('bonus_points', Math.floor((extractedBonus ?? 0) * 0.95))
+            .gte('bonus_points', Math.floor((extractedBonus ?? 0) * 0.90))
             .gte('created_at', thirtyDaysAgo)
             .limit(1)
 
@@ -181,7 +181,7 @@ async function processCard(
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

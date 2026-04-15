@@ -13,6 +13,11 @@ const PROTECTED_PATHS = [
   "/business",
   "/inquiries",
   "/profit",
+  "/settings",
+  "/recommendations",
+  "/onboarding",
+  "/compare",
+  "/statements",
 ]
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -102,5 +107,15 @@ export const config = {
     "/business",
     "/inquiries",
     "/profit",
+    "/settings",
+    "/settings/:path*",
+    "/recommendations",
+    "/recommendations/:path*",
+    "/onboarding",
+    "/onboarding/:path*",
+    "/compare",
+    "/compare/:path*",
+    "/statements",
+    "/statements/:path*",
   ],
 }

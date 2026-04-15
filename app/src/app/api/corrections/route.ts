@@ -48,6 +48,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'reportedValue cannot be empty' }, { status: 400 })
   }
 
+  // Count existing pending reports before inserting to avoid escalation race condition.
+  // If there is already ≥1 pending report for this card+field, the new submission brings
+  // the total to ≥2 and should immediately escalate to 'high' priority.
+  const { count: existingCount } = await supabase
+    .from('card_corrections')
+    .select('id', { count: 'exact', head: true })
+    .eq('card_id', cardId)
+    .eq('field', field)
+    .eq('status', 'pending')
+
+  const verificationPriority: 'high' | 'normal' = (existingCount ?? 0) >= 1 ? 'high' : 'normal'
+
   const { data: correction, error: insertError } = await supabase
     .from('card_corrections')
     .insert({
@@ -63,20 +75,6 @@ export async function POST(request: NextRequest) {
   if (insertError) {
     console.error('Failed to insert correction:', insertError)
     return NextResponse.json({ error: 'Failed to save correction' }, { status: 500 })
-  }
-
-  // Flag card for verification — always needs_verification; escalate to 'high' on multi-user agreement
-  let verificationPriority: 'high' | 'normal' = 'normal'
-
-  const { count: pendingCount } = await supabase
-    .from('card_corrections')
-    .select('id', { count: 'exact', head: true })
-    .eq('card_id', cardId)
-    .eq('field', field)
-    .eq('status', 'pending')
-
-  if ((pendingCount ?? 0) >= 2) {
-    verificationPriority = 'high'
   }
 
   await supabase

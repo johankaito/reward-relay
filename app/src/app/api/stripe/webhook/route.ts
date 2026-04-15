@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { stripe } from "@/lib/stripe/client"
 import { createServerClient } from "@supabase/ssr"
+import { resend, FROM_EMAIL } from "@/lib/email/client"
 import type { Database } from "@/types/database.types"
 import type Stripe from "stripe"
 
@@ -34,7 +35,7 @@ async function upsertSubscription(
   subscription: Stripe.Subscription
 ) {
   const period = getSubscriptionPeriod(subscription)
-  await supabase.from("stripe_subscriptions").upsert(
+  const { error } = await supabase.from("stripe_subscriptions").upsert(
     {
       user_id: userId,
       stripe_subscription_id: subscription.id,
@@ -47,6 +48,7 @@ async function upsertSubscription(
     },
     { onConflict: "stripe_subscription_id" }
   )
+  if (error) throw new Error(`Failed to upsert subscription: ${error.message}`)
 }
 
 export async function POST(req: NextRequest) {
@@ -138,6 +140,33 @@ export async function POST(req: NextRequest) {
           })
           .eq("stripe_subscription_id", subId)
       }
+      break
+    }
+
+    case "customer.subscription.trial_will_end": {
+      const subscription = event.data.object as Stripe.Subscription
+      const customerId = getCustomerId(subscription.customer)
+      const customer = await stripe.customers.retrieve(customerId)
+
+      if (customer.deleted || !customer.email) break
+
+      const trialEnd = subscription.trial_end
+        ? new Date(subscription.trial_end * 1000).toLocaleDateString("en-AU", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+          })
+        : "soon"
+
+      const settingsUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? "https://www.rewardrelay.app"}/settings`
+
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: customer.email,
+        subject: "Your Reward Relay trial is ending soon",
+        html: `<p>Hi there,</p><p>Your Reward Relay free trial ends on <strong>${trialEnd}</strong>. After that, your Pro subscription will automatically continue.</p><p>If you'd like to cancel before then, you can do so from your <a href="${settingsUrl}">account settings</a>.</p>`,
+        text: `Hi there,\n\nYour Reward Relay free trial ends on ${trialEnd}. After that, your Pro subscription will automatically continue.\n\nIf you'd like to cancel, visit your account settings: ${settingsUrl}`,
+      })
       break
     }
   }
