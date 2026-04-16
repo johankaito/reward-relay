@@ -1,0 +1,115 @@
+name: Self-Improvement
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Prevent infinite loops — skip if triggered by the improvement bot itself
+concurrency:
+  group: self-improve
+  cancel-in-progress: true
+
+jobs:
+  improve:
+    # Skip commits made by this workflow to prevent loops
+    if: "!contains(github.event.head_commit.message, '[auto-improve]') && github.actor != 'github-actions[bot]'"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: 'app/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        working-directory: app
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Claude CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Configure git
+        run: |
+          git config user.name "John Keto"
+          git config user.email "john.keto@everlab.com.au"
+
+      - name: Create improvement branch
+        id: branch
+        run: |
+          BRANCH="improve/auto-$(date +%Y%m%d-%H%M%S)"
+          echo "name=$BRANCH" >> "$GITHUB_OUTPUT"
+          git checkout -b "$BRANCH"
+
+      - name: Run improvement agent
+        working-directory: app
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          claude -p "You are a continuous improvement agent for Reward Relay, an Australian credit card churning tracker (Next.js + Supabase + Stripe). The codebase is in your current directory.
+
+          Your job: find and implement the most impactful improvements not already done. Do NOT add comments, docs, or TODOs — make real code changes only.
+
+          Priority order:
+          1. Missing error boundaries around data-fetching components
+          2. Loading skeleton states where components show blank instead of a loader
+          3. Any console.error/unhandled promise rejections visible in the code
+          4. Duplicate logic that can be extracted into a shared hook or util (only if used 3+ times)
+          5. Accessibility: missing aria-labels on icon-only buttons, missing alt text
+          6. Any remaining hardcoded strings that should be env vars
+
+          Constraints:
+          - Run pnpm typecheck and pnpm build after changes — fix any errors introduced
+          - Do not touch files already modified in the last commit (git diff HEAD~1 --name-only)
+          - Maximum 8 files changed
+          - No migration files
+          - No package additions
+
+          After making changes, stage them with git add -p style review, then commit with message: 'improve: automated code quality pass [auto-improve]'
+          The [auto-improve] tag in the commit message is required — it prevents this workflow from re-triggering." \
+            --no-session-persistence \
+            --dangerously-skip-permissions \
+            --strict-mcp-config \
+            --output-format stream-json \
+            --verbose 2>&1 | grep -v '^{' || true
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet HEAD; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push and open PR
+        if: steps.changes.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push --no-verify origin ${{ steps.branch.outputs.name }}
+          gh pr create \
+            --title "improve: automated code quality pass" \
+            --body "Automated improvements generated after merge to master.
+
+          ## What changed
+          $(git diff HEAD~1 --stat)
+
+          ## Details
+          $(git log -1 --format='%B')" \
+            --base master \
+            --head ${{ steps.branch.outputs.name }}
